@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GRC-фундамент</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { --paper: #f4f5f7; --ink: #1a2230; --muted: #5b6575; --seal: #3a3f9e; }
+  @media (prefers-color-scheme: dark) { :root { --paper: #11151c; --ink: #e5e8ee; --muted: #9aa3b2; --seal: #a5a9f2; } }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 640px; margin: 15vh auto; padding: 0 16px; }
+  a { color: var(--seal); }
+  p { color: var(--muted); }
+</style>
+<script>
+  // Resolves this project's ELI identifiers (…/grc-foundation-ua/eli/ua/vru/law/2017/2163-viii) to the act
+  // in the register. GitHub Pages serves this file for any path that has no file of its own.
+  (function () {
+    var path = decodeURIComponent(location.pathname);
+    var i = path.indexOf("/eli/");
+    var base = i >= 0 ? path.slice(0, i + 1)
+      : (/\.github\.io$/.test(location.hostname) ? "/" + (path.split("/")[1] || "") + "/" : "/");
+    if (i >= 0) {
+      var eli = path.slice(i + 1).replace(/\/(ukr|eng)\/?$/, "").replace(/\/$/, "");
+      location.replace(base + "#/sources?act=" + encodeURIComponent(eli));
+      return;
+    }
+    window.__home = base;
+  })();
+</script>
+</head>
+<body>
+<main>
+  <h1>Сторінку не знайдено / Page not found</h1>
+  <p><a id="home" href="./">На головну / Home</a></p>
+</main>
+<script>document.getElementById("home").href = window.__home || "./";</script>
+</body>
+</html>
