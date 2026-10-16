@@ -287,7 +287,11 @@
     if (narrow) app.querySelector(".panel").removeAttribute("open");
     return app.querySelector(`#${mainId}`);
   }
-  const searchBox = () => `<label class="field"><span>${esc(t("search"))}</span><input id="q" type="search" value="${esc(S.q)}" placeholder="${esc(t("searchPh"))}" autocomplete="off"></label>`;
+  // Search field (a magnifier instead of a label) and the reset button, placed right under the "who it concerns" chips
+  const searchBox = () => `<div class="find">
+      <label class="search"><svg aria-hidden="true" viewBox="0 0 20 20" width="16" height="16"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="q" type="search" value="${esc(S.q)}" placeholder="${esc(t("searchPh"))}" aria-label="${esc(t("search"))}" autocomplete="off"></label>
+      <button type="button" class="btn btn-quiet" id="reset">${esc(t("reset"))}</button></div>`;
 
   // ------------------------------------------------------------------ markdown pages (home, guide, method, about)
   async function loadMd(path) {
@@ -510,9 +514,9 @@
     if (!D.controls[S.fw]) S.fw = "iso27001-2022";
     const panel = `${fwPicker()}
       ${sectorChips()}
-      <fieldset><legend>${esc(t("options"))}</legend>${toggle("only", t("optOnlyMapped"))}${toggle("rec", t("optRecommended"))}${toggle("drafts", t("optDrafts"))}</fieldset>
       ${searchBox()}
-      <button type="button" class="btn btn-quiet" id="reset">${esc(t("reset"))}</button>`;
+      <fieldset><legend>${esc(t("options"))}</legend>${toggle("only", t("optOnlyMapped"))}${toggle("rec", t("optRecommended"))}${toggle("drafts", t("optDrafts"))}</fieldset>
+`;
     const main = workspace(panel, "controls-main");
     bindPanel(app, (soft) => (soft ? (writeHash(), drawControls(main)) : render()));
     drawControls(main);
@@ -743,10 +747,10 @@
       toggle("rec", t("optRecommended")), toggle("repealed", t("optRepealed"))];
     if (S.scope === "core") opts.push(toggle("records", t("optRecords")));
     const panel = `${sectorChips()}
+      ${searchBox()}
       <label class="field"><span>${esc(t("srcType"))}</span><select id="type"><option value="">${esc(t("srcAllTypes"))}</option>${typeOpts}</select></label>
       <fieldset><legend>${esc(t("options"))}</legend>${opts.join("")}</fieldset>
-      ${searchBox()}
-      <button type="button" class="btn btn-quiet" id="reset">${esc(t("reset"))}</button>`;
+`;
     const main = workspace(panel, "sources-main");
     bindPanel(app, (soft) => (soft ? (writeHash(), drawSources(main)) : render()));
     drawSources(main);
@@ -1011,9 +1015,9 @@
       <fieldset><legend>${esc(t("sysBaseline"))}</legend>${radios("baseline", bases, S.baseline)}</fieldset>
       <fieldset><legend>${esc(t("sysSector"))}</legend>${sectors.length ? radios("sprofile", sectors, S.sprofile) : `<p class="hint">${esc(t("sysSectorNone"))}</p>`}</fieldset>
       ${sectorChips()}
-      <fieldset><legend>${esc(t("sysShow"))}</legend>${toggle("sb", t("sysFromBaseline"))}${toggle("sp", t("sysFromPlan"))}${toggle("sl", t("sysFromLaw"))}${toggle("drafts", t("optDrafts"))}</fieldset>
       ${searchBox()}
-      <button type="button" class="btn btn-quiet" id="reset">${esc(t("reset"))}</button>`;
+      <fieldset><legend>${esc(t("sysShow"))}</legend>${toggle("sb", t("sysFromBaseline"))}${toggle("sp", t("sysFromPlan"))}${toggle("sl", t("sysFromLaw"))}${toggle("drafts", t("optDrafts"))}</fieldset>
+`;
     const main = workspace(panel, "system-main");
     bindPanel(app, (soft) => (soft ? (writeHash(), drawSystem(main)) : render()));
     app.querySelectorAll('input[name="sprofile"]').forEach((el) => el.addEventListener("change", () => { S.sprofile = el.value; writeHash(); drawSystem(main); }));

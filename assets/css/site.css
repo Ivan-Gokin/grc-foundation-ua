@@ -495,3 +495,9 @@ a.card p { color: var(--muted); }
 .key { margin: 4px 0 8px; }
 .key > summary { cursor: pointer; color: var(--seal); font-size: .9rem; }
 .key .legend { margin: .6em 0 .4em; }
+/* filter panel: search field with a magnifier, reset next to it */
+.find { margin: -6px 0 20px; }
+.search { position: relative; display: block; }
+.search svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.search input[type="search"] { padding-left: 34px; }
+.find .btn-quiet { margin-top: 6px; font-size: .85rem; }

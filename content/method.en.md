@@ -89,14 +89,13 @@ Ukrainian requirements sit on several levels: a law instructs the Cabinet of Min
 |---|---|---|
 | Law | [Law of Ukraine "On the Basic Principles of Ensuring Cybersecurity of Ukraine"](#/sources?act=ua-law-2163-viii) | Art. 8 part 3, item 15: implementing the organisational and technical model of cyber protection is one of the ways to keep the national cybersecurity system working |
 | Cabinet resolution | [No. 1426 of 29.12.2021](#/sources?act=ua-cmu-1426-2021) "On approving the Regulation on the organisational and technical model of cyber protection" | Item 5 of the Regulation: implementing baseline cyber protection measures |
-| Regulator's order | [SSSCIP Administration Order No. 54 of 30.01.2025](#/sources?act=ua-ssscip-54-2025) "On approving the Baseline cyber protection measures and the Methodological recommendations for implementing them" | Approved the baseline measures based on NIST CSF 2.0. They concern the management system, that is the organisation's processes, not the protection of information and communication systems |
-| Replacement | [Order No. 75 of 30.01.2026](#/sources?act=ua-ssscip-75-2026) | Repealed Order No. 54; the baseline measures in force are now in it, together with the catalogue of measures and the cyber protection plan form |
+| Regulator's order | [SSSCIP Administration Order No. 75 of 30.01.2026](#/sources?act=ua-ssscip-75-2026) "On approving the Catalogue of cyber protection measures, the baseline cyber protection measures, the cyber protection plan form and the methodological recommendations for implementing cyber protection measures" | Approves the baseline measures based on NIST CSF 2.0. They concern the management system, that is the organisation's processes, not the protection of information and communication systems |
 
 What follows from this:
 
 - **The baseline measures are the minimum core of the ISMS.** The organisation adds its own requirements (from its risk assessment) and integrates other legal requirements (for example, personal data protection) and contracts.
 - **Protecting the information systems themselves is a separate level:** baseline security profiles based on NIST SP 800-53.
-- **Order No. 75 is what gets mapped**, because it is the most specific; the law and the resolution are its legal basis. The replacement of Order No. 54 shows on the "Chains" tab of [Legal sources](#/sources?scope=core&mode=chains&repealed=1).
+- **Order No. 75 is what gets mapped**, because it is the most specific; the law and the resolution are its legal basis. The whole chain shows on the "Chains" tab of [Legal sources](#/sources?scope=core&mode=chains).
 
 ## Import into GRC systems
 

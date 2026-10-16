@@ -1,5 +1,11 @@
 # Changelog
 
+## data-2026.10.9 (2026-10-17)
+
+- The Methodology's chain example now uses the order in force: law → CMU Resolution No. 1426 → SSSCIP Order No. 75/2026. The link Order 54/2025 `based_on` 1426 is removed; Order 75/2026 `based_on` 1426 is added with `confidence=medium` (item 5 of the Regulation requires the baseline measures; the order's preamble cites Resolutions No. 518 and No. 373).
+- Filter panels: the search field (a magnifier instead of the "Search" label) and "Reset filters" sit right under "Who the requirements concern".
+- Plans: a reverse mapping from the NIST SP 800-53 baseline profiles to ISMS controls, to show what can be met once at management-system level instead of in every system; GRC import listed as its own item.
+
 ## data-2026.10.8 (2026-10-17)
 
 - One licence for the whole project: data, texts and code are under CC BY 4.0 (`LICENSE` now holds its full text; `LICENSE-DATA.md` is gone, its third-party notes moved to the README). Vendored libraries and fonts keep their own licences.
