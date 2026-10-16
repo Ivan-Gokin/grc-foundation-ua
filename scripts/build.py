@@ -248,6 +248,20 @@ def write_csv(path, fields, rows):
         w.writerows(rows)
 
 
+def bust_cache(page):
+    """Add ?v=<content hash> to the page's own scripts and stylesheets, so a browser that cached the previous
+    version (GitHub Pages lets browsers keep files for 10 minutes) fetches the new ones as soon as it gets the page."""
+    import hashlib
+    import re
+    html = page.read_text(encoding="utf-8")
+
+    def stamp(m):
+        f = OUT / m.group(2)
+        v = hashlib.sha256(f.read_bytes()).hexdigest()[:10] if f.exists() else ""
+        return f'{m.group(1)}="{m.group(2)}?v={v}"' if v else m.group(0)
+    page.write_text(re.sub(r'(src|href)="(assets/[^"?]+\.(?:js|css))"', stamp, html), encoding="utf-8")
+
+
 def main():
     if OUT.exists():
         shutil.rmtree(OUT)
@@ -256,6 +270,7 @@ def main():
         src = ROOT / name
         (shutil.copytree if src.is_dir() else shutil.copy2)(src, OUT / name)
 
+    bust_cache(OUT / "index.html")
     meta = json.loads((DATA / "meta.json").read_text(encoding="utf-8"))
     sources, relations = read_csv("sources.csv"), read_csv("source_relations.csv")
     types = {r["id"]: r for r in read_csv("source_types.csv")}
