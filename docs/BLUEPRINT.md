@@ -267,7 +267,7 @@ Column headers have notes, and the columns with fixed values have drop-down list
 
 ### 4.6 Translations
 
-Ukrainian is the primary language of the data. English titles, descriptions and concerns follow; they are informal translations that still need review. Keep terminology consistent with the glossary in the guide (СУІБ = ISMS, КСЗІ = KSZI, ОКІ = critical infrastructure object).
+Ukrainian is the primary language of the data. English titles, descriptions and concerns follow; they are informal translations that still need review. Keep terminology consistent with the glossary in the guide (СУІБ = ISMS, КСЗІ = KSZI, ОКІ = critical infrastructure object). In Ukrainian, write «зацікавлені сторони» (interested parties), not «заінтересовані»; keep the original wording in official texts quoted verbatim (the CSF 2.0 translation and the baseline measures of Order No. 75/2026).
 
 ### 4.7 Copyright rules
 
@@ -280,7 +280,8 @@ Ukrainian is the primary language of the data. English titles, descriptions and 
 
 - `index.html` loads `config.js`, `i18n.js` and `app.js`, plus two libraries kept in `assets/vendor/`: PapaParse (CSV) and marked (Markdown). SheetJS (also vendored) loads only when someone exports to Excel.
 - `404.html` resolves the project's ELI addresses (`/eli/...`) to the act in the register.
-- `app.js` fetches the CSV files from `data/` (two of them built from the workbooks), builds the indexes and renders the views: **Guide**, **Controls** (the mapping table), **Legal sources** (tabs for Ukrainian law and the EU reference list, each as a list or as chains), **System level** (SP 800-53 preview), **Articles** (Markdown from `content/articles/`) and **Data**.
+- `app.js` fetches the CSV files from `data/` (two of them built from the workbooks), builds the indexes and renders the views: **Guide** (with a contents panel), **Controls** (one view for both levels: the ISMS frameworks ISO/IEC 27001 and NIST CSF 2.0, and NIST SP 800-53 for an information system), **Legal sources** (tabs for Ukrainian law and the EU reference list, each as a list or as chains), **Articles** (Markdown from `content/articles/`) and **About** (the project, data downloads, plans). Old `#/system` and `#/data` links still work.
+- Markdown conventions in `content/`: a paragraph that starts with **Мета.** / **Goal.**, **Результат.** / **Result.** or **Типові помилки** / **Common mistakes** (with the list after it) is shown as a callout; an italic-only line right under a heading is the "Covers:" line.
 - The state (language, view, sectors, framework, toggles) is kept in the URL hash, so a filtered view can be shared as a link.
 - Nothing is sent anywhere. All filtering and export happen in the browser.
 
@@ -294,7 +295,7 @@ Selection logic for the controls table:
 
 ## 6. Phase 2: system level
 
-The organisation level (ISO 27001 or CSF 2.0) says what the organisation commits to. The system level (NIST SP 800-53) is where controls are selected and parameterised for each information system. The System level view shows, for each control, where the requirement comes from. The sources are described in `data/sp800-53/profiles.csv`:
+The organisation level (ISO 27001 or CSF 2.0) says what the organisation commits to. The system level (NIST SP 800-53) is where controls are selected and parameterised for each information system. In Controls, "Information system → NIST SP 800-53" shows, for each control, where the requirement comes from. The sources are described in `data/sp800-53/profiles.csv`:
 
 | `kind` | Source | How the SP 800-53 controls are obtained |
 |---|---|---|

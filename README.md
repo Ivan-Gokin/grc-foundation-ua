@@ -23,7 +23,7 @@
 ### Як користуватися
 
 - **Сайт:** [https://ivan-gokin.github.io/grc-foundation-ua/](https://ivan-gokin.github.io/grc-foundation-ua/). Оберіть тип організації та стандарт, перегляньте заходи з правовими підставами й завантажте результат у CSV чи Excel.
-- **Дані для людей:** на сайті в розділі **Дані** є `grc-foundation-ua.xlsx` - реєстр, ланцюги і зіставлення з назвами актів, текстами вимог і назвами заходів в одній книзі.
+- **Дані для людей:** на сайті в розділі **Про проєкт** є `grc-foundation-ua.xlsx` - реєстр, ланцюги і зіставлення з назвами актів, текстами вимог і назвами заходів в одній книзі.
 - **Дані для програм:** там само - CSV (UTF-8) з описом стовпців у `datapackage.json` і метадані ELI (`eli.jsonld`), за постійними адресами `https://ivan-gokin.github.io/grc-foundation-ua/data/<файл>`.
 
 ### Склад репозиторію
@@ -90,7 +90,7 @@ The project assumes operations in Ukraine.
 ### How to use it
 
 - **Site:** [https://ivan-gokin.github.io/grc-foundation-ua/](https://ivan-gokin.github.io/grc-foundation-ua/). Pick your organisation type and framework, review controls with their legal drivers, and download the result as CSV or Excel.
-- **Data for people:** the **Data** section of the site offers `grc-foundation-ua.xlsx`: the register, the chains and the mappings with act names, requirement texts and control names in one workbook.
+- **Data for people:** the **About** section of the site offers `grc-foundation-ua.xlsx`: the register, the chains and the mappings with act names, requirement texts and control names in one workbook.
 - **Data for software:** in the same place, UTF-8 CSV files described in `datapackage.json` and ELI metadata (`eli.jsonld`), at stable addresses `https://ivan-gokin.github.io/grc-foundation-ua/data/<file>`.
 
 ### What is in the repository

@@ -1,7 +1,7 @@
 id,level,parent,sort,name_en,name_uk
 4,clause,,1,Context of the organisation,Контекст організації
 4.1,requirement,4,2,Understand internal and external issues affecting the ISMS,"Визначити внутрішні та зовнішні чинники, що впливають на СУІБ"
-4.2,requirement,4,3,"Identify interested parties and their requirements, including legal ones","Визначити заінтересовані сторони та їхні вимоги, зокрема законодавчі"
+4.2,requirement,4,3,"Identify interested parties and their requirements, including legal ones","Визначити зацікавлені сторони та їхні вимоги, зокрема законодавчі"
 4.3,requirement,4,4,Define the ISMS scope,Визначити сферу дії СУІБ
 4.4,requirement,4,5,"Establish, run, maintain and improve the ISMS","Створити, впровадити, підтримувати та вдосконалювати СУІБ"
 5,clause,,6,Leadership,Лідерство

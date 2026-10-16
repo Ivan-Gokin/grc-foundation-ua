@@ -11,7 +11,8 @@
     "provisions.csv", "mappings.csv", "frameworks.csv", "controls_iso27001-2022.csv", "controls_csf-2.0.csv",
     "sp800-53/baselines_ua.csv", "sp800-53/map_csf-2.0_sp800-53r5.csv", "sp800-53/profiles.csv",
   ];
-  const VIEWS = ["guide", "controls", "sources", "system", "articles", "data"];
+  const VIEWS = ["guide", "controls", "sources", "articles", "about"];
+  const SYSTEM_FW = "sp800-53r5"; // the system-level framework, shown inside Controls
   const ARTICLES = ["isms-policy-case-studies", "grc-systems-overview"];
   const IN_EFFECT = (st) => st === "in_force";
 
@@ -76,7 +77,8 @@
     D.provsBySource = {};
     provs.forEach((p) => (D.provsBySource[p.source_id] = D.provsBySource[p.source_id] || []).push(p));
     D.mappings = maps;
-    D.frameworks = fws.filter((f) => f.tier === "organisation").sort((a, b) => +a.sort - +b.sort);
+    D.frameworks = fws.sort((a, b) => +a.sort - +b.sort);
+    D.orgFrameworks = D.frameworks.filter((f) => f.tier === "organisation");
     D.controls = { "iso27001-2022": iso.sort((a, b) => +a.sort - +b.sort), "csf-2.0": csf.sort((a, b) => +a.sort - +b.sort) };
     D.controlById = { "iso27001-2022": by(iso), "csf-2.0": by(csf) };
     D.b53 = b53;
@@ -99,6 +101,8 @@
     const h = location.hash.replace(/^#\/?/, "");
     const [view, query] = h.split("?");
     if (VIEWS.includes(view)) S.view = view;
+    if (view === "system") { S.view = "controls"; S.fw = SYSTEM_FW; } // old links
+    if (view === "data") S.view = "about";
     const p = new URLSearchParams(query || "");
     if (p.has("lang") && I18N[p.get("lang")]) S.lang = p.get("lang");
     if (p.has("s")) S.sectors = p.get("s").split(",").filter(Boolean);
@@ -118,17 +122,17 @@
     const p = new URLSearchParams();
     p.set("lang", S.lang);
     if (S.sectors.length) p.set("s", S.sectors.join(","));
-    if (S.view === "controls") { p.set("fw", S.fw); p.set("only", S.only ? "1" : "0"); }
+    if (S.view === "controls" && S.fw !== SYSTEM_FW) { p.set("fw", S.fw); p.set("only", S.only ? "1" : "0"); }
     if (S.view === "controls" || S.view === "sources") { p.set("rec", S.rec ? "1" : "0"); }
-    if (S.view === "controls") p.set("drafts", S.drafts ? "1" : "0");
+    if (S.view === "controls" && S.fw !== SYSTEM_FW) p.set("drafts", S.drafts ? "1" : "0");
     if (S.view === "sources") {
       p.set("scope", S.scope); p.set("mode", S.mode);
       ["repealed", "context", "pending", "records"].forEach((k) => p.set(k, S[k] ? "1" : "0"));
       if (S.type) p.set("type", S.type);
     }
     if (S.view === "articles" && S.article) p.set("a", S.article);
-    if (S.view === "system") { p.set("b", S.baseline); if (S.sprofile !== "none") p.set("gp", S.sprofile); ["sb", "sp", "sl", "drafts"].forEach((k) => p.set(k, S[k] ? "1" : "0")); }
-    if (S.q && (S.view === "controls" || S.view === "sources" || S.view === "system")) p.set("q", S.q);
+    if (S.view === "controls" && S.fw === SYSTEM_FW) { p.set("fw", S.fw); p.set("b", S.baseline); if (S.sprofile !== "none") p.set("gp", S.sprofile); ["sb", "sp", "sl", "drafts"].forEach((k) => p.set(k, S[k] ? "1" : "0")); }
+    if (S.q && (S.view === "controls" || S.view === "sources")) p.set("q", S.q);
     const next = `#/${S.view}?${p.toString()}`;
     if (location.hash !== next) history.replaceState(null, "", next);
   }
@@ -209,7 +213,7 @@
   function renderShell() {
     document.documentElement.lang = S.lang === "uk" ? "uk" : "en";
     document.title = `${t("siteName")}: ${t("siteSub")}`;
-    const nav = [["guide", "navGuide"], ["controls", "navControls"], ["sources", "navSources"], ["system", "navSystem"], ["articles", "navArticles"], ["data", "navData"]]
+    const nav = [["guide", "navGuide"], ["controls", "navControls"], ["sources", "navSources"], ["articles", "navArticles"], ["about", "navAbout"]]
       .map(([v, k]) => `<a href="#/${v}" data-view="${v}" ${S.view === v ? 'aria-current="page"' : ""}>${esc(t(k))}</a>`).join("");
     document.getElementById("header").innerHTML = `
       <div class="brand"><a href="#/guide" class="brand-name">${esc(t("siteName"))}</a><span class="brand-sub">${esc(t("siteSub"))}</span></div>
@@ -225,7 +229,7 @@
   function render() {
     renderShell();
     writeHash();
-    ({ guide: renderGuide, controls: renderControls, sources: renderSources, system: renderSystem, articles: renderArticles, data: renderData })[S.view]();
+    ({ guide: renderGuide, controls: renderControls, sources: renderSources, articles: renderArticles, about: renderAbout })[S.view]();
   }
 
   // ------------------------------------------------------------------ filter panel (shared)
@@ -276,7 +280,9 @@
 
   // ------------------------------------------------------------------ guide
   async function renderGuide() {
-    app.innerHTML = `<article class="guide"><div id="hero"></div><div class="prose" id="guide-text"><p class="hint">${esc(t("loading"))}</p></div></article>`;
+    app.innerHTML = `<article class="guide"><div id="hero"></div><div class="guide-body">
+      <details class="toc" id="toc" open><summary>${esc(t("tocTitle"))}</summary><nav aria-label="${esc(t("tocTitle"))}"></nav></details>
+      <div class="prose" id="guide-text"><p class="hint">${esc(t("loading"))}</p></div></div></article>`;
     renderHero(document.getElementById("hero"));
     const key = S.lang;
     if (!guideCache[key]) {
@@ -290,6 +296,7 @@
     renderMarkdown(el, guideCache[key]);
     const legend = el.querySelector("#legend");
     if (legend) legend.outerHTML = relLegend();
+    buildToc(document.getElementById("toc"), el);
   }
   function renderHero(el) {
     const ex = CFG.heroExample || {};
@@ -318,10 +325,16 @@
   }
 
   // ------------------------------------------------------------------ controls
+  // One view for both levels: the ISMS frameworks (organisation) and SP 800-53 (information system).
+  function fwPicker() {
+    const radio = (f) => `<label class="radio"><input type="radio" name="fw" value="${esc(f.id)}" ${S.fw === f.id ? "checked" : ""}><span>${esc(fwLabel(f))}</span></label>`;
+    const group = (tier, label) => `<p class="fw-group">${esc(label)}</p>${D.frameworks.filter((f) => f.tier === tier).map(radio).join("")}`;
+    return `<fieldset><legend>${esc(t("framework"))}</legend>${group("organisation", t("fwGroupIsms"))}${group("system", t("fwGroupSystem"))}</fieldset>`;
+  }
   function renderControls() {
+    if (S.fw === SYSTEM_FW) return renderSystem();
     if (!D.controls[S.fw]) S.fw = "iso27001-2022";
-    const fwRadios = D.frameworks.map((f) => `<label class="radio"><input type="radio" name="fw" value="${esc(f.id)}" ${S.fw === f.id ? "checked" : ""}><span>${esc(fwLabel(f))}</span></label>`).join("");
-    const panel = `<fieldset><legend>${esc(t("framework"))}</legend>${fwRadios}</fieldset>
+    const panel = `${fwPicker()}
       ${sectorChips()}
       <fieldset><legend>${esc(t("options"))}</legend>${toggle("only", t("optOnlyMapped"))}${toggle("rec", t("optRecommended"))}${toggle("drafts", t("optDrafts"))}</fieldset>
       ${searchBox()}
@@ -427,7 +440,7 @@
   }
 
   function otherFwHint() {
-    const other = D.frameworks.find((f) => f.id !== S.fw);
+    const other = D.orgFrameworks.find((f) => f.id !== S.fw);
     if (!other) return "";
     const n = Object.keys(driversFor(other.id, expandedSectors(), S.drafts)).length;
     return n ? `<p><button type="button" class="btn" id="switch-fw" data-fw="${esc(other.id)}">${esc(fmt(t("switchFw"), fwLabel(other), n))}</button></p>` : "";
@@ -750,8 +763,55 @@
   }
 
   // Markdown with heading ids (GitHub style) and in-page links that scroll instead of routing
+  // Contents panel for the guide: h2/h3 links, the current section highlighted while scrolling.
+  let tocObserver = null;
+  function buildToc(box, el) {
+    if (!box) return;
+    const heads = [...el.querySelectorAll("h2, h3")];
+    box.querySelector("nav").innerHTML = `<ul>${heads.map((h) => `<li class="l${h.tagName[1]}"><a href="#${esc(h.id)}">${esc(h.textContent)}</a></li>`).join("")}</ul>`;
+    const narrow = window.matchMedia("(max-width: 900px)").matches;
+    box.open = !narrow;
+    box.querySelectorAll("a").forEach((a) => a.addEventListener("click", (e) => {
+      e.preventDefault();
+      const target = document.getElementById(decodeURIComponent(a.getAttribute("href").slice(1)));
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (window.matchMedia("(max-width: 900px)").matches) box.open = false;
+    }));
+    if (tocObserver) tocObserver.disconnect();
+    if (!("IntersectionObserver" in window)) return;
+    const links = Object.fromEntries([...box.querySelectorAll("a")].map((a) => [decodeURIComponent(a.getAttribute("href").slice(1)), a]));
+    tocObserver = new IntersectionObserver((entries) => {
+      const seen = entries.filter((x) => x.isIntersecting).map((x) => x.target);
+      if (!seen.length) return;
+      Object.values(links).forEach((a) => a.removeAttribute("aria-current"));
+      const a = links[seen[0].id];
+      if (a) { a.setAttribute("aria-current", "true"); if (!narrow) a.scrollIntoView({ block: "nearest" }); }
+    }, { rootMargin: "-90px 0px -70% 0px" });
+    heads.forEach((h) => tocObserver.observe(h));
+  }
+
+  // Markdown with a few conventions: a paragraph starting with **Мета.** / **Goal.**, **Результат.** / **Result.**
+  // or **Типові помилки** / **Common mistakes** (plus the list after it) becomes a callout; a paragraph that is
+  // only *italic* text under a heading is the "Covers:" line.
+  const CALLOUTS = [[/^(Мета|Goal)\.?$/, "goal"], [/^(Результат|Result)\.?$/, "result"], [/^(Типові помилки|Common mistakes)\.?$/, "pitfalls"]];
   function renderMarkdown(el, md) {
     el.innerHTML = marked.parse(md);
+    el.querySelectorAll("p > strong:first-child").forEach((st) => {
+      const p = st.parentElement;
+      if (p.firstChild !== st) return;
+      const hit = CALLOUTS.find(([re]) => re.test(st.textContent.trim()));
+      if (!hit) return;
+      const box = document.createElement("div");
+      box.className = `callout callout-${hit[1]}`;
+      p.replaceWith(box);
+      box.appendChild(p);
+      const next = box.nextElementSibling;
+      if (hit[1] === "pitfalls" && next && /^(UL|OL)$/.test(next.tagName)) box.appendChild(next);
+    });
+    el.querySelectorAll("p").forEach((p) => {
+      const only = p.children.length === 1 && p.firstElementChild.tagName === "EM" && p.textContent.trim() === p.firstElementChild.textContent.trim();
+      if (only && /^H[2-4]$/.test((p.previousElementSibling || {}).tagName || "")) p.classList.add("step-refs");
+    });
     el.querySelectorAll("h1, h2, h3, h4").forEach((h) => { if (!h.id) h.id = slugify(h.textContent); });
     el.querySelectorAll("table").forEach((tb) => { const w = document.createElement("div"); w.className = "table-wrap"; tb.replaceWith(w); w.appendChild(tb); });
     el.querySelectorAll('a[href^="#"]:not([href^="#/"])').forEach((a) => a.addEventListener("click", (e) => {
@@ -775,11 +835,13 @@
     const bases = profilesOf("baseline"), sectors = profilesOf("sector");
     if (!bases.some((p) => p.id === S.baseline)) S.baseline = "none";
     if (!sectors.some((p) => p.id === S.sprofile)) S.sprofile = "none";
-    const panel = `<fieldset><legend>${esc(t("sysBaseline"))}</legend>${radios("baseline", bases, S.baseline)}</fieldset>
+    const panel = `${fwPicker()}
+      <fieldset><legend>${esc(t("sysBaseline"))}</legend>${radios("baseline", bases, S.baseline)}</fieldset>
       <fieldset><legend>${esc(t("sysSector"))}</legend>${sectors.length ? radios("sprofile", sectors, S.sprofile) : `<p class="hint">${esc(t("sysSectorNone"))}</p>`}</fieldset>
       ${sectorChips()}
       <fieldset><legend>${esc(t("sysShow"))}</legend>${toggle("sb", t("sysFromBaseline"))}${toggle("sp", t("sysFromPlan"))}${toggle("sl", t("sysFromLaw"))}${toggle("drafts", t("optDrafts"))}</fieldset>
-      ${searchBox()}`;
+      ${searchBox()}
+      <button type="button" class="btn btn-quiet" id="reset">${esc(t("reset"))}</button>`;
     const main = workspace(panel, "system-main");
     bindPanel(app, (soft) => (soft ? (writeHash(), drawSystem(main)) : render()));
     app.querySelectorAll('input[name="sprofile"]').forEach((el) => el.addEventListener("change", () => { S.sprofile = el.value; writeHash(); drawSystem(main); }));
@@ -856,7 +918,7 @@
   }
 
   // ------------------------------------------------------------------ data
-  function renderData() {
+  function renderAbout() {
     const repo = (CFG.repoUrl || "").replace(/\/$/, "");
     const blob = (p) => `${repo}/blob/${CFG.branch || "main"}/${p}`;
     const tree = (p) => `${repo}/${/\.[a-z]+$/.test(p) ? "blob" : "tree"}/${CFG.branch || "main"}/${p}`;
@@ -870,15 +932,24 @@
         ${D.rowCounts[r.path] != null ? `<span class="muted small">${esc(fmt(t("dataRows"), D.rowCounts[r.path]))}</span>` : ""}
         <p>${esc(r.description || "")}</p>
         <p class="file-links">${view(r)}<a href="data/${esc(r.path)}" download>${esc(t("dataRaw"))}</a></p></li>`).join("");
+    const plans = (t("plans") || []).map(([h, d]) => `<li><b>${esc(h)}</b> ${esc(d)}</li>`).join("");
     app.innerHTML = `<article class="page">
-      <h1>${esc(t("navData"))}</h1>
-      <p class="lead-sm">${esc(t("dataIntro"))}</p>
+      <h1>${esc(t("navAbout"))}</h1>
+      <p class="lead-sm">${esc(t("aboutLead"))}</p>
       ${D.meta ? `<p class="summary">${esc(fmt(t("dataVersion"), D.meta.version, D.meta.date))} ${esc(S.lang === "uk" ? D.meta.note_uk : D.meta.note_en)}</p>` : ""}
-      <p><a href="${esc(blob(S.lang === "uk" ? "docs/BLUEPRINT.uk.md" : "docs/BLUEPRINT.md"))}" target="_blank" rel="noopener">${esc(t("dataBlueprint"))}</a></p>
-      <section class="readable"><h2>${esc(t("dataReadableTitle"))}</h2><p>${esc(t("dataReadable"))}</p>
+      <p class="about-links"><a href="${esc(blob(S.lang === "uk" ? "docs/BLUEPRINT.uk.md" : "docs/BLUEPRINT.md"))}" target="_blank" rel="noopener">${esc(t("dataBlueprint"))}</a>
+        <a href="${esc(repo)}" target="_blank" rel="noopener">${esc(t("aboutRepo"))}</a>
+        <a href="${esc(blob("CHANGELOG.md"))}" target="_blank" rel="noopener">${esc(t("aboutChangelog"))}</a>
+        <a href="https://www.linkedin.com/in/ivan-gokin-2ba0a4136/" target="_blank" rel="noopener">${esc(t("aboutContact"))}</a></p>
+      <h2>${esc(t("navData"))}</h2>
+      <p>${esc(t("dataIntro"))}</p>
+      <section class="readable"><h3>${esc(t("dataReadableTitle"))}</h3><p>${esc(t("dataReadable"))}</p>
         <p><a class="btn btn-primary" href="data/grc-foundation-ua.xlsx" download>${esc(t("dataReadableBtn"))}</a></p></section>
-      <h2>${esc(t("dataMachineTitle"))}</h2><p>${esc(t("dataMachine"))}</p>
-      <ul class="files">${items}</ul>
+      <details class="machine"><summary><h3>${esc(t("dataMachineTitle"))}</h3></summary><p>${esc(t("dataMachine"))}</p>
+        <ul class="files">${items}</ul></details>
+      <h2>${esc(t("plansTitle"))}</h2>
+      <p>${esc(t("plansIntro"))}</p>
+      <ul class="plans">${plans}</ul>
       <h2>${esc(t("dataLegend"))}</h2>${relLegend()}</article>`;
   }
 

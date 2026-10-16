@@ -1,5 +1,12 @@
 # Changelog
 
+## data-2026.10.6 (2026-10-16)
+
+- The System level view is merged into Controls: the control set picker has two groups, "Management system (ISMS)" with ISO/IEC 27001 and NIST CSF 2.0, and "Information system" with NIST SP 800-53. Old `#/system` links open it there.
+- "Data" is now "About": what the project is, links (blueprint, repository, change history, contact), the readable workbook, the machine-readable files (collapsed) and a list of plans: reviewing the AI mappings, monitoring new publications, a "Latest changes" page, diagrams, sector profiles, SP 800-53 to ISO 27001 and OSCAL.
+- Guide: a contents panel on the left with the current section highlighted (collapsible on phones); text restructured into shorter blocks, tables and goal / result / common-mistakes callouts, in both languages. Tables in the guide scroll sideways on phones instead of breaking words.
+- Terminology: «зацікавлені сторони» instead of «заінтересовані» in the project's own texts (guide, ISO 27001 labels); quotations of the official CSF 2.0 translation and of Order No. 75/2026 keep the original wording.
+
 ## data-2026.10.5 (2026-10-16)
 
 - System level reworked: each SP 800-53 control shows where the requirement comes from: the baseline security profile (SSSCIP Orders No. 409/2025, 419/2025, 843/2025, with parameters), the cyber protection plan (baseline measures of Order No. 75/2026, by object category), or CSF and legislation (CSF subcategories required by other acts). Sector security profiles have a place in the view and the data model (`kind=sector`) but none is approved yet.
