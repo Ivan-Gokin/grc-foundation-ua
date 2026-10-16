@@ -1,0 +1,130 @@
+id,level,parent,sort,name_en,name_uk
+4,clause,,1,Context of the organisation,Контекст організації
+4.1,requirement,4,2,Understand internal and external issues affecting the ISMS,"Визначити внутрішні та зовнішні чинники, що впливають на СУІБ"
+4.2,requirement,4,3,"Identify interested parties and their requirements, including legal ones","Визначити заінтересовані сторони та їхні вимоги, зокрема законодавчі"
+4.3,requirement,4,4,Define the ISMS scope,Визначити сферу дії СУІБ
+4.4,requirement,4,5,"Establish, run, maintain and improve the ISMS","Створити, впровадити, підтримувати та вдосконалювати СУІБ"
+5,clause,,6,Leadership,Лідерство
+5.1,requirement,5,7,Top management commitment to the ISMS,Залученість вищого керівництва до СУІБ
+5.2,requirement,5,8,Top-level information security policy,Політика інформаційної безпеки верхнього рівня
+5.3,requirement,5,9,"Assign security roles, responsibilities and authorities","Призначити ролі, обов’язки та повноваження з безпеки"
+6,clause,,10,Planning,Планування
+6.1.1,requirement,6,11,Plan actions on risks and opportunities,Планувати дії щодо ризиків і можливостей
+6.1.2,requirement,6,12,Information security risk assessment process,Процес оцінювання ризиків інформаційної безпеки
+6.1.3,requirement,6,13,Risk treatment process and Statement of Applicability,Процес обробки ризиків і Положення про застосовність
+6.2,requirement,6,14,Security objectives and plans to achieve them,Цілі безпеки та плани їх досягнення
+6.3,requirement,6,15,Plan changes to the ISMS,Планувати зміни в СУІБ
+7,clause,,16,Support,Забезпечення
+7.1,requirement,7,17,Provide resources for the ISMS,Забезпечити ресурси для СУІБ
+7.2,requirement,7,18,Ensure competence of people,Забезпечити компетентність персоналу
+7.3,requirement,7,19,Ensure awareness of the policy and individual role,Забезпечити обізнаність із політикою та власною роллю
+7.4,requirement,7,20,Internal and external ISMS communication,Внутрішні та зовнішні комунікації СУІБ
+7.5,requirement,7,21,Create and control documented information,Створювати та контролювати документовану інформацію
+8,clause,,22,Operation,Функціонування
+8.1,requirement,8,23,Plan and control ISMS operations,Планувати та контролювати процеси СУІБ
+8.2,requirement,8,24,Perform risk assessments at planned intervals,Проводити оцінювання ризиків із запланованою періодичністю
+8.3,requirement,8,25,Implement the risk treatment plan,Виконувати план обробки ризиків
+9,clause,,26,Performance evaluation,Оцінювання результативності
+9.1,requirement,9,27,"Monitor, measure, analyse and evaluate","Моніторинг, вимірювання, аналіз та оцінювання"
+9.2,requirement,9,28,Internal audit programme,Програма внутрішніх аудитів
+9.3,requirement,9,29,Management review of the ISMS,Аналізування СУІБ керівництвом
+10,clause,,30,Improvement,Удосконалення
+10.1,requirement,10,31,Continually improve the ISMS,Постійно вдосконалювати СУІБ
+10.2,requirement,10,32,Handle nonconformities with corrective action,Усувати невідповідності коригувальними діями
+A.5,theme,,33,Organisational controls,Організаційні заходи
+A.5.1,control,A.5,34,"Set, approve, publish and review security policies","Розробити, затвердити, оприлюднити та переглядати політики безпеки"
+A.5.2,control,A.5,35,Define and assign security roles and responsibilities,Визначити й розподілити ролі та обов’язки з безпеки
+A.5.3,control,A.5,36,Separate conflicting duties,Розділяти несумісні обов’язки
+A.5.4,control,A.5,37,Management requires staff to apply security,Керівництво вимагає від персоналу дотримання безпеки
+A.5.5,control,A.5,38,Maintain contacts with authorities,Підтримувати контакти з органами влади
+A.5.6,control,A.5,39,Maintain contacts with special interest groups,Підтримувати контакти з професійними спільнотами
+A.5.7,control,A.5,40,Collect and analyse threat intelligence,Збирати та аналізувати розвідувальні дані про загрози
+A.5.8,control,A.5,41,Build security into project management,Враховувати безпеку в управлінні проєктами
+A.5.9,control,A.5,42,Keep an inventory of information and associated assets,Вести реєстр інформації та пов’язаних активів
+A.5.10,control,A.5,43,Rules for acceptable use of information and assets,Правила допустимого використання інформації та активів
+A.5.11,control,A.5,44,Return of assets on change or termination,Повернення активів у разі зміни чи припинення роботи
+A.5.12,control,A.5,45,Classify information by protection needs,Класифікувати інформацію за потребами в захисті
+A.5.13,control,A.5,46,Label information according to its classification,Маркувати інформацію відповідно до класифікації
+A.5.14,control,A.5,47,Protect information during transfer,Захищати інформацію під час передавання
+A.5.15,control,A.5,48,Access control rules,Правила контролю доступу
+A.5.16,control,A.5,49,Manage the full lifecycle of identities,Керувати повним життєвим циклом ідентифікаторів
+A.5.17,control,A.5,50,Allocate and manage authentication information,Видавати та керувати автентифікаційною інформацією
+A.5.18,control,A.5,51,"Grant, review, change and remove access rights","Надавати, переглядати, змінювати та відкликати права доступу"
+A.5.19,control,A.5,52,Manage security risks of supplier relationships,Керувати ризиками безпеки у відносинах із постачальниками
+A.5.20,control,A.5,53,Include security requirements in supplier agreements,Включати вимоги безпеки в договори з постачальниками
+A.5.21,control,A.5,54,Manage security in the ICT supply chain,Керувати безпекою ланцюга постачання ІКТ
+A.5.22,control,A.5,55,Monitor and review supplier services and changes,Моніторити та переглядати послуги постачальників і зміни в них
+A.5.23,control,A.5,56,Security for the use of cloud services,Безпека використання хмарних послуг
+A.5.24,control,A.5,57,Plan and prepare incident management,Планувати та готувати управління інцидентами
+A.5.25,control,A.5,58,Assess and decide on security events,Оцінювати події безпеки та ухвалювати рішення щодо них
+A.5.26,control,A.5,59,Respond to security incidents,Реагувати на інциденти безпеки
+A.5.27,control,A.5,60,Learn from security incidents,Робити висновки з інцидентів безпеки
+A.5.28,control,A.5,61,Collect and preserve evidence,Збирати та зберігати докази
+A.5.29,control,A.5,62,Maintain security during disruption,Підтримувати безпеку під час збоїв
+A.5.30,control,A.5,63,ICT readiness for business continuity,Готовність ІКТ до забезпечення безперервності діяльності
+A.5.31,control,A.5,64,"Identify legal, regulatory and contractual requirements","Визначити законодавчі, регуляторні та договірні вимоги"
+A.5.32,control,A.5,65,Protect intellectual property rights,Захищати права інтелектуальної власності
+A.5.33,control,A.5,66,Protect records,Захищати записи
+A.5.34,control,A.5,67,Privacy and protection of personal data,Конфіденційність і захист персональних даних
+A.5.35,control,A.5,68,Independent review of information security,Незалежний аналіз інформаційної безпеки
+A.5.36,control,A.5,69,Check compliance with policies and standards,Перевіряти дотримання політик і стандартів
+A.5.37,control,A.5,70,Document operating procedures,Документувати операційні процедури
+A.6,theme,,71,People controls,Заходи щодо персоналу
+A.6.1,control,A.6,72,Background verification of candidates,Перевірка кандидатів перед прийняттям на роботу
+A.6.2,control,A.6,73,Security responsibilities in employment terms,Обов’язки з безпеки в умовах трудового договору
+A.6.3,control,A.6,74,"Security awareness, education and training","Обізнаність, освіта та навчання з безпеки"
+A.6.4,control,A.6,75,Disciplinary process for violations,Дисциплінарний процес за порушення
+A.6.5,control,A.6,76,Responsibilities after termination or change of employment,Обов’язки після звільнення або зміни посади
+A.6.6,control,A.6,77,Confidentiality or non-disclosure agreements,Угоди про конфіденційність або нерозголошення
+A.6.7,control,A.6,78,Security for remote working,Безпека віддаленої роботи
+A.6.8,control,A.6,79,Reporting of security events by staff,Повідомлення персоналом про події безпеки
+A.7,theme,,80,Physical controls,Фізичні заходи
+A.7.1,control,A.7,81,Define physical security perimeters,Визначити периметри фізичної безпеки
+A.7.2,control,A.7,82,Control physical entry,Контролювати фізичний доступ
+A.7.3,control,A.7,83,"Secure offices, rooms and facilities","Захистити офіси, кімнати та приміщення"
+A.7.4,control,A.7,84,Monitor physical security,Моніторити фізичну безпеку
+A.7.5,control,A.7,85,Protect against physical and environmental threats,Захищати від фізичних та екологічних загроз
+A.7.6,control,A.7,86,Rules for working in secure areas,Правила роботи в захищених зонах
+A.7.7,control,A.7,87,Clear desk and clear screen,Чистий стіл і чистий екран
+A.7.8,control,A.7,88,Site and protect equipment,Розміщувати та захищати обладнання
+A.7.9,control,A.7,89,Protect assets off-premises,Захищати активи поза приміщеннями організації
+A.7.10,control,A.7,90,Manage storage media through their lifecycle,Керувати носіями інформації протягом життєвого циклу
+A.7.11,control,A.7,91,Protect supporting utilities,Захищати допоміжні інженерні системи
+A.7.12,control,A.7,92,Protect cabling,Захищати кабельні мережі
+A.7.13,control,A.7,93,Maintain equipment,Обслуговувати обладнання
+A.7.14,control,A.7,94,Secure disposal or re-use of equipment,Безпечна утилізація або повторне використання обладнання
+A.8,theme,,95,Technological controls,Технологічні заходи
+A.8.1,control,A.8,96,Protect user endpoint devices,Захищати кінцеві пристрої користувачів
+A.8.2,control,A.8,97,Restrict and manage privileged access,Обмежувати та контролювати привілейований доступ
+A.8.3,control,A.8,98,Restrict access to information,Обмежувати доступ до інформації
+A.8.4,control,A.8,99,Control access to source code,Контролювати доступ до вихідного коду
+A.8.5,control,A.8,100,Secure authentication mechanisms,Безпечні механізми автентифікації
+A.8.6,control,A.8,101,Plan and monitor capacity,Планувати та моніторити потужності
+A.8.7,control,A.8,102,Protect against malware,Захищати від шкідливого програмного забезпечення
+A.8.8,control,A.8,103,Manage technical vulnerabilities,Керувати технічними вразливостями
+A.8.9,control,A.8,104,Manage configurations,Керувати конфігураціями
+A.8.10,control,A.8,105,Delete information no longer needed,"Видаляти інформацію, яка більше не потрібна"
+A.8.11,control,A.8,106,Mask data,Маскувати дані
+A.8.12,control,A.8,107,Prevent data leakage,Запобігати витоку даних
+A.8.13,control,A.8,108,Back up information and systems,Резервно копіювати інформацію та системи
+A.8.14,control,A.8,109,Provide redundancy of processing facilities,Забезпечити резервування засобів обробки
+A.8.15,control,A.8,110,Produce and protect logs,Формувати та захищати журнали подій
+A.8.16,control,A.8,111,Monitor for anomalous behaviour,Моніторити аномальну поведінку
+A.8.17,control,A.8,112,Synchronise clocks,Синхронізувати час
+A.8.18,control,A.8,113,Control use of privileged utility programs,Контролювати використання привілейованих утиліт
+A.8.19,control,A.8,114,Control software installation on operational systems,Контролювати встановлення ПЗ в робочих системах
+A.8.20,control,A.8,115,Secure networks,Захищати мережі
+A.8.21,control,A.8,116,Secure network services,Захищати мережеві сервіси
+A.8.22,control,A.8,117,Segregate networks,Сегментувати мережі
+A.8.23,control,A.8,118,Filter web access,Фільтрувати вебдоступ
+A.8.24,control,A.8,119,Rules for using cryptography,Правила використання криптографії
+A.8.25,control,A.8,120,Secure development lifecycle,Безпечний життєвий цикл розроблення
+A.8.26,control,A.8,121,Define application security requirements,Визначати вимоги безпеки до застосунків
+A.8.27,control,A.8,122,Secure architecture and engineering principles,Принципи безпечної архітектури та інженерії
+A.8.28,control,A.8,123,Secure coding,Безпечне програмування
+A.8.29,control,A.8,124,Security testing in development and acceptance,Тестування безпеки під час розроблення та приймання
+A.8.30,control,A.8,125,Oversee outsourced development,Наглядати за аутсорсинговим розробленням
+A.8.31,control,A.8,126,"Separate development, test and production","Розділяти середовища розроблення, тестування та експлуатації"
+A.8.32,control,A.8,127,Manage changes,Керувати змінами
+A.8.33,control,A.8,128,Protect test information,Захищати тестові дані
+A.8.34,control,A.8,129,Protect systems during audit testing,Захищати системи під час аудиторського тестування

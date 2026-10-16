@@ -1,0 +1,5 @@
+id,sort,label_uk,label_en
+status,0,Правовий статус,Legal status
+info,1,"Інформація, яку ви обробляєте",Information you process
+industry,2,Галузь або послуга,Sector or service
+supply,3,Постачальники та надавачі послуг,Suppliers and service providers
