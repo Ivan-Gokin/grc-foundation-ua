@@ -214,6 +214,8 @@
       <nav class="nav" aria-label="${esc(t("siteName"))}">${nav}</nav>
       <button class="lang" type="button" id="lang" aria-label="${esc(t("langSwitchLabel"))}">${esc(t("langSwitch"))}</button>`;
     document.getElementById("lang").onclick = () => { S.lang = S.lang === "uk" ? "en" : "uk"; store.set("grc-lang", S.lang); render(); };
+    const pv = document.getElementById("preview");
+    if (pv) { pv.hidden = !CFG.preview; pv.textContent = CFG.preview ? t("previewBanner") : ""; }
     const meta = D.meta ? fmt(t("dataVersion"), D.meta.version, D.meta.date) : "";
     document.getElementById("footer").innerHTML = `<p>${esc(t("footer"))} ${esc(meta)}</p>`;
   }

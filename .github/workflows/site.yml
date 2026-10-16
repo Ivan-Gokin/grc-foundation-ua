@@ -28,6 +28,13 @@ jobs:
         run: python3 scripts/validate.py --stats
       - name: Build the site into _site/
         run: python3 scripts/build.py
+      # The built site is kept with every run (Actions -> the run -> Artifacts -> site), so it can be
+      # downloaded and opened locally even while the repository is private and Pages is off.
+      - uses: actions/upload-artifact@v7
+        with:
+          name: site
+          path: _site
+          retention-days: 30
       - if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v6
       - if: github.event_name != 'pull_request'

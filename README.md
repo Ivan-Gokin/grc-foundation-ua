@@ -46,6 +46,8 @@
 4. Відкрийте вкладку **Actions** і, якщо перший запуск ще не відбувся або впав до вмикання Pages, запустіть **Check and publish** вручну (Run workflow). За кілька хвилин сайт з'явиться за адресою https://ivan-gokin.github.io/grc-foundation-ua/.
 5. Далі кожна зміна в `main` перевіряється й публікується автоматично; pull request лише перевіряється.
 
+**Попередній режим.** Поки дані вичитуються, сайт закрито від пошукових систем (`<meta name="robots" content="noindex">` в `index.html`), а вгорі кожної сторінки є смуга «Попередня версія». Коли дані буде перевірено, видаліть цей рядок з `index.html` і поставте `preview: false` в `assets/js/config.js`. Зібраний сайт зберігається з кожним запуском (Actions → запуск → Artifacts → `site`), тож його можна завантажити й переглянути локально, навіть коли репозиторій приватний.
+
 Локально: `pip install openpyxl`, потім `python3 scripts/validate.py --stats`, `python3 scripts/build.py` і `python3 -m http.server 8000 -d _site` (відкрийте `http://localhost:8000`).
 
 ### Як оновити зіставлення
@@ -110,6 +112,8 @@ Generated files (`provisions.csv`, `mappings.csv`, `eli.jsonld`, `grc-foundation
 3. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
 4. Open the **Actions** tab and, if the first run has not happened yet or failed before Pages was switched on, run **Check and publish** by hand (Run workflow). In a few minutes the site is live at https://ivan-gokin.github.io/grc-foundation-ua/.
 5. From then on every change to `main` is checked and published automatically; pull requests are only checked.
+
+**Preview mode.** While the data is being reviewed, the site is closed to search engines (`<meta name="robots" content="noindex">` in `index.html`) and every page shows a "Preview" banner. When the data is reviewed, delete that line from `index.html` and set `preview: false` in `assets/js/config.js`. The built site is kept with every run (Actions → the run → Artifacts → `site`), so it can be downloaded and viewed locally even while the repository is private.
 
 Locally: `pip install openpyxl`, then `python3 scripts/validate.py --stats`, `python3 scripts/build.py` and `python3 -m http.server 8000 -d _site` (open `http://localhost:8000`).
 
