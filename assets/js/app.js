@@ -11,18 +11,23 @@
     "provisions.csv", "mappings.csv", "frameworks.csv", "controls_iso27001-2022.csv", "controls_csf-2.0.csv",
     "sp800-53/baselines_ua.csv", "sp800-53/map_csf-2.0_sp800-53r5.csv", "sp800-53/profiles.csv",
   ];
-  const VIEWS = ["guide", "controls", "sources", "articles", "about"];
+  const VIEWS = ["home", "start", "guide", "controls", "sources", "method", "articles", "about"];
   const SYSTEM_FW = "sp800-53r5"; // the system-level framework, shown inside Controls
   const ARTICLES = ["isms-policy-case-studies", "grc-systems-overview"];
+  // Guide chapters: content/guide/<id>.<lang>.md, grouped by stage in the menu and the side panel
+  const CHAPTERS = [
+    ["roles", "1"], ["context", "1"], ["requirements", "1"], ["standard", "1"], ["soa", "1"], ["ims", "1"],
+    ["compliance", "2"], ["risk", "3"], ["glossary", "ref"],
+  ].map(([id, stage]) => ({ id, stage }));
   const IN_EFFECT = (st) => st === "in_force";
 
   const D = {}; // indexes
   const S = {   // state (mirrored in the URL hash)
-    lang: null, view: "guide", sectors: [], fw: "iso27001-2022", only: true, rec: true, drafts: true,
+    lang: null, view: "home", chapter: "roles", anchor: "", sectors: [], fw: "iso27001-2022", only: true, rec: true, drafts: true,
     repealed: false, context: false, q: "", type: "", baseline: "open", sprofile: "none", sb: true, sp: true, sl: true,
     scope: "core", mode: "list", pending: false, records: false, article: "",
   };
-  const guideCache = {};
+  const mdCache = {};
   const slugify = (text) => text.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, "").replace(/\s/g, "-");
   const app = document.getElementById("app");
 
@@ -98,11 +103,12 @@
   // ------------------------------------------------------------------ state <-> URL
   function readHash() {
     if (location.hash && !location.hash.startsWith("#/")) return false; // in-page anchor
-    const h = location.hash.replace(/^#\/?/, "");
-    const [view, query] = h.split("?");
-    if (VIEWS.includes(view)) S.view = view;
+    const [route, anchor] = location.hash.replace(/^#\/?/, "").split("#");
+    const [view, query] = route.split("?");
+    S.view = VIEWS.includes(view) ? view : "home";
     if (view === "system") { S.view = "controls"; S.fw = SYSTEM_FW; } // old links
     if (view === "data") S.view = "about";
+    try { S.anchor = anchor ? decodeURIComponent(anchor) : ""; } catch (e) { S.anchor = ""; }
     const p = new URLSearchParams(query || "");
     if (p.has("lang") && I18N[p.get("lang")]) S.lang = p.get("lang");
     if (p.has("s")) S.sectors = p.get("s").split(",").filter(Boolean);
@@ -115,6 +121,7 @@
     if (p.has("scope")) S.scope = p.get("scope") === "reference" ? "reference" : "core";
     if (p.has("mode")) S.mode = p.get("mode") === "chains" ? "chains" : "list";
     S.article = ARTICLES.includes(p.get("a")) ? p.get("a") : "";
+    S.chapter = CHAPTERS.some((c) => c.id === p.get("c")) ? p.get("c") : CHAPTERS[0].id;
     S.act = p.get("act") || ""; // an ELI or id, e.g. from an /eli/... link resolved by 404.html
     return true;
   }
@@ -131,6 +138,7 @@
       if (S.type) p.set("type", S.type);
     }
     if (S.view === "articles" && S.article) p.set("a", S.article);
+    if (S.view === "guide") p.set("c", S.chapter);
     if (S.view === "controls" && S.fw === SYSTEM_FW) { p.set("fw", S.fw); p.set("b", S.baseline); if (S.sprofile !== "none") p.set("gp", S.sprofile); ["sb", "sp", "sl", "drafts"].forEach((k) => p.set(k, S[k] ? "1" : "0")); }
     if (S.q && (S.view === "controls" || S.view === "sources")) p.set("q", S.q);
     const next = `#/${S.view}?${p.toString()}`;
@@ -213,10 +221,13 @@
   function renderShell() {
     document.documentElement.lang = S.lang === "uk" ? "uk" : "en";
     document.title = `${t("siteName")}: ${t("siteSub")}`;
-    const nav = [["guide", "navGuide"], ["controls", "navControls"], ["sources", "navSources"], ["articles", "navArticles"], ["about", "navAbout"]]
-      .map(([v, k]) => `<a href="#/${v}" data-view="${v}" ${S.view === v ? 'aria-current="page"' : ""}>${esc(t(k))}</a>`).join("");
+    const link = ([v, k]) => `<a href="#/${v}" data-view="${v}" ${S.view === v ? 'aria-current="page"' : ""}>${esc(t(k))}</a>`;
+    const inGuide = S.view === "guide" || S.view === "articles";
+    const menu = `<details class="nav-menu" id="guide-menu"><summary${inGuide ? ' aria-current="page"' : ""}>${esc(t("navGuide"))}</summary>
+      <div class="menu">${guideLinks(false)}</div></details>`;
+    const nav = menu + [["controls", "navControls"], ["sources", "navSources"], ["method", "navMethod"], ["about", "navAbout"]].map(link).join("");
     document.getElementById("header").innerHTML = `
-      <div class="brand"><a href="#/guide" class="brand-name">${esc(t("siteName"))}</a><span class="brand-sub">${esc(t("siteSub"))}</span></div>
+      <div class="brand"><a href="#/home" class="brand-name">${esc(t("siteName"))}</a><span class="brand-sub">${esc(t("siteSub"))}</span></div>
       <nav class="nav" aria-label="${esc(t("siteName"))}">${nav}</nav>
       <button class="lang" type="button" id="lang" aria-label="${esc(t("langSwitchLabel"))}">${esc(t("langSwitch"))}</button>`;
     document.getElementById("lang").onclick = () => { S.lang = S.lang === "uk" ? "en" : "uk"; store.set("grc-lang", S.lang); render(); };
@@ -229,7 +240,7 @@
   function render() {
     renderShell();
     writeHash();
-    ({ guide: renderGuide, controls: renderControls, sources: renderSources, articles: renderArticles, about: renderAbout })[S.view]();
+    ({ home: renderHome, start: renderStart, guide: renderGuide, controls: renderControls, sources: renderSources, method: renderMethod, articles: renderArticles, about: renderAbout })[S.view]();
   }
 
   // ------------------------------------------------------------------ filter panel (shared)
@@ -241,7 +252,7 @@
       return `<details class="chip-group"${open ? " open" : ""}><summary>${esc(L(g, "label"))}</summary>${items.map(chip).join("")}</details>`;
     }).join("");
     return `<fieldset class="chips"><legend>${esc(t("orgType"))}</legend>
-      <p class="hint">${esc(t("orgTypeHint"))}</p>${groups}
+      <p class="hint">${esc(t("orgTypeHint"))} <a href="#/start">${esc(t("orgTypeQuiz"))}</a></p>${groups}
     </fieldset>`;
   }
   function toggle(key, label) {
@@ -278,47 +289,203 @@
   }
   const searchBox = () => `<label class="field"><span>${esc(t("search"))}</span><input id="q" type="search" value="${esc(S.q)}" placeholder="${esc(t("searchPh"))}" autocomplete="off"></label>`;
 
-  // ------------------------------------------------------------------ guide
-  async function renderGuide() {
-    app.innerHTML = `<article class="guide"><div id="hero"></div><div class="guide-body">
-      <details class="toc" id="toc" open><summary>${esc(t("tocTitle"))}</summary><nav aria-label="${esc(t("tocTitle"))}"></nav></details>
-      <div class="prose" id="guide-text"><p class="hint">${esc(t("loading"))}</p></div></div></article>`;
-    renderHero(document.getElementById("hero"));
-    const key = S.lang;
-    if (!guideCache[key]) {
+  // ------------------------------------------------------------------ markdown pages (home, guide, method, about)
+  async function loadMd(path) {
+    if (mdCache[path] === undefined) {
       try {
-        const res = await fetch(`content/guide.${key}.md`, { cache: "no-cache" });
-        guideCache[key] = res.ok ? await res.text() : "";
-      } catch (e) { guideCache[key] = ""; }
+        const res = await fetch(path, { cache: "no-cache" });
+        mdCache[path] = res.ok ? await res.text() : "";
+      } catch (e) { mdCache[path] = ""; }
     }
-    if (S.view !== "guide" || S.lang !== key) return;
-    const el = document.getElementById("guide-text");
-    renderMarkdown(el, guideCache[key]);
-    const legend = el.querySelector("#legend");
-    if (legend) legend.outerHTML = relLegend();
-    buildToc(document.getElementById("toc"), el);
+    return mdCache[path];
   }
-  function renderHero(el) {
+  // Renders content/<name>.<lang>.md into el; returns false if the reader has moved on meanwhile.
+  async function mdInto(el, name) {
+    const view = S.view, lang = S.lang, key = S.chapter + S.article;
+    const md = await loadMd(`content/${name}.${lang}.md`);
+    if (S.view !== view || S.lang !== lang || S.chapter + S.article !== key || !el.isConnected) return false;
+    renderMarkdown(el, md);
+    return true;
+  }
+  function scrollToAnchor() {
+    if (!S.anchor) return;
+    const target = document.getElementById(S.anchor);
+    S.anchor = "";
+    if (target) target.scrollIntoView({ block: "start" });
+  }
+  // A page with a side panel (contents or the guide's chapters) and the text
+  function docLayout(panelTitle) {
+    app.innerHTML = `<article class="guide"><div class="guide-body">
+      <details class="toc" id="toc" open><summary>${esc(panelTitle)}</summary><nav aria-label="${esc(panelTitle)}"></nav></details>
+      <div class="prose" id="doc-text"><p class="hint">${esc(t("loading"))}</p></div></div></article>`;
+    return document.getElementById("doc-text");
+  }
+
+  // ------------------------------------------------------------------ home
+  async function renderHome() {
+    app.innerHTML = `<article class="home" id="home-text"><p class="hint">${esc(t("loading"))}</p></article>`;
+    const el = document.getElementById("home-text");
+    if (!(await mdInto(el, "home"))) return;
+    const ex = el.querySelector("#hero-example");
+    if (ex) ex.outerHTML = heroExample();
+    scrollToAnchor();
+  }
+  function heroExample() {
     const ex = CFG.heroExample || {};
     const m = D.mappings.find((x) => x.provision_id === ex.provision && x.framework_id === ex.framework && x.control_id === ex.control);
     const p = m && D.provById[m.provision_id];
     const src = p && D.sourceById[p.source_id];
     const c = m && D.controlById[m.framework_id] && D.controlById[m.framework_id][m.control_id];
-    let example = "";
-    if (m && p && src && c) {
-      const capT = (t("heroCaption") || {})[m.relationship] || "";
-      const provRef = `${L(p, "ref")}`;
-      example = `<figure class="hero-example">
-        <div class="hero-pair">
-          <div class="hero-card"><span class="hero-kicker">${esc(sourceRef(src))}, ${esc(provRef)}${isDraft(m) ? ` <span class="badge rv-${esc(m.review_status)}">${esc(reviewLabel(m.review_status))}</span>` : ""}</span><span class="hero-text">${esc(L(p, "summary"))}</span></div>
-          ${glyph(m.relationship, true)}
-          <div class="hero-card"><span class="hero-kicker">${esc(fwLabel(fwRow(m.framework_id)))}, ${esc(c.id)}</span><span class="hero-text">${esc(controlName(m.framework_id, c))}</span></div>
-        </div>
-        <figcaption>${esc(fmt(capT, provRef, c.id))}</figcaption></figure>`;
-    }
-    el.innerHTML = `<header class="hero"><h1>${esc(t("heroTitle"))}</h1><p class="lead">${esc(t("heroLead"))}</p>
-      ${example}
-      <p class="hero-actions"><a class="btn btn-primary" href="#/controls">${esc(t("heroOpenControls"))}</a><a class="btn" href="#/sources">${esc(t("heroOpenSources"))}</a></p></header>`;
+    if (!(m && p && src && c)) return "";
+    const capT = (t("heroCaption") || {})[m.relationship] || "";
+    const provRef = `${L(p, "ref")}`;
+    return `<figure class="hero-example">
+      <div class="hero-pair">
+        <div class="hero-card"><span class="hero-kicker">${esc(sourceRef(src))}, ${esc(provRef)}${isDraft(m) ? ` <span class="badge rv-${esc(m.review_status)}">${esc(reviewLabel(m.review_status))}</span>` : ""}</span><span class="hero-text">${esc(L(p, "summary"))}</span></div>
+        ${glyph(m.relationship, true)}
+        <div class="hero-card"><span class="hero-kicker">${esc(fwLabel(fwRow(m.framework_id)))}, ${esc(c.id)}</span><span class="hero-text">${esc(controlName(m.framework_id, c))}</span></div>
+      </div>
+      <figcaption>${esc(fmt(capT, provRef, c.id))}</figcaption></figure>`;
+  }
+
+  // ------------------------------------------------------------------ questionnaire
+  // Four questions that set the sector filters and the framework. Answers live only in this variable and in
+  // the links of the result; nothing is sent or stored.
+  const QUIZ = {
+    q1: { multi: true, opts: [["public", ["public-sector"]], ["defence", ["defence"]], ["defind", ["defence-industry"]], ["finance", ["finance"]],
+      ["telecom", ["telecom"]], ["infra", ["ics"]], ["health", ["health"]], ["cloud", ["cloud"]], ["platforms", ["platforms"]], ["trust", ["trust"]],
+      ["vendors", ["vendors"]], ["suppliers", ["ict-suppliers", "security-services"]], ["ai", ["ai"]], ["other", []]] },
+    q2: { multi: true, opts: [["pd", ["personal-data"]], ["sir", ["public-sir"]], ["restricted", ["public-restricted"]], ["secrets", ["state-secrets"]],
+      ["nato", ["nato-info"]], ["none", []]] },
+    q3: { multi: false, opts: [["no", []], ["c12", ["cii-1-2"]], ["c34", ["cii-3-4"]], ["unknown", ["ki"]]] },
+    q4: { multi: false, opts: [["auto", []], ["iso27001-2022", []], ["csf-2.0", []]] },
+  };
+  const QUIZ_EXCLUSIVE = { q1: "other", q2: "none" };
+  const QA = { q1: [], q2: ["pd"], q3: "no", q4: "auto", shown: false };
+  const quizSectors = () => [...new Set(["q1", "q2", "q3"].flatMap((q) => {
+    const sel = [].concat(QA[q]);
+    return QUIZ[q].opts.filter(([id]) => sel.includes(id)).flatMap(([, ids]) => ids);
+  }))].filter((id) => D.sectorById[id]);
+  function quizFw() {
+    if (QA.q4 !== "auto") return QA.q4;
+    return QA.q3 !== "no" || QA.q1.some((x) => ["public", "defence", "defind"].includes(x)) ? "csf-2.0" : "iso27001-2022";
+  }
+  function quizBaseline() {
+    if (QA.q2.includes("nato")) return "nato";
+    if (QA.q2.includes("restricted")) return "dsk";
+    if (QA.q2.includes("sir")) return "open";
+    return "";
+  }
+  // Runs fn with the quiz answers as the current filters, then restores the reader's own filters.
+  function withQuizState(fn) {
+    const keys = ["sectors", "fw", "q", "drafts", "rec", "only", "scope", "repealed", "pending", "context", "records"];
+    const saved = Object.fromEntries(keys.map((k) => [k, S[k]]));
+    Object.assign(S, { sectors: quizSectors(), fw: quizFw(), q: "", drafts: true, rec: true, only: true, scope: "core", repealed: false, pending: false, context: false, records: false });
+    try { return fn(); } finally { Object.assign(S, saved); }
+  }
+  function renderStart() {
+    const opt = (q, [id]) => {
+      const multi = QUIZ[q].multi;
+      const on = multi ? QA[q].includes(id) : QA[q] === id;
+      return `<label class="q-opt"><input type="${multi ? "checkbox" : "radio"}" name="${q}" value="${esc(id)}" ${on ? "checked" : ""}><span>${esc(t(`qo_${q}_${id}`))}</span></label>`;
+    };
+    const question = (q, n) => `<fieldset class="q"><legend><span class="q-num">${n}</span>${esc(t(q))}</legend>
+      ${t(q + "Hint") !== q + "Hint" ? `<p class="hint">${esc(t(q + "Hint"))}</p>` : ""}
+      <div class="q-opts${QUIZ[q].opts.length > 6 ? " q-opts-wide" : ""}">${QUIZ[q].opts.map((o) => opt(q, o)).join("")}</div></fieldset>`;
+    app.innerHTML = `<article class="quiz">
+      <h1>${esc(t("qTitle"))}</h1><p class="lead-sm">${esc(t("qLead"))}</p>
+      <form id="quiz" onsubmit="return false">${["q1", "q2", "q3", "q4"].map((q, i) => question(q, i + 1)).join("")}
+        <div class="q-actions"><button type="submit" class="btn btn-primary btn-lg" id="q-go">${esc(t("qGo"))}</button>
+          <a class="q-skip" href="#/sources?scope=core&s=">${esc(t("qSkip"))}</a></div>
+        <p class="q-privacy">${esc(t("qPrivacy"))}</p></form>
+      <section class="q-result" id="q-result" aria-live="polite"${QA.shown ? "" : " hidden"}></section></article>`;
+    const form = document.getElementById("quiz");
+    const result = document.getElementById("q-result");
+    form.addEventListener("change", (e) => {
+      const q = e.target.name;
+      if (!QUIZ[q]) return;
+      if (QUIZ[q].multi) {
+        const ex = QUIZ_EXCLUSIVE[q];
+        if (e.target.checked && e.target.value === ex) form.querySelectorAll(`input[name="${q}"]`).forEach((x) => { if (x.value !== ex) x.checked = false; });
+        else if (e.target.checked) { const x = form.querySelector(`input[name="${q}"][value="${ex}"]`); if (x) x.checked = false; }
+        QA[q] = [...form.querySelectorAll(`input[name="${q}"]:checked`)].map((x) => x.value);
+      } else QA[q] = e.target.value;
+      if (QA.shown) drawQuizResult(result);
+    });
+    document.getElementById("q-go").addEventListener("click", () => {
+      QA.shown = true;
+      result.hidden = false;
+      drawQuizResult(result);
+      result.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    if (QA.shown) drawQuizResult(result);
+  }
+  function drawQuizResult(box) {
+    const sectors = quizSectors(), fw = quizFw(), base = quizBaseline();
+    const f = fwRow(fw);
+    const n = withQuizState(() => {
+      const exp = expandedSectors();
+      return {
+        acts: D.sources.filter((src) => sourceVisible(src, exp, true)).length,
+        controls: Object.keys(driversFor(fw, exp, true)).length,
+        gaps: gapRows().length,
+      };
+    });
+    const s = encodeURIComponent(sectors.join(",")).replace(/%2C/g, ",");
+    const chips = sectors.length ? sectors.map((id) => `<span class="tag">${esc(L(D.sectorById[id], "label"))}</span>`).join("") : `<span class="tag">${esc(t("qNoSectors"))}</span>`;
+    const why = QA.q4 === "auto" ? `<p class="hint">${esc(fmt(t("qAutoChosen"), fwLabel(f), t(fw === "csf-2.0" ? "qWhyCsf" : "qWhyIso")))}</p>` : "";
+    box.innerHTML = `<h2>${esc(t("qResultTitle"))}</h2>
+      <p class="q-tags">${chips}</p>
+      <div class="q-stats">
+        <div><b>${n.acts}</b><span>${esc(t("qStatActs"))}</span></div>
+        <div><b>${n.controls}</b><span>${esc(fmt(t("qStatControls"), fwLabel(f)))}</span></div>
+        <div><b>${n.gaps}</b><span>${esc(t("qStatGaps"))}</span></div>
+      </div>${why}
+      <p class="q-links"><a class="btn btn-primary" href="#/controls?s=${s}&fw=${esc(fw)}">${esc(t("qOpenControls"))}</a>
+        <a class="btn" href="#/sources?scope=core&s=${s}">${esc(t("qOpenSources"))}</a>
+        <button type="button" class="btn" id="q-soa">${esc(fmt(t("exportSoaXlsx"), L(f, "output")))}</button></p>
+      ${base ? `<div class="callout callout-goal"><p>${esc(t("qSystemNote"))}</p><p><a href="#/controls?fw=${SYSTEM_FW}&b=${base}&s=${s}">${esc(t("qOpenSystem"))} →</a></p></div>` : ""}
+      <p class="hint">${esc(t("qResultHint"))}</p>`;
+    box.querySelector("#q-soa").onclick = () => withQuizState(() => exportSoa(controlRows().rows, "xlsx"));
+  }
+
+  // ------------------------------------------------------------------ guide
+  const chapterTitle = (id) => t("ch_" + id);
+  // Links to every chapter (grouped by stage) and article: the header menu and the guide's side panel.
+  // current: the open chapter or article id, whose headings the side panel lists under it.
+  function guideLinks(withCurrent, heads) {
+    const cur = S.view === "guide" ? S.chapter : S.view === "articles" ? S.article : "";
+    const item = (href, id, label) => `<li${withCurrent && id === cur ? ' class="current"' : ""}><a href="${href}"${id === cur ? ' aria-current="page"' : ""}>${esc(label)}</a>${withCurrent && id === cur && heads ? heads : ""}</li>`;
+    const groups = [["1", t("stage_1")], ["2", null], ["3", null], ["ref", t("stage_ref")]];
+    let html = "";
+    groups.forEach(([stage, label]) => {
+      const chs = CHAPTERS.filter((c) => c.stage === stage);
+      const items = chs.map((c) => item(`#/guide?c=${c.id}`, c.id, chapterTitle(c.id))).join("")
+        + (stage === "ref" ? ARTICLES.map((a) => item(`#/articles?a=${a}`, a, t("art_" + a))).join("") : "");
+      html += `${label ? `<p class="menu-group">${esc(label)}</p>` : ""}<ul>${items}</ul>`;
+    });
+    return html;
+  }
+  async function renderGuide() {
+    const i = CHAPTERS.findIndex((c) => c.id === S.chapter);
+    const ch = CHAPTERS[i];
+    const el = docLayout(t("navGuide"));
+    if (!(await mdInto(el, `guide/${ch.id}`))) return;
+    if (ch.stage === "1") el.insertAdjacentHTML("afterbegin", `<p class="kicker">${esc(t("stage_1"))}</p>`);
+    const legend = el.querySelector("#legend");
+    if (legend) legend.outerHTML = relLegend();
+    const prev = CHAPTERS[i - 1], next = CHAPTERS[i + 1];
+    el.insertAdjacentHTML("beforeend", `<nav class="pager" aria-label="${esc(t("navGuide"))}">
+      ${prev ? `<a class="pager-prev" href="#/guide?c=${prev.id}"><span>${esc(t("chPrev"))}</span>${esc(chapterTitle(prev.id))}</a>` : "<span></span>"}
+      ${next ? `<a class="pager-next" href="#/guide?c=${next.id}"><span>${esc(t("chNext"))}</span>${esc(chapterTitle(next.id))}</a>` : ""}</nav>`);
+    buildToc(document.getElementById("toc"), el, true);
+    scrollToAnchor();
+  }
+  async function renderMethod() {
+    const el = docLayout(t("tocTitle"));
+    if (!(await mdInto(el, "method"))) return;
+    buildToc(document.getElementById("toc"), el, false);
+    scrollToAnchor();
   }
   function relLegend() {
     return `<dl class="legend" aria-label="${esc(t("dataLegend"))}">${Object.keys(GLYPH).map((r) => `<div>${glyph(r)}<dt>${esc(r)}</dt><dd>${esc(relWords(r))}</dd></div>`).join("")}</dl>`;
@@ -516,6 +683,7 @@
     return xlsxLoading;
   }
   async function downloadXlsx(name, sheet, header, rows, widths) {
+    const fw = S.fw, sectors = S.sectors.join(", ") || "all"; // read before the await: the quiz restores the filters
     await loadXlsx();
     const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
     ws["!cols"] = (widths || header.map(() => 24)).map((w) => ({ wch: w }));
@@ -523,8 +691,8 @@
     ws["!freeze"] = { xSplit: 1, ySplit: 1 };
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, sheet.slice(0, 31));
-    const ai = D.mappings.filter((m) => m.framework_id === S.fw && m.review_status === "ai_draft").length;
-    const meta = [["note", ai ? t("aiFileNote") : ""], ["version", D.meta ? D.meta.version : ""], ["date", new Date().toISOString().slice(0, 10)], ["framework", S.fw], ["sectors", S.sectors.join(", ") || "all"], ["url", location.href]];
+    const ai = D.mappings.filter((m) => m.framework_id === fw && m.review_status === "ai_draft").length;
+    const meta = [["note", ai ? t("aiFileNote") : ""], ["version", D.meta ? D.meta.version : ""], ["date", new Date().toISOString().slice(0, 10)], ["framework", fw], ["sectors", sectors], ["url", location.href]];
     XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(meta), "about");
     XLSX.writeFile(wb, name);
   }
@@ -742,44 +910,39 @@
     else downloadCsv(`${name}.csv`, header, data);
   }
 
-  // ------------------------------------------------------------------ articles
-  const articleCache = {};
+  // ------------------------------------------------------------------ articles (part of the guide's menu)
   async function renderArticles() {
     if (!S.article) {
       app.innerHTML = `<article class="page"><h1>${esc(t("navArticles"))}</h1><p class="lead-sm">${esc(t("articlesIntro"))}</p>
         <ul class="files">${ARTICLES.map((a) => `<li class="file"><a class="file-name" href="#/articles?a=${a}">${esc(t("art_" + a))}</a><p>${esc(t("artd_" + a))}</p></li>`).join("")}</ul></article>`;
       return;
     }
-    const key = `${S.article}.${S.lang}`;
-    app.innerHTML = `<article class="guide"><p><a href="#/articles">${esc(t("articlesBack"))}</a></p><div class="prose" id="article-text"><p class="hint">${esc(t("loading"))}</p></div></article>`;
-    if (articleCache[key] === undefined) {
-      try {
-        const res = await fetch(`content/articles/${key}.md`, { cache: "no-cache" });
-        articleCache[key] = res.ok ? await res.text() : "";
-      } catch (e) { articleCache[key] = ""; }
-    }
-    if (S.view !== "articles" || `${S.article}.${S.lang}` !== key) return;
-    renderMarkdown(document.getElementById("article-text"), articleCache[key]);
+    const el = docLayout(t("navGuide"));
+    if (!(await mdInto(el, `articles/${S.article}`))) return;
+    buildToc(document.getElementById("toc"), el, true);
+    scrollToAnchor();
   }
 
-  // Markdown with heading ids (GitHub style) and in-page links that scroll instead of routing
-  // Contents panel for the guide: h2/h3 links, the current section highlighted while scrolling.
+  // Side panel. Guide pages (inGuide): all chapters and articles, with the open one's h2 headings under it.
+  // Other pages: their own h2/h3 headings. The heading in view is highlighted while scrolling.
   let tocObserver = null;
-  function buildToc(box, el) {
+  function buildToc(box, el, inGuide) {
     if (!box) return;
-    const heads = [...el.querySelectorAll("h2, h3")];
-    box.querySelector("nav").innerHTML = `<ul>${heads.map((h) => `<li class="l${h.tagName[1]}"><a href="#${esc(h.id)}">${esc(h.textContent)}</a></li>`).join("")}</ul>`;
+    const heads = [...el.querySelectorAll(inGuide ? "h2" : "h2, h3")];
+    const headList = heads.length ? `<ul class="toc-heads">${heads.map((h) => `<li class="l${h.tagName[1]}"><a href="#${esc(h.id)}">${esc(h.textContent)}</a></li>`).join("")}</ul>` : "";
+    box.querySelector("nav").innerHTML = inGuide ? guideLinks(true, headList) : headList;
     const narrow = window.matchMedia("(max-width: 900px)").matches;
     box.open = !narrow;
-    box.querySelectorAll("a").forEach((a) => a.addEventListener("click", (e) => {
+    const inPage = [...box.querySelectorAll('a[href^="#"]:not([href^="#/"])')];
+    inPage.forEach((a) => a.addEventListener("click", (e) => {
       e.preventDefault();
       const target = document.getElementById(decodeURIComponent(a.getAttribute("href").slice(1)));
       if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
       if (window.matchMedia("(max-width: 900px)").matches) box.open = false;
     }));
     if (tocObserver) tocObserver.disconnect();
-    if (!("IntersectionObserver" in window)) return;
-    const links = Object.fromEntries([...box.querySelectorAll("a")].map((a) => [decodeURIComponent(a.getAttribute("href").slice(1)), a]));
+    if (!("IntersectionObserver" in window) || !inPage.length) return;
+    const links = Object.fromEntries(inPage.map((a) => [decodeURIComponent(a.getAttribute("href").slice(1)), a]));
     tocObserver = new IntersectionObserver((entries) => {
       const seen = entries.filter((x) => x.isIntersecting).map((x) => x.target);
       if (!seen.length) return;
@@ -810,7 +973,8 @@
     });
     el.querySelectorAll("p").forEach((p) => {
       const only = p.children.length === 1 && p.firstElementChild.tagName === "EM" && p.textContent.trim() === p.firstElementChild.textContent.trim();
-      if (only && /^H[2-4]$/.test((p.previousElementSibling || {}).tagName || "")) p.classList.add("step-refs");
+      const prev = p.previousElementSibling;
+      if (only && prev && (/^H[1-4]$/.test(prev.tagName) || prev.classList.contains("chapter-lead"))) p.classList.add("step-refs");
     });
     el.querySelectorAll("h1, h2, h3, h4").forEach((h) => { if (!h.id) h.id = slugify(h.textContent); });
     el.querySelectorAll("table").forEach((tb) => { const w = document.createElement("div"); w.className = "table-wrap"; tb.replaceWith(w); w.appendChild(tb); });
@@ -917,11 +1081,19 @@
     };
   }
 
-  // ------------------------------------------------------------------ data
-  function renderAbout() {
+  // ------------------------------------------------------------------ about
+  // The text is content/about.<lang>.md; the version, links, data files and plans are filled in here.
+  async function renderAbout() {
+    const el = docLayout(t("tocTitle"));
+    if (!(await mdInto(el, "about"))) return;
     const repo = (CFG.repoUrl || "").replace(/\/$/, "");
     const blob = (p) => `${repo}/blob/${CFG.branch || "main"}/${p}`;
     const tree = (p) => `${repo}/${/\.[a-z]+$/.test(p) ? "blob" : "tree"}/${CFG.branch || "main"}/${p}`;
+    const fill = (id, html) => { const x = el.querySelector(`#${id}`); if (x) x.outerHTML = html; };
+    fill("about-version", D.meta ? `<p class="summary">${esc(fmt(t("dataVersion"), D.meta.version, D.meta.date))} ${esc(S.lang === "uk" ? D.meta.note_uk : D.meta.note_en)}</p>` : "");
+    fill("about-links", `<p class="about-links"><a href="${esc(blob(S.lang === "uk" ? "docs/BLUEPRINT.uk.md" : "docs/BLUEPRINT.md"))}" target="_blank" rel="noopener">${esc(t("dataBlueprint"))}</a>
+        <a href="${esc(repo)}" target="_blank" rel="noopener">${esc(t("aboutRepo"))}</a>
+        <a href="${esc(blob("CHANGELOG.md"))}" target="_blank" rel="noopener">${esc(t("aboutChangelog"))}</a></p>`);
     const res = ((D.pkg && D.pkg.resources) || FILES.map((f) => ({ path: f }))).filter((r) => r.name !== "readable");
     // generated files have no copy in git: link to what they are built from
     const view = (r) => r["x-source"]
@@ -932,25 +1104,14 @@
         ${D.rowCounts[r.path] != null ? `<span class="muted small">${esc(fmt(t("dataRows"), D.rowCounts[r.path]))}</span>` : ""}
         <p>${esc(r.description || "")}</p>
         <p class="file-links">${view(r)}<a href="data/${esc(r.path)}" download>${esc(t("dataRaw"))}</a></p></li>`).join("");
-    const plans = (t("plans") || []).map(([h, d]) => `<li><b>${esc(h)}</b> ${esc(d)}</li>`).join("");
-    app.innerHTML = `<article class="page">
-      <h1>${esc(t("navAbout"))}</h1>
-      <p class="lead-sm">${esc(t("aboutLead"))}</p>
-      ${D.meta ? `<p class="summary">${esc(fmt(t("dataVersion"), D.meta.version, D.meta.date))} ${esc(S.lang === "uk" ? D.meta.note_uk : D.meta.note_en)}</p>` : ""}
-      <p class="about-links"><a href="${esc(blob(S.lang === "uk" ? "docs/BLUEPRINT.uk.md" : "docs/BLUEPRINT.md"))}" target="_blank" rel="noopener">${esc(t("dataBlueprint"))}</a>
-        <a href="${esc(repo)}" target="_blank" rel="noopener">${esc(t("aboutRepo"))}</a>
-        <a href="${esc(blob("CHANGELOG.md"))}" target="_blank" rel="noopener">${esc(t("aboutChangelog"))}</a>
-        <a href="https://www.linkedin.com/in/ivan-gokin-2ba0a4136/" target="_blank" rel="noopener">${esc(t("aboutContact"))}</a></p>
-      <h2>${esc(t("navData"))}</h2>
-      <p>${esc(t("dataIntro"))}</p>
+    fill("about-data", `<p>${esc(t("dataIntro"))}</p>
       <section class="readable"><h3>${esc(t("dataReadableTitle"))}</h3><p>${esc(t("dataReadable"))}</p>
         <p><a class="btn btn-primary" href="data/grc-foundation-ua.xlsx" download>${esc(t("dataReadableBtn"))}</a></p></section>
       <details class="machine"><summary><h3>${esc(t("dataMachineTitle"))}</h3></summary><p>${esc(t("dataMachine"))}</p>
-        <ul class="files">${items}</ul></details>
-      <h2>${esc(t("plansTitle"))}</h2>
-      <p>${esc(t("plansIntro"))}</p>
-      <ul class="plans">${plans}</ul>
-      <h2>${esc(t("dataLegend"))}</h2>${relLegend()}</article>`;
+        <ul class="files">${items}</ul></details>`);
+    fill("about-plans", `<p>${esc(t("plansIntro"))}</p><ul class="plans">${(t("plans") || []).map(([h, d]) => `<li><b>${esc(h)}</b> ${esc(d)}</li>`).join("")}</ul>`);
+    buildToc(document.getElementById("toc"), el, false);
+    scrollToAnchor();
   }
 
   // ------------------------------------------------------------------ boot
@@ -966,6 +1127,15 @@
       return;
     }
     window.addEventListener("hashchange", () => { if (readHash()) { render(); window.scrollTo(0, 0); } });
+    // the guide menu in the header closes on a click outside it or on Escape
+    document.addEventListener("click", (e) => {
+      const m = document.getElementById("guide-menu");
+      if (m && m.open && !m.contains(e.target)) m.open = false;
+    });
+    document.addEventListener("keydown", (e) => {
+      const m = document.getElementById("guide-menu");
+      if (e.key === "Escape" && m && m.open) { m.open = false; m.querySelector("summary").focus(); }
+    });
     render();
   }
   boot();

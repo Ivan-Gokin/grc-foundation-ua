@@ -1,5 +1,13 @@
 # Changelog
 
+## data-2026.10.7 (2026-10-16)
+
+- New home page (`#/home`, the brand link): what the project does, a four-step "how it works" diagram, the two levels of requirements (the ISMS on ISO/IEC 27001 or NIST CSF 2.0; information systems on NIST SP 800-53 baseline profiles) with the Ukrainian names of the standards, what you get, the three stages (governance → compliance → risk management) and audience cards.
+- New questionnaire (`#/start`): four questions (sectors, several allowed; information processed; critical infrastructure category; standard, or "suggest one") that set the filters and show the number of applicable acts, controls and requirements with no counterpart, with links to the controls, the acts, the SoA download and, for state, official or NATO information, the SP 800-53 baseline. A "skip" option shows everything. Answers are not sent or stored.
+- Guide split into chapters (`content/guide/<id>.<lang>.md`, `#/guide?c=<id>`): stage 1 has six steps, starting with the new "Roles and authorities" (management, collective body, CISO, owners, three lines, segregation of duties, what regulators require); then compliance, risk management and the glossary. The header has a "Guide" menu with all chapters and the reference articles; the side panel lists them with the open chapter's headings; back / next links at the bottom. The "If you are..." table gave way to the questionnaire.
+- New Methodology page (`content/method.*.md`): base standards, OCEG GRC and the integrated management system, NIST IR 8477 STRM, kinds of requirements (including what registration with the Ministry of Justice means), chains and deduplication with ELI, data quality.
+- About is now Markdown (`content/about.*.md`): open source and data, how the project is built, data downloads, plans, feedback and cooperation.
+
 ## data-2026.10.6 (2026-10-16)
 
 - The System level view is merged into Controls: the control set picker has two groups, "Management system (ISMS)" with ISO/IEC 27001 and NIST CSF 2.0, and "Information system" with NIST SP 800-53. Old `#/system` links open it there.

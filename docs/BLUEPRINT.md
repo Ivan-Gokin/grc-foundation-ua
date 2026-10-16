@@ -26,7 +26,7 @@ The project is a starting point, not legal advice. Every row carries its provena
 index.html, 404.html       the site (single page; 404.html resolves /eli/... addresses)
 assets/                    styles, scripts, fonts and vendored libraries
 assets/js/config.js        repository URL and other settings  <- edit before publishing
-content/                   the guide and reference articles (Markdown, uk and en)
+content/                   page texts in Markdown, uk and en: home, method, about, guide/ chapters, articles/
 mappings/*.xlsx            provisions and their mappings to the frameworks: edited by hand
 data/*.csv                 everything else: sources, chains, entity types, framework controls
 data/sp800-53/             system-level data (phase 2)
@@ -280,7 +280,7 @@ Ukrainian is the primary language of the data. English titles, descriptions and 
 
 - `index.html` loads `config.js`, `i18n.js` and `app.js`, plus two libraries kept in `assets/vendor/`: PapaParse (CSV) and marked (Markdown). SheetJS (also vendored) loads only when someone exports to Excel.
 - `404.html` resolves the project's ELI addresses (`/eli/...`) to the act in the register.
-- `app.js` fetches the CSV files from `data/` (two of them built from the workbooks), builds the indexes and renders the views: **Guide** (with a contents panel), **Controls** (one view for both levels: the ISMS frameworks ISO/IEC 27001 and NIST CSF 2.0, and NIST SP 800-53 for an information system), **Legal sources** (tabs for Ukrainian law and the EU reference list, each as a list or as chains), **Articles** (Markdown from `content/articles/`) and **About** (the project, data downloads, plans). Old `#/system` and `#/data` links still work.
+- `app.js` fetches the CSV files from `data/` (two of them built from the workbooks), builds the indexes and renders the views: **Home** (`content/home.*.md`), **Questionnaire** (`#/start`: four questions that set the sector filters and the framework; answers are not stored), **Guide** (chapters from `content/guide/`, listed in the `CHAPTERS` constant of `app.js`, with a header menu and a side panel), **Controls** (one view for both levels: the ISMS frameworks ISO/IEC 27001 and NIST CSF 2.0, and NIST SP 800-53 for an information system), **Legal sources** (tabs for Ukrainian law and the EU reference list, each as a list or as chains), **Methodology** (`content/method.*.md`), **Articles** (Markdown from `content/articles/`, shown in the guide's menu) and **About** (`content/about.*.md`; data downloads and plans are filled in by `app.js`). Old `#/system`, `#/data` and `#/guide` links still work. A link like `#/method#heading-id` scrolls to that heading.
 - Markdown conventions in `content/`: a paragraph that starts with **Мета.** / **Goal.**, **Результат.** / **Result.** or **Типові помилки** / **Common mistakes** (with the list after it) is shown as a callout; an italic-only line right under a heading is the "Covers:" line.
 - The state (language, view, sectors, framework, toggles) is kept in the URL hash, so a filtered view can be shared as a link.
 - Nothing is sent anywhere. All filtering and export happen in the browser.
