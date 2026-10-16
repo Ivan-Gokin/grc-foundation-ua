@@ -294,16 +294,18 @@ Selection logic for the controls table:
 
 ## 6. Phase 2: system level
 
-The organisation level (ISO 27001 or CSF 2.0) says what the organisation commits to. The system level (NIST SP 800-53) is where controls are selected and parameterised for each information system. Ukrainian system-level requirements (the SSSCIP baseline security profiles for open, official and NATO information) are built on SP 800-53.
+The organisation level (ISO 27001 or CSF 2.0) says what the organisation commits to. The system level (NIST SP 800-53) is where controls are selected and parameterised for each information system. The System level view shows, for each control, where the requirement comes from. The sources are described in `data/sp800-53/profiles.csv`:
 
-The path from one level to the other:
+| `kind` | Source | How the SP 800-53 controls are obtained |
+|---|---|---|
+| `baseline` | SSSCIP baseline security profiles (Orders No. 409/2025, 419/2025, 843/2025) | directly: column `<id>` and parameters `<id>_params_uk` in `baselines_ua.csv` |
+| `plan` | baseline cyber protection measures, the mandatory part of the cyber protection plan (Order No. 75/2026) | the CSF subcategories of that act's provisions, filtered by the object's category (`applies_to`), expanded through the NIST CSF 2.0 to SP 800-53 mapping (`map_csf-2.0_sp800-53r5.csv`) |
+| - | CSF and legislation | the CSF subcategories that all other acts require (mappings in `mappings/*.xlsx`), expanded through the same mapping |
+| `sector` | sector security profiles (Art. 10 of Law No. 80/94-VR) | like `baseline`; none approved yet |
 
-1. Start from the organisation-level result (the CSF subcategories with legal drivers).
-2. Expand to SP 800-53 controls through the NIST CSF 2.0 to SP 800-53 mapping (`data/sp800-53/map_csf-2.0_sp800-53r5.csv`).
-3. Intersect with the Ukrainian baseline for the system's information type (`baselines_ua.csv`), which also gives the parameter values.
-4. Tailor per system. The expansion over-selects, so treat it as candidates.
+To add a sector profile once approved: add the act to `sources.csv`, a `kind=sector` row to `profiles.csv`, and two columns to `baselines_ua.csv` (`<id>` with `yes` for the profile's controls and `<id>_params_uk` with the parameters). The site picks it up without code changes.
 
-Not yet done: the NIST SP 800-53 to ISO 27001 mapping (for ISO users), and OSCAL output (machine-readable profiles with parameter values set), which is the bridge to automation.
+The mapping over-selects, so treat the expansion as candidates to tailor, not a final set. Mappings to ISO 27001 are not included. Not yet done: the NIST SP 800-53 to ISO 27001 mapping, and OSCAL output (machine-readable profiles with parameter values set), which is the bridge to automation.
 
 ## 7. Quality gates
 

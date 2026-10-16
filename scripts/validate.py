@@ -236,7 +236,16 @@ def main():
         seen.add(k)
         mapped.add(r["provision_id"])
 
-    b53 = {r["id"] for r in load("sp800-53/baselines_ua.csv")}
+    b53_rows = load("sp800-53/baselines_ua.csv")
+    b53 = {r["id"] for r in b53_rows}
+    b53_cols = set(b53_rows[0]) if b53_rows else set()
+    for r in load("sp800-53/profiles.csv"):
+        if r["kind"] not in ("baseline", "sector", "plan"):
+            err("sp800-53/profiles.csv", r, f"kind='{r['kind']}' must be baseline, sector or plan")
+        if r["source_id"] not in sources:
+            err("sp800-53/profiles.csv", r, f"unknown source '{r['source_id']}'")
+        if r["kind"] in ("baseline", "sector") and not {r["id"], r["id"] + "_params_uk"} <= b53_cols:
+            err("sp800-53/profiles.csv", r, f"baselines_ua.csv needs the columns '{r['id']}' and '{r['id']}_params_uk'")
     csf = controls.get("csf-2.0", {})
     for r in load("sp800-53/map_csf-2.0_sp800-53r5.csv"):
         if r["csf_id"] not in csf:

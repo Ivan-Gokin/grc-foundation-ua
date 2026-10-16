@@ -157,7 +157,14 @@ Outcome: requirements are applied to systems and assets as secure configurations
 
 The management system says what the organisation commits to. Each information system then needs specific technical and organisational controls with their parameters set. Ukrainian system-level requirements, including the SSSCIP baseline security profiles for open, official and NATO information, are built on NIST SP 800-53.
 
-The [System level](#/system) view shows this step: from CSF 2.0 subcategories with legal drivers, through the official NIST mapping, to the SP 800-53 controls in the baseline for your type of information, with parameter values. It is a preview: expanding through the mapping over-selects, so treat the result as candidates to tailor.
+The [System level](#/system) view shows, for each SP 800-53 control, where the requirement comes from:
+
+- the **baseline security profile** for the kind of information in the system (open or confidential, official, NATO RESTRICTED), with parameter values;
+- the **cyber protection plan**: the baseline cyber protection measures (SSSCIP Order No. 75/2026), mandatory depending on the object's category;
+- **CSF and legislation**: the CSF 2.0 subcategories that other acts require;
+- a **sector security profile**: sector regulators develop these, but none has been approved yet.
+
+The interesting part is the controls outside the baseline profile, added by the plan or by legislation. It is a preview: the plan and legislation are expanded to SP 800-53 through the NIST mapping, which over-selects, so treat the result as candidates to tailor.
 
 ### Tools and machine-readable data
 

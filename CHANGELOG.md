@@ -1,5 +1,11 @@
 # Changelog
 
+## data-2026.10.5 (2026-10-16)
+
+- System level reworked: each SP 800-53 control shows where the requirement comes from: the baseline security profile (SSSCIP Orders No. 409/2025, 419/2025, 843/2025, with parameters), the cyber protection plan (baseline measures of Order No. 75/2026, by object category), or CSF and legislation (CSF subcategories required by other acts). Sector security profiles have a place in the view and the data model (`kind=sector`) but none is approved yet.
+- New `data/sp800-53/profiles.csv` describing these sources; the validator checks it.
+- Preview mode: `noindex` on the site, a "Preview, please do not share" banner (`preview: true` in `config.js`), and the built site kept as an artifact of every Actions run.
+
 ## data-2026.10.4 (2026-10-16)
 
 - Provisions and mappings moved from `data/provisions.csv` and `data/mappings.csv` to Excel workbooks `mappings/*.xlsx` (`nbu`, `law-80-94-vr`, `cmu-373-736`, `ssscip-75-2026`): a «Вимоги» sheet per workbook and one sheet per framework, linked by act + paragraph, with header notes and drop-down lists. The conversion was lossless, except that the duplicate provision `ua-law-80-94-vr:a8-p4-gap` was merged into `a8-p4` as its "no counterpart" link.

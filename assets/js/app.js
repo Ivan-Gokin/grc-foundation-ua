@@ -9,7 +9,7 @@
   const FILES = [
     "sources.csv", "source_types.csv", "sectors.csv", "sector_groups.csv", "applicability.csv", "source_relations.csv",
     "provisions.csv", "mappings.csv", "frameworks.csv", "controls_iso27001-2022.csv", "controls_csf-2.0.csv",
-    "sp800-53/baselines_ua.csv", "sp800-53/map_csf-2.0_sp800-53r5.csv",
+    "sp800-53/baselines_ua.csv", "sp800-53/map_csf-2.0_sp800-53r5.csv", "sp800-53/profiles.csv",
   ];
   const VIEWS = ["guide", "controls", "sources", "system", "articles", "data"];
   const ARTICLES = ["isms-policy-case-studies", "grc-systems-overview"];
@@ -18,7 +18,7 @@
   const D = {}; // indexes
   const S = {   // state (mirrored in the URL hash)
     lang: null, view: "guide", sectors: [], fw: "iso27001-2022", only: true, rec: true, drafts: true,
-    repealed: false, context: false, q: "", type: "", baseline: "open", linked: true,
+    repealed: false, context: false, q: "", type: "", baseline: "open", sprofile: "none", sb: true, sp: true, sl: true,
     scope: "core", mode: "list", pending: false, records: false, article: "",
   };
   const guideCache = {};
@@ -47,7 +47,7 @@
   async function loadAll() {
     const tables = await Promise.all(FILES.map(loadCsv));
     const by = (rows, key = "id") => Object.fromEntries(rows.map((r) => [r[key], r]));
-    const [sources, types, sectors, groups, appl, rels, provs, maps, fws, iso, csf, b53, m53] = tables;
+    const [sources, types, sectors, groups, appl, rels, provs, maps, fws, iso, csf, b53, m53, profiles] = tables;
     D.sources = sources;
     D.sourceById = by(sources);
     D.sourceByEli = by(sources, "eli");
@@ -80,6 +80,7 @@
     D.controls = { "iso27001-2022": iso.sort((a, b) => +a.sort - +b.sort), "csf-2.0": csf.sort((a, b) => +a.sort - +b.sort) };
     D.controlById = { "iso27001-2022": by(iso), "csf-2.0": by(csf) };
     D.b53 = b53;
+    D.profiles = profiles;
     D.csfTo53 = {};
     m53.forEach((r) => (D.csfTo53[r.csf_id] = D.csfTo53[r.csf_id] || []).push(r.sp800_53_id));
     try {
@@ -102,10 +103,11 @@
     if (p.has("lang") && I18N[p.get("lang")]) S.lang = p.get("lang");
     if (p.has("s")) S.sectors = p.get("s").split(",").filter(Boolean);
     if (p.has("fw")) S.fw = p.get("fw");
-    ["only", "rec", "drafts", "repealed", "context", "linked", "pending", "records"].forEach((k) => { if (p.has(k)) S[k] = p.get(k) === "1"; });
+    ["only", "rec", "drafts", "repealed", "context", "sb", "sp", "sl", "pending", "records"].forEach((k) => { if (p.has(k)) S[k] = p.get(k) === "1"; });
     S.q = p.get("q") || "";
     S.type = p.get("type") || "";
     if (p.has("b")) S.baseline = p.get("b");
+    if (p.has("gp")) S.sprofile = p.get("gp");
     if (p.has("scope")) S.scope = p.get("scope") === "reference" ? "reference" : "core";
     if (p.has("mode")) S.mode = p.get("mode") === "chains" ? "chains" : "list";
     S.article = ARTICLES.includes(p.get("a")) ? p.get("a") : "";
@@ -125,7 +127,7 @@
       if (S.type) p.set("type", S.type);
     }
     if (S.view === "articles" && S.article) p.set("a", S.article);
-    if (S.view === "system") { p.set("b", S.baseline); p.set("linked", S.linked ? "1" : "0"); }
+    if (S.view === "system") { p.set("b", S.baseline); if (S.sprofile !== "none") p.set("gp", S.sprofile); ["sb", "sp", "sl", "drafts"].forEach((k) => p.set(k, S[k] ? "1" : "0")); }
     if (S.q && (S.view === "controls" || S.view === "sources" || S.view === "system")) p.set("q", S.q);
     const next = `#/${S.view}?${p.toString()}`;
     if (location.hash !== next) history.replaceState(null, "", next);
@@ -258,7 +260,7 @@
     }
     const reset = root.querySelector("#reset");
     if (reset) reset.addEventListener("click", () => {
-      Object.assign(S, { sectors: [], only: true, rec: true, drafts: true, repealed: false, context: false, q: "", type: "", linked: true, pending: false, records: false });
+      Object.assign(S, { sectors: [], only: true, rec: true, drafts: true, repealed: false, context: false, q: "", type: "", sb: true, sp: true, sl: true, pending: false, records: false });
       render();
     });
   }
@@ -761,50 +763,95 @@
   }
 
   // ------------------------------------------------------------------ system level (preview)
+  // Where each SP 800-53 control comes from (data/sp800-53/profiles.csv):
+  //   baseline / sector profiles  - a column of baselines_ua.csv named by the profile id (+ <id>_params_uk);
+  //   plan                        - the CSF subcategories that the plan act's provisions require;
+  //   CSF and legislation         - the CSF subcategories that all other acts require.
+  // CSF subcategories expand to SP 800-53 through the NIST mapping (map_csf-2.0_sp800-53r5.csv).
+  const profilesOf = (kind) => D.profiles.filter((p) => p.kind === kind).sort((a, b) => +a.sort - +b.sort);
   function renderSystem() {
-    const bl = [["open", "sysOpen"], ["dsk", "sysDsk"], ["nato", "sysNato"]].map(([v, k]) => `<label class="radio"><input type="radio" name="baseline" value="${v}" ${S.baseline === v ? "checked" : ""}><span>${esc(t(k))}</span></label>`).join("");
-    const panel = `<fieldset><legend>${esc(t("sysBaseline"))}</legend>${bl}</fieldset>
+    const radios = (name, list, value) => [{ id: "none", label_uk: t("sysNone0"), label_en: t("sysNone0") }, ...list]
+      .map((p) => `<label class="radio"><input type="radio" name="${name}" value="${esc(p.id)}" ${value === p.id ? "checked" : ""}><span>${esc(L(p, "label"))}${p.source_id ? `<span class="muted small block">${esc(sourceRef(D.sourceById[p.source_id]))}</span>` : ""}</span></label>`).join("");
+    const bases = profilesOf("baseline"), sectors = profilesOf("sector");
+    if (!bases.some((p) => p.id === S.baseline)) S.baseline = "none";
+    if (!sectors.some((p) => p.id === S.sprofile)) S.sprofile = "none";
+    const panel = `<fieldset><legend>${esc(t("sysBaseline"))}</legend>${radios("baseline", bases, S.baseline)}</fieldset>
+      <fieldset><legend>${esc(t("sysSector"))}</legend>${sectors.length ? radios("sprofile", sectors, S.sprofile) : `<p class="hint">${esc(t("sysSectorNone"))}</p>`}</fieldset>
       ${sectorChips()}
-      <fieldset><legend>${esc(t("options"))}</legend>${toggle("linked", t("sysLinked"))}${toggle("drafts", t("optDrafts"))}</fieldset>
+      <fieldset><legend>${esc(t("sysShow"))}</legend>${toggle("sb", t("sysFromBaseline"))}${toggle("sp", t("sysFromPlan"))}${toggle("sl", t("sysFromLaw"))}${toggle("drafts", t("optDrafts"))}</fieldset>
       ${searchBox()}`;
     const main = workspace(panel, "system-main");
     bindPanel(app, (soft) => (soft ? (writeHash(), drawSystem(main)) : render()));
+    app.querySelectorAll('input[name="sprofile"]').forEach((el) => el.addEventListener("change", () => { S.sprofile = el.value; writeHash(); drawSystem(main); }));
     drawSystem(main);
   }
   function systemRows() {
     const exp = expandedSectors();
-    const csfDrivers = driversFor("csf-2.0", exp, S.drafts);
-    const linked = {};
-    Object.keys(csfDrivers).forEach((csf) => (D.csfTo53[csf] || []).forEach((id) => (linked[id] = linked[id] || []).push(csf)));
-    const fam = {}; // family-level links (e.g. "PT") apply to every control of that family
-    Object.keys(linked).filter((k) => /^[A-Z]{2}$/.test(k)).forEach((k) => (fam[k] = linked[k]));
+    const planSrc = new Set(profilesOf("plan").map((p) => p.source_id));
+    const plan = {}, law = {}; // CSF id -> mappings
+    Object.entries(driversFor("csf-2.0", exp, S.drafts)).forEach(([csf, ms]) => ms.forEach((m) => {
+      const bucket = planSrc.has(D.provById[m.provision_id].source_id) ? plan : law;
+      (bucket[csf] = bucket[csf] || []).push(m);
+    }));
+    const expand = (byCsf) => {
+      const out = {}; // SP 800-53 id or whole family ("PT") -> CSF ids
+      Object.keys(byCsf).forEach((csf) => (D.csfTo53[csf] || []).forEach((id) => (out[id] = out[id] || new Set()).add(csf)));
+      return out;
+    };
+    const p53 = expand(plan), l53 = expand(law);
+    const forCtl = (map, c) => [...new Set([...(map[c.id] || []), ...(map[c.family] || [])])].sort();
     const q = S.q.trim().toLowerCase();
     return D.b53.filter((c) => {
-      if (c[S.baseline] !== "yes") return false;
-      c._csf = [...new Set([...(linked[c.id] || []), ...(fam[c.family] || [])])];
-      if (S.linked && !c._csf.length) return false;
-      if (q && ![c.id, c.name_en, c.name_uk_machine, c[`${S.baseline}_params_uk`]].join(" ").toLowerCase().includes(q)) return false;
+      if (c.withdrawn === "yes") return false;
+      c._base = S.baseline !== "none" && c[S.baseline] === "yes";
+      c._sector = S.sprofile !== "none" && c[S.sprofile] === "yes";
+      c._plan = forCtl(p53, c);
+      c._law = forCtl(l53, c);
+      const lawMaps = c._law.flatMap((csf) => law[csf]);
+      c._acts = [...new Set(lawMaps.map((m) => D.provById[m.provision_id].source_id))];
+      c._ai = lawMaps.some((m) => m.review_status === "ai_draft") || c._plan.some((csf) => plan[csf].some((m) => m.review_status === "ai_draft"));
+      if (!((S.sb && (c._base || c._sector)) || (S.sp && c._plan.length) || (S.sl && c._law.length))) return false;
+      if (q && ![c.id, c.name_en, c.name_uk_machine, c[`${S.baseline}_params_uk`], ...c._plan, ...c._law].join(" ").toLowerCase().includes(q)) return false;
       return true;
     });
   }
   function drawSystem(main) {
     const rows = systemRows();
-    const pcol = `${S.baseline}_params_uk`;
+    const prof = (id) => D.profiles.find((p) => p.id === id);
+    const base = prof(S.baseline), sector = prof(S.sprofile);
+    const pcol = `${S.baseline}_params_uk`, scol = `${S.sprofile}_params_uk`;
+    const n = (f) => rows.filter(f).length;
+    const outside = base ? n((c) => !c._base && (c._plan.length || c._law.length)) : 0;
+    const csfTitle = (id) => { const c = D.controlById["csf-2.0"][id]; return c ? controlName("csf-2.0", c) : ""; };
+    const csfList = (ids) => (ids.length ? ids.map((id) => `<code title="${esc(csfTitle(id))}">${esc(id)}</code>`).join(" ") : `<span class="muted">—</span>`);
+    const src = (k, title, text) => `<div class="sys-src"><dt>${esc(title)}</dt><dd>${esc(text)}</dd></div>`;
+    const cols = [base && t("sysColBaseline"), sector && t("sysColSector"), t("sysColPlan"), t("sysColLaw")].filter(Boolean);
+    const cell = (c) => [
+      base && `<td data-label="${esc(t("sysColBaseline"))}">${c._base ? `<span class="mark">✓</span> ${esc(c[pcol] || "")}` : `<span class="muted">—</span>`}</td>`,
+      sector && `<td data-label="${esc(t("sysColSector"))}">${c._sector ? `<span class="mark">✓</span> ${esc(c[scol] || "")}` : `<span class="muted">—</span>`}</td>`,
+      `<td data-label="${esc(t("sysColPlan"))}">${csfList(c._plan)}</td>`,
+      `<td data-label="${esc(t("sysColLaw"))}">${csfList(c._law)}${c._acts.length ? `<span class="muted small block">${esc(c._acts.map((id) => sourceRef(D.sourceById[id])).join("; "))}</span>` : ""}${c._ai ? ` <span class="badge rv-ai_draft">${esc(t("aiDraft"))}</span>` : ""}</td>`,
+    ].filter(Boolean).join("");
     main.innerHTML = `<div class="results-head">
         <h1>NIST SP 800-53 Rev. 5</h1>
         <p class="lead-sm">${esc(t("sysIntro"))}</p>
+        <dl class="sys-sources">${src("b", t("sysSrcBaselineT"), t("sysSrcBaseline"))}${src("p", t("sysSrcPlanT"), t("sysSrcPlan"))}${src("l", t("sysSrcLawT"), t("sysSrcLaw"))}${src("s", t("sysSrcSectorT"), profilesOf("sector").length ? t("sysSrcSector") : t("sysSrcSector") + " " + t("sysSectorNone"))}</dl>
         <p class="notice">${esc(t("sysPreview"))}</p>
-        <p class="summary">${esc(fmt(t("sysSummary"), rows.length))} ${S.lang === "uk" ? esc(t("sysMachine")) : ""}</p>
+        <p class="summary">${esc(fmt(t("sysSummary"), rows.length, n((c) => c._base || c._sector), n((c) => c._plan.length), n((c) => c._law.length)))}${outside ? ` ${esc(fmt(t("sysOutside"), outside))}` : ""}</p>
+        <p class="hint">${esc(t("sysIsoNote"))} ${S.lang === "uk" ? esc(t("sysMachine")) : ""}</p>
         <div class="exports"><button type="button" class="btn btn-primary" id="y-csv">${esc(t("sysDownload"))}</button></div>
       </div>
       ${rows.length ? `<div class="table-wrap"><table class="system">
-        <thead><tr><th scope="col">${esc(t("sysColId"))}</th><th scope="col">${esc(t("sysColName"))}</th><th scope="col">${esc(t("sysColParams"))}</th><th scope="col">${esc(t("sysColCsf"))}</th></tr></thead>
-        <tbody>${rows.map((c) => `<tr><th scope="row"><span class="ctl-id">${esc(c.id)}</span></th><td data-label="${esc(t("sysColName"))}">${esc(c.name_en)}${S.lang === "uk" ? `<span class="muted small block">${esc(c.name_uk_machine)}</span>` : ""}</td><td lang="uk" data-label="${esc(t("sysColParams"))}">${esc(c[pcol])}</td><td class="small" data-label="${esc(t("sysColCsf"))}">${esc(c._csf.join(", "))}</td></tr>`).join("")}</tbody>
+        <thead><tr><th scope="col">${esc(t("sysColId"))}</th>${cols.map((h) => `<th scope="col">${esc(h)}</th>`).join("")}</tr></thead>
+        <tbody>${rows.map((c) => `<tr><th scope="row"><span class="ctl-id">${esc(c.id)}</span><span class="ctl-name">${esc(c.name_en)}</span>${S.lang === "uk" ? `<span class="muted small block">${esc(c.name_uk_machine)}</span>` : ""}</th>${cell(c)}</tr>`).join("")}</tbody>
       </table></div>` : `<p class="empty">${esc(t("sysNone"))}</p>`}`;
     main.querySelector("#y-csv").onclick = () => {
-      const header = [t("sysColId"), "name_en", "name_uk_machine", t("sysColParams"), t("sysColCsf"), t("xApplicable"), t("xOrgValue"), t("xPolicy"), t("xStatus"), t("xEvidence")];
+      const header = [t("sysColId"), "name_en", "name_uk_machine", t("sysColBaseline"), t("sysColParams"), t("sysColSector"), t("sysColPlan"), t("sysColLaw"), t("xSource"),
+        t("xApplicable"), t("xOrgValue"), t("xPolicy"), t("xStatus"), t("xEvidence")];
+      const yes = S.lang === "uk" ? "так" : "Y";
       downloadCsv(`sp800-53_${S.baseline}_${new Date().toISOString().slice(0, 10)}.csv`, header,
-        rows.map((c) => [c.id, c.name_en, c.name_uk_machine, c[pcol], c._csf.join(", "), "", "", "", "", ""]));
+        rows.map((c) => [c.id, c.name_en, c.name_uk_machine, c._base ? yes : "", c._base ? c[pcol] : "", c._sector ? yes : "", c._plan.join(", "), c._law.join(", "),
+          c._acts.map((id) => sourceRef(D.sourceById[id])).join("; "), "", "", "", "", ""]));
     };
   }
 

@@ -706,6 +706,52 @@
       }
     },
     {
+      "name": "sp800-53-profiles",
+      "path": "sp800-53/profiles.csv",
+      "format": "csv",
+      "mediatype": "text/csv",
+      "encoding": "utf-8",
+      "description": "Where system-level requirements come from. kind=baseline: an SSSCIP baseline security profile, whose controls and parameters are the column <id> and <id>_params_uk of baselines_ua.csv; kind=sector: a sector security profile (same columns; none approved yet); kind=plan: the act whose provisions are the mandatory measures of the cyber protection plan (their CSF subcategories expand to SP 800-53).",
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "kind",
+            "type": "string",
+            "description": "baseline | sector | plan"
+          },
+          {
+            "name": "source_id",
+            "type": "string",
+            "description": "The act that approves the profile (sources.csv)."
+          },
+          {
+            "name": "sort",
+            "type": "integer"
+          },
+          {
+            "name": "label_uk",
+            "type": "string"
+          },
+          {
+            "name": "label_en",
+            "type": "string"
+          },
+          {
+            "name": "applies_uk",
+            "type": "string"
+          },
+          {
+            "name": "applies_en",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
       "name": "eli",
       "path": "eli.jsonld",
       "format": "jsonld",

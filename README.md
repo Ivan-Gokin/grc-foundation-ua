@@ -14,7 +14,7 @@
 
 1. **Реєстр нормативних джерел** (252 позиції): закони, укази, постанови КМУ, накази Держспецзв'язку та НБУ, НД ТЗІ, ДСТУ, ВСТ, міжнародні договори і політики НАТО, а також законопроєкти для спостереження. Перелік фільтрується за типом суб'єкта (25 типів у чотирьох групах), показує опис і "кого стосується" для кожного акта, нормативні ланцюги з правовою підставою кожної ланки, і його можна завантажити. Кожен акт має ідентифікатор ELI (European Legislation Identifier), а ланцюги описано властивостями онтології ELI і доступні як JSON-LD.
 2. **Зіставлення з СУІБ**: окремі положення (стаття, пункт) зіставлені із заходами ISO/IEC 27001:2022 або NIST CSF 2.0 за методикою NIST IR 8477. Результат вивантажується як проєкт Положення про застосовність або цільового профілю зі стовпцями для параметрів, які визначає організація, і посилань на політики.
-3. **Рівень систем (попередня версія)**: перехід від CSF 2.0 до NIST SP 800-53 з українськими базовими профілями безпеки.
+3. **Рівень систем (попередня версія)**: заходи NIST SP 800-53 для конкретної системи з позначкою, звідки походить кожна вимога: базовий профіль безпеки, план кіберзахисту, CSF і законодавство (галузеві профілі додадуться, коли їх затвердять).
 
 Окремо ведеться **довідковий перелік актів і проєктів ЄС** (36 позицій): він показує, куди рухається українське законодавство, але не потрапляє до таблиці заходів. Розділ **Статті** містить довідкові матеріали (кейси політик СУІБ, огляд GRC-систем).
 
@@ -81,7 +81,7 @@ GRC automation starts with a management system, not a tool: you need to know whi
 
 1. **A register of legal and normative sources** (252 entries): laws, decrees, Cabinet of Ministers resolutions, SSSCIP and NBU orders, TZI normative documents, national and military standards, international agreements and NATO policies, plus bills on a watch list. It is filtered by entity type (25 types in four groups), shows what each act is about and whom it concerns, and regulatory chains with the legal basis of every link, and it can be downloaded. Every act has a European Legislation Identifier (ELI), and the chains use the ELI ontology properties and are published as JSON-LD.
 2. **ISMS mappings**: individual provisions (article, paragraph) are mapped to ISO/IEC 27001:2022 or NIST CSF 2.0 controls using the NIST IR 8477 relationship model. The result is exported as a draft Statement of Applicability or Target Profile, with columns for organisation-defined values and policy references.
-3. **System level (preview)**: from CSF 2.0 to NIST SP 800-53 with the Ukrainian baseline security profiles.
+3. **System level (preview)**: NIST SP 800-53 controls for a given system, each marked with where the requirement comes from: a baseline security profile, the cyber protection plan, or CSF and legislation (sector profiles will be added once approved).
 
 A separate **EU reference list** (36 acts and proposals) shows where Ukrainian law is heading but never enters the controls table. The **Articles** section holds background reading (ISMS policy case studies, an overview of GRC systems).
 

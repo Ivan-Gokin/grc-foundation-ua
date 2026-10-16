@@ -184,8 +184,13 @@ table.sources td:nth-child(4) { width: 22%; min-width: 180px; }
 .src-eli code { font-size: .95em; }
 .src-eli abbr { text-decoration: none; font-weight: 600; letter-spacing: .02em; }
 table.system .ctl-id { white-space: nowrap; }
-table.system td:nth-child(2) { width: 32%; min-width: 200px; }
-table.system td:nth-child(4) { width: 22%; min-width: 150px; }
+table.system th[scope=row] { width: 30%; min-width: 200px; }
+table.system code { font-size: .8rem; white-space: nowrap; }
+.mark { color: var(--full); font-weight: 600; }
+.sys-sources { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }
+.sys-src { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius); padding: 10px 12px; }
+.sys-src dt { font-weight: 600; margin-bottom: 4px; }
+.sys-src dd { margin: 0; font-size: .88rem; color: var(--muted); }
 tr.flash > * { background: var(--seal-tint); transition: background .3s; }
 
 /* ------------------------------------------------------------ drivers: the set-relation glyph is the one bold element */
