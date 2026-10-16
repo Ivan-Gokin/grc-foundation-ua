@@ -2,7 +2,7 @@
 
 The data in `data/` is licensed under the Creative Commons Attribution 4.0 International licence (CC BY 4.0): https://creativecommons.org/licenses/by/4.0/
 
-Attribution: "GRC foundation for Ukraine, data version <version>, https://github.com/<owner>/grc-foundation-ua".
+Attribution: "GRC foundation for Ukraine, data version <version>, https://ivan-gokin.github.io/grc-foundation-ua/".
 
 Third-party content inside the data keeps its own status:
 

@@ -1,0 +1,41 @@
+name: Помилка в зіставленні / Mapping error
+description: Неправильне чи відсутнє зіставлення положення із заходом / A wrong or missing provision-to-control mapping
+labels: [mappings]
+body:
+  - type: input
+    id: provision
+    attributes:
+      label: Положення / Provision
+      placeholder: ua-cmu-373-2006:p7
+    validations:
+      required: true
+  - type: dropdown
+    id: framework
+    attributes:
+      label: Стандарт / Framework
+      options: [ISO/IEC 27001:2022, NIST CSF 2.0]
+    validations:
+      required: true
+  - type: input
+    id: control
+    attributes:
+      label: Захід / Control
+      placeholder: A.8.5 / PR.AA-03
+  - type: dropdown
+    id: problem
+    attributes:
+      label: Проблема / Problem
+      options:
+        - Зайве зіставлення / Mapping should not exist
+        - Бракує зіставлення / Mapping is missing
+        - Неправильне відношення чи покриття / Wrong relationship or coverage
+        - Бракує параметра із закону / Legal parameter missing
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Обґрунтування / Rationale
+      description: Посилання на пункт акта і чому / Cite the paragraph and explain why
+    validations:
+      required: true

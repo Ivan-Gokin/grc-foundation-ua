@@ -22,28 +22,38 @@
 
 ### Як користуватися
 
-- **Сайт:** `https://<owner>.github.io/grc-foundation-ua/` (після публікації). Оберіть тип організації та стандарт, перегляньте заходи з правовими підставами й завантажте результат у CSV чи Excel.
-- **Дані:** таблиці в теці [`data/`](data/). GitHub показує їх як таблиці з пошуком, їх можна завантажити напряму.
+- **Сайт:** [https://ivan-gokin.github.io/grc-foundation-ua/](https://ivan-gokin.github.io/grc-foundation-ua/). Оберіть тип організації та стандарт, перегляньте заходи з правовими підставами й завантажте результат у CSV чи Excel.
+- **Дані для людей:** на сайті в розділі **Дані** є `grc-foundation-ua.xlsx` - реєстр, ланцюги і зіставлення з назвами актів, текстами вимог і назвами заходів в одній книзі.
+- **Дані для програм:** там само - CSV (UTF-8) з описом стовпців у `datapackage.json` і метадані ELI (`eli.jsonld`), за постійними адресами `https://ivan-gokin.github.io/grc-foundation-ua/data/<файл>`.
 
 ### Склад репозиторію
 
 | Що | Де |
 |---|---|
-| Сайт | `index.html`, `assets/`, `content/` |
-| Дані | `data/*.csv`, опис стовпців у `data/datapackage.json` |
+| Сайт | `index.html`, `404.html`, `assets/`, `content/` |
+| Зіставлення (редагуються в Excel) | `mappings/*.xlsx` |
+| Решта даних | `data/*.csv`, опис стовпців у `data/datapackage.json` |
+| Перевірка і збирання | `scripts/validate.py`, `scripts/build.py`; публікація - `.github/workflows/site.yml` |
 | Концепція, модель даних і порядок супроводу | [`docs/BLUEPRINT.uk.md`](docs/BLUEPRINT.uk.md) |
-| Довідкові статті | `content/articles/*.md` |
-| Метадані ELI (JSON-LD) | `data/eli.jsonld`, генерує `scripts/build_eli.py` |
-| Перевірка даних | `scripts/validate.py` (запускається в CI) |
+
+Згенеровані файли (`provisions.csv`, `mappings.csv`, `eli.jsonld`, `grc-foundation-ua.xlsx`) у репозиторії не зберігаються: їх збирають під час публікації.
 
 ### Встановлення
 
-1. Створіть на GitHub порожній публічний репозиторій `grc-foundation-ua` і завантажте до нього вміст архіву (`git push` або "Add file → Upload files").
-2. У `assets/js/config.js` замініть `OWNER` у `repoUrl` на свій обліковий запис.
-3. **Settings → Pages → Build and deployment:** Source "Deploy from a branch", гілка `main`, тека `/ (root)`. Збирати нічого не треба (файл `.nojekyll` вимикає Jekyll).
-4. За хвилину-дві сайт з'явиться за адресою `https://<owner>.github.io/grc-foundation-ua/`.
-5. Перевірка даних запускається автоматично для кожного pull request (`.github/workflows/validate.yml`). Локально: `python3 scripts/validate.py --stats`; після зміни актів чи зв'язків також `python3 scripts/build_eli.py`.
-6. Для локального перегляду: `python3 -m http.server 8000` у корені репозиторію і відкрийте `http://localhost:8000` (сайт читає CSV через `fetch`, тому відкриття `index.html` як файлу не спрацює).
+1. Створіть на GitHub порожній публічний репозиторій `grc-foundation-ua` в обліковому записі [Ivan-Gokin](https://github.com/Ivan-Gokin) (адреси в `assets/js/config.js` і `data/meta.json` уже налаштовано на нього).
+2. Завантажте вміст архіву: "Add file → Upload files" (разом із прихованою текою `.github`) або з терміналу в теці проєкту: `git init -b main`, `git add -A`, `git commit -m "Перша публікація"`, `git remote add origin https://github.com/Ivan-Gokin/grc-foundation-ua.git`, `git push -u origin main`.
+3. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
+4. Відкрийте вкладку **Actions** і, якщо перший запуск ще не відбувся або впав до вмикання Pages, запустіть **Check and publish** вручну (Run workflow). За кілька хвилин сайт з'явиться за адресою https://ivan-gokin.github.io/grc-foundation-ua/.
+5. Далі кожна зміна в `main` перевіряється й публікується автоматично; pull request лише перевіряється.
+
+Локально: `pip install openpyxl`, потім `python3 scripts/validate.py --stats`, `python3 scripts/build.py` і `python3 -m http.server 8000 -d _site` (відкрийте `http://localhost:8000`).
+
+### Як оновити зіставлення
+
+1. Відкрийте потрібну книгу в `mappings/` (на GitHub: файл → "Download raw file").
+2. Змініть рядки в аркуші «Вимоги» чи в аркуші стандарту (`iso27001-2022`, `csf-2.0`). Підказки є в примітках до заголовків, значення - у випадних списках.
+3. Завантажте файл назад з тією самою назвою ("Add file → Upload files") і зробіть commit.
+4. Перевірка покаже помилки, якщо вони є (вкладка Actions); інакше сайт оновиться сам.
 
 ### Як долучитися
 
@@ -51,7 +61,7 @@
 
 ### Походження
 
-Перелік джерел, українські базові профілі SP 800-53 і зіставлення базових заходів з CSF 2.0 імпортовано з проєкту [grc-one-stop-shop-ua](https://github.com/Ivan-Gokin/grc-one-stop-shop-ua) (`scripts/import_legacy.py`). Розширений реєстр (описи, теги типів суб'єктів, ланцюги з правовими підставами, акти ЄС) додано у жовтні 2026 р. (`scripts/merge_register_2026_10.py`). Зіставлення для восьми постанов НБУ (з ISO/IEC 27001) і Закону № 80/94-ВР (з NIST CSF 2.0) згенеровано ШІ і ще не вичитано; їх імпортовано скриптом `scripts/import_strm_2026_10.py`, а на сайті вони мають позначку "ШІ, не вичитано". Ідентифікатори і зв'язки переведено на ELI скриптом `scripts/migrate_to_eli_2026_10.py`. Усі чотири скрипти одноразові й зберігаються лише для простежуваності.
+Перелік джерел, українські базові профілі SP 800-53 і зіставлення базових заходів з CSF 2.0 походять із проєкту [grc-one-stop-shop-ua](https://github.com/Ivan-Gokin/grc-one-stop-shop-ua); розширений реєстр (описи, теги, ланцюги, акти ЄС) додано у жовтні 2026 р. Зіставлення для восьми постанов НБУ (з ISO/IEC 27001) і Закону № 80/94-ВР (з NIST CSF 2.0) згенеровано ШІ і ще не вичитано: на сайті й у таблицях вони мають позначку "ШІ, не вичитано". Як дані потрапили до проєкту, описано в [`CHANGELOG.md`](CHANGELOG.md).
 
 ### Ліцензії
 
@@ -77,28 +87,38 @@ The project assumes operations in Ukraine.
 
 ### How to use it
 
-- **Site:** `https://<owner>.github.io/grc-foundation-ua/` (once published). Pick your organisation type and framework, review controls with their legal drivers, and download the result as CSV or Excel.
-- **Data:** the tables in [`data/`](data/). GitHub renders them as searchable tables, and they can be downloaded directly.
+- **Site:** [https://ivan-gokin.github.io/grc-foundation-ua/](https://ivan-gokin.github.io/grc-foundation-ua/). Pick your organisation type and framework, review controls with their legal drivers, and download the result as CSV or Excel.
+- **Data for people:** the **Data** section of the site offers `grc-foundation-ua.xlsx`: the register, the chains and the mappings with act names, requirement texts and control names in one workbook.
+- **Data for software:** in the same place, UTF-8 CSV files described in `datapackage.json` and ELI metadata (`eli.jsonld`), at stable addresses `https://ivan-gokin.github.io/grc-foundation-ua/data/<file>`.
 
 ### What is in the repository
 
 | What | Where |
 |---|---|
-| Site | `index.html`, `assets/`, `content/` |
-| Data | `data/*.csv`, column descriptions in `data/datapackage.json` |
+| Site | `index.html`, `404.html`, `assets/`, `content/` |
+| Mappings (edited in Excel) | `mappings/*.xlsx` |
+| Other data | `data/*.csv`, column descriptions in `data/datapackage.json` |
+| Checks and build | `scripts/validate.py`, `scripts/build.py`; publishing: `.github/workflows/site.yml` |
 | Concept, data model and maintenance procedure | [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) |
-| Articles | `content/articles/*.md` |
-| ELI metadata (JSON-LD) | `data/eli.jsonld`, built by `scripts/build_eli.py` |
-| Data checks | `scripts/validate.py` (runs in CI) |
+
+Generated files (`provisions.csv`, `mappings.csv`, `eli.jsonld`, `grc-foundation-ua.xlsx`) are not kept in the repository; they are built on publication.
 
 ### Installation
 
-1. Create an empty public repository `grc-foundation-ua` on GitHub and add the contents of the archive (`git push`, or "Add file → Upload files").
-2. In `assets/js/config.js`, replace `OWNER` in `repoUrl` with your account.
-3. **Settings → Pages → Build and deployment:** Source "Deploy from a branch", branch `main`, folder `/ (root)`. There is no build step (`.nojekyll` turns Jekyll off).
-4. After a minute or two the site is live at `https://<owner>.github.io/grc-foundation-ua/`.
-5. Data checks run automatically on every pull request (`.github/workflows/validate.yml`). Locally: `python3 scripts/validate.py --stats`; after changing acts or links, also `python3 scripts/build_eli.py`.
-6. To preview locally: run `python3 -m http.server 8000` in the repository root and open `http://localhost:8000` (the site loads the CSVs with `fetch`, so opening `index.html` as a file will not work).
+1. Create an empty public repository `grc-foundation-ua` under the [Ivan-Gokin](https://github.com/Ivan-Gokin) account (the addresses in `assets/js/config.js` and `data/meta.json` already point there).
+2. Add the contents of the archive: "Add file → Upload files" (including the hidden `.github` folder), or from a terminal in the project folder: `git init -b main`, `git add -A`, `git commit -m "First publication"`, `git remote add origin https://github.com/Ivan-Gokin/grc-foundation-ua.git`, `git push -u origin main`.
+3. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
+4. Open the **Actions** tab and, if the first run has not happened yet or failed before Pages was switched on, run **Check and publish** by hand (Run workflow). In a few minutes the site is live at https://ivan-gokin.github.io/grc-foundation-ua/.
+5. From then on every change to `main` is checked and published automatically; pull requests are only checked.
+
+Locally: `pip install openpyxl`, then `python3 scripts/validate.py --stats`, `python3 scripts/build.py` and `python3 -m http.server 8000 -d _site` (open `http://localhost:8000`).
+
+### Updating the mappings
+
+1. Open the workbook in `mappings/` (on GitHub: the file → "Download raw file").
+2. Edit the rows in the «Вимоги» sheet or in a framework sheet (`iso27001-2022`, `csf-2.0`). The header notes explain each column; fixed values come from drop-down lists.
+3. Upload the file back under the same name ("Add file → Upload files") and commit.
+4. The check reports any errors (Actions tab); otherwise the site updates itself.
 
 ### Contributing
 
@@ -106,7 +126,7 @@ Report a new or changed act, or a wrong mapping, through an issue, or propose a 
 
 ### Provenance
 
-The source list, the Ukrainian SP 800-53 baseline profiles and the baseline-measure mapping to CSF 2.0 were imported from [grc-one-stop-shop-ua](https://github.com/Ivan-Gokin/grc-one-stop-shop-ua) (`scripts/import_legacy.py`). The extended register (descriptions, entity-type tags, chains with legal bases, EU acts) was merged in October 2026 (`scripts/merge_register_2026_10.py`). The mappings for eight NBU resolutions (to ISO/IEC 27001) and Law No. 80/94-VR (to NIST CSF 2.0) were generated by AI and have not yet been proofread; they were imported with `scripts/import_strm_2026_10.py` and are marked "AI, not reviewed" on the site. Identifiers and links were moved to ELI with `scripts/migrate_to_eli_2026_10.py`. All four scripts are one-off and kept for provenance only.
+The source list, the Ukrainian SP 800-53 baseline profiles and the baseline-measure mapping to CSF 2.0 come from [grc-one-stop-shop-ua](https://github.com/Ivan-Gokin/grc-one-stop-shop-ua); the extended register (descriptions, tags, chains, EU acts) was added in October 2026. The mappings for eight NBU resolutions (to ISO/IEC 27001) and Law No. 80/94-VR (to NIST CSF 2.0) were generated by AI and have not yet been proofread: the site and the workbooks mark them "AI, not reviewed". [`CHANGELOG.md`](CHANGELOG.md) records how the data came in.
 
 ### Licences
 

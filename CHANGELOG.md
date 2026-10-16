@@ -1,5 +1,13 @@
 # Changelog
 
+## data-2026.10.4 (2026-10-16)
+
+- Provisions and mappings moved from `data/provisions.csv` and `data/mappings.csv` to Excel workbooks `mappings/*.xlsx` (`nbu`, `law-80-94-vr`, `cmu-373-736`, `ssscip-75-2026`): a «Вимоги» sheet per workbook and one sheet per framework, linked by act + paragraph, with header notes and drop-down lists. The conversion was lossless, except that the duplicate provision `ua-law-80-94-vr:a8-p4-gap` was merged into `a8-p4` as its "no counterpart" link.
+- Nothing generated is kept in git any more. `scripts/build.py` builds the site into `_site/` and adds `provisions.csv`, `mappings.csv`, `eli.jsonld` and the new readable workbook `grc-foundation-ua.xlsx` (register, chains and mappings with names and texts joined in). GitHub Actions (`site.yml`) checks every pull request and publishes `main` to Pages; the Pages source is now "GitHub Actions".
+- Removed for compactness: the one-off import and migration scripts (`import_legacy.py`, `merge_register_2026_10.py`, `import_strm_2026_10.py`, `migrate_to_eli_2026_10.py`, `legacy_translations_en.csv`), `build_eli.py` (now part of `build.py`), `.nojekyll` and `validate.yml`. What they did is recorded in the entries below.
+- The Data page now offers the readable workbook first and links generated files to what they are built from.
+- Removed the archived CSF 1.1 integration matrix (`data/archive/`). The repository and site addresses now point to github.com/Ivan-Gokin; the readable workbook gives full ELI addresses.
+
 ## data-2026.10.3 (2026-10-16)
 
 - Regulatory chains rebuilt on the European Legislation Identifier (ELI). `source_relations.csv` now uses ELI ontology 1.5 properties: `issued_under` → `based_on` (103), `replaces` → `repeals` (16), `implements` → `transposes` (EU directives, 3), `applies` (EU regulations, 3) or `ensures_implementation_of` (treaties, 3); `amends` unchanged. Three links were reclassified: Law 4336-IX → Regulation 2024/792 (`related_to`), SSSCIP order 843/2025 → UA-NATO Security Agreement and Decree 37/2022 → Decree 447/2021 (`ensures_implementation_of`). New `adopts` (ELI-DL) for a law adopted from a bill.

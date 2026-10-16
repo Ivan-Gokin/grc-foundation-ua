@@ -1,0 +1,41 @@
+name: Новий або змінений акт / New or changed act
+description: Повідомити про новий акт, зміни, втрату чинності / Report a new act, an amendment or a repeal
+labels: [sources]
+body:
+  - type: dropdown
+    id: event
+    attributes:
+      label: Що сталося / What happened
+      options:
+        - Новий акт / New act
+        - Внесено зміни / Amended
+        - Втратив чинність / Repealed
+        - Замінено іншим актом / Replaced by another act
+        - Помилка в описі чи застосовності / Wrong description or applicability
+    validations:
+      required: true
+  - type: input
+    id: act
+    attributes:
+      label: Акт / Act
+      description: Вид, номер, дата / Type, number, date
+      placeholder: Постанова КМУ № 518 від 19.06.2019
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Посилання на офіційний текст / Link to the official text
+      placeholder: https://zakon.rada.gov.ua/laws/show/...
+    validations:
+      required: true
+  - type: input
+    id: source_id
+    attributes:
+      label: Ідентифікатор у sources.csv, якщо є / ID in sources.csv, if any
+      placeholder: ua-cmu-518-2019
+  - type: textarea
+    id: details
+    attributes:
+      label: Подробиці / Details
+      description: До кого застосовний, які пункти змінилися, що замінює / Who it applies to, which paragraphs changed, what it replaces
