@@ -10,7 +10,3 @@
 | КСЗІ | KSZI | comprehensive information protection system with state expertise |
 | ТЗІ | TZI | technical information protection |
 | параметр, визначений організацією | organisation-defined parameter (ODP) | a value the standard leaves to the organisation |
-
-## Disclaimer
-
-This is a reference tool, not legal advice. Applicability and mappings are the authors' opinion. Check conclusions against the official texts linked in the legal sources.

@@ -37,7 +37,7 @@ ua-cmu-518-2019,based_on,ua-law-2163-viii,Відповідно до ч. 3 ст. 
 ua-cmu-943-2020,based_on,ua-law-2163-viii,Відповідно до ч. 3 ст. 4 Закону 2163-VIII,https://iplex.com.ua/doc.php?code=943-2020-%D0%BF,high,no
 ua-cmu-1109-2020,based_on,ua-law-1882-ix,"Відповідно до ст. 8, 9, 10 Закону ""Про критичну інфраструктуру"" (чинна редакція)",https://iplex.com.ua/doc.php?code=1109-2020-%D0%BF,high,no
 ua-cmu-1176-2020,based_on,ua-law-2469-viii,"Відповідно до п. 4 ч. 3 ст. 27 Закону ""Про національну безпеку України""",https://iplex.com.ua/doc.php?code=1176-2020-%D0%BF,high,no
-ua-cmu-1426-2021,based_on,ua-law-2163-viii,Відповідно до ч. 3 ст. 8 Закону 2163-VIII,https://iplex.com.ua/doc.php?code=1426-2021-%D0%BF,high,no
+ua-cmu-1426-2021,based_on,ua-law-2163-viii,"Відповідно до ч. 3 ст. 8 Закону 2163-VIII: п. 15 називає впровадження організаційно-технічної моделі кіберзахисту одним зі способів забезпечення функціонування національної системи кібербезпеки",https://iplex.com.ua/doc.php?code=1426-2021-%D0%BF,high,no
 ua-cmu-415-2023,based_on,ua-law-1882-ix,"Відповідно до ч. 5 ст. 11 Закону ""Про критичну інфраструктуру""",https://iplex.com.ua/doc.php?code=415-2023-%D0%BF,high,no
 ua-cmu-299-2023,based_on,ua-pres-37-2022,Відповідно до п. 37 Плану реалізації Стратегії кібербезпеки,https://iplex.com.ua/doc.php?code=299-2023-%D0%BF,high,no
 ua-cmu-373-2006,based_on,ua-law-80-94-vr,"Відповідно до ст. 10 Закону ""Про захист інформації в ІКС""",https://iplex.com.ua/doc.php?code=373-2006-%D0%BF,high,no
@@ -99,6 +99,7 @@ ua-ssscip-75-2026,based_on,ua-cmu-518-2019,Мінрозвитку: на вико
 ua-ssscip-75-2026,based_on,ua-cmu-373-2006,Те саме роз'яснення Мінрозвитку,https://mininfra.gov.ua/storage/app/sites/1/uploaded-files/roziasnennia-05-05-3643-2026-vn.pdf,high,no
 ua-ssscip-75-2026,repeals,ua-ssscip-601-2021,З набранням чинності наказом № 75 наказ № 601 втратив чинність,https://mininfra.gov.ua/storage/app/sites/1/uploaded-files/roziasnennia-05-05-3643-2026-vn.pdf,high,no
 ua-ssscip-75-2026,repeals,ua-ssscip-54-2025,З набранням чинності наказом № 75 наказ № 54 втратив чинність,https://mininfra.gov.ua/storage/app/sites/1/uploaded-files/roziasnennia-05-05-3643-2026-vn.pdf,high,no
+ua-ssscip-54-2025,based_on,ua-cmu-1426-2021,"Базові заходи з кіберзахисту передбачено п. 5 Положення про організаційно-технічну модель кіберзахисту (у редакції 2024 року); наказ № 54 їх затвердив",https://www.kmu.gov.ua/news/natsionalna-systema-kiberbezpeky-funktsionuvatyme-efektyvnishe,high,no
 ua-ssscip-141-2026,repeals,ua-ssscip-599-2023,"Коментар реєстру: наказ № 599 втратив чинність, див. наказ № 141",,medium,no
 ua-ssscip-143-2026,repeals,ua-ssscip-570-2023,"Коментар реєстру: ймовірно втратив чинність, див. наказ № 143; наказ № 143 замінює рекомендації 2023 року",,medium,no
 ua-ssscip-143-2026,repeals,ua-nccc-21-2023,"Коментар реєстру: протокол TLP втратив чинність, див. наказ № 143",,medium,no

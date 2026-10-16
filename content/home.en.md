@@ -75,5 +75,3 @@ GRC engineering turns requirements, controls and evidence into data and code: se
 <a class="card" href="#/controls?s=vendors,ict-suppliers,security-services,cloud&fw=iso27001-2022"><h3>IT and cybersecurity service suppliers</h3><p>Requirements that reach you through contracts with your customers.</p></a>
 <a class="card" href="#/sources?scope=core"><h3>Consultants and auditors</h3><p>The full register without filters and ready-made mappings for every client.</p></a>
 </div>
-
-<p class="home-note">This is a reference tool, not legal advice. Check conclusions against the texts of the acts linked in the register.</p>

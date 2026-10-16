@@ -492,3 +492,6 @@ a.card p { color: var(--muted); }
 .pager a span { color: var(--muted); font-size: .85rem; }
 .pager-next { text-align: right; margin-left: auto; }
 .prose h1, .prose h2, .prose h3 { scroll-margin-top: 90px; }
+.key { margin: 4px 0 8px; }
+.key > summary { cursor: pointer; color: var(--seal); font-size: .9rem; }
+.key .legend { margin: .6em 0 .4em; }

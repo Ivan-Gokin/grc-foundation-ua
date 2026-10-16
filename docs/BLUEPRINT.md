@@ -18,7 +18,7 @@ Scope decisions:
 - **ISMS only.** An integrated management system also covers quality (ISO 9001), continuity (ISO 22301) and others. They share the same harmonised structure, but this project covers the information security part.
 - **System level (phase 2):** NIST SP 800-53 Rev. 5 with the Ukrainian baseline profiles, reached from the CSF 2.0 result through the official NIST mapping.
 
-The project is a starting point, not legal advice. Every row carries its provenance and review status.
+Every row carries its provenance and review status.
 
 ## 2. Repository layout
 
@@ -47,7 +47,7 @@ Nothing generated is kept in git, so every fact lives in one place. On every pus
 | `data/eli.jsonld` | `sources.csv`, `source_relations.csv` | ELI metadata (3.4) |
 | `data/grc-foundation-ua.xlsx` | all of the above, joined | people: register, chains and mappings with names and texts |
 
-To preview locally: `pip install openpyxl`, `python3 scripts/build.py`, `python3 -m http.server 8000 -d _site`.
+How to check and build the site locally: [`CONTRIBUTING.md`](../CONTRIBUTING.md).
 
 ## 3. Data model
 
@@ -132,7 +132,7 @@ Provision IDs are `<source_id>:<local reference>`, for example `ua-cmu-373-2006:
 
 ### 3.3 Entity types and applicability
 
-Each act is tagged with the entity types it concerns (`applicability.csv`). The 25 types in `sectors.csv` are grouped for the filter (`sector_groups.csv`):
+Each act is tagged with the entity types it concerns (`applicability.csv`). The types in `sectors.csv` are grouped for the filter (`sector_groups.csv`):
 
 - **legal status:** critical infrastructure operators, CII owners, public sector, national cybersecurity system bodies, Defence Forces;
 - **information processed:** state information resources and restricted information, state secrets, NATO information, personal data;
@@ -146,6 +146,8 @@ A type can have several parents (`parent` separated by `;`). The criticality cat
 Selection logic: choosing a type includes its parents and `general` when matching acts (choosing `cii-3-4` shows acts tagged `ki`, `kii`, `cii-3-4` or `general`). For provisions with `applies_to`, choosing a broad type also includes the narrower ones (choosing `ki` shows the baseline measures for both criticality groups).
 
 ### 3.4 Regulatory chains: decoupling requirements
+
+For readers this is explained in the Methodology (`content/method.*.md`, with an example); here are the recording rules.
 
 Requirements often sit several levels deep: a law delegates to the Cabinet of Ministers, which delegates to SSSCIP. Chains are recorded in the vocabulary of the ELI ontology, so they can be exchanged with EUR-Lex and national gazettes that publish ELI metadata. To avoid counting the same requirement twice:
 
@@ -174,6 +176,8 @@ Requirements often sit several levels deep: a law delegates to the Cabinet of Mi
 
 ### 3.5 Mapping methodology
 
+For readers, the meaning of the relationships and coverage is explained in the Methodology; here are the field values.
+
 Mappings follow the set-theory relationship model from NIST IR 8477 (the method behind NIST's OLIR programme). The **provision is the focal element** and the control is the reference element, so each row reads "provision X is a `<relationship>` of control Y".
 
 | `relationship` | Meaning | Typical `coverage` |
@@ -199,16 +203,7 @@ Map each provision to both frameworks directly. Do not derive ISO mappings from 
 
 ### 3.6 Export columns
 
-The site exports what the reader sees plus blank columns to fill in:
-
-| Column | Filled by |
-|---|---|
-| Control ID, control, legal drivers, relationship, coverage, legal parameter | the site |
-| Applicable (Y/N), justification for exclusion | the organisation |
-| Organisation-defined value | the organisation (not weaker than the legal parameter) |
-| Policy / procedure reference, owner, implementation status, evidence | the organisation |
-
-For ISO 27001 this is a draft Statement of Applicability. For CSF 2.0 it is a draft Target Profile.
+The site exports what the reader sees and adds blank columns for the organisation's work. What to fill in is explained to readers in the guide (step 5, `content/guide/soa.*.md`); the columns are set by `exportSoa` in `assets/js/app.js`. For ISO 27001 it is a draft Statement of Applicability, for CSF 2.0 a draft target profile.
 
 ## 4. Maintaining the list of laws
 
@@ -226,7 +221,7 @@ For ISO 27001 this is a draft Statement of Applicability. For CSF 2.0 it is a dr
    - `last_verified`: today's date.
 3. Add one row per entity type to `applicability.csv`, with `basis` (why it applies) and `verified=yes` if you checked the scope article. Acts with no direct duties get no rows and `role=context`.
 4. Add its links to `source_relations.csv` with the ELI property that fits (3.4): at least `based_on` for the act it was adopted under. If it repeals an act, set the old act's `status` to `repealed`.
-5. If it contains requirements (`role=requirements`), add its provisions (4.3).
+5. If it contains requirements (`role=requirements`), add its provisions (4.4).
 6. Run `python3 scripts/validate.py` and open a pull request. CI runs the same check, and publishes the site once the change is merged.
 
 ### 4.2 Bills and EU acts

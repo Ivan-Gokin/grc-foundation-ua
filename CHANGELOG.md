@@ -1,5 +1,13 @@
 # Changelog
 
+## data-2026.10.8 (2026-10-17)
+
+- One licence for the whole project: data, texts and code are under CC BY 4.0 (`LICENSE` now holds its full text; `LICENSE-DATA.md` is gone, its third-party notes moved to the README). Vendored libraries and fonts keep their own licences.
+- New chain: SSSCIP Order No. 54/2025 `based_on` CMU Resolution No. 1426 (item 5 of the Regulation on the organisational and technical model of cyber protection); the basis of 1426 now cites item 15 of Art. 8(3) of Law No. 2163-VIII. The Methodology walks through this chain as an example of how an ISMS is required in public authorities, including the replacement of Order No. 54 by Order No. 75/2026.
+- Methodology: new section on importing the data into GRC systems (CISO Assistant YAML libraries, OSCAL) as an on-request option; the questionnaire result links to it.
+- Every piece of information now lives in one place: the full disclaimer only in About (short form in the footer); relationship symbols and coverage only in the Methodology (plus a collapsible key in Controls); the sources of SP 800-53 requirements only in the system view; the integrated-system how-to only in guide step 6; repository layout, procedures and local commands only in the blueprint and CONTRIBUTING. About explains the project's logic without file paths; the README is now a short maintainer entry point.
+- Clearer wording: the chains hint, the SP 800-53 preview note and source descriptions, the "who it concerns" review note, the guide's "follow the chains" step, the rationale of a mapping; baseline measures and the cyber protection plan are one row in the kinds of requirements. The GRC systems article no longer says KSZI is built on SP 800-53.
+
 ## data-2026.10.7 (2026-10-16)
 
 - New home page (`#/home`, the brand link): what the project does, a four-step "how it works" diagram, the two levels of requirements (the ISMS on ISO/IEC 27001 or NIST CSF 2.0; information systems on NIST SP 800-53 baseline profiles) with the Ukrainian names of the standards, what you get, the three stages (governance → compliance → risk management) and audience cards.

@@ -31,5 +31,5 @@ Amendment 1:2024 to ISO/IEC 27001:2022 also requires you to decide whether clima
 **Common mistakes**
 
 - the context is copied from a template;
-- only laws are considered and contractual requirements are missed;
+- the ISMS scope leaves out the suppliers that critical services depend on;
 - the context is described once and never reviewed.

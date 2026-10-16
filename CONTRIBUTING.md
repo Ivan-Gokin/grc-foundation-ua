@@ -7,8 +7,8 @@ Full procedure: [docs/BLUEPRINT.md](docs/BLUEPRINT.md), section 4.
 
 1. Одна зміна - один pull request: новий акт, зміна статусу, нові положення або зіставлення.
    One change per pull request: a new act, a status change, new provisions or mappings.
-2. **Зіставлення** редагуйте в Excel у `mappings/*.xlsx`: аркуш «Вимоги» і аркуш стандарту (`iso27001-2022`, `csf-2.0`). Підказки - у примітках до заголовків.
-   Edit **mappings** in Excel in `mappings/*.xlsx`: the «Вимоги» sheet and the framework sheet. The header notes explain each column.
+2. **Зіставлення** редагуйте в Excel у `mappings/*.xlsx`: аркуш «Вимоги» і аркуш стандарту (`iso27001-2022`, `csf-2.0`). Підказки - у примітках до заголовків, значення - у випадних списках. Без терміналу: на GitHub відкрийте файл → «Download raw file», змініть, завантажте з тією самою назвою («Add file → Upload files») і зробіть commit; помилки покаже вкладка Actions.
+   Edit **mappings** in Excel in `mappings/*.xlsx`: the «Вимоги» sheet and the framework sheet. The header notes explain each column; fixed values come from drop-down lists. Without a terminal: on GitHub open the file → "Download raw file", edit it, upload it under the same name ("Add file → Upload files") and commit; the Actions tab shows any errors.
 3. **Решту даних** редагуйте в CSV у `data/` (UTF-8 без BOM; в Excel - лише через імпорт з UTF-8). Ідентифікатори і `eli` постійні. Новий акт отримує наступний вільний `register_no`; акти ЄС - `scope=reference`; зв'язки в `source_relations.csv` - властивості ELI (`based_on`, `amends`, `repeals`, `transposes`...).
    Edit **everything else** in the CSV files in `data/` (UTF-8, no BOM). IDs and `eli` are permanent. A new act takes the next free `register_no`; EU acts get `scope=reference`; links in `source_relations.csv` are ELI properties.
 4. Нове зіставлення має статус «чернетка», згенероване ШІ - «ШІ (не вичитано)». «Перевірено» ставить друга людина і вписує себе в «Хто перевірив».

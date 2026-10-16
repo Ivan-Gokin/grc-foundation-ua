@@ -17,7 +17,7 @@ ISO management system standards share the same clauses 4-10, so they can be run 
 | Management review | 9.3 | One meeting, one record |
 | Nonconformity and improvement | 10 | One corrective action log |
 
-**Where to start.** With the document pyramid: top-level policy, topic-specific policies, procedures, instructions, records. How to write policies that are followed: [ISMS policy examples and templates](#/articles?a=isms-policy-case-studies). Every requirement in the register and every control needs an owner.
+**Where to start.** With the document pyramid: policies, standards, procedures, instructions and records. How to build it and write policies that are followed: [ISMS policy examples and templates](#/articles?a=isms-policy-case-studies). Every requirement in the register and every control needs an owner.
 
 **Records management.** Ukrainian records management requirements (including DSTU 4163:2020) are in the [legal sources](#/sources?scope=core&records=1) once you turn on "records management requirements". For public authorities and state-owned enterprises they are the basis of document control (clause 7.5).
 

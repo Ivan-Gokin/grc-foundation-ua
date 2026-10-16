@@ -4,35 +4,26 @@
 
 <div id="about-version"></div>
 
-## Open source and open data
-
-The project is fully open:
-
-- **code** is under the MIT licence;
-- **data** is under CC BY 4.0: you may use, change and share it, including in commercial products, as long as you credit the source.
-
-The texts of ISO standards are not reproduced: only identifiers and our own short names.
-
 ## How it is built
 
-The project's logic can be traced from the primary source to every row on the site. Its main value is the data: the register of acts, requirements broken down by provision, and mappings to controls. Everything else just presents them.
+The project's logic can be traced from the primary source to every row on the site:
 
-| Part | Where | What it does |
-|---|---|---|
-| Register of acts, chains, kinds of entities, control catalogues | `data/*.csv` | The core data, edited as tables |
-| Requirements of acts and mappings | `mappings/*.xlsx` | One Excel workbook per group of acts: a "Вимоги" (requirements) sheet and one sheet per standard |
-| Validation | `scripts/validate.py` | Catches errors: unknown acts and controls, invalid values, duplicates |
-| Build | `scripts/build.py` | Builds the site and generates the downloads: CSV, JSON-LD (ELI), a combined Excel workbook |
-| Site | `index.html`, `assets/`, `content/` | A static page: all filters and exports run in the browser, nothing is sent anywhere |
-| Publishing | `.github/workflows/site.yml` | After every change, GitHub Actions validates the data, builds the site and publishes it |
+1. **Register of acts.** Every act has a description, legal status, the date it was last checked against the official text, a link to that text and "who it applies to" tags.
+2. **Requirements.** Every act is broken down into provisions (article, paragraph) with a short summary.
+3. **Mappings.** Every provision is linked to controls of a standard, with a relationship and a review status.
+4. **Checks and publishing.** After every change the data is checked for errors automatically, and the site and the downloads are rebuilt. Filters and exports run in your browser; nothing is sent anywhere.
 
-How the data itself is built is described in the [Methodology](#/method). The full data model and maintenance rules are in the project blueprint:
+The main value is the data; the site only presents it. The rules it is built by are in the [Methodology](#/method), and the technical description for maintainers is in the blueprint:
 
 <div id="about-links"></div>
 
 ## Data
 
 <div id="about-data"></div>
+
+## Licence
+
+The whole project — data, texts and code — is under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): you may use, change and share it, including commercially, as long as you credit the source. How to credit it and the status of third-party material (including ISO texts, which are not reproduced) are in the [README](https://github.com/Ivan-Gokin/grc-foundation-ua#licence).
 
 ## Plans
 

@@ -4,13 +4,7 @@
 
 ## Base standards
 
-The basis is the standards Ukrainian regulators rely on:
-
-| Standard | Used for | Why this one |
-|---|---|---|
-| **ISO/IEC 27001:2022** (Information security management systems. Requirements) | The organisation's ISMS, certification | The international management system standard; the Ukrainian version is DSTU ISO/IEC 27001 |
-| **NIST CSF 2.0** (NIST Cybersecurity Framework) | The organisation's cybersecurity profile | The SSSCIP baseline cyber protection measures (Order No. 75/2026) are an adapted translation of CSF 2.0 |
-| **NIST SP 800-53 Rev. 5** (Security and Privacy Controls for Information Systems and Organizations) | Controls for a specific information system | The SSSCIP baseline security profiles (Orders No. 409/2025, 419/2025, 843/2025) are built on it |
+The basis is the standards Ukrainian regulators rely on: **ISO/IEC 27001:2022** and **NIST CSF 2.0** for the organisation's management system, and **NIST SP 800-53 Rev. 5** for information systems (the SSSCIP baseline security profiles are built on it). How to choose between the first two is described in the guide: [step 4](#/guide?c=standard).
 
 These standards do not exclude others. Mappings are tied to specific provisions of acts, so they can be carried over to any other standard (ISO 22301, ISO/IEC 27701, CIS Controls) through published crosswalks between standards.
 
@@ -18,13 +12,12 @@ These standards do not exclude others. Mappings are tied to specific provisions 
 
 [OCEG](https://www.oceg.org/ideas/what-is-grc) is the international non-profit community that coined the term GRC. It defines GRC as *the integrated collection of capabilities that enable an organization to reliably achieve objectives, address uncertainty, and act with integrity*. Integration does not mean one big GRC department or one piece of software. It means governance, risk and compliance do not live in isolated silos. According to OCEG, organisations that integrate these processes duplicate less work and spend less.
 
-ISO implements the idea through the **harmonised structure** of management system standards: ISO 9001 (quality), ISO/IEC 27001 (information security), ISO 22301 (continuity), ISO/IEC 27701 (privacy) and ISO/IEC 42001 (AI) share the same clauses 4-10. So one management system can meet several standards at once: one context, one risk method, one audit plan. This site covers the information security management system, but the other systems can be built on the same foundation.
+ISO implements the idea through the harmonised structure of management system standards: quality, information security, continuity, privacy and AI can be run as one system. How to do this in practice is in the guide: [step 6](#/guide?c=ims). This site covers the information security management system, but the other systems can be built on the same foundation.
 
 **How ready-made mappings help:**
 
 - **One control covers many requirements.** For example, ISO/IEC 27001 control A.5.24 (incident management planning) meets requirements of several NBU resolutions, SSSCIP orders and the personal data protection law at once. The organisation implements it once and has evidence for all of them.
 - **You see where the standard is not enough.** Partial coverage and requirements with no counterpart show what to add on top of the standard. The organisation does not spend time on what is already covered and focuses on real gaps.
-- **Legal changes stay local.** A new version of an act affects only the controls its provisions are linked to, not the whole system.
 
 ## How requirements are mapped to controls
 
@@ -42,23 +35,21 @@ The method is **Set Theory Relationship Mapping (STRM)** from [NIST IR 8477](htt
 
 Each mapping also carries:
 
-- **rationale:** meaning (semantic), wording (syntactic) or outcome (functional);
+- **rationale:** what the conclusion about the relationship rests on: the meaning of the requirements (semantic), matching wording (syntactic) or the same outcome (functional);
 - **legal parameter:** a value the act sets instead of the organisation;
 - **where it belongs:** the internal document the requirement should live in;
-- **status:** "AI, not reviewed" → "draft" → "reviewed" (by a second person, signed).
-
-A provision that no control covers goes to the list of **requirements with no counterpart**.
+- **review status** (see "Data quality" below).
 
 ## Kinds of requirements
 
 | Kind | Examples | Binding force and nuances |
 |---|---|---|
-| **International treaties and EU law** | Convention on Cybercrime, Convention 108, EU-Ukraine Association Agreement, Security Agreement with NATO; EU acts: NIS2, DORA, GDPR | Ratified treaties are part of Ukrainian legislation (Art. 9 of the Constitution). EU law is not directly binding in Ukraine: it sits on a separate "Reference" tab and shows where legislation is heading through approximation |
+| **International treaties and EU law** | Convention on Cybercrime, Convention 108, EU-Ukraine Association Agreement, Security Agreement with NATO; EU acts: NIS2, DORA, GDPR | Ratified treaties are part of Ukrainian legislation (Art. 9 of the Constitution). EU law is for reference only, on a separate tab |
 | **Laws of Ukraine** | "On the Basic Principles of Ensuring Cybersecurity of Ukraine", "On Information Protection in Information and Communication Systems", "On Personal Data Protection" | Set the framework and delegate details to secondary legislation. Rarely contain specific controls themselves |
 | **Sector requirements: finance** | NBU Board resolutions on information security, cyber protection, risk management, cloud services | The NBU adopts them under the Law "On the National Bank of Ukraine". They bind banks and other NBU-supervised institutions and often go down to deadlines and thresholds |
 | **Sector requirements: public sector and CI** | Cabinet of Ministers resolutions (general cyber protection requirements for CI objects, minimum requirements for information protection in ICS), SSSCIP orders | See below on registration with the Ministry of Justice |
-| **Baseline measures and profiles** | Baseline cyber protection measures based on CSF 2.0 (Order No. 75/2026); baseline security profiles based on SP 800-53 (Orders No. 409/2025, 419/2025, 843/2025) | The mandatory minimum. Depend on the object's category (baseline measures) or the kind of information in the system (profiles) |
-| **Cyber protection plan** | The cyber protection plan form (Order No. 75/2026) | Mandatory measures that must go into the plan depending on the object's category |
+| **Baseline measures and the cyber protection plan** (organisation level) | Order No. 75/2026: baseline cyber protection measures based on CSF 2.0 and the cyber protection plan form | The mandatory minimum set of measures for the object's category; the organisation puts them into its cyber protection plan together with its other measures |
+| **Baseline security profiles** (information system level) | Orders No. 409/2025, 419/2025, 843/2025 based on SP 800-53 | The minimum set of controls with parameters for the kind of information in the system |
 | **Military standards and NATO policies** | Ministry of Defence military standards (VST), AC/35 directives on protecting NATO information | Binding for the Defence Forces, the defence industry and anyone handling NATO information. Some documents are restricted: they are in the register for completeness, but without mappings |
 
 ### What "registered with the Ministry of Justice" means
@@ -92,8 +83,32 @@ Ukrainian requirements sit on several levels: a law instructs the Cabinet of Min
 - **Changes show at once.** When an act is amended or repealed, the chain shows which acts and controls it affects. Repealed acts are hidden, not deleted, to keep the history.
 - **Every act has a permanent identifier.** For EU acts it is the official ELI. For Ukrainian acts it is an identifier following the ELI pattern (for example, `eli/ua/vru/law/2017/2163-viii`), because Ukraine has no official ELI yet. The chains are available to software as JSON-LD.
 
+### Example: how an ISMS is required in public authorities
+
+| Level | Act | What it requires |
+|---|---|---|
+| Law | [Law of Ukraine "On the Basic Principles of Ensuring Cybersecurity of Ukraine"](#/sources?act=ua-law-2163-viii) | Art. 8 part 3, item 15: implementing the organisational and technical model of cyber protection is one of the ways to keep the national cybersecurity system working |
+| Cabinet resolution | [No. 1426 of 29.12.2021](#/sources?act=ua-cmu-1426-2021) "On approving the Regulation on the organisational and technical model of cyber protection" | Item 5 of the Regulation: implementing baseline cyber protection measures |
+| Regulator's order | [SSSCIP Administration Order No. 54 of 30.01.2025](#/sources?act=ua-ssscip-54-2025) "On approving the Baseline cyber protection measures and the Methodological recommendations for implementing them" | Approved the baseline measures based on NIST CSF 2.0. They concern the management system, that is the organisation's processes, not the protection of information and communication systems |
+| Replacement | [Order No. 75 of 30.01.2026](#/sources?act=ua-ssscip-75-2026) | Repealed Order No. 54; the baseline measures in force are now in it, together with the catalogue of measures and the cyber protection plan form |
+
+What follows from this:
+
+- **The baseline measures are the minimum core of the ISMS.** The organisation adds its own requirements (from its risk assessment) and integrates other legal requirements (for example, personal data protection) and contracts.
+- **Protecting the information systems themselves is a separate level:** baseline security profiles based on NIST SP 800-53.
+- **Order No. 75 is what gets mapped**, because it is the most specific; the law and the resolution are its legal basis. The replacement of Order No. 54 shows on the "Chains" tab of [Legal sources](#/sources?scope=core&mode=chains&repealed=1).
+
+## Import into GRC systems
+
+The project's data can be turned into formats that GRC systems load. There is no such export yet: we will build it if users need it, so let us know (contacts in [About](#/about)).
+
+- **CISO Assistant (YAML libraries).** Each group of acts becomes a framework and each provision a requirement with a permanent identifier. Separate mapping sets link them to the ISO/IEC 27001:2022, NIST CSF 2.0 and NIST SP 800-53 frameworks built into CISO Assistant; NIST IR 8477 relationships carry over almost unchanged. An ISO/IEC 27001 assessment then pre-fills the assessment of the Ukrainian acts.
+- **OSCAL.** NIST's open format for control catalogues, profiles with parameters and implementation state. Various GRC tools read it, so it is the option for other systems.
+
+What cannot be carried over: the Statement of Applicability itself, that is your decisions (applicable or not, justification, status, evidence). They are the result of your assessment, which is created in the GRC system; the imported libraries supply its requirements and legal basis.
+
 ## Data quality
 
 - Every act has the date it was last checked against the official text.
-- "Who it applies to" tags and mappings have a review status. Unreviewed items are marked on the site and in the files.
-- Errors can be reported on [GitHub](https://github.com/Ivan-Gokin/grc-foundation-ua/issues). The rule: "reviewed" is set by a second person, not by the author of the mapping.
+- "Who it applies to" tags and mappings have a review status: "AI, not reviewed" → "draft" → "reviewed". "Reviewed" is set by a second person, not by the author of the mapping. Unreviewed items are marked on the site and in the files.
+- How to report an error is described in [About](#/about).

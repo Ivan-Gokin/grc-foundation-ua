@@ -445,7 +445,8 @@
         <a class="btn" href="#/sources?scope=core&s=${s}">${esc(t("qOpenSources"))}</a>
         <button type="button" class="btn" id="q-soa">${esc(fmt(t("exportSoaXlsx"), L(f, "output")))}</button></p>
       ${base ? `<div class="callout callout-goal"><p>${esc(t("qSystemNote"))}</p><p><a href="#/controls?fw=${SYSTEM_FW}&b=${base}&s=${s}">${esc(t("qOpenSystem"))} →</a></p></div>` : ""}
-      <p class="hint">${esc(t("qResultHint"))}</p>`;
+      <p class="hint">${esc(t("qResultHint"))}</p>
+      <p class="hint">${esc(t("qGrc"))} <a href="#/method#${methodAnchor("grc")}">${esc(t("qGrcLink"))}</a>.</p>`;
     box.querySelector("#q-soa").onclick = () => withQuizState(() => exportSoa(controlRows().rows, "xlsx"));
   }
 
@@ -487,6 +488,12 @@
     buildToc(document.getElementById("toc"), el, false);
     scrollToAnchor();
   }
+  // ids of Methodology headings that other views link to
+  const METHOD_ANCHORS = {
+    uk: { chains: "ланцюги-актів-і-дедублікація", mapping: "як-зіставляються-вимоги-із-заходами", grc: "імпорт-у-grc-системи" },
+    en: { chains: "chains-of-acts-and-deduplication", mapping: "how-requirements-are-mapped-to-controls", grc: "import-into-grc-systems" },
+  };
+  const methodAnchor = (k) => (METHOD_ANCHORS[S.lang] || METHOD_ANCHORS.uk)[k];
   function relLegend() {
     return `<dl class="legend" aria-label="${esc(t("dataLegend"))}">${Object.keys(GLYPH).map((r) => `<div>${glyph(r)}<dt>${esc(r)}</dt><dd>${esc(relWords(r))}</dd></div>`).join("")}</dl>`;
   }
@@ -559,6 +566,7 @@
       <div class="results-head">
         <h1>${esc(fwLabel(fw))}</h1>
         <p class="summary">${esc(fmt(t("summaryControls"), withDrivers, leafCount, provSet.size, srcSet.size))}${partial ? ` ${esc(fmt(t("summaryPartial"), partial))}` : ""}</p>
+        <details class="key"><summary>${esc(t("dataLegend"))}</summary>${relLegend()}<p class="hint"><a href="#/method#${methodAnchor("mapping")}">${esc(t("legendMore"))}</a></p></details>
         ${ai ? `<p class="ai-warning" role="note">${esc(fmt(t("aiWarning"), ai, shown.length))}</p>` : ""}
         ${S.sectors.length ? "" : `<p class="hint">${esc(t("orgTypeNone"))}</p>`}
         <p class="hint">${esc(L(fw, "text_note"))}</p>
@@ -815,7 +823,7 @@
         <p class="summary">${esc(fmt(t("srcSummary"), rows.length, total))}</p>
         ${S.sectors.length ? "" : `<p class="hint">${esc(t("orgTypeNone"))}</p>`}
         ${D.unverifiedAppl && S.mode === "list" ? `<p class="hint">${esc(t("srcUnverified"))}</p>` : ""}
-        ${S.mode === "list" ? `<div class="exports"><button type="button" class="btn btn-primary" id="s-csv">${esc(t("srcDownload"))}</button><button type="button" class="btn" id="s-xlsx">${esc(t("srcDownloadX"))}</button></div>` : `<p class="lead-sm">${esc(t("chainsIntro"))}</p>`}
+        ${S.mode === "list" ? `<div class="exports"><button type="button" class="btn btn-primary" id="s-csv">${esc(t("srcDownload"))}</button><button type="button" class="btn" id="s-xlsx">${esc(t("srcDownloadX"))}</button></div>` : `<p class="lead-sm">${esc(t("chainsIntro"))} <a href="#/method#${methodAnchor("chains")}">${esc(t("navMethod"))} →</a></p>`}
       </div>`;
     main.innerHTML = head + (S.mode === "chains" ? chainsHtml(rows) : sourcesTable(rows));
     main.querySelectorAll("a[data-scope]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); S.scope = a.dataset.scope; S.type = ""; render(); }));
