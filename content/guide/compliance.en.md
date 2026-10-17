@@ -31,4 +31,4 @@ The tables from this project are fine for getting started. It is time for a GRC 
 
 How to choose: [GRC systems overview](#/articles?a=grc-systems-overview).
 
-Once the register and the mappings exist as data, legal changes become data changes, and each SoA row can be linked to an evidence source (logs, scanner reports, ticket records) and checked automatically. How to bring this project's data into a GRC system: [Methodology](#/method#import-into-grc-systems). Downloads: [About](#/about#data).
+Once the register and the mappings exist as data, legal changes become data changes, and each SoA row can be linked to an evidence source (logs, scanner reports, ticket records) and checked automatically. How to bring this project's data into a GRC system: [Methodology](#/method#import-into-grc-systems). Downloads: [Methodology, open data](#/method#open-data).

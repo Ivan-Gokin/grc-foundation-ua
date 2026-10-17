@@ -530,6 +530,7 @@
   async function renderMethod() {
     const el = docLayout(t("tocTitle"));
     if (!(await mdInto(el, "method"))) return;
+    fillMethod(el);
     buildToc(document.getElementById("toc"), el, false);
     scrollToAnchor();
   }
@@ -1193,12 +1194,19 @@
   async function renderAbout() {
     const el = docLayout(t("tocTitle"));
     if (!(await mdInto(el, "about"))) return;
+    const plans = el.querySelector("#about-plans");
+    if (plans) plans.outerHTML = `<p>${esc(t("plansIntro"))}</p><ul class="plans">${(t("plans") || []).map(([h, d]) => `<li><b>${esc(h)}</b> ${esc(d)}</li>`).join("")}</ul>`;
+    buildToc(document.getElementById("toc"), el, false);
+    scrollToAnchor();
+  }
+  // Methodology placeholders: the data version, the maintainer links and the open data files
+  function fillMethod(el) {
     const repo = (CFG.repoUrl || "").replace(/\/$/, "");
     const blob = (p) => `${repo}/blob/${CFG.branch || "main"}/${p}`;
     const tree = (p) => `${repo}/${/\.[a-z]+$/.test(p) ? "blob" : "tree"}/${CFG.branch || "main"}/${p}`;
     const fill = (id, html) => { const x = el.querySelector(`#${id}`); if (x) x.outerHTML = html; };
-    fill("about-version", D.meta ? `<p class="summary">${esc(fmt(t("dataVersion"), D.meta.version, D.meta.date))} ${esc(S.lang === "uk" ? D.meta.note_uk : D.meta.note_en)}</p>` : "");
-    fill("about-links", `<p class="about-links"><a href="${esc(blob(S.lang === "uk" ? "docs/BLUEPRINT.uk.md" : "docs/BLUEPRINT.md"))}" target="_blank" rel="noopener">${esc(t("dataBlueprint"))}</a>
+    fill("method-version", D.meta ? `<p class="summary">${esc(fmt(t("dataVersion"), D.meta.version, D.meta.date))} ${esc(S.lang === "uk" ? D.meta.note_uk : D.meta.note_en)}</p>` : "");
+    fill("method-links", `<p class="about-links"><a href="${esc(blob(S.lang === "uk" ? "docs/BLUEPRINT.uk.md" : "docs/BLUEPRINT.md"))}" target="_blank" rel="noopener">${esc(t("dataBlueprint"))}</a>
         <a href="${esc(repo)}" target="_blank" rel="noopener">${esc(t("aboutRepo"))}</a>
         <a href="${esc(blob("CHANGELOG.md"))}" target="_blank" rel="noopener">${esc(t("aboutChangelog"))}</a></p>`);
     const res = ((D.pkg && D.pkg.resources) || FILES.map((f) => ({ path: f }))).filter((r) => r.name !== "readable");
@@ -1211,14 +1219,11 @@
         ${D.rowCounts[r.path] != null ? `<span class="muted small">${esc(fmt(t("dataRows"), D.rowCounts[r.path]))}</span>` : ""}
         <p>${esc(r.description || "")}</p>
         <p class="file-links">${view(r)}<a href="data/${esc(r.path)}" download>${esc(t("dataRaw"))}</a></p></li>`).join("");
-    fill("about-data", `<p>${esc(t("dataIntro"))}</p>
+    fill("method-data", `<p>${esc(t("dataIntro"))}</p>
       <section class="readable"><h3>${esc(t("dataReadableTitle"))}</h3><p>${esc(t("dataReadable"))}</p>
         <p><a class="btn btn-primary" href="data/grc-foundation-ua.xlsx" download>${esc(t("dataReadableBtn"))}</a></p></section>
       <details class="machine"><summary><h3>${esc(t("dataMachineTitle"))}</h3></summary><p>${esc(t("dataMachine"))}</p>
         <ul class="files">${items}</ul></details>`);
-    fill("about-plans", `<p>${esc(t("plansIntro"))}</p><ul class="plans">${(t("plans") || []).map(([h, d]) => `<li><b>${esc(h)}</b> ${esc(d)}</li>`).join("")}</ul>`);
-    buildToc(document.getElementById("toc"), el, false);
-    scrollToAnchor();
   }
 
   // ------------------------------------------------------------------ boot
