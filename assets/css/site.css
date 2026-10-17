@@ -1,5 +1,5 @@
 /* GRC foundation for Ukraine, styled by the design system "Іван Гокін", version 2.
- * Look: deco drawing on graph paper. Light theme is drafting paper with a blue grid, dark theme indigo with a lavender grid.
+ * Look: deco drawing on graph paper. Light theme is drafting paper with a blue grid, dark theme "Midnight" (blue-indigo) with a blue-lavender grid.
  * One accent (steel / ice blue) for labels, step numbers, big numbers and links; text itself is ink or muted.
  * Violet for arrows and connectors, series-* for categories, ramp-* for levels; coral, green, red only for states.
  * Type: Tektur (condensed) for headings, labels, navigation and identifiers; IBM Plex Sans for reading and every number. */
@@ -19,13 +19,13 @@
   --on-accent: #f8fafb;
   --teal: #13706a;
   --violet: #4a3c86;
-  --frame: #14132b;
-  --frame-grid: rgba(167, 159, 216, 0.08);
+  --frame: #0c0f22;
+  --frame-grid: rgba(150, 165, 225, 0.12);
   --frame-ink: #e4ecf5;
   --frame-muted: #a9a4c8;
   --frame-label: #a79fd8;
   --numeral: #7cc4f0;
-  --tile: #14132b;
+  --tile: #0c0f22;
   --statement: #1f5c8f;
   --statement-ink: #f8fafb;
   --series-blue: #1f5c8f;
@@ -63,9 +63,9 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #14132b; --grid: rgba(167, 159, 216, 0.08); --surface: #1d1c3b; --surface-2: #24224a; --ink: #e4ecf5;
-    --muted: #a9a4c8; --rule: #3a3766; --accent: #7cc4f0; --accent-strong: #b4ddf7; --accent-tint: #1b2a4d;
-    --on-accent: #07111d; --teal: #5fd3c4; --violet: #a79fd8; --tile: #2a2755; --statement: #14132b;
+    --paper: #0c0f22; --grid: rgba(150, 165, 225, 0.12); --surface: #141932; --surface-2: #1a1f3d; --ink: #e4ecf5;
+    --muted: #a9a4c8; --rule: #2c3258; --accent: #7cc4f0; --accent-strong: #b4ddf7; --accent-tint: #1b2a4d;
+    --on-accent: #07111d; --teal: #5fd3c4; --violet: #a79fd8; --tile: #1f2549; --statement: #0c0f22;
     --statement-ink: #e4ecf5; --series-blue: #4a9ad6; --series-teal: #3fb5a6; --series-violet: #8c7ecf;
     --ok: #6fd9b0; --ok-tint: #16303a; --warn: #f2a07b; --warn-tint: #2f2233; --danger: #f0958b;
     --danger-tint: #36203a; --focus: #7cc4f0;
@@ -73,9 +73,9 @@
   }
 }
 :root[data-theme="dark"] {
-  --paper: #14132b; --grid: rgba(167, 159, 216, 0.08); --surface: #1d1c3b; --surface-2: #24224a; --ink: #e4ecf5;
-  --muted: #a9a4c8; --rule: #3a3766; --accent: #7cc4f0; --accent-strong: #b4ddf7; --accent-tint: #1b2a4d;
-  --on-accent: #07111d; --teal: #5fd3c4; --violet: #a79fd8; --tile: #2a2755; --statement: #14132b;
+  --paper: #0c0f22; --grid: rgba(150, 165, 225, 0.12); --surface: #141932; --surface-2: #1a1f3d; --ink: #e4ecf5;
+  --muted: #a9a4c8; --rule: #2c3258; --accent: #7cc4f0; --accent-strong: #b4ddf7; --accent-tint: #1b2a4d;
+  --on-accent: #07111d; --teal: #5fd3c4; --violet: #a79fd8; --tile: #1f2549; --statement: #0c0f22;
   --statement-ink: #e4ecf5; --series-blue: #4a9ad6; --series-teal: #3fb5a6; --series-violet: #8c7ecf;
   --ok: #6fd9b0; --ok-tint: #16303a; --warn: #f2a07b; --warn-tint: #2f2233; --danger: #f0958b;
   --danger-tint: #36203a; --focus: #7cc4f0;
