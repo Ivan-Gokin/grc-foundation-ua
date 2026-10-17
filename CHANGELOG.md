@@ -1,5 +1,15 @@
 # Changelog
 
+## Site design (design system "Іван Гокін", version 2)
+
+- Colours come from the design system's tokens. The dark theme is indigo with a lavender grid instead of night blue; the light theme is unchanged.
+- A theme switch next to the language switch: light or dark; without a choice the system setting decides, and a choice is remembered in the browser.
+- The top block of the home page is a frame: indigo with a lavender grid, four corner marks, and the emblem with the site's name under it.
+- Cards have cut corners (top right and bottom left) instead of square ones; the primary button keeps all four corners cut.
+- Violet for arrows and connectors (chain links, step arrows, relation symbols, quotes); series colours mark categories (the two requirement levels, the key chains), the lavender ramp marks the three stages.
+- Text is ink or muted: headings, identifiers and card titles are no longer coloured; the accent stays for labels, step numbers, big numbers and links. Every number is set in IBM Plex Sans.
+- Header and footer are surfaces with a double rule; no shadows.
+
 ## Site design (2026-10-17, 3)
 
 - An emblem next to the site name and as the favicon: three 60-degree rhombuses (governance, risk, compliance) turning around a triangle in the accent colour, inside a hexagon whose corners meet the rhombus tips. It follows the light and dark themes.
