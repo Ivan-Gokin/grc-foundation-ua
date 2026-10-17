@@ -188,6 +188,23 @@ def main():
             err("source_relations.csv", r, "duplicate relation")
         rel_seen.add(k)
 
+    # key chains: a narrated path through the register (chains.csv + chain_steps.csv)
+    chain_rows = load("chains.csv")
+    chains = unique("chains.csv", chain_rows)
+    step_seen = set()
+    for r in load("chain_steps.csv"):
+        if r["chain_id"] not in chains:
+            err("chain_steps.csv", r, f"unknown chain_id '{r['chain_id']}'")
+        if r["source_id"] not in sources:
+            err("chain_steps.csv", r, f"unknown source_id '{r['source_id']}'")
+        if not r["step"].isdigit():
+            err("chain_steps.csv", r, "step must be a whole number")
+        if (r["chain_id"], r["step"]) in step_seen:
+            err("chain_steps.csv", r, "duplicate step")
+        step_seen.add((r["chain_id"], r["step"]))
+        if not r["role_uk"].strip():
+            err("chain_steps.csv", r, "role_uk is required")
+
     prov_rows, map_rows, wb_errors = mapdata.read_all(set(controls))
     errors.extend(wb_errors)
     provisions = {r["id"] for r in prov_rows}

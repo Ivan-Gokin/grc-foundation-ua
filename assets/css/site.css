@@ -581,3 +581,27 @@ a.card h3 { color: var(--seal); }
 .q-stats div { border-radius: 0; }
 .kicker { color: var(--teal); }
 .pager a { font-family: var(--sans); }
+
+/* chains: key chains with steps, the legal basis under each link, acts outside the filter dimmed */
+.key-chains { margin: 8px 0 28px; }
+.key-chain { background: var(--surface); border: 1px solid var(--rule); border-top: 2px solid var(--seal); padding: 16px 20px 6px; margin-bottom: 16px; scroll-margin-top: 90px; }
+.key-chain h2 { margin: 0 0 .4em; font-size: 1.25rem; }
+.key-chain > p { max-width: 90ch; color: var(--muted); }
+.kc-steps { list-style: none; counter-reset: kc; margin: 12px 0 0; padding: 0; }
+.kc-steps li { counter-increment: kc; position: relative; padding: 0 0 16px 46px; display: flex; flex-direction: column; gap: 2px; }
+.kc-steps li::before {
+  content: counter(kc); position: absolute; left: 0; top: 0; width: 30px; height: 30px; display: grid; place-items: center;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background: var(--seal-tint); color: var(--seal);
+  font-family: var(--display); font-stretch: 85%; font-weight: 600;
+}
+.kc-steps li:not(:last-child)::after { content: ""; position: absolute; left: 14px; top: 32px; bottom: 2px; width: 2px; background: var(--rule); }
+.kc-steps li:last-child::before { background: var(--teal); color: var(--surface); }
+.kc-act { font-weight: 600; }
+.kc-title { font-size: .88rem; color: var(--muted); }
+.kc-role { max-width: 80ch; }
+.kc-badges:empty { display: none; }
+.chains-all { font-size: 1.1rem; text-transform: uppercase; letter-spacing: .1em; color: var(--seal); margin: 8px 0 10px; }
+.chain-basis { display: block; margin: 2px 0 0; font-size: .8rem; color: var(--muted); max-width: 90ch; }
+.chain-basis::before { content: "↳ "; color: var(--teal); }
+.chain-ctx { opacity: .6; }
+.weight-req { color: var(--teal); border-color: var(--teal); background: transparent; }

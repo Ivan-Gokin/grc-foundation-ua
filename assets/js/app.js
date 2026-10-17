@@ -10,6 +10,7 @@
     "sources.csv", "source_types.csv", "sectors.csv", "sector_groups.csv", "applicability.csv", "source_relations.csv",
     "provisions.csv", "mappings.csv", "frameworks.csv", "controls_iso27001-2022.csv", "controls_csf-2.0.csv",
     "sp800-53/baselines_ua.csv", "sp800-53/map_csf-2.0_sp800-53r5.csv", "sp800-53/profiles.csv",
+    "chains.csv", "chain_steps.csv",
   ];
   const VIEWS = ["home", "start", "guide", "controls", "sources", "method", "articles", "about"];
   const SYSTEM_FW = "sp800-53r5"; // the system-level framework, shown inside Controls
@@ -53,7 +54,7 @@
   async function loadAll() {
     const tables = await Promise.all(FILES.map(loadCsv));
     const by = (rows, key = "id") => Object.fromEntries(rows.map((r) => [r[key], r]));
-    const [sources, types, sectors, groups, appl, rels, provs, maps, fws, iso, csf, b53, m53, profiles] = tables;
+    const [sources, types, sectors, groups, appl, rels, provs, maps, fws, iso, csf, b53, m53, profiles, chains, steps] = tables;
     D.sources = sources;
     D.sourceById = by(sources);
     D.sourceByEli = by(sources, "eli");
@@ -88,6 +89,18 @@
     D.controlById = { "iso27001-2022": by(iso), "csf-2.0": by(csf) };
     D.b53 = b53;
     D.profiles = profiles;
+    D.chains = chains.sort((a, b) => +a.sort - +b.sort);
+    D.chainSteps = {};
+    steps.forEach((r) => (D.chainSteps[r.chain_id] = D.chainSteps[r.chain_id] || []).push(r));
+    Object.values(D.chainSteps).forEach((list) => list.sort((a, b) => +a.step - +b.step));
+    // provisions of each act that appear in a mapping: "where the requirements live" in the chains
+    D.mappedProvs = {};
+    maps.forEach((m) => {
+      if (!m.control_id) return;
+      const pr = D.provById[m.provision_id];
+      if (pr) (D.mappedProvs[pr.source_id] = D.mappedProvs[pr.source_id] || new Set()).add(pr.id);
+    });
+    D.profileSources = new Set(profiles.filter((x) => x.kind === "baseline" || x.kind === "sector").map((x) => x.source_id));
     D.csfTo53 = {};
     m53.forEach((r) => (D.csfTo53[r.csf_id] = D.csfTo53[r.csf_id] || []).push(r.sp800_53_id));
     try {
@@ -829,7 +842,8 @@
         ${D.unverifiedAppl && S.mode === "list" ? `<p class="hint">${esc(t("srcUnverified"))}</p>` : ""}
         ${S.mode === "list" ? `<div class="exports"><button type="button" class="btn btn-primary" id="s-csv">${esc(t("srcDownload"))}</button><button type="button" class="btn" id="s-xlsx">${esc(t("srcDownloadX"))}</button></div>` : `<p class="lead-sm">${esc(t("chainsIntro"))} <a href="#/method#${methodAnchor("chains")}">${esc(t("navMethod"))} →</a></p>`}
       </div>`;
-    main.innerHTML = head + (S.mode === "chains" ? chainsHtml(rows) : sourcesTable(rows));
+    main.innerHTML = head + (S.mode === "chains" && S.scope === "core" ? keyChainsHtml() + `<h2 class="chains-all">${esc(t("chainsAll"))}</h2>` : "")
+      + (S.mode === "chains" ? chainsHtml(rows) : sourcesTable(rows));
     main.querySelectorAll("a[data-scope]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); S.scope = a.dataset.scope; S.type = ""; render(); }));
     main.querySelectorAll("a[data-mode]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); S.mode = a.dataset.mode; writeHash(); drawSources(main); }));
     const csvBtn = main.querySelector("#s-csv");
@@ -837,6 +851,7 @@
       csvBtn.onclick = () => exportSources(rows, "csv");
       main.querySelector("#s-xlsx").onclick = () => exportSources(rows, "xlsx");
     }
+    if (S.anchor) { const target = document.getElementById(S.anchor); S.anchor = ""; if (target) target.scrollIntoView({ block: "start" }); }
     main.querySelectorAll("a[data-jump]").forEach((a) => a.addEventListener("click", (e) => {
       e.preventDefault();
       const id = a.dataset.jump;
@@ -875,6 +890,32 @@
   }
 
   // Chains: hierarchy from eli:based_on and the implementation properties; amendments, repeals and the rest shown alongside.
+  // Where the requirements of an act live: mapped provisions, a baseline profile, or a framework act
+  function chainWeight(x) {
+    const n = D.mappedProvs[x.id] ? D.mappedProvs[x.id].size : 0;
+    if (n) return `<span class="badge weight-req" title="${esc(t("weightReqHint"))}">${esc(fmt(t("weightReq"), n))}</span>`;
+    if (D.profileSources.has(x.id)) return `<span class="badge weight-req">${esc(t("weightProfile"))}</span>`;
+    if (x.role === "context") return `<span class="badge">${esc(t("weightFrame"))}</span>`;
+    return "";
+  }
+  // Key chains: a narrated path through the register, step by step (chains.csv + chain_steps.csv)
+  function keyChainsHtml() {
+    if (!D.chains.length) return "";
+    const exp = expandedSectors();
+    const items = D.chains.map((c) => {
+      const steps = (D.chainSteps[c.id] || []).map((st) => {
+        const x = D.sourceById[st.source_id];
+        if (!x) return "";
+        const yours = exp && sourceApplies(x, exp) ? ` <span class="badge cov-full">${esc(t("chainYours"))}</span>` : "";
+        return `<li><span class="kc-act"><a href="#src-${esc(x.id)}" data-jump="${esc(x.id)}">${esc(sourceRef(x))}</a>${L(st, "ref") ? `, ${esc(L(st, "ref"))}` : ""}</span>
+          <span class="kc-title">${esc(sourceTitle(x))}</span>
+          <span class="kc-role">${esc(L(st, "role"))}</span>
+          <span class="kc-badges">${chainWeight(x)}${!IN_EFFECT(x.status) ? ` <span class="badge st-${esc(x.status)}">${esc(statusLabel(x.status))}</span>` : ""}${yours}</span></li>`;
+      }).join("");
+      return `<section class="key-chain" id="chain-${esc(c.id)}"><h2>${esc(L(c, "title"))}</h2><p>${esc(L(c, "summary"))}</p><ol class="kc-steps">${steps}</ol></section>`;
+    }).join("");
+    return `<div class="key-chains"><p class="kicker">${esc(t("chainsKey"))}</p>${items}</div>`;
+  }
   function chainsHtml(rows) {
     const HIER = new Set(["based_on", "transposes", "applies", "ensures_implementation_of"]);
     const kids = {}, parents = {};
@@ -891,24 +932,29 @@
     const cmp = (a, b) => { const ra = rank(a), rb = rank(b); return ra[0] - rb[0] || ra[1].localeCompare(rb[1]); };
     const roots = [...show].filter((id) => !(parents[id] || []).some((p) => show.has(p)) && kids[id]).sort(cmp);
     const seen = new Set();
-    const label = (id, rel) => {
+    const direct = new Set(rows.map((x) => x.id));
+    const label = (id, rel, link) => {
       const x = D.sourceById[id];
       const side = (D.relsIn[id] || []).filter((r) => !HIER.has(r.relation))
         .map((r) => `${esc(relIn(r))} <a href="#src-${esc(r.source_id)}" data-jump="${esc(r.source_id)}">${esc(sourceRef(D.sourceById[r.source_id]))}</a>${esc(pendingMark(r.source_id))}`);
-      const cls = x.status === "repealed" ? " repealed" : "";
+      const cls = (x.status === "repealed" ? " repealed" : "") + (S.sectors.length && !direct.has(id) ? " chain-ctx" : "");
       return `${rel && rel !== "based_on" ? `<span class="badge" title="eli:${esc(rel)}">${esc(t("rel_" + rel))}</span> ` : ""}<a class="chain-node${cls}" href="#src-${esc(id)}" data-jump="${esc(id)}">${esc(sourceRef(x))}</a>`
         + `${!IN_EFFECT(x.status) ? ` <span class="badge st-${esc(x.status)}">${esc(statusLabel(x.status))}</span>` : ""}${x.scope === "reference" ? ` <span class="badge">${esc(t("badgeEu"))}</span>` : ""}`
         + ` <span class="muted small">${esc(sourceTitle(x).slice(0, 110))}</span>`
-        + (side.length ? ` <span class="chain-side">(${side.join("; ")})</span>` : "");
+        + ` ${chainWeight(x)}`
+        + (side.length ? ` <span class="chain-side">(${side.join("; ")})</span>` : "")
+        + (link && link.basis_uk ? `<span class="chain-basis">${esc(link.basis_uk)}${link.confidence === "medium" ? ` <span class="badge" title="${esc(t("confMedium"))}">${esc(t("confMediumShort"))}</span>` : ""}</span>` : "");
     };
-    const walk = (id, rel, depth) => {
+    const walk = (id, link, depth) => {
+      const rel = link ? link.relation : null;
       const ch = (kids[id] || []).filter((r) => show.has(r.source_id)).sort((a, b) => cmp(a.source_id, b.source_id));
-      if (seen.has(id) && ch.length) return `<li>${label(id, rel)} <span class="muted small">${esc(t("seeAbove"))}</span></li>`;
+      if (seen.has(id) && ch.length) return `<li>${label(id, rel, link)} <span class="muted small">${esc(t("seeAbove"))}</span></li>`;
       seen.add(id);
-      if (!ch.length || depth > 8) return `<li>${label(id, rel)}</li>`;
-      return `<li>${label(id, rel)}<ul>${ch.map((r) => walk(r.source_id, r.relation, depth + 1)).join("")}</ul></li>`;
+      if (!ch.length || depth > 8) return `<li>${label(id, rel, link)}</li>`;
+      return `<li>${label(id, rel, link)}<ul>${ch.map((r) => walk(r.source_id, r, depth + 1)).join("")}</ul></li>`;
     };
-    return `<div class="chains">${roots.map((id) => `<ul class="tree">${walk(id, null, 0)}</ul>`).join("")}</div>`;
+    const ctxNote = S.sectors.length ? `<p class="hint">${esc(t("chainsCtx"))}</p>` : "";
+    return `${ctxNote}<div class="chains">${roots.map((id) => `<ul class="tree">${walk(id, null, 0)}</ul>`).join("")}</div>`;
   }
 
   function exportSources(rows, kind) {

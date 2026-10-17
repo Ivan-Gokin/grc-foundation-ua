@@ -1,5 +1,13 @@
 # Changelog
 
+## data-2026.10.10 (2026-10-17)
+
+- Chains get context. The "Chains" tab now opens with **key chains**, each step with the provision that matters and what it does: "Baseline cyber protection measures: the ISMS in the public sector" (Law 2163-VIII → CMU 1426 → SSSCIP Order 75/2026) and "Protecting information systems: KSZI, authorisation and NIST SP 800-53 baseline profiles" (Law 80/94-VR → CMU 373 → CMU 712/2025 → ND TZI 3.6-004-21 → ND TZI 3.6-006-24 → Orders 409/2025 and 419/2025). New data files `chains.csv` and `chain_steps.csv`, checked by the validator.
+- In the full tree every link shows its legal basis (and a "medium confidence" mark where it comes from secondary sources), and every act shows where its requirements live: how many of its provisions are in the controls table, "SP 800-53 baseline profile", or "framework, no direct requirements".
+- With organisations selected, acts that do not apply to them directly are dimmed in the tree (they are there as the legal basis), and steps of the key chains that do apply are marked.
+- The Methodology's chain example moved to the key chains; the Methodology links there.
+- Data fixes: the malformed record `ua-ndtzi-3.6` is now `ua-ndtzi-3.6-004-21` (number, title and ELI corrected); CMU Resolution No. 373 carries its current title "On approving the Minimum requirements for the protection of information, electronic communication, information and communication and technological systems".
+
 ## Site design (2026-10-17)
 
 - New look: cool retro-futurist deco on graph paper. The light theme is drafting paper with a blue grid and a steel-blue accent, the dark theme a night-blue chart table with an ice-blue accent; teal is the second colour and coral is kept for warnings and partial coverage. Double rules under the header and above the footer, notched primary buttons, ring-shaped relationship symbols.

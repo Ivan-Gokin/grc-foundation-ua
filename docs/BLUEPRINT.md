@@ -174,6 +174,8 @@ Requirements often sit several levels deep: a law delegates to the Cabinet of Mi
 
 **Machine-readable chains.** On publication, `scripts/build.py` turns `sources.csv` and `source_relations.csv` into `data/eli.jsonld`: every act as an `eli:LegalResource` (bills and proposals as `eli:Work`) with its ELI, type, date, force, issuer, official-language title and the chain links as ELI properties (pillar II). The file is not kept in the repository.
 
+**Key chains.** `chains.csv` (a chain's title and short description) and `chain_steps.csv` (the steps in order: act, provision, what it does in the chain) narrate a path through the register; the site shows them above the tree on the "Chains" tab. The links between the acts are still recorded in `source_relations.csv`: a key chain explains them, it does not replace them.
+
 ### 3.5 Mapping methodology
 
 For readers, the meaning of the relationships and coverage is explained in the Methodology; here are the field values.

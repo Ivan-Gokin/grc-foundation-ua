@@ -83,19 +83,7 @@ Ukrainian requirements sit on several levels: a law instructs the Cabinet of Min
 - **Changes show at once.** When an act is amended or repealed, the chain shows which acts and controls it affects. Repealed acts are hidden, not deleted, to keep the history.
 - **Every act has a permanent identifier.** For EU acts it is the official ELI. For Ukrainian acts it is an identifier following the ELI pattern (for example, `eli/ua/vru/law/2017/2163-viii`), because Ukraine has no official ELI yet. The chains are available to software as JSON-LD.
 
-### Example: how an ISMS is required in public authorities
-
-| Level | Act | What it requires |
-|---|---|---|
-| Law | [Law of Ukraine "On the Basic Principles of Ensuring Cybersecurity of Ukraine"](#/sources?act=ua-law-2163-viii) | Art. 8 part 3, item 15: implementing the organisational and technical model of cyber protection is one of the ways to keep the national cybersecurity system working |
-| Cabinet resolution | [No. 1426 of 29.12.2021](#/sources?act=ua-cmu-1426-2021) "On approving the Regulation on the organisational and technical model of cyber protection" | Item 5 of the Regulation: implementing baseline cyber protection measures |
-| Regulator's order | [SSSCIP Administration Order No. 75 of 30.01.2026](#/sources?act=ua-ssscip-75-2026) "On approving the Catalogue of cyber protection measures, the baseline cyber protection measures, the cyber protection plan form and the methodological recommendations for implementing cyber protection measures" | Approves the baseline measures based on NIST CSF 2.0. They concern the management system, that is the organisation's processes, not the protection of information and communication systems |
-
-What follows from this:
-
-- **The baseline measures are the minimum core of the ISMS.** The organisation adds its own requirements (from its risk assessment) and integrates other legal requirements (for example, personal data protection) and contracts.
-- **Protecting the information systems themselves is a separate level:** baseline security profiles based on NIST SP 800-53.
-- **Order No. 75 is what gets mapped**, because it is the most specific; the law and the resolution are its legal basis. The whole chain shows on the "Chains" tab of [Legal sources](#/sources?scope=core&mode=chains).
+The key chains in [Legal sources](#/sources?scope=core&mode=chains#chain-isms-baseline) show best how to read chains: how a law leads to the baseline ISMS measures, and how the requirements for information systems themselves are set. Each step there says what exactly it requires.
 
 ## Import into GRC systems
 

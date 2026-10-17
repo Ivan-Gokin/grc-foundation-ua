@@ -340,6 +340,101 @@
       }
     },
     {
+      "name": "chains",
+      "path": "chains.csv",
+      "format": "csv",
+      "encoding": "utf-8",
+      "description": "Key chains: narrated paths through the register (for example, how a law leads to the baseline cyber protection measures). Steps are in chain_steps.csv.",
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "sort",
+            "type": "integer"
+          },
+          {
+            "name": "title_uk",
+            "type": "string"
+          },
+          {
+            "name": "title_en",
+            "type": "string"
+          },
+          {
+            "name": "summary_uk",
+            "type": "string"
+          },
+          {
+            "name": "summary_en",
+            "type": "string"
+          }
+        ],
+        "primaryKey": "id"
+      }
+    },
+    {
+      "name": "chain-steps",
+      "path": "chain_steps.csv",
+      "format": "csv",
+      "encoding": "utf-8",
+      "description": "Steps of the key chains, in order: the act, the provision that matters and what it does in the chain.",
+      "schema": {
+        "fields": [
+          {
+            "name": "chain_id",
+            "type": "string",
+            "description": "chains.id"
+          },
+          {
+            "name": "step",
+            "type": "integer"
+          },
+          {
+            "name": "source_id",
+            "type": "string",
+            "description": "sources.id"
+          },
+          {
+            "name": "ref_uk",
+            "type": "string",
+            "description": "provision of the act that matters for this chain"
+          },
+          {
+            "name": "ref_en",
+            "type": "string"
+          },
+          {
+            "name": "role_uk",
+            "type": "string",
+            "description": "what the act does in the chain"
+          },
+          {
+            "name": "role_en",
+            "type": "string"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "fields": "chain_id",
+            "reference": {
+              "resource": "chains",
+              "fields": "id"
+            }
+          },
+          {
+            "fields": "source_id",
+            "reference": {
+              "resource": "sources",
+              "fields": "id"
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "provisions",
       "path": "provisions.csv",
       "format": "csv",
