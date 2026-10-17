@@ -2,6 +2,11 @@
 
 <p class="chapter-lead">GRC foundation is an open reference of cybersecurity requirements for organisations operating in Ukraine. It answers three questions: which acts apply to me, what exactly they require, and which controls of a standard meet those requirements. It is used by security leads, compliance specialists, auditors and consultants, and by anyone building an information security management system.</p>
 
+## Disclaimer
+
+This is a reference tool, not legal advice. Applicability and mappings are the authors' opinion. Check conclusions against the official texts.
+
+
 ## Cooperation and feedback
 
 The project is built and maintained by **Ivan Gokin**. It is a non-commercial open source project, and it relies on feedback. The most helpful things are:
@@ -28,7 +33,3 @@ The whole project — data, texts and code — is under [CC BY 4.0](https://crea
 ## Plans
 
 <div id="about-plans"></div>
-
-## Disclaimer
-
-This is a reference tool, not legal advice. Applicability and mappings are the authors' opinion. Check conclusions against the official texts.
