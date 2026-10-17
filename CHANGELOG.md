@@ -1,5 +1,9 @@
 # Changelog
 
+## Site design (2026-10-18, preview banner)
+
+- The preview banner ("Preview: the data is still being checked…") is lemon (series-lemon) with dark text in both themes, so it stands out from the page.
+
 ## Site layout (2026-10-18, filters)
 
 - Filter panel (Controls, Sources, SP 800-53): the search field and "Reset filters" moved up, right under the "Who the requirements concern" title and above the legal status groups. The note "No type selected: showing requirements for all organisation types" now sits right under them, only while nothing is selected, instead of above the results.

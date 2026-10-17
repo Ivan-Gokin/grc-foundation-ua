@@ -797,3 +797,6 @@ a.card:hover { --ne: var(--accent); }
 
 /* the filter panel: search and reset under the "who it concerns" title; the note when no type is chosen sits right under them */
 .none-note { margin: 0 0 10px; padding: 6px 10px; font-size: .82rem; line-height: 1.4; color: var(--muted); background: var(--surface-2); }
+
+/* preview banner: a lemon fill with dark text (lemon is only ever a fill; the text takes the always-dark frame colour) */
+.preview-banner { background: var(--series-lemon); color: var(--frame); border-bottom: 1px solid var(--frame); font-weight: 500; }
