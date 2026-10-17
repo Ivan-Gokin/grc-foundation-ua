@@ -4,7 +4,19 @@
 
 ## Base standards
 
-The basis is the standards Ukrainian regulators rely on: **ISO/IEC 27001:2022** and **NIST CSF 2.0** for the organisation's management system, and **NIST SP 800-53 Rev. 5** for information systems (the SSSCIP baseline security profiles are built on it). How to choose between the first two is described in the guide: [step 4](#/guide?c=standard).
+The basis is the standards Ukrainian regulators rely on: **ISO/IEC 27001:2022** and **NIST CSF 2.0** for the organisation's management system, and **NIST SP 800-53 Rev. 5** for information systems. How to choose between the first two is described in the guide: [step 4](#/guide?c=standard).
+
+NIST standards are not one document but a family of different types. The most common mistake is confusing a management framework with a control catalogue:
+
+| NIST document | What it is | Ukrainian counterpart |
+|---|---|---|
+| **CSF 2.0** | A framework: which processes the organisation must have. The language of the security lead and management | Baseline cyber protection measures (Order No. 75/2026) |
+| **SP 800-53** | A catalogue of 1,000+ controls for information systems. The language of architects and administrators | ND TZI 3.6-006-24 |
+| **SP 800-53A** | How to assess implemented controls | SSSCIP Order No. 354/2024 |
+| **SP 800-53B** | Control baselines | Baseline security profiles (Orders No. 409/2025, 419/2025, 843/2025) |
+| **SP 800-61** | Incident response methodology | First Order No. 570/2023 (an adaptation of Rev. 2), now a national approach: CMU Resolution No. 1533/2025 and Order No. 143/2026 |
+
+The whole architecture resembles the US FISMA, which obliges federal agencies to build security on NIST standards. Security authorisation against profiles plays the role of the authority to operate (ATO), the procedure for assessing the state of cyber protection that of continuous monitoring, and the requirement to have a head of cyber protection in every public authority mirrors FISMA's CISO requirement. How these documents connect is shown by the [key chains](#/sources?scope=core&mode=chains#chain-isms-baseline); more on how NIST standards were adapted is in the author's article ["We have FISMA at home"](https://www.linkedin.com/pulse/%D0%BC%D0%BE%D0%B4%D0%B5%D1%80%D0%BD%D1%96%D0%B7%D0%B0%D1%86%D1%96%D1%8F-%D0%BA%D1%81%D0%B7%D1%96-%D1%87%D0%B8-%D1%81%D1%82%D0%B0%D0%BD%D0%B4%D0%B0%D1%80%D1%82%D0%B8-nist-ivan-gokin-beh7f) (in Ukrainian).
 
 These standards do not exclude others. Mappings are tied to specific provisions of acts, so they can be carried over to any other standard (ISO 22301, ISO/IEC 27701, CIS Controls) through published crosswalks between standards.
 

@@ -851,7 +851,8 @@
       csvBtn.onclick = () => exportSources(rows, "csv");
       main.querySelector("#s-xlsx").onclick = () => exportSources(rows, "xlsx");
     }
-    if (S.anchor) { const target = document.getElementById(S.anchor); S.anchor = ""; if (target) target.scrollIntoView({ block: "start" }); }
+    // after the hashchange handler has scrolled to the top
+    if (S.anchor) { const id = S.anchor; S.anchor = ""; setTimeout(() => { const target = document.getElementById(id); if (target) target.scrollIntoView({ block: "start" }); }, 0); }
     main.querySelectorAll("a[data-jump]").forEach((a) => a.addEventListener("click", (e) => {
       e.preventDefault();
       const id = a.dataset.jump;

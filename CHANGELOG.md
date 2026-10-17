@@ -1,5 +1,15 @@
 # Changelog
 
+## data-2026.10.11 (2026-10-17)
+
+From the author's article "We have FISMA at home" (LinkedIn, updated 2026):
+
+- Key chains: the ISMS chain says who the baseline measures are mandatory for; the information-system chain adds item 25 of CMU Resolution No. 373, the security profile procedure in Resolution No. 712, SSSCIP Order No. 354/2024 (assessment of controls, the SP 800-53A counterpart), the NIST counterparts of each document and the advice to build open-information systems into the ISMS and inherit controls; a new chain "Incident response: from NIST SP 800-61 to a national approach" (Decree 37/2022 → CMU 299/2023 → Order 570/2023 → CMU 1533/2025 → Order 143/2026).
+- SSSCIP Order No. 570/2023 is marked as repealed (replaced by Order No. 143/2026).
+- Methodology: a table of the NIST document family and their Ukrainian counterparts, the FISMA parallel, and a link to the article.
+- Guide, stage 2: a starting map for a public authority or a critical infrastructure operator.
+- Links to a key chain (`#/sources?...#chain-<id>`) now scroll to it.
+
 ## data-2026.10.10 (2026-10-17)
 
 - Chains get context. The "Chains" tab now opens with **key chains**, each step with the provision that matters and what it does: "Baseline cyber protection measures: the ISMS in the public sector" (Law 2163-VIII → CMU 1426 → SSSCIP Order 75/2026) and "Protecting information systems: KSZI, authorisation and NIST SP 800-53 baseline profiles" (Law 80/94-VR → CMU 373 → CMU 712/2025 → ND TZI 3.6-004-21 → ND TZI 3.6-006-24 → Orders 409/2025 and 419/2025). New data files `chains.csv` and `chain_steps.csv`, checked by the validator.
