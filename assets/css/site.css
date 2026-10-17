@@ -1,50 +1,84 @@
-/* GRC foundation for Ukraine.
- * Look: cool retro-futurist deco on graph paper. Light theme is drafting paper with a blue grid, dark theme a night-blue
- * chart table; one cool accent (steel / ice blue), teal as the second colour, coral only for warnings and partial coverage.
- * Type: Tektur (condensed, octagonal) for titles, labels and identifiers; IBM Plex Sans for reading and tables. */
+/* GRC foundation for Ukraine, styled by the design system "Іван Гокін", version 2.
+ * Look: deco drawing on graph paper. Light theme is drafting paper with a blue grid, dark theme indigo with a lavender grid.
+ * One accent (steel / ice blue) for labels, step numbers, big numbers and links; text itself is ink or muted.
+ * Violet for arrows and connectors, series-* for categories, ramp-* for levels; coral, green, red only for states.
+ * Type: Tektur (condensed) for headings, labels, navigation and identifiers; IBM Plex Sans for reading and every number. */
 
 :root {
+  /* design system "Іван Гокін", version 2: colour tokens as published (light theme first) */
   --paper: #edf1f4;
-  --grid: rgba(31, 92, 143, .11);
+  --grid: rgba(31, 92, 143, 0.11);
   --surface: #f8fafb;
   --surface-2: #e3e9ef;
   --ink: #121c2b;
   --muted: #4a5868;
   --rule: #c3cfdb;
-  --seal: #1f5c8f;
-  --seal-strong: #16466f;
-  --seal-tint: #dde8f2;
-  --on-seal: #f8fafb;
+  --accent: #1f5c8f;
+  --accent-strong: #16466f;
+  --accent-tint: #dde8f2;
+  --on-accent: #f8fafb;
   --teal: #13706a;
-  --full: #1e6b4a;
-  --full-tint: #dcefe4;
-  --partial: #a34a1f;
-  --partial-tint: #f6e4dc;
-  --bad: #a3352b;
-  --bad-tint: #f6e3e1;
-  --banner: #dde7f0;
+  --violet: #4a3c86;
+  --frame: #14132b;
+  --frame-grid: rgba(167, 159, 216, 0.08);
+  --frame-ink: #e4ecf5;
+  --frame-muted: #a9a4c8;
+  --frame-label: #a79fd8;
+  --numeral: #7cc4f0;
+  --tile: #14132b;
+  --statement: #1f5c8f;
+  --statement-ink: #f8fafb;
+  --series-blue: #1f5c8f;
+  --series-teal: #1e7f75;
+  --series-lemon: #d6e04a;
+  --series-violet: #4a3c86;
+  --ramp-1: #d9d4f1;
+  --ramp-2: #b3a9e2;
+  --ramp-3: #8c7ecf;
+  --ramp-4: #6a5bb5;
+  --ramp-5: #4a3c86;
+  --ramp-6: #2e2559;
+  --ok: #1e6b4a;
+  --ok-tint: #dcefe4;
+  --warn: #a34a1f;
+  --warn-tint: #f6e4dc;
+  --danger: #a3352b;
+  --danger-tint: #f6e3e1;
   --focus: #1f5c8f;
+  --flag-blue: #0057b7;
+  --flag-yellow: #ffd700;
+  /* the site's own names, kept as aliases so every rule takes its colour from a token */
+  --seal: var(--accent); --seal-strong: var(--accent-strong); --seal-tint: var(--accent-tint); --on-seal: var(--on-accent);
+  --full: var(--ok); --full-tint: var(--ok-tint); --partial: var(--warn); --partial-tint: var(--warn-tint);
+  --bad: var(--danger); --bad-tint: var(--danger-tint); --banner: var(--surface-2);
+  /* the emblem on frame is always on dark indigo: the dark-theme accent and teal of emblem-dark.svg */
+  --frame-mark: var(--numeral); --frame-core: #5fd3c4;
   --display: "Tektur", "Agency FB", "Bahnschrift", "Arial Narrow", sans-serif;
   --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   --math: "Cambria Math", "STIX Two Math", "Noto Sans Math", "Segoe UI Symbol", serif;
   --radius: 2px;
-  --notch: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+  --notch: 8px;
+  --notch-all: polygon(var(--notch) 0, calc(100% - var(--notch)) 0, 100% var(--notch), 100% calc(100% - var(--notch)), calc(100% - var(--notch)) 100%, var(--notch) 100%, 0 calc(100% - var(--notch)), 0 var(--notch));
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #0b1220; --grid: rgba(124, 196, 240, .075); --surface: #111b2e; --surface-2: #15223a; --ink: #e4ecf5;
-    --muted: #9fb0c6; --rule: #2a3b55; --seal: #7cc4f0; --seal-strong: #b4ddf7; --seal-tint: #17304a; --on-seal: #07111d;
-    --teal: #5fd3c4; --full: #6fd9b0; --full-tint: #12322a; --partial: #f2a07b; --partial-tint: #33221d; --bad: #f0958b;
-    --bad-tint: #3d2220; --banner: #142640; --focus: #7cc4f0;
+    --paper: #14132b; --grid: rgba(167, 159, 216, 0.08); --surface: #1d1c3b; --surface-2: #24224a; --ink: #e4ecf5;
+    --muted: #a9a4c8; --rule: #3a3766; --accent: #7cc4f0; --accent-strong: #b4ddf7; --accent-tint: #1b2a4d;
+    --on-accent: #07111d; --teal: #5fd3c4; --violet: #a79fd8; --tile: #2a2755; --statement: #14132b;
+    --statement-ink: #e4ecf5; --series-blue: #4a9ad6; --series-teal: #3fb5a6; --series-violet: #8c7ecf;
+    --ok: #6fd9b0; --ok-tint: #16303a; --warn: #f2a07b; --warn-tint: #2f2233; --danger: #f0958b;
+    --danger-tint: #36203a; --focus: #7cc4f0;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --paper: #0b1220; --grid: rgba(124, 196, 240, .075); --surface: #111b2e; --surface-2: #15223a; --ink: #e4ecf5;
-  --muted: #9fb0c6; --rule: #2a3b55; --seal: #7cc4f0; --seal-strong: #b4ddf7; --seal-tint: #17304a; --on-seal: #07111d;
-  --teal: #5fd3c4; --full: #6fd9b0; --full-tint: #12322a; --partial: #f2a07b; --partial-tint: #33221d; --bad: #f0958b;
-  --bad-tint: #3d2220; --banner: #142640; --focus: #7cc4f0;
+  --paper: #14132b; --grid: rgba(167, 159, 216, 0.08); --surface: #1d1c3b; --surface-2: #24224a; --ink: #e4ecf5;
+  --muted: #a9a4c8; --rule: #3a3766; --accent: #7cc4f0; --accent-strong: #b4ddf7; --accent-tint: #1b2a4d;
+  --on-accent: #07111d; --teal: #5fd3c4; --violet: #a79fd8; --tile: #2a2755; --statement: #14132b;
+  --statement-ink: #e4ecf5; --series-blue: #4a9ad6; --series-teal: #3fb5a6; --series-violet: #8c7ecf;
+  --ok: #6fd9b0; --ok-tint: #16303a; --warn: #f2a07b; --warn-tint: #2f2233; --danger: #f0958b;
+  --danger-tint: #36203a; --focus: #7cc4f0;
   color-scheme: dark;
 }
 
@@ -392,7 +426,7 @@ details.more p { margin: 6px 0 0; }
 .nav-menu .menu {
   position: absolute; left: 0; top: calc(100% + 6px); z-index: 20; width: min(360px, 92vw);
   background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius);
-  box-shadow: 0 8px 24px rgba(10, 20, 40, .14); padding: 8px; max-height: calc(100vh - 120px); overflow: auto;
+  padding: 8px; max-height: calc(100vh - 120px); overflow: auto;
 }
 .nav-menu .menu ul { list-style: none; margin: 0 0 6px; padding: 0; }
 .nav-menu .menu a { display: block; padding: 6px 10px; border-radius: var(--radius); border: 0; color: var(--ink); }
@@ -521,7 +555,7 @@ body {
 .nav a:hover, .nav-menu > summary:hover { background: transparent; color: var(--seal); }
 .lang { letter-spacing: .08em; border-radius: 0; }
 .btn { text-transform: uppercase; letter-spacing: .08em; font-weight: 500; border-radius: 0; border-color: var(--seal); }
-.btn-primary { clip-path: var(--notch); padding-left: 18px; padding-right: 18px; }
+.btn-primary { clip-path: var(--notch-all); padding-left: 18px; padding-right: 18px; }
 .btn-quiet { font-family: var(--sans); text-transform: none; letter-spacing: 0; border-color: transparent; }
 legend, .menu-group, .toc > summary { text-transform: uppercase; letter-spacing: .14em; font-size: .8rem; font-weight: 600; color: var(--seal); }
 .q legend { text-transform: none; letter-spacing: .01em; color: var(--ink); font-size: 1.25rem; }
@@ -611,4 +645,109 @@ a.card h3 { color: var(--seal); }
 
 /* the flag of Ukraine next to the site name (official colours, kept as they are in both themes) */
 .brand-name { display: inline-flex; align-items: center; gap: 10px; }
-.flag-ua { display: inline-block; flex: none; width: 21px; height: 14px; background: linear-gradient(#0057b7 0 50%, #ffd700 50% 100%); box-shadow: 0 0 0 1px var(--rule); }
+.flag-ua { display: inline-block; flex: none; width: 21px; height: 14px; background: linear-gradient(var(--flag-blue) 0 50%, var(--flag-yellow) 50% 100%); box-shadow: 0 0 0 1px var(--rule); }
+
+/* ============================================================ design system v2 */
+
+/* header and footer: surface with a double rule */
+.site-footer { background: var(--surface); }
+
+/* theme switch beside the language switch: two buttons, the current theme pressed */
+.header-tools { display: flex; gap: 8px; align-items: center; }
+.theme-switch { display: inline-flex; border: 1px solid var(--rule); }
+.theme-switch button {
+  font: 500 .85rem var(--display); font-stretch: 85%; letter-spacing: .08em; text-transform: uppercase;
+  padding: 6px 10px; border: 0; background: transparent; color: var(--ink); cursor: pointer;
+}
+.theme-switch button + button { border-left: 1px solid var(--rule); }
+.theme-switch button:hover { color: var(--accent); }
+.theme-switch button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+
+/* notched cards: corners cut top right and bottom left; the cut edge is drawn in the card's border colour */
+.card, .hero-card, .flow li, .stages li, .q, .q-result, .key-chain, .sys-src, .readable, .chains, .panel {
+  --nb: var(--surface); --ne: var(--rule);
+  clip-path: polygon(0 0, calc(100% - var(--notch)) 0, 100% var(--notch), 100% 100%, var(--notch) 100%, 0 calc(100% - var(--notch)));
+  background: var(--notch-paint);
+}
+.card, .hero-card, .flow li, .stages li, .q, .q-result, .key-chain, .sys-src, .readable, .chains, .panel, a.card:hover {
+  --notch-paint:
+    linear-gradient(to bottom left, transparent 50%, var(--ne) 50%, var(--ne) calc(50% + 1.2px), transparent calc(50% + 1.2px)) right top / var(--notch) var(--notch) no-repeat border-box,
+    linear-gradient(to top right, transparent 50%, var(--ne) 50%, var(--ne) calc(50% + 1.2px), transparent calc(50% + 1.2px)) left bottom / var(--notch) var(--notch) no-repeat border-box,
+    var(--nb);
+}
+a.card:hover { --ne: var(--accent); }
+
+/* text is ink or muted; accent only for labels, step numbers, big numbers and links */
+.ctl-id, tr.group th, a.card h3, .chains-all, .home h2 { color: var(--ink); }
+.kicker, .hero-kicker { color: var(--accent); }
+.tag { background: var(--accent-tint); color: var(--ink); }
+.home h2::before, .home h2::after { background: var(--rule); }
+
+/* every number in IBM Plex Sans */
+.q-stats b { font-family: var(--sans); font-stretch: 100%; font-weight: 600; color: var(--accent); }
+.flow li::before, .kc-steps li::before, .q-num { font-family: var(--sans); font-stretch: 100%; font-weight: 600; }
+
+/* violet: arrows, connectors, quote marks, relation symbols */
+.flow li:not(:last-child)::after { color: var(--violet); }
+.chain-basis::before { color: var(--violet); }
+.kc-steps li:not(:last-child)::after { background: var(--violet); }
+.tree ul { border-left-color: var(--violet); }
+.prose blockquote { border-left-color: var(--violet); }
+.glyph { border-color: var(--violet); color: var(--violet); }
+
+/* steps: the same accent diamond for every step, nothing singled out */
+.flow li, .stages li { border: 1px solid var(--rule); }
+.flow li:last-child { border-color: var(--rule); background: var(--notch-paint); }
+.flow li:last-child::before { background: var(--accent-tint); color: var(--accent); }
+.kc-steps li:last-child::before { background: var(--accent-tint); color: var(--accent); }
+
+/* levels: the three stages rise on the ramp */
+.stages li { --nb: var(--surface); border-top: 6px solid var(--ramp-2); }
+.stages li:first-child { border-color: var(--rule); border-top-color: var(--ramp-2); }
+.stages li:nth-child(2) { border-top-color: var(--ramp-3); }
+.stages li:nth-child(3) { border-top-color: var(--ramp-4); }
+.stages li::before, .stages li:nth-child(3)::before { color: var(--accent); }
+
+/* categories: a series bar on top of each card, the name stays ink */
+.cards-2 .card { border-top: 6px solid var(--series-blue); }
+.cards-2 .card + .card { border-top-color: var(--series-violet); }
+.key-chain { border-top: 6px solid var(--series-blue); }
+.key-chain:nth-of-type(2) { border-top-color: var(--series-teal); }
+.key-chain:nth-of-type(3) { border-top-color: var(--series-violet); }
+.q-result { border-top: 6px solid var(--accent); border-color: var(--rule); }
+
+/* home: the top block is a frame, indigo with a lavender grid and four corner marks */
+.home-hero {
+  position: relative; margin: 24px 0 8px; padding: 56px 56px 48px; color: var(--frame-ink);
+  background:
+    linear-gradient(var(--frame-label), var(--frame-label)) left 12px top 12px / 40px 2px no-repeat,
+    linear-gradient(var(--frame-label), var(--frame-label)) left 12px top 12px / 2px 40px no-repeat,
+    linear-gradient(var(--frame-label), var(--frame-label)) right 12px top 12px / 40px 2px no-repeat,
+    linear-gradient(var(--frame-label), var(--frame-label)) right 12px top 12px / 2px 40px no-repeat,
+    linear-gradient(var(--frame-label), var(--frame-label)) left 12px bottom 12px / 40px 2px no-repeat,
+    linear-gradient(var(--frame-label), var(--frame-label)) left 12px bottom 12px / 2px 40px no-repeat,
+    linear-gradient(var(--frame-label), var(--frame-label)) right 12px bottom 12px / 40px 2px no-repeat,
+    linear-gradient(var(--frame-label), var(--frame-label)) right 12px bottom 12px / 2px 40px no-repeat,
+    linear-gradient(var(--frame-grid) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, var(--frame-grid) 1px, transparent 1px) 0 0 / 24px 24px,
+    var(--frame);
+}
+.home-hero h1 { color: var(--frame-ink); }
+.home-hero p { color: var(--frame-muted); }
+.home-hero strong, .home-hero b { color: var(--frame-ink); }
+.home-hero a:not(.btn) { color: var(--frame-mark); }
+.home-hero .btn { color: var(--frame-ink); background: transparent; border-color: var(--frame-label); }
+.home-hero .btn:hover { color: var(--frame-mark); border-color: var(--frame-mark); }
+.home-hero .btn-primary { background: var(--frame-mark); border-color: var(--frame-mark); color: var(--frame); }
+.home-hero .btn-primary:hover { background: var(--frame-ink); border-color: var(--frame-ink); color: var(--frame); }
+.home-hero :focus-visible { outline-color: var(--frame-mark); }
+/* the lockup on the frame: the lettered emblem with the site's name under it */
+.hero-gate { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.hero-gate .e-frame, .hero-gate .e-arms { fill: var(--frame-mark); }
+.hero-gate .e-core { fill: var(--frame-core); }
+.hero-lockup-name { display: inline-flex; align-items: center; gap: 10px; margin: 0; font-family: var(--display); font-stretch: 85%; font-weight: 600; font-size: 1.6rem; line-height: 1.1; }
+.home-hero .hero-lockup-name { color: var(--frame-ink); }
+.hero-lockup-name .flag-ua { box-shadow: 0 0 0 1px var(--frame-label); }
+@media (max-width: 900px) {
+  .home-hero { padding: 40px 24px 32px; }
+}
