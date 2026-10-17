@@ -3,6 +3,7 @@
 ## Site design (2026-10-17, 3)
 
 - An emblem next to the site name and as the favicon: three 60-degree rhombuses (governance, risk, compliance) turning around a triangle in the accent colour, inside a hexagon whose corners meet the rhombus tips. It follows the light and dark themes.
+- Home: the decorative rings next to the headline are replaced by the emblem itself, large, with the letters G, R and C.
 
 ## Site design (2026-10-17, 2)
 
