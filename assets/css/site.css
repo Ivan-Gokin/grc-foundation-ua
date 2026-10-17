@@ -652,16 +652,21 @@ a.card h3 { color: var(--seal); }
 /* header and footer: surface with a double rule */
 .site-footer { background: var(--surface); }
 
-/* theme switch beside the language switch: two buttons, the current theme pressed */
+/* theme switch beside the language switch: a sun and a moon on a track; a notched accent thumb slides under the current one */
 .header-tools { display: flex; gap: 8px; align-items: center; }
-.theme-switch { display: inline-flex; border: 1px solid var(--rule); }
-.theme-switch button {
-  font: 500 .85rem var(--display); font-stretch: 85%; letter-spacing: .08em; text-transform: uppercase;
-  padding: 6px 10px; border: 0; background: transparent; color: var(--ink); cursor: pointer;
+.theme-switch { position: relative; display: inline-flex; padding: 2px; border: 1px solid var(--rule); background: var(--paper); }
+.theme-switch::before {
+  content: ""; position: absolute; top: 2px; bottom: 2px; left: 2px; width: calc(50% - 2px);
+  background: var(--accent); clip-path: polygon(5px 0, calc(100% - 5px) 0, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0 calc(100% - 5px), 0 5px);
+  transition: transform .2s ease;
 }
-.theme-switch button + button { border-left: 1px solid var(--rule); }
+.theme-switch[data-current="dark"]::before { transform: translateX(100%); }
+.theme-switch button {
+  position: relative; z-index: 1; display: grid; place-items: center; width: 36px; height: 28px; padding: 0;
+  border: 0; background: transparent; color: var(--muted); cursor: pointer; transition: color .2s ease;
+}
 .theme-switch button:hover { color: var(--accent); }
-.theme-switch button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+.theme-switch button[aria-pressed="true"], .theme-switch button[aria-pressed="true"]:hover { color: var(--on-accent); cursor: default; }
 
 /* notched cards: corners cut top right and bottom left; the cut edge is drawn in the card's border colour */
 .card, .hero-card, .flow li, .stages li, .q, .q-result, .key-chain, .sys-src, .readable, .chains, .panel {
