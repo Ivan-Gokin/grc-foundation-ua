@@ -530,7 +530,7 @@ a.card p { color: var(--muted); }
 .key > summary { cursor: pointer; color: var(--seal); font-size: .9rem; }
 .key .legend { margin: .6em 0 .4em; }
 /* filter panel: search field with a magnifier, reset next to it */
-.find { margin: -6px 0 20px; }
+.find { margin: 10px 0 8px; }
 .search { position: relative; display: block; }
 .search svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
 .search input[type="search"] { padding-left: 34px; }
@@ -794,3 +794,6 @@ a.card:hover { --ne: var(--accent); }
   .exports-panel { grid-template-columns: minmax(0, 1fr); }
   .exports-panel .hint { grid-column: 1; }
 }
+
+/* the filter panel: search and reset under the "who it concerns" title; the note when no type is chosen sits right under them */
+.none-note { margin: 0 0 10px; padding: 6px 10px; font-size: .82rem; line-height: 1.4; color: var(--muted); background: var(--surface-2); }

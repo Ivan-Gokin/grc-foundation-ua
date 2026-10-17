@@ -1,5 +1,9 @@
 # Changelog
 
+## Site layout (2026-10-18, filters)
+
+- Filter panel (Controls, Sources, SP 800-53): the search field and "Reset filters" moved up, right under the "Who the requirements concern" title and above the legal status groups. The note "No type selected: showing requirements for all organisation types" now sits right under them, only while nothing is selected, instead of above the results.
+
 ## Site design (2026-10-18, colours)
 
 - Colours follow the design system's latest tokens: the dark theme is "Midnight" (#0c0f22, blue-indigo) with a more visible blue-lavender grid, and darker surfaces, rules and tiles to match; the home frame uses the same midnight in both themes. The light theme is unchanged.

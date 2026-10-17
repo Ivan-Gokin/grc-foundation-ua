@@ -290,7 +290,10 @@
       return `<details class="chip-group"${open ? " open" : ""}><summary>${esc(L(g, "label"))}</summary>${items.map(chip).join("")}</details>`;
     }).join("");
     return `<fieldset class="chips"><legend>${esc(t("orgType"))}</legend>
-      <p class="hint">${esc(t("orgTypeHint"))} <a href="#/start">${esc(t("orgTypeQuiz"))}</a></p>${groups}
+      <p class="hint">${esc(t("orgTypeHint"))} <a href="#/start">${esc(t("orgTypeQuiz"))}</a></p>
+      ${searchBox()}
+      ${S.sectors.length ? "" : `<p class="none-note">${esc(t("orgTypeNone"))}</p>`}
+      ${groups}
     </fieldset>`;
   }
   function toggle(key, label) {
@@ -325,7 +328,7 @@
     if (narrow) app.querySelector(".panel").removeAttribute("open");
     return app.querySelector(`#${mainId}`);
   }
-  // Search field (a magnifier instead of a label) and the reset button, placed right under the "who it concerns" chips
+  // Search field (a magnifier instead of a label) and the reset button, at the top of the "who it concerns" filter
   const searchBox = () => `<div class="find">
       <label class="search"><svg aria-hidden="true" viewBox="0 0 20 20" width="16" height="16"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         <input id="q" type="search" value="${esc(S.q)}" placeholder="${esc(t("searchPh"))}" aria-label="${esc(t("search"))}" autocomplete="off"></label>
@@ -552,7 +555,6 @@
     if (!D.controls[S.fw]) S.fw = "iso27001-2022";
     const panel = `${fwPicker()}
       ${sectorChips()}
-      ${searchBox()}
       <fieldset><legend>${esc(t("options"))}</legend>${toggle("only", t("optOnlyMapped"))}${toggle("rec", t("optRecommended"))}${toggle("drafts", t("optDrafts"))}</fieldset>
 `;
     const main = workspace(panel, "controls-main");
@@ -631,7 +633,6 @@
         <div class="head-notes">
           <details class="key"><summary>${esc(t("dataLegend"))}</summary>${relLegend()}<p class="hint"><a href="#/method#${methodAnchor("mapping")}">${esc(t("legendMore"))}</a></p></details>
           <ul class="notes">
-            ${S.sectors.length ? "" : `<li>${esc(t("orgTypeNone"))}</li>`}
             <li>${esc(L(fw, "text_note"))}</li>
           </ul>
         </div>
@@ -799,7 +800,6 @@
       toggle("rec", t("optRecommended")), toggle("repealed", t("optRepealed"))];
     if (S.scope === "core") opts.push(toggle("records", t("optRecords")));
     const panel = `${sectorChips()}
-      ${searchBox()}
       <label class="field"><span>${esc(t("srcType"))}</span><select id="type"><option value="">${esc(t("srcAllTypes"))}</option>${typeOpts}</select></label>
       <fieldset><legend>${esc(t("options"))}</legend>${opts.join("")}</fieldset>
 `;
@@ -877,7 +877,6 @@
         ${sourceTabs()}
         ${S.scope === "reference" ? `<p class="notice">${esc(t("refNote"))}</p>` : ""}
         <p class="summary">${esc(fmt(t("srcSummary"), rows.length, total))}</p>
-        ${S.sectors.length ? "" : `<p class="hint">${esc(t("orgTypeNone"))}</p>`}
         ${D.unverifiedAppl && S.mode === "list" ? `<p class="hint">${esc(t("srcUnverified"))}</p>` : ""}
         ${S.mode === "list" ? `<div class="exports"><button type="button" class="btn btn-primary" id="s-csv">${esc(t("srcDownload"))}</button><button type="button" class="btn" id="s-xlsx">${esc(t("srcDownloadX"))}</button></div>` : `<p class="lead-sm">${esc(t("chainsIntro"))} <a href="#/method#${methodAnchor("chains")}">${esc(t("navMethod"))} →</a></p>`}
       </div>`;
@@ -1108,7 +1107,6 @@
       <fieldset><legend>${esc(t("sysBaseline"))}</legend>${radios("baseline", bases, S.baseline)}</fieldset>
       <fieldset><legend>${esc(t("sysSector"))}</legend>${sectors.length ? radios("sprofile", sectors, S.sprofile) : `<p class="hint">${esc(t("sysSectorNone"))}</p>`}</fieldset>
       ${sectorChips()}
-      ${searchBox()}
       <fieldset><legend>${esc(t("sysShow"))}</legend>${toggle("sb", t("sysFromBaseline"))}${toggle("sp", t("sysFromPlan"))}${toggle("sl", t("sysFromLaw"))}${toggle("drafts", t("optDrafts"))}</fieldset>
 `;
     const main = workspace(panel, "system-main");
