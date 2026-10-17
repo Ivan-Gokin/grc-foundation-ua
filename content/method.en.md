@@ -39,6 +39,10 @@ The method is **Set Theory Relationship Mapping (STRM)** from [NIST IR 8477](htt
 
 **The unit of mapping** is a provision of an act (article, part, paragraph), not the whole act. A row reads: "provision [relationship] control".
 
+This is what one such mapping looks like:
+
+<div id="mapping-example"></div>
+
 | Relationship | Meaning | Coverage |
 |---|---|---|
 | **=** equal | The provision and the control are the same | full |
@@ -137,11 +141,11 @@ The technical description for maintainers:
 
 <div id="method-links"></div>
 
-## Open data
+## Open data and import into GRC systems
 
 <div id="method-data"></div>
 
-## Import into GRC systems
+### Import into GRC systems
 
 The project's data can be turned into formats that GRC systems load. There is no such export yet: we will build it if users need it, so let us know (contacts in [About](#/about)).
 

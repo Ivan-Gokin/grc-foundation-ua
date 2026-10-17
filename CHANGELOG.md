@@ -1,5 +1,10 @@
 # Changelog
 
+## Site content (2026-10-18, home and open data)
+
+- Home: a new "What problem it solves" section (not missing a requirement, not doing work twice, having the legal basis for each control); "What you get" is now one sentence — the minimum set of controls to include in your ISMS or system profile to comply with the laws that apply to you — followed by the two levels (organisation, information system). The mapping example moved to the Methodology, the three stages to the start of guide step 1.
+- Methodology: "Open data" and "Import into GRC systems" are one section; the files are a table (file, rows, description) whose names are the download links.
+
 ## Site content (2026-10-18, About and Methodology)
 
 - About is now about the project as an organisation: what it is and for whom, who makes it (with contacts), cooperation and feedback, a new Privacy section (no data collected; the questionnaire only sets the filters and its answers stay in the part of the address after "#"; the browser remembers only the language and the theme; a note on GitHub Pages logs), licence, plans and the disclaimer.

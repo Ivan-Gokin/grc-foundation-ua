@@ -371,8 +371,6 @@
     app.innerHTML = `<article class="home" id="home-text"><p class="hint">${esc(t("loading"))}</p></article>`;
     const el = document.getElementById("home-text");
     if (!(await mdInto(el, "home"))) return;
-    const ex = el.querySelector("#hero-example");
-    if (ex) ex.outerHTML = heroExample();
     scrollToAnchor();
   }
   function heroExample() {
@@ -531,6 +529,8 @@
     const el = docLayout(t("tocTitle"));
     if (!(await mdInto(el, "method"))) return;
     fillMethod(el);
+    const ex = el.querySelector("#mapping-example");
+    if (ex) ex.outerHTML = heroExample();
     buildToc(document.getElementById("toc"), el, false);
     scrollToAnchor();
   }
@@ -1203,27 +1203,20 @@
   function fillMethod(el) {
     const repo = (CFG.repoUrl || "").replace(/\/$/, "");
     const blob = (p) => `${repo}/blob/${CFG.branch || "main"}/${p}`;
-    const tree = (p) => `${repo}/${/\.[a-z]+$/.test(p) ? "blob" : "tree"}/${CFG.branch || "main"}/${p}`;
     const fill = (id, html) => { const x = el.querySelector(`#${id}`); if (x) x.outerHTML = html; };
     fill("method-version", D.meta ? `<p class="summary">${esc(fmt(t("dataVersion"), D.meta.version, D.meta.date))} ${esc(S.lang === "uk" ? D.meta.note_uk : D.meta.note_en)}</p>` : "");
     fill("method-links", `<p class="about-links"><a href="${esc(blob(S.lang === "uk" ? "docs/BLUEPRINT.uk.md" : "docs/BLUEPRINT.md"))}" target="_blank" rel="noopener">${esc(t("dataBlueprint"))}</a>
         <a href="${esc(repo)}" target="_blank" rel="noopener">${esc(t("aboutRepo"))}</a>
         <a href="${esc(blob("CHANGELOG.md"))}" target="_blank" rel="noopener">${esc(t("aboutChangelog"))}</a></p>`);
     const res = ((D.pkg && D.pkg.resources) || FILES.map((f) => ({ path: f }))).filter((r) => r.name !== "readable");
-    // generated files have no copy in git: link to what they are built from
-    const view = (r) => r["x-source"]
-      ? `<a href="${esc(tree(r["x-source"]))}" target="_blank" rel="noopener">${esc(t("dataSource"))}</a>`
-      : `<a href="${esc(blob("data/" + r.path))}" target="_blank" rel="noopener">${esc(t("dataView"))}</a>`;
-    const items = res.map((r) => `<li class="file">
-        <span class="file-name">${esc(r.path)}</span>
-        ${D.rowCounts[r.path] != null ? `<span class="muted small">${esc(fmt(t("dataRows"), D.rowCounts[r.path]))}</span>` : ""}
-        <p>${esc(r.description || "")}</p>
-        <p class="file-links">${view(r)}<a href="data/${esc(r.path)}" download>${esc(t("dataRaw"))}</a></p></li>`).join("");
+    const rowsOf = (r) => (D.rowCounts[r.path] != null ? String(D.rowCounts[r.path]) : "—");
+    const files = `<div class="table-wrap"><table class="files-table">
+        <thead><tr><th scope="col">${esc(t("dataColFile"))}</th><th scope="col" class="num">${esc(t("dataColRows"))}</th><th scope="col">${esc(t("dataColDesc"))}</th></tr></thead>
+        <tbody>${res.map((r) => `<tr><th scope="row"><a href="data/${esc(r.path)}" download>${esc(r.path)}</a></th><td class="num">${esc(rowsOf(r))}</td><td>${esc(r.description || "")}</td></tr>`).join("")}</tbody></table></div>`;
     fill("method-data", `<p>${esc(t("dataIntro"))}</p>
       <section class="readable"><h3>${esc(t("dataReadableTitle"))}</h3><p>${esc(t("dataReadable"))}</p>
         <p><a class="btn btn-primary" href="data/grc-foundation-ua.xlsx" download>${esc(t("dataReadableBtn"))}</a></p></section>
-      <details class="machine"><summary><h3>${esc(t("dataMachineTitle"))}</h3></summary><p>${esc(t("dataMachine"))}</p>
-        <ul class="files">${items}</ul></details>`);
+      <h3>${esc(t("dataMachineTitle"))}</h3><p>${esc(t("dataMachine"))}</p>${files}`);
   }
 
   // ------------------------------------------------------------------ boot

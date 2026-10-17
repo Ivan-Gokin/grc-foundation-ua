@@ -12,6 +12,12 @@ Answer four questions and get the **skeleton of an information security manageme
 
 </section>
 
+## What problem it solves
+
+- **Do not miss a requirement.** You see the acts that apply to your organisation, with their "law → resolution → order" chains.
+- **Do not do it twice.** One control of a standard often meets the requirements of several acts at once, and the table shows it.
+- **Have the legal basis.** For every control you see which provisions of which acts require it: for an auditor, a regulator or management.
+
 ## How it works
 
 <ol class="flow">
@@ -21,11 +27,9 @@ Answer four questions and get the **skeleton of an information security manageme
 <li><b>Your ISMS skeleton</b><span>Each requirement is linked to a control of the standard: you see where the standard covers the law and where the law asks for more.</span></li>
 </ol>
 
-This is what one such link looks like:
+## What you get
 
-<div id="hero-example"></div>
-
-## Two levels of requirements
+The minimum set of controls to include in your ISMS or in an information system's profile to comply with the laws and regulations that apply to you. Each control comes with its legal basis, and the list can be downloaded as a draft Statement of Applicability or profile.
 
 <div class="cards cards-2">
 <div class="card">
@@ -46,26 +50,6 @@ This is what one such link looks like:
 <p><a href="#/controls?fw=sp800-53r5">Controls for an information system →</a></p>
 </div>
 </div>
-
-## What you get
-
-- **A list of applicable acts** with descriptions, legal status and "law → resolution → order" chains. Downloadable as Excel.
-- **A draft Statement of Applicability (SoA)** for ISO/IEC 27001 or a **target profile** for NIST CSF 2.0: for each control you see which provisions of which acts require it.
-- **Legal parameters:** deadlines, frequencies and thresholds set by law rather than by you.
-- **Requirements with no counterpart:** what the law asks beyond the standard (reporting to the regulator, contract terms) and which document to put it in.
-- **An information system profile:** NIST SP 800-53 controls marked with where each requirement comes from: a baseline security profile, the cyber protection plan or legislation.
-
-## From chaos to GRC engineering
-
-GRC engineering turns requirements, controls and evidence into data and code: secure configurations, automated checks, continuous monitoring. But you can only automate what has already been defined. The path has three stages:
-
-<ol class="stages">
-<li><b>Governance</b><span>We decide who is responsible for security, what is required of us and how we manage it. The result is an integrated management system with a complete set of requirements. It is the prerequisite for everything else, and this is where this site helps.</span></li>
-<li><b>Compliance</b><span>What is required regardless of our wishes is applied to systems and automated: configurations, checks, evidence collection. Less time on routine.</span><a href="#/guide?c=compliance">Guide: stage 2 →</a></li>
-<li><b>Risk management</b><span>The freed-up resources go into resilience to a changing environment: new threats, new suppliers, new requirements.</span><a href="#/guide?c=risk">Guide: stage 3 →</a></li>
-</ol>
-
-<p class="home-cta"><a class="btn btn-primary" href="#/guide?c=roles">How to go through the first stage → Guide</a></p>
 
 ## Who it is for
 
