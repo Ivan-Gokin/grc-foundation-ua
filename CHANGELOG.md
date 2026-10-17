@@ -3,7 +3,7 @@
 ## Site design (design system "Іван Гокін", version 2)
 
 - Colours come from the design system's tokens. The dark theme is indigo with a lavender grid instead of night blue; the light theme is unchanged.
-- A theme switch next to the language switch: light or dark; without a choice the system setting decides, and a choice is remembered in the browser.
+- A two-button theme switch (Light | Dark) next to the language switch, the current theme pressed; without a choice the system setting decides, and a choice is remembered in the browser.
 - The top block of the home page is a frame: indigo with a lavender grid, four corner marks, and the emblem with the site's name under it.
 - Cards have cut corners (top right and bottom left) instead of square ones; the primary button keeps all four corners cut.
 - Violet for arrows and connectors (chain links, step arrows, relation symbols, quotes); series colours mark categories (the two requirement levels, the key chains), the lavender ramp marks the three stages.

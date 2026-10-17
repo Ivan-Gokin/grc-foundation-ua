@@ -652,8 +652,16 @@ a.card h3 { color: var(--seal); }
 /* header and footer: surface with a double rule */
 .site-footer { background: var(--surface); }
 
-/* theme switch beside the language switch */
+/* theme switch beside the language switch: two buttons, the current theme pressed */
 .header-tools { display: flex; gap: 8px; align-items: center; }
+.theme-switch { display: inline-flex; border: 1px solid var(--rule); }
+.theme-switch button {
+  font: 500 .85rem var(--display); font-stretch: 85%; letter-spacing: .08em; text-transform: uppercase;
+  padding: 6px 10px; border: 0; background: transparent; color: var(--ink); cursor: pointer;
+}
+.theme-switch button + button { border-left: 1px solid var(--rule); }
+.theme-switch button:hover { color: var(--accent); }
+.theme-switch button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
 
 /* notched cards: corners cut top right and bottom left; the cut edge is drawn in the card's border colour */
 .card, .hero-card, .flow li, .stages li, .q, .q-result, .key-chain, .sys-src, .readable, .chains, .panel {

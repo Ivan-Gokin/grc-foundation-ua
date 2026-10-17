@@ -19,17 +19,17 @@
   const DARK = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
   const themeNow = () => document.documentElement.getAttribute("data-theme") || (DARK && DARK.matches ? "dark" : "light");
   function themeButton() {
-    const b = document.getElementById("theme");
-    if (!b) return;
-    const toDark = themeNow() !== "dark";
-    b.textContent = t(toDark ? "themeDark" : "themeLight");
-    b.setAttribute("aria-label", t(toDark ? "themeDarkLabel" : "themeLightLabel"));
-    b.onclick = () => {
-      const next = themeNow() === "dark" ? "light" : "dark";
-      document.documentElement.setAttribute("data-theme", next);
-      store.set("grc-theme", next);
-      themeButton();
-    };
+    const box = document.getElementById("theme");
+    if (!box) return;
+    const now = themeNow();
+    box.querySelectorAll("button").forEach((b) => {
+      b.setAttribute("aria-pressed", String(b.dataset.set === now));
+      b.onclick = () => {
+        document.documentElement.setAttribute("data-theme", b.dataset.set);
+        store.set("grc-theme", b.dataset.set);
+        themeButton();
+      };
+    });
   }
   if (DARK && DARK.addEventListener) DARK.addEventListener("change", themeButton);
   const VIEWS = ["home", "start", "guide", "controls", "sources", "method", "articles", "about"];
@@ -262,7 +262,7 @@
     document.getElementById("header").innerHTML = `
       <div class="brand">${BRAND_MARK}<div class="brand-text"><a href="#/home" class="brand-name">${esc(t("siteName"))}<span class="flag-ua" role="img" aria-label="${esc(t("flagUa"))}"></span></a><span class="brand-sub">${esc(t("siteSub"))}</span></div></div>
       <nav class="nav" aria-label="${esc(t("siteName"))}">${nav}</nav>
-      <div class="header-tools"><button class="lang" type="button" id="theme"></button><button class="lang" type="button" id="lang" aria-label="${esc(t("langSwitchLabel"))}">${esc(t("langSwitch"))}</button></div>`;
+      <div class="header-tools"><div class="theme-switch" id="theme" role="group" aria-label="${esc(t("themeGroup"))}"><button type="button" data-set="light">${esc(t("themeLight"))}</button><button type="button" data-set="dark">${esc(t("themeDark"))}</button></div><button class="lang" type="button" id="lang" aria-label="${esc(t("langSwitchLabel"))}">${esc(t("langSwitch"))}</button></div>`;
     document.getElementById("lang").onclick = () => { S.lang = S.lang === "uk" ? "en" : "uk"; store.set("grc-lang", S.lang); render(); };
     themeButton();
     const pv = document.getElementById("preview");
