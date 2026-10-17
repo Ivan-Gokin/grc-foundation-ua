@@ -579,6 +579,22 @@
     return { rows, leafCount: leaf.length, drivers, exp };
   }
 
+  // Key figures above a table: a label, one big number, one line under it
+  function kpi(label, value, sub, cls) {
+    return `<div class="kpi${cls ? " " + cls : ""}"><p class="kpi-label">${esc(label)}</p><p class="kpi-value">${esc(value)}</p>${sub ? `<p class="kpi-sub">${esc(sub)}</p>` : ""}</div>`;
+  }
+  function kpiUpdated() {
+    if (!D.meta) return "";
+    const d = new Date(D.meta.date + "T00:00:00");
+    const date = isNaN(d) ? D.meta.date : (S.lang === "uk" ? d.toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit", year: "numeric" }) : d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }));
+    return kpi(t("kpiUpdated"), date, fmt(t("kpiVersion"), D.meta.version));
+  }
+  function kpiAi(ai, total) {
+    return ai
+      ? kpi(t("kpiAi"), fmt(t("kpiOf"), ai, total), t("kpiAiSub"), "kpi-warn")
+      : kpi(t("kpiAi"), "0", t("kpiAiNone"));
+  }
+
   function drawControls(main) {
     const { rows, leafCount, drivers } = controlRows();
     const fw = fwRow(S.fw);
@@ -605,17 +621,27 @@
 
     const outName = L(fw, "output");
     main.innerHTML = `
-      <div class="results-head">
+      <div class="results-head kpi-head">
         <h1>${esc(fwLabel(fw))}</h1>
-        <p class="summary">${esc(fmt(t("summaryControls"), withDrivers, leafCount, provSet.size, srcSet.size))}${partial ? ` ${esc(fmt(t("summaryPartial"), partial))}` : ""}</p>
-        <details class="key"><summary>${esc(t("dataLegend"))}</summary>${relLegend()}<p class="hint"><a href="#/method#${methodAnchor("mapping")}">${esc(t("legendMore"))}</a></p></details>
-        ${ai ? `<p class="ai-warning" role="note">${esc(fmt(t("aiWarning"), ai, shown.length))}</p>` : ""}
-        ${S.sectors.length ? "" : `<p class="hint">${esc(t("orgTypeNone"))}</p>`}
-        <p class="hint">${esc(L(fw, "text_note"))}</p>
-        <div class="exports">
-          <button type="button" class="btn btn-primary" id="x-csv">${esc(fmt(t("exportSoaCsv"), outName))}</button>
-          <button type="button" class="btn" id="x-xlsx">${esc(fmt(t("exportSoaXlsx"), outName))}</button>
-          <button type="button" class="btn btn-quiet" id="x-long">${esc(t("exportLong"))}</button>
+        <div class="kpis">
+          ${kpi(t("kpiControls"), fmt(t("kpiOf"), withDrivers, leafCount), fmt(t("kpiControlsSub"), provSet.size, srcSet.size) + (partial ? " " + fmt(t("kpiPartial"), partial) : ""))}
+          ${kpiUpdated()}
+          ${kpiAi(ai, shown.length)}
+        </div>
+        <div class="head-notes">
+          <details class="key"><summary>${esc(t("dataLegend"))}</summary>${relLegend()}<p class="hint"><a href="#/method#${methodAnchor("mapping")}">${esc(t("legendMore"))}</a></p></details>
+          <ul class="notes">
+            ${S.sectors.length ? "" : `<li>${esc(t("orgTypeNone"))}</li>`}
+            <li>${esc(L(fw, "text_note"))}</li>
+          </ul>
+        </div>
+        <div class="exports exports-panel">
+          <p class="exports-title">${esc(t("exportsTitle"))}</p>
+          <div class="exports-btns">
+            <button type="button" class="btn btn-primary" id="x-csv">${esc(fmt(t("exportSoaCsv"), outName))}</button>
+            <button type="button" class="btn" id="x-xlsx">${esc(fmt(t("exportSoaXlsx"), outName))}</button>
+            <button type="button" class="btn btn-quiet" id="x-long">${esc(t("exportLong"))}</button>
+          </div>
           <p class="hint">${esc(t("exportNote"))} ${S.only ? esc(t("exportScope")) : ""}</p>
         </div>
       </div>
@@ -1013,6 +1039,7 @@
   function buildToc(box, el, inGuide) {
     if (!box) return;
     const heads = [...el.querySelectorAll(inGuide ? "h2" : "h2, h3")];
+    heads.forEach((h) => { if (!h.id) h.id = slugify(h.textContent); });
     const headList = heads.length ? `<ul class="toc-heads">${heads.map((h) => `<li class="l${h.tagName[1]}"><a href="#${esc(h.id)}">${esc(h.textContent)}</a></li>`).join("")}</ul>` : "";
     box.querySelector("nav").innerHTML = inGuide ? guideLinks(true, headList) : headList;
     const narrow = window.matchMedia("(max-width: 900px)").matches;
@@ -1021,7 +1048,10 @@
     inPage.forEach((a) => a.addEventListener("click", (e) => {
       e.preventDefault();
       const target = document.getElementById(decodeURIComponent(a.getAttribute("href").slice(1)));
-      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (target) {
+        for (let d = target.closest("details"); d; d = d.parentElement.closest("details")) d.open = true;
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
       if (window.matchMedia("(max-width: 900px)").matches) box.open = false;
     }));
     if (tocObserver) tocObserver.disconnect();
@@ -1065,7 +1095,10 @@
     el.querySelectorAll('a[href^="#"]:not([href^="#/"])').forEach((a) => a.addEventListener("click", (e) => {
       e.preventDefault();
       const target = document.getElementById(decodeURIComponent(a.getAttribute("href").slice(1)));
-      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (target) {
+        for (let d = target.closest("details"); d; d = d.parentElement.closest("details")) d.open = true;
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }));
     el.querySelectorAll('a[href^="http"]').forEach((a) => { a.target = "_blank"; a.rel = "noopener"; });
   }
@@ -1142,12 +1175,16 @@
       `<td data-label="${esc(t("sysColPlan"))}">${csfList(c._plan)}</td>`,
       `<td data-label="${esc(t("sysColLaw"))}">${csfList(c._law)}${c._acts.length ? `<span class="muted small block">${esc(c._acts.map((id) => sourceRef(D.sourceById[id])).join("; "))}</span>` : ""}${c._ai ? ` <span class="badge rv-ai_draft">${esc(t("aiDraft"))}</span>` : ""}</td>`,
     ].filter(Boolean).join("");
-    main.innerHTML = `<div class="results-head">
+    main.innerHTML = `<div class="results-head kpi-head">
         <h1>NIST SP 800-53 Rev. 5</h1>
+        <div class="kpis">
+          ${kpi(t("kpiSys"), String(rows.length), fmt(t("kpiSysSub"), n((c) => c._base || c._sector), n((c) => c._plan.length), n((c) => c._law.length)) + (outside ? " " + fmt(t("sysOutside"), outside) : ""))}
+          ${kpiUpdated()}
+          ${kpiAi(n((c) => c._ai), rows.length)}
+        </div>
         <p class="lead-sm">${esc(t("sysIntro"))}</p>
         <dl class="sys-sources">${src("b", t("sysSrcBaselineT"), t("sysSrcBaseline"))}${src("p", t("sysSrcPlanT"), t("sysSrcPlan"))}${src("l", t("sysSrcLawT"), t("sysSrcLaw"))}${src("s", t("sysSrcSectorT"), profilesOf("sector").length ? t("sysSrcSector") : t("sysSrcSector") + " " + t("sysSectorNone"))}</dl>
         <p class="notice">${esc(t("sysPreview"))}</p>
-        <p class="summary">${esc(fmt(t("sysSummary"), rows.length, n((c) => c._base || c._sector), n((c) => c._plan.length), n((c) => c._law.length)))}${outside ? ` ${esc(fmt(t("sysOutside"), outside))}` : ""}</p>
         <p class="hint">${esc(t("sysIsoNote"))} ${S.lang === "uk" ? esc(t("sysMachine")) : ""}</p>
         <div class="exports"><button type="button" class="btn btn-primary" id="y-csv">${esc(t("sysDownload"))}</button></div>
       </div>
