@@ -1,5 +1,7 @@
 <section class="home-hero">
 
+<div class="hero-gate" aria-hidden="true"><svg viewBox="0 0 380 380"><g class="ring"><circle class="faint" cx="190" cy="190" r="182" stroke-width="1"></circle><circle cx="190" cy="190" r="168" stroke-width="3"></circle><circle class="faint" cx="190" cy="190" r="150" stroke-width="1"></circle><circle cx="190" cy="190" r="104" stroke-width="1.5"></circle><circle class="faint" cx="190" cy="190" r="62" stroke-width="1"></circle><path d="M190 8v36M190 336v36M8 190h36M336 190h36M61 61l25 25M294 294l25 25M319 61l-25 25M86 294l-25 25" stroke-width="2"></path><path class="faint" d="M190 40v28M190 312v28M40 190h28M312 190h28M84 84l20 20M276 276l20 20M296 84l-20 20M104 276l-20 20M133 52l8 25M247 52l-8 25M133 328l8-25M247 328l-8-25M52 133l25 8M52 247l25-8M328 133l-25 8M328 247l-25-8" stroke-width="1"></path></g><path class="core" d="M190 128l62 62-62 62-62-62z"></path><path class="core faint" d="M190 150l40 40-40 40-40-40z"></path><text x="190" y="203" text-anchor="middle">⊂</text></svg></div>
+
 # Хочете розібратися, яким вимогам кібербезпеки ви маєте відповідати?
 
 Закони, постанови Кабміну, накази Держспецзв'язку, постанови НБУ, стандарти, політики НАТО: сотні документів, які посилаються один на одного, змінюються і втрачають чинність. GRC-фундамент зводить їх в одну картину і показує, що з цього стосується саме вашої організації.

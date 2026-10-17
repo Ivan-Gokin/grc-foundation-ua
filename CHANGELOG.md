@@ -1,5 +1,12 @@
 # Changelog
 
+## Site design (2026-10-17)
+
+- New look: cool retro-futurist deco on graph paper. The light theme is drafting paper with a blue grid and a steel-blue accent, the dark theme a night-blue chart table with an ice-blue accent; teal is the second colour and coral is kept for warnings and partial coverage. Double rules under the header and above the footer, notched primary buttons, ring-shaped relationship symbols.
+- Type: Tektur (variable, condensed to 85%) for titles, navigation, labels and control identifiers; IBM Plex Sans for reading text and tables. Literata is removed. Both fonts stay self-hosted.
+- Home: a decorative "gate" next to the headline (hidden on phones), numbered diamonds in "How it works", and the three stages as rising columns with Roman numerals.
+- The favicon follows the new palette. No data changes.
+
 ## data-2026.10.9 (2026-10-17)
 
 - The Methodology's chain example now uses the order in force: law → CMU Resolution No. 1426 → SSSCIP Order No. 75/2026. The link Order 54/2025 `based_on` 1426 is removed; Order 75/2026 `based_on` 1426 is added with `confidence=medium` (item 5 of the Regulation requires the baseline measures; the order's preamble cites Resolutions No. 518 and No. 373).
