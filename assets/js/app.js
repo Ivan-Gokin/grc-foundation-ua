@@ -240,7 +240,7 @@
       <div class="menu">${guideLinks(false)}</div></details>`;
     const nav = menu + [["controls", "navControls"], ["sources", "navSources"], ["method", "navMethod"], ["about", "navAbout"]].map(link).join("");
     document.getElementById("header").innerHTML = `
-      <div class="brand"><a href="#/home" class="brand-name">${esc(t("siteName"))}</a><span class="brand-sub">${esc(t("siteSub"))}</span></div>
+      <div class="brand"><a href="#/home" class="brand-name">${esc(t("siteName"))}<span class="flag-ua" role="img" aria-label="${esc(t("flagUa"))}"></span></a><span class="brand-sub">${esc(t("siteSub"))}</span></div>
       <nav class="nav" aria-label="${esc(t("siteName"))}">${nav}</nav>
       <button class="lang" type="button" id="lang" aria-label="${esc(t("langSwitchLabel"))}">${esc(t("langSwitch"))}</button>`;
     document.getElementById("lang").onclick = () => { S.lang = S.lang === "uk" ? "en" : "uk"; store.set("grc-lang", S.lang); render(); };

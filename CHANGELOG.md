@@ -1,5 +1,9 @@
 # Changelog
 
+## Site design (2026-10-17, 2)
+
+- The flag of Ukraine next to the site name in the header (official colours in both themes).
+
 ## data-2026.10.11 (2026-10-17)
 
 From the author's article "We have FISMA at home" (LinkedIn, updated 2026):

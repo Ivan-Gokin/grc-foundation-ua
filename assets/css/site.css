@@ -605,3 +605,7 @@ a.card h3 { color: var(--seal); }
 .chain-basis::before { content: "↳ "; color: var(--teal); }
 .chain-ctx { opacity: .6; }
 .weight-req { color: var(--teal); border-color: var(--teal); background: transparent; }
+
+/* the flag of Ukraine next to the site name (official colours, kept as they are in both themes) */
+.brand-name { display: inline-flex; align-items: center; gap: 10px; }
+.flag-ua { display: inline-block; flex: none; width: 21px; height: 14px; background: linear-gradient(#0057b7 0 50%, #ffd700 50% 100%); box-shadow: 0 0 0 1px var(--rule); }
