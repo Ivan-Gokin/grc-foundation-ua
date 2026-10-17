@@ -83,7 +83,11 @@ p { margin: 0 0 .75em; }
   padding: 12px 24px; background: var(--surface); border-bottom: 1px solid var(--rule);
   position: sticky; top: 0; z-index: 5;
 }
-.brand { display: flex; flex-direction: column; min-width: 0; }
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.brand-text { display: flex; flex-direction: column; min-width: 0; }
+.brand-mark { flex: none; width: 44px; height: 44px; }
+.brand-mark .bm-frame, .brand-mark .bm-arms { fill: var(--seal); }
+.brand-mark .bm-core { fill: var(--teal); }
 .brand-name { font-family: var(--display); font-weight: 600; font-stretch: 85%; font-size: 1.35rem; letter-spacing: .02em; color: var(--ink); text-decoration: none; }
 .brand-sub { color: var(--muted); font-size: .8rem; }
 .nav { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; }
@@ -146,6 +150,7 @@ input[type="search"]:focus, select:focus { border-color: var(--seal); }
 @media (max-width: 900px) {
   main { padding: 16px; }
   .site-header { padding: 10px 16px; gap: 8px 16px; position: static; }
+  .brand-mark { width: 36px; height: 36px; }
   .nav { order: 3; flex-basis: 100%; flex-wrap: wrap; }
   .nav a { white-space: nowrap; }
   .workspace { grid-template-columns: minmax(0, 1fr); gap: 16px; }

@@ -12,6 +12,9 @@
     "sp800-53/baselines_ua.csv", "sp800-53/map_csf-2.0_sp800-53r5.csv", "sp800-53/profiles.csv",
     "chains.csv", "chain_steps.csv",
   ];
+  // The emblem: three 60-degree rhombuses (governance, risk, compliance) turning around a triangle, inside a hexagon.
+  // Decorative next to the site name, so it is hidden from screen readers.
+  const BRAND_MARK = `<svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path class="bm-frame" fill-rule="evenodd" d="M67.44 6.36L96.52 43.29L79.07 86.93L32.56 93.64L3.48 56.71L20.93 13.07ZM65.96 10.07L92.56 43.86L76.6 83.79L34.04 89.93L7.44 56.14L23.4 16.21Z"/><path class="bm-arms" d="M35.86 44.63L59.43 36.47L64.14 11.97L40.57 20.13ZM61.72 40.43L57.01 64.93L75.86 81.27L80.58 56.77ZM52.42 64.93L33.56 48.6L9.99 56.77L28.85 73.1Z"/><path class="bm-core" d="M36.84 47.47L58.77 39.87L54.39 62.67Z"/></svg>`;
   const VIEWS = ["home", "start", "guide", "controls", "sources", "method", "articles", "about"];
   const SYSTEM_FW = "sp800-53r5"; // the system-level framework, shown inside Controls
   const ARTICLES = ["isms-policy-case-studies", "grc-systems-overview"];
@@ -240,7 +243,7 @@
       <div class="menu">${guideLinks(false)}</div></details>`;
     const nav = menu + [["controls", "navControls"], ["sources", "navSources"], ["method", "navMethod"], ["about", "navAbout"]].map(link).join("");
     document.getElementById("header").innerHTML = `
-      <div class="brand"><a href="#/home" class="brand-name">${esc(t("siteName"))}<span class="flag-ua" role="img" aria-label="${esc(t("flagUa"))}"></span></a><span class="brand-sub">${esc(t("siteSub"))}</span></div>
+      <div class="brand">${BRAND_MARK}<div class="brand-text"><a href="#/home" class="brand-name">${esc(t("siteName"))}<span class="flag-ua" role="img" aria-label="${esc(t("flagUa"))}"></span></a><span class="brand-sub">${esc(t("siteSub"))}</span></div></div>
       <nav class="nav" aria-label="${esc(t("siteName"))}">${nav}</nav>
       <button class="lang" type="button" id="lang" aria-label="${esc(t("langSwitchLabel"))}">${esc(t("langSwitch"))}</button>`;
     document.getElementById("lang").onclick = () => { S.lang = S.lang === "uk" ? "en" : "uk"; store.set("grc-lang", S.lang); render(); };

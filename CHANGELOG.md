@@ -1,5 +1,9 @@
 # Changelog
 
+## Site design (2026-10-17, 3)
+
+- An emblem next to the site name and as the favicon: three 60-degree rhombuses (governance, risk, compliance) turning around a triangle in the accent colour, inside a hexagon whose corners meet the rhombus tips. It follows the light and dark themes.
+
 ## Site design (2026-10-17, 2)
 
 - The flag of Ukraine next to the site name in the header (official colours in both themes).
