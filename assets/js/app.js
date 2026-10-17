@@ -638,11 +638,10 @@
         <div class="exports exports-panel">
           <p class="exports-title">${esc(t("exportsTitle"))}</p>
           <div class="exports-btns">
-            <button type="button" class="btn btn-primary" id="x-csv">${esc(fmt(t("exportSoaCsv"), outName))}</button>
-            <button type="button" class="btn" id="x-xlsx">${esc(fmt(t("exportSoaXlsx"), outName))}</button>
-            <button type="button" class="btn btn-quiet" id="x-long">${esc(t("exportLong"))}</button>
+            <span class="exports-file">${esc(outName)}</span>
+            <button type="button" class="btn btn-primary" id="x-csv">CSV</button>
+            <button type="button" class="btn" id="x-xlsx">Excel</button>
           </div>
-          <p class="hint">${esc(t("exportNote"))} ${S.only ? esc(t("exportScope")) : ""}</p>
         </div>
       </div>
       ${rows.length ? `<div class="table-wrap"><table class="controls">
@@ -653,7 +652,6 @@
     if (sw) sw.onclick = () => { S.fw = sw.dataset.fw; render(); };
     main.querySelector("#x-csv").onclick = () => exportSoa(rows, "csv");
     main.querySelector("#x-xlsx").onclick = () => exportSoa(rows, "xlsx");
-    main.querySelector("#x-long").onclick = () => exportLong(rows, gaps);
   }
 
   // provisions checked against the whole framework with no counterpart (empty control_id)
@@ -788,17 +786,7 @@
     if (kind === "xlsx") downloadXlsx(`${base}.xlsx`, S.fw === "csf-2.0" ? "Profile" : "SoA", header, data, [10, 50, 55, 12, 35, 14, 30, 30, 30, 40, 20, 20, 30]);
     else downloadCsv(`${base}.csv`, header, data);
   }
-  function exportLong(rows, gaps) {
-    const header = [t("xControlId"), t("xControl"), t("xProvision"), t("xSource"), "ref", t("driverSummary"), t("xRelationship"), t("xCoverage"), t("xParam"), t("driverPolicy"), t("xReview"), t("xMappedBy"), "url"];
-    const out = [];
-    const line = (cid, cname, m) => {
-      const p = D.provById[m.provision_id]; const s = D.sourceById[p.source_id];
-      out.push([cid, cname, p.id, sourceRef(s), L(p, "ref"), L(p, "summary"), m.relationship, m.coverage, L(m, "parameter"), L(m, "policy"), reviewLabel(m.review_status), m.mapped_by, s.url]);
-    };
-    rows.forEach(({ c, ds }) => ds.forEach((m) => line(c.id, controlName(S.fw, c), m)));
-    (gaps || []).forEach((m) => line("", t("gapsNone"), m));
-    downloadCsv(`mappings_${stamp()}.csv`, header, out);
-  }
+
 
   // ------------------------------------------------------------------ sources
   function renderSources() {

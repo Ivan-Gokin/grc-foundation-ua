@@ -785,7 +785,8 @@ a.card:hover { --ne: var(--accent); }
 .exports-panel { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 20px; align-items: center; margin: 0;
   padding: 14px 18px; border: 1px solid var(--rule); background: var(--surface); }
 .exports-title { margin: 0; font: 500 .8rem var(--display); font-stretch: 85%; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
-.exports-btns { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.exports-btns { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; }
+.exports-file { font-weight: 600; color: var(--ink); margin-right: 6px; }
 .exports-panel .hint { grid-column: 2; margin: 0; max-width: 100ch; }
 @media (max-width: 900px) {
   .kpis { grid-template-columns: minmax(0, 1fr); }

@@ -204,9 +204,6 @@ window.GRC_I18N = {
     exportTitle: "Завантажити",
     exportSoaCsv: "{0} (CSV)",
     exportSoaXlsx: "{0} (Excel)",
-    exportLong: "Зіставлення рядками (CSV)",
-    exportNote: "У файлі є порожні стовпці для значень, які визначає організація, посилань на політики, відповідальних і доказів.",
-    exportScope: "У файл потрапляють заходи, показані в таблиці. Щоб отримати повний перелік для SoA, вимкніть \"лише заходи з правовими підставами\".",
 
     xApplicable: "Застосовний (так/ні)",
     xJustification: "Обґрунтування виключення",
@@ -543,9 +540,6 @@ window.GRC_I18N = {
     exportTitle: "Download",
     exportSoaCsv: "{0} (CSV)",
     exportSoaXlsx: "{0} (Excel)",
-    exportLong: "Mappings, one per row (CSV)",
-    exportNote: "The file has blank columns for organisation-defined values, policy references, owners and evidence.",
-    exportScope: "The file contains the controls shown in the table. For a complete SoA, turn off \"only controls with legal drivers\".",
 
     xApplicable: "Applicable (Y/N)",
     xJustification: "Justification for exclusion",
