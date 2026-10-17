@@ -262,7 +262,7 @@
     const inGuide = S.view === "guide" || S.view === "articles";
     const menu = `<details class="nav-menu" id="guide-menu"><summary${inGuide ? ' aria-current="page"' : ""}>${esc(t("navGuide"))}</summary>
       <div class="menu">${guideLinks(false)}</div></details>`;
-    const nav = menu + [["controls", "navControls"], ["sources", "navSources"], ["method", "navMethod"], ["about", "navAbout"]].map(link).join("");
+    const nav = [["controls", "navControls"], ["sources", "navSources"]].map(link).join("") + menu + [["method", "navMethod"], ["about", "navAbout"]].map(link).join("");
     document.getElementById("header").innerHTML = `
       <div class="brand">${BRAND_MARK}<div class="brand-text"><a href="#/home" class="brand-name">${esc(t("siteName"))}<span class="flag-ua" role="img" aria-label="${esc(t("flagUa"))}"></span></a><span class="brand-sub">${esc(t("siteSub"))}</span></div></div>
       <nav class="nav" aria-label="${esc(t("siteName"))}">${nav}</nav>

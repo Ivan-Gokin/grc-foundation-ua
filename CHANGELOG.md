@@ -1,5 +1,9 @@
 # Changelog
 
+## Site navigation (2026-10-18)
+
+- The header menu follows the order of use: Controls, Sources, Guide, Methodology, About.
+
 ## Site design (2026-10-18, preview banner)
 
 - The preview banner ("Preview: the data is still being checked…") is lemon (series-lemon) with dark text in both themes, so it stands out from the page.
