@@ -33,17 +33,6 @@ The whole architecture resembles the US FISMA, which obliges federal agencies to
 
 These standards do not exclude others. Mappings are tied to specific provisions of acts, so they can be carried over to any other standard (ISO 22301, ISO/IEC 27701, CIS Controls) through published crosswalks between standards.
 
-## GRC and the integrated management system
-
-[OCEG](https://www.oceg.org/ideas/what-is-grc) is the international non-profit community that coined the term GRC. It defines GRC as *the integrated collection of capabilities that enable an organization to reliably achieve objectives, address uncertainty, and act with integrity*. Integration does not mean one big GRC department or one piece of software. It means governance, risk and compliance do not live in isolated silos. According to OCEG, organisations that integrate these processes duplicate less work and spend less.
-
-ISO implements the idea through the harmonised structure of management system standards: quality, information security, continuity, privacy and AI can be run as one system. How to do this in practice is in the guide: [step 6](#/guide?c=ims). This site covers the information security management system, but the other systems can be built on the same foundation.
-
-**How ready-made mappings help:**
-
-- **One control covers many requirements.** For example, ISO/IEC 27001 control A.5.24 (incident management planning) meets requirements of several NBU resolutions, SSSCIP orders and the personal data protection law at once. The organisation implements it once and has evidence for all of them.
-- **You see where the standard is not enough.** Partial coverage and requirements with no counterpart show what to add on top of the standard. The organisation does not spend time on what is already covered and focuses on real gaps.
-
 ## How requirements are mapped to controls
 
 The method is **Set Theory Relationship Mapping (STRM)** from [NIST IR 8477](https://csrc.nist.gov/pubs/ir/8477/final), "Mapping Relationships Between Documentary Standards, Regulations, Frameworks, and Guidelines" (2024). NIST uses the same approach in its OLIR programme.

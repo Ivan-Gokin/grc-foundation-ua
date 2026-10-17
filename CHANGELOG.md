@@ -4,6 +4,7 @@
 
 - About is now about the project as an organisation: what it is and for whom, who makes it (with contacts), cooperation and feedback, a new Privacy section (no data collected; the questionnaire only sets the filters and its answers stay in the part of the address after "#"; the browser remembers only the language and the theme; a note on GitHub Pages logs), licence, plans and the disclaimer.
 - Methodology explains how the project is made and how to repeat it: how the project is built (moved from About), new sections on how the data is updated and checked, on the use of AI, and on the tools with steps to build a similar project; the open data downloads and the maintainer links moved here from About. The old "Data quality" section is folded into "How the data is updated and checked".
+- The section on GRC and the integrated management system moved from the Methodology to the guide, step 6, as "What GRC is and why integrate".
 
 ## Site navigation (2026-10-18)
 

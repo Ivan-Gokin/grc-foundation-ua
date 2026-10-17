@@ -2,7 +2,20 @@
 
 *Covers: ISO/IEC 27001:2022, clauses 5-10 · harmonised structure of ISO management system standards · NIST CSF 2.0, GOVERN function*
 
-**Goal.** Build the requirements and controls into normal processes, so the system works every day and not only before an inspection. Why an integrated system saves resources is explained in the [Methodology](#/method#grc-and-the-integrated-management-system).
+**Goal.** Build the requirements and controls into normal processes, so the system works every day and not only before an inspection.
+
+## What GRC is and why integrate
+
+[OCEG](https://www.oceg.org/ideas/what-is-grc) is the international non-profit community that coined the term GRC. It defines GRC as *the integrated collection of capabilities that enable an organization to reliably achieve objectives, address uncertainty, and act with integrity*. Integration does not mean one big GRC department or one piece of software. It means governance, risk and compliance do not live in isolated silos. According to OCEG, organisations that integrate these processes duplicate less work and spend less.
+
+ISO implements the idea through the harmonised structure of management system standards: quality, information security, continuity, privacy and AI can be run as one system. This site covers the information security management system, but the other systems can be built on the same foundation.
+
+**How ready-made mappings help:**
+
+- **One control covers many requirements.** For example, ISO/IEC 27001 control A.5.24 (incident management planning) meets requirements of several NBU resolutions, SSSCIP orders and the personal data protection law at once. The organisation implements it once and has evidence for all of them.
+- **You see where the standard is not enough.** Partial coverage and requirements with no counterpart show what to add on top of the standard. The organisation does not spend time on what is already covered and focuses on real gaps.
+
+## How to integrate
 
 ISO management system standards share the same clauses 4-10, so they can be run as one system:
 
