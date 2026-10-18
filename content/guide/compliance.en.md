@@ -14,7 +14,7 @@ If you are starting work in a public authority or at a critical infrastructure o
 
 1. **Inventory the systems and kinds of information.** Decide what information each system processes: open, confidential, official. The kind of information determines the baseline profile.
 2. **Choose a baseline profile for each system** and compare it with what is already in place. If there are certified KSZI, find out how to move them to authorisation.
-3. **Run a gap analysis at organisation level** against the baseline cyber protection measures (CSF 2.0): which processes exist and which are missing.
+3. **Run a gap analysis at organisation level** against the baseline cyber protection measures (NIST CSF 2.0): which processes exist and which are missing.
 4. **Draw up the cyber protection plan** using the approved form. It is the main document recording the current state and the plan to close the gaps.
 5. **Design incident response** with mandatory reporting to CERT-UA from the start: classification by severity and deadlines.
 6. **Find the overlaps early.** If you are implementing an ISMS, decide which controls the systems inherit from the ISMS level, so you do not run two parallel projects or repeat the same thing system by system.

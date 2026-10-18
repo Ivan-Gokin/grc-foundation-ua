@@ -778,7 +778,7 @@
       "path": "sp800-53/map_csf-2.0_sp800-53r5.csv",
       "format": "csv",
       "encoding": "utf-8",
-      "description": "NIST informative reference: CSF 2.0 to SP 800-53 Rev. 5.",
+      "description": "NIST informative reference: NIST CSF 2.0 to NIST SP 800-53 Rev. 5.",
       "schema": {
         "fields": [
           {
@@ -806,7 +806,7 @@
       "format": "csv",
       "mediatype": "text/csv",
       "encoding": "utf-8",
-      "description": "Where system-level requirements come from. kind=baseline: an SSSCIP baseline security profile, whose controls and parameters are the column <id> and <id>_params_uk of baselines_ua.csv; kind=sector: a sector security profile (same columns; none approved yet); kind=plan: the act whose provisions are the mandatory measures of the cyber protection plan (their CSF subcategories expand to SP 800-53).",
+      "description": "Where system-level requirements come from. kind=baseline: an SSSCIP baseline security profile, whose controls and parameters are the column <id> and <id>_params_uk of baselines_ua.csv; kind=sector: a sector security profile (same columns; none approved yet); kind=plan: the act whose provisions are the mandatory measures of the cyber protection plan (their NIST CSF subcategories expand to NIST SP 800-53).",
       "schema": {
         "fields": [
           {

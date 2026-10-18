@@ -55,7 +55,7 @@ Compare the two approaches:
 
 | Approach | Problem |
 | --- | --- |
-| Orders No. 12, 47, 103, 211... | It is unclear which is current. Documents contradict one another. Staff are hard to train. |
+| Orders No. 12, 47, 103, 211... | It is unclear which is current. Documents contradict one another. Staff are hard to train. |
 | Password Usage Policy v2.1 | One document, one owner, one review date. It is always clear what is in force. |
 
 > This does not mean orders disappear: they can serve as the act that approves or amends a policy. But **the substantive requirement lives in the policy**, not in the order.

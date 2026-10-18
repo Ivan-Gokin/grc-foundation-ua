@@ -810,3 +810,6 @@ a.card:hover { --ne: var(--accent); }
 .prose .stages { font-size: .92rem; line-height: 1.5; }
 .prose .stages li { margin-bottom: 0; }
 .prose .stages li:nth-child(n) { min-height: 0; }
+
+/* Keep short identifiers on one line */
+.nw { white-space: nowrap; }

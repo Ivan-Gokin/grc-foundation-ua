@@ -1,5 +1,11 @@
 # Changelog
 
+## Citations (2026-10-18)
+
+- Ukrainian acts are cited in full everywhere: type, issuer, number and date (e.g. "SSSCIP Order No. 75 of 30.01.2026", "CMU Resolution No. 1533 of 26.11.2025") in the Methodology tables, the guide, the system profile notes, the chains and the source descriptions and comments. Short references of laws, presidential decrees and bills now carry their date too ("Law of Ukraine No. 2163-VIII of 05.10.2017").
+- NIST documents always carry the NIST prefix ("NIST SP 800-53", "NIST CSF 2.0"), including the Methodology comparison table, interface labels and data file descriptions; "ISO 27001" is written as "ISO/IEC 27001".
+- A number stays on the same line as its "№"/"No.", and NIST document names in the comparison table do not wrap.
+
 ## Site content (2026-10-18, home and open data)
 
 - Home: a new "What problem it solves" section (not missing a requirement, not doing work twice, having the legal basis for each control); "What you get" is now one sentence — the minimum set of controls to include in your ISMS or system profile to comply with the laws that apply to you — followed by the two levels (organisation, information system). The mapping example moved to the Methodology, the three stages to the start of guide step 1.

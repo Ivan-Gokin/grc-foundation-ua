@@ -12,7 +12,7 @@ The most important thing in the table is **partial coverage**: the control helps
 
 **Requirements with no counterpart.** Below the table is a list of provisions that no control covers: reporting to the regulator, corporate governance, contract terms. They need their own clauses in your documents; each comes with a suggestion of where it belongs.
 
-**What you download.** A draft Statement of Applicability (ISO/IEC 27001) or Target Profile (CSF 2.0), with blank columns for your work:
+**What you download.** A draft Statement of Applicability (ISO/IEC 27001) or Target Profile (NIST CSF 2.0), with blank columns for your work:
 
 | Column | What to fill in |
 |---|---|
