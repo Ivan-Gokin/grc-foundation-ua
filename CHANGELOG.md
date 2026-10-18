@@ -1,5 +1,9 @@
 # Changelog
 
+## Home page: the top block follows the theme (2026-10-18)
+
+- The hero frame was always dark indigo, so switching to the light theme seemed to do nothing on the home page. In the light theme it is now drafting paper with the blue grid, ink text and the steel-blue emblem with a teal core; the dark theme is unchanged.
+
 ## About: plans (2026-10-18)
 
 - The monitoring item describes how it would work (scheduled checks of the Rada open data and regulators' sites, each new act queued as a GitHub issue for review); a new item on subscribing to changes (RSS/Atom feed and GitHub releases per data version, no addresses collected, Telegram if there is demand).

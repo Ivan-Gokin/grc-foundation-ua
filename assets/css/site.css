@@ -19,11 +19,11 @@
   --on-accent: #f8fafb;
   --teal: #13706a;
   --violet: #4a3c86;
-  --frame: #0c0f22;
-  --frame-grid: rgba(150, 165, 225, 0.12);
-  --frame-ink: #e4ecf5;
-  --frame-muted: #a9a4c8;
-  --frame-label: #a79fd8;
+  --frame: #f8fafb;
+  --frame-grid: rgba(31, 92, 143, 0.11);
+  --frame-ink: #121c2b;
+  --frame-muted: #4a5868;
+  --frame-label: #1f5c8f;
   --numeral: #7cc4f0;
   --tile: #0c0f22;
   --statement: #1f5c8f;
@@ -51,8 +51,8 @@
   --seal: var(--accent); --seal-strong: var(--accent-strong); --seal-tint: var(--accent-tint); --on-seal: var(--on-accent);
   --full: var(--ok); --full-tint: var(--ok-tint); --partial: var(--warn); --partial-tint: var(--warn-tint);
   --bad: var(--danger); --bad-tint: var(--danger-tint); --banner: var(--surface-2);
-  /* the emblem on frame is always on dark indigo: the dark-theme accent and teal of emblem-dark.svg */
-  --frame-mark: var(--numeral); --frame-core: #5fd3c4;
+  /* the frame follows the theme: drafting paper here, midnight indigo in the dark theme */
+  --frame-mark: #1f5c8f; --frame-core: #13706a;
   --display: "Tektur", "Agency FB", "Bahnschrift", "Arial Narrow", sans-serif;
   --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   --math: "Cambria Math", "STIX Two Math", "Noto Sans Math", "Segoe UI Symbol", serif;
@@ -69,6 +69,8 @@
     --statement-ink: #e4ecf5; --series-blue: #4a9ad6; --series-teal: #3fb5a6; --series-violet: #8c7ecf;
     --ok: #6fd9b0; --ok-tint: #16303a; --warn: #f2a07b; --warn-tint: #2f2233; --danger: #f0958b;
     --danger-tint: #36203a; --focus: #7cc4f0;
+    --frame: #0c0f22; --frame-grid: rgba(150, 165, 225, 0.12); --frame-ink: #e4ecf5; --frame-muted: #a9a4c8;
+    --frame-label: #a79fd8; --frame-mark: #7cc4f0; --frame-core: #5fd3c4;
     color-scheme: dark;
   }
 }
@@ -79,6 +81,8 @@
   --statement-ink: #e4ecf5; --series-blue: #4a9ad6; --series-teal: #3fb5a6; --series-violet: #8c7ecf;
   --ok: #6fd9b0; --ok-tint: #16303a; --warn: #f2a07b; --warn-tint: #2f2233; --danger: #f0958b;
   --danger-tint: #36203a; --focus: #7cc4f0;
+  --frame: #0c0f22; --frame-grid: rgba(150, 165, 225, 0.12); --frame-ink: #e4ecf5; --frame-muted: #a9a4c8;
+  --frame-label: #a79fd8; --frame-mark: #7cc4f0; --frame-core: #5fd3c4;
   color-scheme: dark;
 }
 
