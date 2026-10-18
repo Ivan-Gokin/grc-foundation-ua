@@ -1,5 +1,11 @@
 # Changelog
 
+## Home page (2026-10-18, less text)
+
+- The hero keeps one short paragraph; "What you get" is folded into "What problem it solves" (the minimum set of controls, three short points, and two compact links: for the organisation, for an information system).
+- "Who it is for" is folded into "How it works": step 1 is now a picker of organisation types by group (legal status, information, sector, suppliers) that opens the controls table filtered for that type, plus "Requirements for every organisation" and a link to the four questions.
+- The controls filter explains when only the requirements for every organisation are shown.
+
 ## Citations (2026-10-18)
 
 - Ukrainian acts are cited in full everywhere: type, issuer, number and date (e.g. "SSSCIP Order No. 75 of 30.01.2026", "CMU Resolution No. 1533 of 26.11.2025") in the Methodology tables, the guide, the system profile notes, the chains and the source descriptions and comments. Short references of laws, presidential decrees and bills now carry their date too ("Law of Ukraine No. 2163-VIII of 05.10.2017").

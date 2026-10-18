@@ -292,7 +292,7 @@
     return `<fieldset class="chips"><legend>${esc(t("orgType"))}</legend>
       <p class="hint">${esc(t("orgTypeHint"))} <a href="#/start">${esc(t("orgTypeQuiz"))}</a></p>
       ${searchBox()}
-      ${S.sectors.length ? "" : `<p class="none-note">${esc(t("orgTypeNone"))}</p>`}
+      ${!S.sectors.length ? `<p class="none-note">${esc(t("orgTypeNone"))}</p>` : S.sectors.every((id) => id === "general") ? `<p class="none-note">${esc(t("orgTypeGeneral"))}</p>` : ""}
       ${groups}
     </fieldset>`;
   }
@@ -371,7 +371,23 @@
     app.innerHTML = `<article class="home" id="home-text"><p class="hint">${esc(t("loading"))}</p></article>`;
     const el = document.getElementById("home-text");
     if (!(await mdInto(el, "home"))) return;
+    const who = document.getElementById("home-who");
+    if (who) who.outerHTML = homeWho();
     scrollToAnchor();
+  }
+  // Step 1 of "How it works": the organisation types as links into the controls table, by group
+  function homeWho() {
+    const pill = (href, label, cls, title) => `<a class="pill${cls ? " " + cls : ""}" href="${href}"${title ? ` title="${esc(title)}"` : ""}>${esc(label)}</a>`;
+    const groups = D.groups.map((g) => {
+      const items = D.sectors.filter((s) => s.selectable === "yes" && s.group === g.id && !D.parents[s.id].length);
+      if (!items.length) return "";
+      return `<div class="who-group"><h3>${esc(L(g, "label"))}</h3><div class="pills">${items.map((s) => pill(`#/controls?s=${encodeURIComponent(s.id)}`, L(s, "label"), "", L(s, "description"))).join("")}</div></div>`;
+    }).join("");
+    return `<section class="home-who" aria-labelledby="who-title">
+      <div class="who-head"><h3 id="who-title">${esc(t("whoTitle"))}</h3>
+        <div class="pills">${pill("#/controls?s=general", t("whoAll"), "pill-all")}${pill("#/start", t("whoQuiz"), "pill-quiz")}</div></div>
+      <div class="who-groups">${groups}</div>
+    </section>`;
   }
   function heroExample() {
     const ex = CFG.heroExample || {};

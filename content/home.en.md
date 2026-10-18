@@ -4,9 +4,7 @@
 
 # Want to figure out which cybersecurity requirements you must meet?
 
-Laws, Cabinet of Ministers resolutions, SSSCIP orders, NBU resolutions, standards, NATO policies: hundreds of documents that refer to each other, change and get repealed. GRC foundation brings them into one picture and shows which of them apply to your organisation.
-
-Answer four questions and get the **skeleton of an information security management system (ISMS)**: the controls of the standard you choose, each with its legal basis in Ukrainian legislation.
+Laws, resolutions, orders, standards, NATO policies: hundreds of documents that refer to each other and keep changing. GRC foundation shows which of them apply to your organisation and which controls meet them.
 
 <p class="home-cta"><a class="btn btn-primary btn-lg" href="#/start">Find my requirements</a><a class="btn btn-lg" href="#/sources">Browse all acts</a></p>
 
@@ -14,50 +12,24 @@ Answer four questions and get the **skeleton of an information security manageme
 
 ## What problem it solves
 
-- **Do not miss a requirement.** You see the acts that apply to your organisation, with their "law → resolution → order" chains.
-- **Do not do it twice.** One control of a standard often meets the requirements of several acts at once, and the table shows it.
-- **Have the legal basis.** For every control you see which provisions of which acts require it: for an auditor, a regulator or management.
+You get **the minimum set of controls** to include in your ISMS or in an information system's profile to comply with the acts that apply to you.
+
+- **Miss nothing.** Only the acts that apply to you, with their "law → resolution → order" chains.
+- **Do not do it twice.** One control of a standard often meets the requirements of several acts at once.
+- **Have the legal basis.** Every control shows the provisions that require it, and the list downloads as a draft Statement of Applicability.
+
+<div class="cards cards-2 levels">
+<a class="card" href="#/controls"><h3>For the organisation</h3><p>A management system under ISO/IEC 27001:2022 or NIST CSF 2.0</p></a>
+<a class="card" href="#/controls?fw=sp800-53r5"><h3>For an information system</h3><p>Baseline security profiles under NIST SP 800-53 Rev. 5</p></a>
+</div>
 
 ## How it works
 
 <ol class="flow">
-<li><b>Who are you?</b><span>Sector, the information you process, critical infrastructure, standard.</span></li>
-<li><b>What applies to you</b><span>Only the acts that apply to you are taken from the register: laws, resolutions, orders, standards.</span></li>
-<li><b>What exactly they require</b><span>Every act is broken down into specific requirements: article, paragraph.</span></li>
-<li><b>Your ISMS skeleton</b><span>Each requirement is linked to a control of the standard: you see where the standard covers the law and where the law asks for more.</span></li>
+<li><b>Who you are</b><span>Pick your type of organisation below or answer four questions.</span></li>
+<li><b>What applies to you</b><span>Only the applicable acts stay from the register.</span></li>
+<li><b>What they require</b><span>Every act is broken down to article and paragraph.</span></li>
+<li><b>Your controls</b><span>Each requirement is linked to a control of the standard.</span></li>
 </ol>
 
-## What you get
-
-The minimum set of controls to include in your ISMS or in an information system's profile to comply with the laws and regulations that apply to you. Each control comes with its legal basis, and the list can be downloaded as a draft Statement of Applicability or profile.
-
-<div class="cards cards-2">
-<div class="card">
-<h3>Organisation: the management system</h3>
-<p>General requirements for how the organisation manages information security: roles, risks, policies, suppliers, incidents. They are described in one of two standards:</p>
-<ul>
-<li><b>ISO/IEC 27001:2022</b> (Information security management systems. Requirements)</li>
-<li><b>NIST CSF 2.0</b> (NIST Cybersecurity Framework)</li>
-</ul>
-<p><a href="#/controls">Controls for the organisation →</a></p>
-</div>
-<div class="card">
-<h3>Information system: protection controls</h3>
-<p>Systems with state information resources, official information or NATO information have separate mandatory requirements: baseline security profiles with specific controls and parameters. They are built on:</p>
-<ul>
-<li><b>NIST SP 800-53 Rev. 5</b> (Security and Privacy Controls for Information Systems and Organizations)</li>
-</ul>
-<p><a href="#/controls?fw=sp800-53r5">Controls for an information system →</a></p>
-</div>
-</div>
-
-## Who it is for
-
-<div class="cards cards-audience">
-<a class="card" href="#/controls?s=ki,kii&fw=csf-2.0"><h3>Critical infrastructure operators and CII owners</h3><p>SSSCIP baseline measures, the cyber protection plan, general Cabinet of Ministers requirements.</p></a>
-<a class="card" href="#/controls?s=public-sector,state-ir&fw=csf-2.0"><h3>Public authorities and state-owned enterprises</h3><p>Requirements for state information resources, baseline security profiles, system authorisation.</p></a>
-<a class="card" href="#/controls?s=finance&fw=iso27001-2022"><h3>Banks and financial institutions</h3><p>NBU resolutions on information security, cyber protection, risk management and cloud services.</p></a>
-<a class="card" href="#/controls?s=defence,defence-industry,nato-info&fw=csf-2.0"><h3>Defence and NATO information</h3><p>Military standards, NATO policies, the baseline profile for NATO RESTRICTED information.</p></a>
-<a class="card" href="#/controls?s=vendors,ict-suppliers,security-services,cloud&fw=iso27001-2022"><h3>IT and cybersecurity service suppliers</h3><p>Requirements that reach you through contracts with your customers.</p></a>
-<a class="card" href="#/sources?scope=core"><h3>Consultants and auditors</h3><p>The full register without filters and ready-made mappings for every client.</p></a>
-</div>
+<div id="home-who"></div>
