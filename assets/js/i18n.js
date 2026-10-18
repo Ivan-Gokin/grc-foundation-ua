@@ -143,7 +143,8 @@ window.GRC_I18N = {
     plansIntro: "Що планується додати, коли дані буде вичитано. Порядок і строки ще не визначено.",
     plans: [
       ["Вичитування зіставлень.", "Перевірити людиною всі зіставлення, згенеровані ШІ, і теги «кого стосується»."],
-      ["Моніторинг нових публікацій.", "Автоматично відстежувати нові й змінені акти на офіційних сайтах і ставити їх у чергу на перевірку."],
+      ["Моніторинг нових публікацій.", "Регулярно (за розкладом GitHub Actions) перевіряти відкриті дані Верховної Ради і сайти регуляторів на нові й змінені акти з теми проєкту і ставити кожен у чергу на перевірку як завдання (issue) на GitHub. До реєстру акт потрапляє лише після вичитування і зіставлення."],
+      ["Підписка на зміни.", "Стрічка RSS/Atom і випуски (releases) на GitHub для кожної версії даних: нові акти, зміни статусу, нові й вичитані зіставлення. Без збирання адрес; за потреби — канал у Telegram."],
       ["Сторінка «Останні зміни».", "Що додано і змінено в кожній версії даних, з коротким підсумком нових актів і їхніх вимог."],
       ["Схеми.", "Як вимога проходить від закону до заходу; ланцюги актів; як пов'язані рівень організації і рівень систем."],
       ["Галузеві профілі безпеки.", "Додати, щойно їх затвердять регулятори галузей."],
@@ -482,7 +483,8 @@ window.GRC_I18N = {
     plansIntro: "What is planned once the data has been reviewed. Order and dates are not set yet.",
     plans: [
       ["Reviewing the mappings.", "Have a person check every AI-generated mapping and the \"who it concerns\" tags."],
-      ["Monitoring new publications.", "Automatically track new and amended acts on official websites and queue them for review."],
+      ["Monitoring new publications.", "Check the Verkhovna Rada open data and the regulators' websites on a schedule (GitHub Actions) for new and amended acts on the project's topics and queue each one for review as a GitHub issue. An act enters the register only after it has been read and mapped."],
+      ["Subscribing to changes.", "An RSS/Atom feed and GitHub releases for each data version: new acts, status changes, new and reviewed mappings. No addresses collected; a Telegram channel if there is demand."],
       ["A \"Latest changes\" page.", "What each data version added and changed, with a short summary of new acts and their requirements."],
       ["Diagrams.", "How a requirement travels from a law to a control; chains of acts; how the organisation and system levels connect."],
       ["Sector security profiles.", "Add them as soon as sector regulators approve them."],

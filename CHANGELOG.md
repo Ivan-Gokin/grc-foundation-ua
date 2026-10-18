@@ -1,5 +1,9 @@
 # Changelog
 
+## About: plans (2026-10-18)
+
+- The monitoring item describes how it would work (scheduled checks of the Rada open data and regulators' sites, each new act queued as a GitHub issue for review); a new item on subscribing to changes (RSS/Atom feed and GitHub releases per data version, no addresses collected, Telegram if there is demand).
+
 ## Home page (2026-10-18, less text)
 
 - The hero keeps one short paragraph; "What you get" is folded into "What problem it solves" (the minimum set of controls, three short points, and two compact links: for the organisation, for an information system).
