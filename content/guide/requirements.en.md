@@ -4,7 +4,7 @@
 
 **Goal.** Build your own list of requirements the organisation must meet or has chosen to meet, and give each an owner.
 
-In Ukraine, cybersecurity requirements are spread across documents at different levels, from international treaties and laws to orders of the SSSCIP (the State Service of Special Communications and Information Protection), NBU resolutions and NATO policies. The kinds of requirements and how they differ are described in the [Methodology](#/method#kinds-of-requirements). The [Legal sources](#/sources) view helps collect them.
+In Ukraine, cybersecurity requirements are spread across documents at different levels, from international treaties and laws to orders of the SSSCIP (the State Service of Special Communications and Information Protection), NBU resolutions and NATO policies. The kinds of requirements and how they differ are described in the [Methodology](#/method#kinds-of-requirements). The [Legal sources](#/sources) view helps collect them. To tell the acts that apply to you from the acts about how public authorities work, look at the [map of the national cybersecurity system](#/sources?scope=core&mode=map).
 
 1. **Download the list.** Choose who the requirements should concern and download the filtered list as CSV or Excel. It is the basis of your requirements register.
 2. **Mark applicability.** For each act: yes, no or unknown. For "unknown", note who should clarify it.

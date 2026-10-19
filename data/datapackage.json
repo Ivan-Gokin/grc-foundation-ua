@@ -189,6 +189,11 @@
           {
             "name": "issuer_en",
             "type": "string"
+          },
+          {
+            "name": "actor",
+            "type": "string",
+            "description": "Id of the body in actors.csv that issues acts of this type"
           }
         ]
       }
@@ -430,6 +435,152 @@
               "resource": "sources",
               "fields": "id"
             }
+          }
+        ]
+      }
+    },
+    {
+      "name": "actors",
+      "path": "actors.csv",
+      "format": "csv",
+      "encoding": "utf-8",
+      "description": "Map of the national cybersecurity system: the bodies (actors), grouped in bands (coord: coordination and policy; main: the main bodies of the national cybersecurity system; other: other participants), with their role and legal basis. Draft: verified=no until checked against the acts.",
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "band",
+            "type": "string"
+          },
+          {
+            "name": "sort",
+            "type": "integer"
+          },
+          {
+            "name": "parent",
+            "type": "string"
+          },
+          {
+            "name": "label_uk",
+            "type": "string"
+          },
+          {
+            "name": "label_en",
+            "type": "string"
+          },
+          {
+            "name": "short_uk",
+            "type": "string"
+          },
+          {
+            "name": "short_en",
+            "type": "string"
+          },
+          {
+            "name": "role_uk",
+            "type": "string"
+          },
+          {
+            "name": "role_en",
+            "type": "string"
+          },
+          {
+            "name": "basis_uk",
+            "type": "string"
+          },
+          {
+            "name": "basis_en",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "verified",
+            "type": "string"
+          }
+        ],
+        "primaryKey": "id"
+      }
+    },
+    {
+      "name": "actor-relations",
+      "path": "actor_relations.csv",
+      "format": "csv",
+      "encoding": "utf-8",
+      "description": "Relations between the bodies on the map (coordinates, directs, cooperates, member_of, agrees_with), with the act (source_id) or document (basis_url) they come from.",
+      "schema": {
+        "fields": [
+          {
+            "name": "from",
+            "type": "string"
+          },
+          {
+            "name": "relation",
+            "type": "string"
+          },
+          {
+            "name": "to",
+            "type": "string"
+          },
+          {
+            "name": "source_id",
+            "type": "string"
+          },
+          {
+            "name": "ref_uk",
+            "type": "string"
+          },
+          {
+            "name": "ref_en",
+            "type": "string"
+          },
+          {
+            "name": "basis_url",
+            "type": "string"
+          },
+          {
+            "name": "verified",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "actor-acts",
+      "path": "actor_acts.csv",
+      "format": "csv",
+      "encoding": "utf-8",
+      "description": "Acts linked to a body on the map: establishes (sets up the body or its powers) or addressed (the act's duties fall on the body rather than on organisations). Acts a body issues come from source_types.csv (column actor).",
+      "schema": {
+        "fields": [
+          {
+            "name": "actor_id",
+            "type": "string"
+          },
+          {
+            "name": "source_id",
+            "type": "string"
+          },
+          {
+            "name": "relation",
+            "type": "string"
+          },
+          {
+            "name": "ref_uk",
+            "type": "string"
+          },
+          {
+            "name": "ref_en",
+            "type": "string"
+          },
+          {
+            "name": "verified",
+            "type": "string"
           }
         ]
       }

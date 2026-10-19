@@ -1,0 +1,16 @@
+from,relation,to,source_id,ref_uk,ref_en,basis_url,verified
+nccc,coordinates,ssscip,ua-law-2163-viii,,,https://www.rnbo.gov.ua/files/2026/NATIONAL_CYBER_SCC/kiber_2025.pdf,no
+nccc,coordinates,police,ua-law-2163-viii,,,https://www.rnbo.gov.ua/files/2026/NATIONAL_CYBER_SCC/kiber_2025.pdf,no
+nccc,coordinates,sbu,ua-law-2163-viii,,,https://www.rnbo.gov.ua/files/2026/NATIONAL_CYBER_SCC/kiber_2025.pdf,no
+nccc,coordinates,mod,ua-law-2163-viii,,,https://www.rnbo.gov.ua/files/2026/NATIONAL_CYBER_SCC/kiber_2025.pdf,no
+nccc,coordinates,intel,ua-law-2163-viii,,,https://www.rnbo.gov.ua/files/2026/NATIONAL_CYBER_SCC/kiber_2025.pdf,no
+mintsyfra,member_of,nccc,,,,https://www.rnbo.gov.ua/files/2026/NATIONAL_CYBER_SCC/kiber_2025.pdf,no
+cmu,directs,ssscip,ua-cmu-411-2014,,,,no
+ssscip,coordinates,csirts,ua-ssscip-425-2026,,,,no
+cert-ua,cooperates,police,ua-cmu-1471-2025,,,,no
+cert-ua,cooperates,sbu,ua-cmu-1471-2025,,,,no
+cert-ua,cooperates,intel,ua-cmu-1471-2025,,,,no
+cert-ua,cooperates,csirts,ua-ssscip-425-2026,,,,no
+cert-ua,cooperates,csirt-nbu,,,,https://interfax.com.ua/news/telecom/605564.html,no
+sbu,coordinates,police,ua-law-4336-ix,"протидія кібершпигунству, кібертероризму і кібердиверсіям","countering cyber espionage, cyber terrorism and cyber sabotage",,no
+sector-reg,agrees_with,ssscip,ua-law-80-94-vr,"ст. 10, ч. 5","Art. 10, Part 5",,no

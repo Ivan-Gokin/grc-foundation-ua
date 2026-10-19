@@ -28,6 +28,10 @@ ENUMS = {
     "relation": {"based_on", "amends", "repeals", "transposes", "applies", "ensures_implementation_of",
                  "commences", "cites", "related_to", "adopts"},
     "scope": {"core", "reference"},
+    # the map of the national cybersecurity system (actors.csv, actor_relations.csv, actor_acts.csv)
+    "band": {"coord", "main", "other"},
+    "actor_relation": {"coordinates", "directs", "cooperates", "member_of", "agrees_with"},
+    "actor_act": {"establishes", "addressed"},
     "domain": {"cybersecurity", "records"},
     "confidence": {"high", "medium", "low", ""},
     "provision_type": {"substantive", "delegating", "definitional"},
@@ -204,6 +208,42 @@ def main():
         step_seen.add((r["chain_id"], r["step"]))
         if not r["role_uk"].strip():
             err("chain_steps.csv", r, "role_uk is required")
+
+    # the map of the national cybersecurity system
+    actor_rows = load("actors.csv")
+    actors = unique("actors.csv", actor_rows)
+    for r in actor_rows:
+        check_enum("actors.csv", r, "band")
+        check_enum("actors.csv", r, "verified", "yesno")
+        if r["parent"] and r["parent"] not in actors:
+            err("actors.csv", r, f"unknown parent '{r['parent']}'")
+        if not r["sort"].isdigit():
+            err("actors.csv", r, "sort must be a whole number")
+        if r["url"] and not r["url"].startswith(("http://", "https://")):
+            err("actors.csv", r, "url must start with http(s)://")
+        for fld in ("label_uk", "label_en", "role_uk"):
+            if not r[fld].strip():
+                err("actors.csv", r, f"{fld} is required")
+    for r in load("actor_relations.csv"):
+        for fld in ("from", "to"):
+            if r[fld] not in actors:
+                err("actor_relations.csv", r, f"unknown {fld} '{r[fld]}'")
+        check_enum("actor_relations.csv", r, "relation", "actor_relation")
+        check_enum("actor_relations.csv", r, "verified", "yesno")
+        if r["source_id"] and r["source_id"] not in sources:
+            err("actor_relations.csv", r, f"unknown source_id '{r['source_id']}'")
+        if not r["source_id"] and not r["basis_url"]:
+            err("actor_relations.csv", r, "needs a source_id or a basis_url")
+    for r in load("actor_acts.csv"):
+        if r["actor_id"] not in actors:
+            err("actor_acts.csv", r, f"unknown actor_id '{r['actor_id']}'")
+        if r["source_id"] not in sources:
+            err("actor_acts.csv", r, f"unknown source_id '{r['source_id']}'")
+        check_enum("actor_acts.csv", r, "relation", "actor_act")
+        check_enum("actor_acts.csv", r, "verified", "yesno")
+    for r in load("source_types.csv"):
+        if r.get("actor") and r["actor"] not in actors:
+            err("source_types.csv", r, f"unknown actor '{r['actor']}'")
 
     prov_rows, map_rows, wb_errors = mapdata.read_all(set(controls))
     errors.extend(wb_errors)

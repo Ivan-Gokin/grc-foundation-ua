@@ -10,7 +10,7 @@
     "sources.csv", "source_types.csv", "sectors.csv", "sector_groups.csv", "applicability.csv", "source_relations.csv",
     "provisions.csv", "mappings.csv", "frameworks.csv", "controls_iso27001-2022.csv", "controls_csf-2.0.csv",
     "sp800-53/baselines_ua.csv", "sp800-53/map_csf-2.0_sp800-53r5.csv", "sp800-53/profiles.csv",
-    "chains.csv", "chain_steps.csv",
+    "chains.csv", "chain_steps.csv", "actors.csv", "actor_relations.csv", "actor_acts.csv",
   ];
   // The emblem: three 60-degree rhombuses (governance, risk, compliance) turning around a triangle, inside a hexagon.
   // Decorative next to the site name, so it is hidden from screen readers.
@@ -78,7 +78,7 @@
   async function loadAll() {
     const tables = await Promise.all(FILES.map(loadCsv));
     const by = (rows, key = "id") => Object.fromEntries(rows.map((r) => [r[key], r]));
-    const [sources, types, sectors, groups, appl, rels, provs, maps, fws, iso, csf, b53, m53, profiles, chains, steps] = tables;
+    const [sources, types, sectors, groups, appl, rels, provs, maps, fws, iso, csf, b53, m53, profiles, chains, steps, actors, actorRels, actorActs] = tables;
     D.sources = sources;
     D.sourceById = by(sources);
     D.sourceByEli = by(sources, "eli");
@@ -114,6 +114,14 @@
     D.b53 = b53;
     D.profiles = profiles;
     D.chains = chains.sort((a, b) => +a.sort - +b.sort);
+    // the map of the national cybersecurity system
+    D.actors = actors.sort((a, b) => +a.sort - +b.sort);
+    D.actorById = by(actors);
+    D.actorRels = actorRels;
+    D.actorActs = {};
+    actorActs.forEach((r) => (D.actorActs[r.actor_id] = D.actorActs[r.actor_id] || []).push(r));
+    D.typesByActor = {};
+    types.forEach((r) => { if (r.actor) (D.typesByActor[r.actor] = D.typesByActor[r.actor] || []).push(r.id); });
     D.chainSteps = {};
     steps.forEach((r) => (D.chainSteps[r.chain_id] = D.chainSteps[r.chain_id] || []).push(r));
     Object.values(D.chainSteps).forEach((list) => list.sort((a, b) => +a.step - +b.step));
@@ -156,7 +164,8 @@
     if (p.has("b")) S.baseline = p.get("b");
     if (p.has("gp")) S.sprofile = p.get("gp");
     if (p.has("scope")) S.scope = p.get("scope") === "reference" ? "reference" : "core";
-    if (p.has("mode")) S.mode = p.get("mode") === "chains" ? "chains" : "list";
+    if (p.has("mode")) S.mode = ["chains", "map"].includes(p.get("mode")) ? p.get("mode") : "list";
+    S.actor = p.get("ac") || "";
     S.article = ARTICLES.includes(p.get("a")) ? p.get("a") : "";
     S.chapter = CHAPTERS.some((c) => c.id === p.get("c")) ? p.get("c") : CHAPTERS[0].id;
     S.act = p.get("act") || ""; // an ELI or id, e.g. from an /eli/... link resolved by 404.html
@@ -173,6 +182,7 @@
       p.set("scope", S.scope); p.set("mode", S.mode);
       ["repealed", "context", "pending", "records"].forEach((k) => p.set(k, S[k] ? "1" : "0"));
       if (S.type) p.set("type", S.type);
+      if (S.mode === "map" && S.actor) p.set("ac", S.actor);
     }
     if (S.view === "articles" && S.article) p.set("a", S.article);
     if (S.view === "guide") p.set("c", S.chapter);
@@ -882,7 +892,7 @@
     const mode = (k, label) => `<a href="#" data-mode="${k}" class="tab"${S.mode === k ? ' aria-current="page"' : ""}>${esc(label)}</a>`;
     const count = (sc) => D.sources.filter((x) => x.scope === sc).length;
     return `<div class="tabs"><nav class="tabset" aria-label="${esc(t("navSources"))}">${tab("core", t("tabCore"), count("core"))}${tab("reference", t("tabReference"), count("reference"))}</nav>
-      <nav class="tabset" aria-label="${esc(t("modeLabel"))}">${mode("list", t("modeList"))}${mode("chains", t("modeChains"))}</nav></div>`;
+      <nav class="tabset" aria-label="${esc(t("modeLabel"))}">${mode("list", t("modeList"))}${mode("chains", t("modeChains"))}${mode("map", t("modeMap"))}</nav></div>`;
   }
 
   function drawSources(main) {
@@ -893,14 +903,14 @@
         <h1>${esc(t(S.scope === "core" ? "navSources" : "tabReference"))}</h1>
         ${sourceTabs()}
         ${S.scope === "reference" ? `<p class="notice">${esc(t("refNote"))}</p>` : ""}
-        <p class="summary">${esc(fmt(t("srcSummary"), rows.length, total))}</p>
+        ${S.mode === "map" ? `<p class="lead-sm">${esc(t("mapIntro"))}</p>` : `<p class="summary">${esc(fmt(t("srcSummary"), rows.length, total))}</p>`}
         ${D.unverifiedAppl && S.mode === "list" ? `<p class="hint">${esc(t("srcUnverified"))}</p>` : ""}
-        ${S.mode === "list" ? `<div class="exports"><button type="button" class="btn btn-primary" id="s-csv">${esc(t("srcDownload"))}</button><button type="button" class="btn" id="s-xlsx">${esc(t("srcDownloadX"))}</button></div>` : `<p class="lead-sm">${esc(t("chainsIntro"))} <a href="#/method#${methodAnchor("chains")}">${esc(t("navMethod"))} →</a></p>`}
+        ${S.mode === "list" ? `<div class="exports"><button type="button" class="btn btn-primary" id="s-csv">${esc(t("srcDownload"))}</button><button type="button" class="btn" id="s-xlsx">${esc(t("srcDownloadX"))}</button></div>` : S.mode === "chains" ? `<p class="lead-sm">${esc(t("chainsIntro"))} <a href="#/method#${methodAnchor("chains")}">${esc(t("navMethod"))} →</a></p>` : ""}
       </div>`;
+    if (S.mode === "map") { main.innerHTML = head + mapHtml(); bindMap(main); bindSourceTabs(main); return; }
     main.innerHTML = head + (S.mode === "chains" && S.scope === "core" ? keyChainsHtml() + `<h2 class="chains-all">${esc(t("chainsAll"))}</h2>` : "")
       + (S.mode === "chains" ? chainsHtml(rows) : sourcesTable(rows));
-    main.querySelectorAll("a[data-scope]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); S.scope = a.dataset.scope; S.type = ""; render(); }));
-    main.querySelectorAll("a[data-mode]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); S.mode = a.dataset.mode; writeHash(); drawSources(main); }));
+    bindSourceTabs(main);
     const csvBtn = main.querySelector("#s-csv");
     if (csvBtn) {
       csvBtn.onclick = () => exportSources(rows, "csv");
@@ -918,6 +928,148 @@
         Object.assign(S, { mode: "list", scope: x ? x.scope : S.scope, repealed: true, context: true, pending: true, records: true, type: "", q: x ? x.eli : id });
         render();
       }
+    }));
+  }
+
+  function bindSourceTabs(main) {
+    main.querySelectorAll("a[data-scope]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); S.scope = a.dataset.scope; S.type = ""; if (S.mode === "map") S.mode = "list"; render(); }));
+    main.querySelectorAll("a[data-mode]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); S.mode = a.dataset.mode; if (S.mode === "map") S.scope = "core"; writeHash(); drawSources(main); }));
+  }
+
+  // ------------------------------------------------------------------ map of the national cybersecurity system
+  // Bands of bodies (actors.csv) above the organisation and its information systems. Every count and link is
+  // computed from the register, so the map follows the data. Relations (actor_relations.csv) are drawn only for
+  // the selected body, to keep the picture readable.
+  const MAP_BANDS = ["coord", "main", "other"];
+  // acts in force in the core register that put requirements on organisations
+  // (the same acts the list shows by default: no drafts, repealed, context or records management)
+  const orgActs = () => D.sources.filter((s) => s.scope === "core" && IN_EFFECT(s.status) && s.role === "requirements" && s.domain !== "records");
+  function actsIssuedBy(id) {
+    const types = D.typesByActor[id] || [];
+    return D.sources.filter((s) => s.scope === "core" && IN_EFFECT(s.status) && types.includes(s.type));
+  }
+  function forYou(list) {
+    const exp = expandedSectors();
+    return exp ? list.filter((s) => s.role === "requirements" && s.domain !== "records" && sourceApplies(s, exp)) : [];
+  }
+  const actorName = (a, short) => (short ? L(a, "short") || L(a, "label") : L(a, "label"));
+  function actorCard(a) {
+    const issued = actsIssuedBy(a.id);
+    const mine = forYou(issued);
+    const addressed = (D.actorActs[a.id] || []).filter((r) => r.relation === "addressed").length;
+    const kids = D.actors.filter((x) => x.parent === a.id);
+    const facts = [
+      issued.length ? fmt(t("mapIssues"), issued.length) : "",
+      S.sectors.length && issued.length ? fmt(t("mapForYou"), mine.length) : "",
+      addressed ? fmt(t("mapAddressed"), addressed) : "",
+    ].filter(Boolean);
+    return `<div class="actor${S.actor === a.id ? " is-sel" : ""}${S.sectors.length && issued.length && !mine.length ? " is-quiet" : ""}" data-actor-box="${esc(a.id)}">
+      <button type="button" class="actor-btn" data-actor="${esc(a.id)}" aria-expanded="${S.actor === a.id}">
+        <span class="actor-name">${esc(actorName(a))}</span>
+        ${facts.length ? `<span class="actor-facts">${facts.map((x) => `<span>${esc(x)}</span>`).join("")}</span>` : ""}
+      </button>
+      ${kids.map((k) => `<button type="button" class="actor-kid${S.actor === k.id ? " is-sel" : ""}" data-actor="${esc(k.id)}" data-actor-box="${esc(k.id)}" aria-expanded="${S.actor === k.id}">${esc(actorName(k))}</button>`).join("")}
+    </div>`;
+  }
+  function actorPanel(id) {
+    const a = D.actorById[id];
+    if (!a) return "";
+    const actLink = (sid) => { const s = D.sourceById[sid]; return s ? `<a href="#/sources?act=${encodeURIComponent(s.id)}">${esc(sourceRef(s))}</a>` : esc(sid); };
+    const relWord = (r, out) => t((out ? "mapRel_" : "mapRelIn_") + r.relation) || r.relation;
+    const rels = D.actorRels.filter((r) => r.from === id || r.to === id).map((r) => {
+      const out = r.from === id;
+      const other = D.actorById[out ? r.to : r.from];
+      const basis = r.source_id ? ` <span class="muted">(${actLink(r.source_id)}${L(r, "ref") ? ", " + esc(L(r, "ref")) : ""})</span>`
+        : r.basis_url ? ` <span class="muted">(<a href="${esc(r.basis_url)}" target="_blank" rel="noopener">${esc(t("mapBasisDoc"))}</a>)</span>` : "";
+      return `<li>${esc(relWord(r, out))} <button type="button" class="linklike" data-actor="${esc(other.id)}">${esc(actorName(other))}</button>${basis}</li>`;
+    });
+    const links = (rel) => (D.actorActs[id] || []).filter((r) => r.relation === rel).map((r) => `<li>${actLink(r.source_id)}${L(r, "ref") ? `, ${esc(L(r, "ref"))}` : ""} <span class="muted">${esc(sourceTitle(D.sourceById[r.source_id]) || "")}</span></li>`);
+    const issued = actsIssuedBy(id);
+    const types = (D.typesByActor[id] || []).filter((ty) => issued.some((s) => s.type === ty));
+    const issuedLine = types.map((ty) => `<a href="#/sources?scope=core&mode=list&type=${encodeURIComponent(ty)}">${esc(typeLabel(ty))}: ${issued.filter((s) => s.type === ty).length}</a>`).join(" · ");
+    const mine = forYou(issued);
+    const sec = (title, items) => (items.length ? `<h4>${esc(title)}</h4><ul>${items.join("")}</ul>` : "");
+    return `<div class="actor-panel" id="actor-panel" role="region" aria-label="${esc(actorName(a))}">
+      <div class="actor-panel-head"><h3>${esc(actorName(a))}</h3><button type="button" class="btn btn-quiet" data-actor-close>${esc(t("mapClose"))}</button></div>
+      <p>${esc(L(a, "role"))}</p>
+      ${L(a, "basis") ? `<p class="muted small"><b>${esc(t("mapBasis"))}:</b> ${esc(L(a, "basis"))}${a.url ? ` · <a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(t("mapBasisDoc"))}</a>` : ""}</p>` : ""}
+      ${sec(t("mapRelations"), rels)}
+      ${issuedLine ? `<h4>${esc(t("mapIssuesH"))}</h4><p>${issuedLine}${S.sectors.length ? ` <span class="muted">· ${esc(fmt(t("mapForYou"), mine.length))}</span>` : ""}</p>` : ""}
+      ${sec(t("mapEstablishes"), links("establishes"))}
+      ${sec(t("mapAddressedH"), links("addressed"))}
+    </div>`;
+  }
+  function orgBand() {
+    const acts = orgActs();
+    const count = (id) => { const e = new Set(["general", id]); const up = (x) => (D.parents[x] || []).forEach((p) => { e.add(p); up(p); }); up(id); return acts.filter((s) => sourceApplies(s, e)).length; };
+    const general = acts.filter((s) => sourceApplies(s, new Set(["general"]))).length;
+    const mine = forYou(acts);
+    const chip = (s) => `<button type="button" class="pill${S.sectors.includes(s.id) ? " is-on" : ""}" data-map-sector="${esc(s.id)}" aria-pressed="${S.sectors.includes(s.id)}" title="${esc(L(s, "description"))}">${esc(L(s, "label"))} <span class="pill-n">${count(s.id)}</span></button>`;
+    const groups = D.groups.map((g) => {
+      const items = D.sectors.filter((s) => s.selectable === "yes" && s.group === g.id && !D.parents[s.id].length);
+      return items.length ? `<div class="who-group"><h4>${esc(L(g, "label"))}</h4><div class="pills">${items.map(chip).join("")}</div></div>` : "";
+    }).join("");
+    const lead = S.sectors.length
+      ? `<p class="org-lead"><b>${esc(fmt(t("mapOrgYou"), mine.length))}</b> <a href="#/sources?scope=core&mode=list&s=${encodeURIComponent(S.sectors.join(","))}">${esc(t("mapOrgList"))} →</a> <a href="#/controls?s=${encodeURIComponent(S.sectors.join(","))}">${esc(t("mapOrgControls"))} →</a></p>`
+      : `<p class="org-lead">${esc(fmt(t("mapOrgAll"), general))} ${esc(t("mapOrgPick"))}</p>`;
+    return `<section class="band band-org" aria-labelledby="band-org"><h3 class="band-title" id="band-org">${esc(t("mapBandOrg"))}</h3>${lead}<div class="who-groups">${groups}</div></section>`;
+  }
+  function sysBand() {
+    const want = { open: ["state-ir", "public-sir", "public-sector"], dsk: ["public-restricted", "state-ir"], nato: ["nato-info"] };
+    const rows = D.profiles.filter((p) => p.kind === "baseline").sort((a, b) => +a.sort - +b.sort).map((p) => {
+      const n = D.b53.filter((c) => c[p.id] === "yes").length;
+      const src = D.sourceById[p.source_id];
+      const hit = S.sectors.some((s) => (want[p.id] || []).includes(s));
+      return `<li class="sys-row${hit ? " is-on" : ""}"><span class="sys-info">${esc(L(p, "label"))}</span><span class="sys-arrow" aria-hidden="true">→</span>
+        <span class="sys-prof">${src ? `<a href="#/sources?act=${encodeURIComponent(src.id)}">${esc(sourceRef(src))}</a>` : ""}</span><span class="sys-arrow" aria-hidden="true">→</span>
+        <a class="sys-ctl" href="#/controls?fw=${SYSTEM_FW}&b=${encodeURIComponent(p.id)}">${esc(fmt(t("mapSysControls"), n))}</a></li>`;
+    }).join("");
+    return `<section class="band band-sys" aria-labelledby="band-sys"><h3 class="band-title" id="band-sys">${esc(t("mapBandSys"))}</h3>
+      <p class="muted small">${esc(t("mapSysLead"))}</p><ul class="sys-rows">${rows}
+      <li class="sys-row sys-none"><span class="sys-info">${esc(t("mapSysSecrets"))}</span><span class="sys-arrow" aria-hidden="true">→</span><span class="sys-prof muted">${esc(t("mapSysSecretsNote"))}</span></li></ul></section>`;
+  }
+  function mapHtml() {
+    const band = (b) => {
+      const top = D.actors.filter((a) => a.band === b && !a.parent);
+      const sel = D.actorById[S.actor];
+      const selTop = sel && (sel.parent ? D.actorById[sel.parent] : sel);
+      return `<section class="band band-${b}" aria-labelledby="band-${b}"><h3 class="band-title" id="band-${b}">${esc(t("mapBand_" + b))}${I18N.uk["mapBandNote_" + b] ? ` <span class="band-note">${esc(t("mapBandNote_" + b))}</span>` : ""}</h3>
+        <div class="actors">${top.map(actorCard).join("")}</div>${selTop && selTop.band === b ? actorPanel(S.actor) : ""}</section>`;
+    };
+    const link = (k) => `<p class="band-link"><span aria-hidden="true">↓</span> ${esc(t(k))}</p>`;
+    const draft = D.actors.some((a) => a.verified !== "yes") ? `<p class="notice small">${esc(t("mapDraft"))}</p>` : "";
+    return `${draft}<div class="ncs-map" id="ncs-map">
+      ${band("coord")}${link("mapLinkCoord")}${band("main")}${band("other")}${link("mapLinkReg")}${orgBand()}${link("mapLinkOwns")}${sysBand()}</div>`;
+  }
+  function bindMap(main) {
+    // the selected body's links: related bodies get a tag with the relation, the rest step back
+    const tags = {};
+    D.actorRels.filter((r) => r.from === S.actor || r.to === S.actor).forEach((r) => {
+      const out = r.from === S.actor, other = out ? r.to : r.from;
+      (tags[other] = tags[other] || []).push(t((out ? "mapTag_" : "mapTagIn_") + r.relation));
+    });
+    if (S.actor) main.querySelectorAll("[data-actor-box]").forEach((e) => {
+      const id = e.dataset.actorBox;
+      if (id === S.actor) return;
+      const parentSel = D.actorById[id] && D.actorById[id].parent === S.actor;
+      const kidSel = D.actorById[S.actor] && D.actorById[S.actor].parent === id;
+      if (tags[id]) {
+        e.classList.add("is-rel");
+        const tag = `<span class="rel-tag">${esc([...new Set(tags[id])].join(" · "))}</span>`;
+        (e.querySelector(".actor-btn") || e).insertAdjacentHTML("beforeend", tag);
+      } else if (!parentSel && !kidSel) e.classList.add("is-dim");
+    });
+    main.querySelectorAll("[data-actor]").forEach((b) => b.addEventListener("click", () => {
+      S.actor = S.actor === b.dataset.actor ? "" : b.dataset.actor;
+      writeHash(); drawSources(main);
+      const p = main.querySelector("#actor-panel");
+      if (p) p.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }));
+    main.querySelectorAll("[data-actor-close]").forEach((b) => b.addEventListener("click", () => { S.actor = ""; writeHash(); drawSources(main); }));
+    main.querySelectorAll("[data-map-sector]").forEach((b) => b.addEventListener("click", () => {
+      const id = b.dataset.mapSector;
+      S.sectors = S.sectors.includes(id) ? S.sectors.filter((x) => x !== id) : [...S.sectors, id];
+      render();
     }));
   }
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## Map of the national cybersecurity system (2026-10-19, draft)
+
+- Legal sources has a third view, "Map": the bodies of the national cybersecurity system in bands (coordination and policy; the main bodies under Art. 8 of Law No. 2163-VIII; other participants), then your organisation, then information systems and data with the NIST SP 800-53 baseline profiles. Each body shows how many acts in force it issues, how many of them apply to the selected type of organisation and how many acts are addressed to the body itself; clicking a body opens its role, legal basis, links to other bodies and the acts that set it up. The organisation band works as a type picker.
+- New data files: actors.csv, actor_relations.csv and actor_acts.csv, plus an "actor" column in source_types.csv (who issues each type of act); all described in datapackage.json and checked by validate.py. Every row is a draft (verified = no) until checked against the acts.
+- Guide step 2 points to the map.
+
 ## Preview banner (2026-10-19)
 
 - The lemon preview banner keeps dark text in the light theme too (it turned white there).
