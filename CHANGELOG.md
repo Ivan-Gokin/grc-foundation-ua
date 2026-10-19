@@ -1,5 +1,9 @@
 # Changelog
 
+## Preview banner (2026-10-19)
+
+- The lemon preview banner keeps dark text in the light theme too (it turned white there).
+
 ## Home page: the top block follows the theme (2026-10-18)
 
 - The hero frame was always dark indigo, so switching to the light theme seemed to do nothing on the home page. In the light theme it is now drafting paper with the blue grid, ink text and the steel-blue emblem with a teal core; the dark theme is unchanged.
