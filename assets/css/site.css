@@ -1107,47 +1107,46 @@ a.stage-hint { color: var(--accent); }
 .aa-more > summary { cursor: pointer; font-weight: 500; }
 .aa-links { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 14px 0 0; }
 
-/* guide: the matching tool in a panel beside the text (II.1 acts, II.2 controls) */
-.guide.has-side { max-width: 1600px; }
-.guide.has-side .guide-body { grid-template-columns: 210px minmax(0, 1fr) minmax(360px, 480px); gap: 28px; }
-.guide.has-side.side-closed .guide-body { grid-template-columns: 240px minmax(0, 1fr); gap: 40px; }
-.side-panel { position: sticky; top: 92px; max-height: calc(100vh - 110px); overflow: auto; overscroll-behavior: contain;
-  background: var(--surface); border: 1px solid var(--rule); border-top: 6px solid var(--accent); }
-.side-closed .side-panel { display: none; }
-.side-head { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 12px;
-  padding: 10px 14px; background: var(--surface); border-bottom: 1px solid var(--rule); }
-.side-title { margin: 0; font: 600 .9rem/1.2 var(--display); font-stretch: 85%; text-transform: uppercase; letter-spacing: .12em; color: var(--accent); }
-.side-body { padding: 12px 14px 18px; }
-.side-body .aa { margin: 0; padding: 0; border: 0; background: none; font-size: .92rem; }
+/* guide: the matching tool at the end of a chapter, collapsed by default; its summary carries the key figure */
+.tool-jump { margin: 0 0 1em; font-family: var(--sans); font-size: .95rem; }
+.tool-jump a { font-weight: 500; }
+.tool-box { margin: 2.2em 0 0; scroll-margin-top: 90px; font-family: var(--sans); font-size: .95rem; line-height: 1.5; }
+.tool-box > details { background: var(--surface); border: 1px solid var(--rule); border-top: 6px solid var(--accent); }
+.tool-box summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; padding: 14px 18px; cursor: pointer; list-style: none; }
+.tool-box summary::-webkit-details-marker { display: none; }
+.tool-box summary::before { content: "▸"; color: var(--accent); }
+.tool-box details[open] > summary::before { content: "▾"; }
+.tool-box details[open] > summary { border-bottom: 1px solid var(--rule); }
+.tool-title { font: 600 1rem/1.2 var(--display); font-stretch: 85%; text-transform: uppercase; letter-spacing: .12em; color: var(--accent); }
+.tool-figure { color: var(--muted); }
+.tool-body { padding: 14px 18px 18px; }
+.tool-body .aa { margin: 0; padding: 0; border: 0; background: none; }
+.prose .tool-body ul { padding-left: 0; }
+.prose .tool-body li { margin: 0; }
 .side-pick .pills { margin-top: 6px; }
-.side-fab { display: none; position: fixed; right: 20px; bottom: 20px; z-index: 6; box-shadow: 0 4px 16px rgba(0,0,0,.25); }
-.side-closed .side-fab { display: inline-flex; }
-/* compact controls inside the panel */
-.side-panel .ctl-tools-side { flex-wrap: wrap; }
-.side-panel .ctl-fw, .side-panel .ctl-fw select { width: 100%; }
-.side-panel .ctl-title { margin-bottom: 8px; }
-.side-panel .ctl-summary { font-size: .88rem; }
-.side-panel .ctl-head { grid-template-columns: 52px minmax(0, 1fr) 16px; padding: 10px 12px; gap: 4px 10px; }
-.side-panel .ctl-head .ctl-acts { grid-column: 2; grid-row: 2; }
-.side-panel .ctl-head .ctl-fit { display: none; }
-.side-panel .ctl-head .chev { grid-column: 3; grid-row: 1; }
-.side-panel .ctl-group { padding: 8px 12px; }
-.side-panel .ctl-body { padding: 2px 12px 14px 12px; }
-.side-panel .prov-line { grid-template-columns: minmax(0, 1fr); }
-.side-panel .prov-links { white-space: normal; }
-.side-panel .prov-text, .side-panel .prov-note, .side-panel .prov-more { margin-left: 0; }
-.side-panel .law-kids { padding-left: 14px; }
-.side-panel .dl-list { right: auto; left: 0; }
-.side-panel .ctl-legend { font-size: .8rem; }
-@media (max-width: 1180px) {
-  .guide.has-side .guide-body, .guide.has-side.side-closed .guide-body { grid-template-columns: 240px minmax(0, 1fr); gap: 40px; }
-  .side-panel, .side-closed .side-panel { display: block; position: fixed; top: 0; right: 0; bottom: 0; width: min(100%, 480px); max-height: none;
-    z-index: 20; transform: translateX(105%); transition: transform .2s ease; box-shadow: -8px 0 24px rgba(0,0,0,.3); visibility: hidden; }
-  .drawer-open .side-panel { transform: none; visibility: visible; }
-  .side-fab, .side-closed .side-fab { display: inline-flex; }
-  .drawer-open .side-fab { display: none; }
+.tool-body .ctl-fw select { min-width: 240px; }
+.tool-body .ctl-title { margin-bottom: 8px; }
+/* compact rows: the text column is narrow */
+.tool-body .ctl-head { grid-template-columns: 60px minmax(0, 1fr) 16px; padding: 10px 12px; gap: 4px 12px; }
+.tool-body .ctl-head .ctl-acts { grid-column: 2; grid-row: 2; }
+.tool-body .ctl-head .ctl-fit { display: none; }
+.tool-body .ctl-head .chev { grid-column: 3; grid-row: 1; }
+.tool-body .ctl-group { padding: 8px 12px; }
+.tool-body .ctl-body { padding: 2px 12px 14px 12px; }
+.tool-body .prov-line { grid-template-columns: minmax(0, 1fr) auto; }
+.tool-body .prov-fit { grid-column: 1 / -1; }
+.tool-body .prov-text, .tool-body .prov-note, .tool-body .prov-more { margin-left: 0; }
+.tool-body .law-kids { padding-left: 14px; }
+.tool-body .ctl-legend { font-size: .8rem; }
+.sys-list { list-style: none; margin: 8px 0 0; padding: 0; border: 1px solid var(--rule); }
+.prose .sys-list li { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 2px 12px; padding: 8px 12px; border-top: 1px solid var(--rule); margin: 0; }
+.prose .sys-list li:first-child { border-top: 0; }
+.sys-list .ctl-id { color: var(--accent); }
+.sys-tags { grid-column: 2; display: flex; flex-wrap: wrap; gap: 4px; }
+@media (max-width: 700px) {
+  .tool-body .prov-line { grid-template-columns: minmax(0, 1fr); }
+  .tool-body .ctl-fw, .tool-body .ctl-fw select { width: 100%; min-width: 0; }
 }
-@media (max-width: 900px) {
-  .guide.has-side .guide-body, .guide.has-side.side-closed .guide-body { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-}
-@media (prefers-reduced-motion: reduce) { .side-panel { transition: none; } }
+.prose .tool-body .ctl-group { margin: 0; font: 500 .85rem/1.3 var(--display); font-stretch: 85%; text-transform: uppercase; letter-spacing: .1em; }
+.tool-body .dl-menu > summary { line-height: 1.2; }
+.prose .tool-body p { margin-bottom: .5em; }

@@ -6,7 +6,7 @@ The Statement of Applicability covers the organisation. Stage II continues at th
 
 The management system says what the organisation commits to. Each information system then needs specific technical and organisational controls with their parameters set. Ukrainian system-level requirements are built on NIST SP 800-53 (Security and Privacy Controls for Information Systems and Organizations).
 
-Open [Controls → Information system](#/controls?fw=sp800-53r5) and pick the baseline profile for the kind of information in the system. Each control shows where the requirement comes from: the baseline profile, the cyber protection plan or legislation. Start with the controls that are not in the baseline profile: they are the ones most often missed.
+The NIST SP 800-53 controls for your profile are at the end of this chapter; the full view is in [Controls → Information system](#/controls?fw=sp800-53r5). Pick the baseline profile for the kind of information in the system. Each control shows where the requirement comes from: the baseline profile, the cyber protection plan or legislation. Start with the controls that are not in the baseline profile: they are the ones most often missed.
 
 ## A starting map for a public authority or a CI operator
 

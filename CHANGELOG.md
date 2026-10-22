@@ -1,5 +1,10 @@
 # Changelog
 
+## Guide: the matching tool at the end of the chapter, collapsed (2026-10-22)
+
+- The side panel became a box at the end of the chapter, collapsed by default. Its summary carries the key figure (e.g. "Your controls · 111 of 118"); a link near the top of the chapter opens it and scrolls to it. Once opened, it stays open from chapter to chapter until closed.
+- II.3 "Information systems" got the same box: NIST SP 800-53 controls for the reader's systems, with the baseline profile (preset from the information types in the answers), search, and where each control comes from (baseline profile, cyber protection plan, the acts behind it).
+
 ## Guide: acts and controls in a panel beside the text (2026-10-22)
 
 - II.1 "Applicable acts" shows the reader's acts as chains in a panel beside the chapter, and II.2 "Controls and the SoA" shows the reader's controls there (framework, search, rows that open in place, chains, jump to clause, SoA download, a link to the full Controls page). Both are filtered by the answers.
