@@ -379,10 +379,12 @@
     if (target) target.scrollIntoView({ block: "start" });
   }
   // A page with a side panel (contents or the guide's chapters) and the text
-  function docLayout(panelTitle) {
-    app.innerHTML = `<article class="guide"><div class="guide-body">
+  function docLayout(panelTitle, side) {
+    app.innerHTML = `<article class="guide${side ? " has-side" : ""}" id="guide-page"><div class="guide-body">
       <details class="toc" id="toc" open><summary>${esc(panelTitle)}</summary><nav aria-label="${esc(panelTitle)}"></nav></details>
-      <div class="prose" id="doc-text"><p class="hint">${esc(t("loading"))}</p></div></div></article>`;
+      <div class="prose" id="doc-text"><p class="hint">${esc(t("loading"))}</p></div>
+      ${side ? `<aside class="side-panel" id="side-panel" aria-label="${esc(t(side === "acts" ? "aaTitle" : "sideControls"))}"></aside>` : ""}</div>
+      ${side ? `<button type="button" class="side-fab btn btn-primary" id="side-fab" aria-controls="side-panel">${esc(t(side === "acts" ? "sideFabActs" : "sideControls"))}</button>` : ""}</article>`;
     return document.getElementById("doc-text");
   }
 
@@ -575,13 +577,13 @@
   async function renderGuide() {
     const i = CHAPTERS.findIndex((c) => c.id === S.chapter);
     const ch = CHAPTERS[i];
-    const el = docLayout(t("navGuide"));
+    const side = SIDE[ch.id];
+    const el = docLayout(t("navGuide"), side);
+    if (side) drawSide(side);
     if (!(await mdInto(el, `guide/${ch.id}`))) return;
     if (ch.stage !== "ref") el.insertAdjacentHTML("afterbegin", `<p class="kicker">${esc(t("stage_" + ch.stage))}</p>`);
     const legend = el.querySelector("#legend");
     if (legend) legend.outerHTML = relLegend();
-    const aa = el.querySelector("#applicable-acts");
-    if (aa) drawApplicable(aa);
     const prev = CHAPTERS[i - 1], next = CHAPTERS[i + 1];
     el.insertAdjacentHTML("beforeend", `<nav class="pager" aria-label="${esc(t("navGuide"))}">
       ${prev ? `<a class="pager-prev" href="#/guide?c=${prev.id}"><span>${esc(t("chPrev"))}</span>${esc(chapterTitle(prev.id))}</a>` : "<span></span>"}
@@ -589,6 +591,60 @@
     buildToc(document.getElementById("toc"), el, true);
     scrollToAnchor();
   }
+  // ------------------------------------------------------------------ guide: the matching tool beside the text
+  // II.1 shows the reader's acts, II.2 their controls, both filtered by the answers (the profile). On wide screens
+  // the panel is a third column that can be hidden; on narrow ones it is a drawer opened from a button.
+  const SIDE = { requirements: "acts", soa: "controls" };
+  let sideHidden = false;
+  const narrowSide = () => window.matchMedia("(max-width: 1180px)").matches;
+  function drawSide(kind) {
+    const page = document.getElementById("guide-page"), panel = document.getElementById("side-panel"), fab = document.getElementById("side-fab");
+    if (!page || !panel) return;
+    page.classList.toggle("side-closed", sideHidden);
+    panel.innerHTML = `<div class="side-head"><p class="side-title">${esc(t(kind === "acts" ? "aaTitle" : "sideControls"))}</p>
+        <button type="button" class="link-btn" id="side-hide">${esc(t("sideHide"))}</button></div>
+      <div class="side-body" id="side-body"></div>`;
+    const body = panel.querySelector("#side-body");
+    if (!S.sectors.length) body.innerHTML = sidePick(kind);
+    else if (kind === "acts") drawApplicable(body);
+    else drawSideControls(body);
+    panel.querySelector("#side-hide").onclick = () => {
+      if (narrowSide()) page.classList.remove("drawer-open");
+      else { sideHidden = true; page.classList.add("side-closed"); }
+      fab.focus();
+    };
+    fab.onclick = () => {
+      if (narrowSide()) page.classList.add("drawer-open");
+      else { sideHidden = false; page.classList.remove("side-closed"); }
+      panel.querySelector("#side-hide").focus();
+    };
+  }
+  // No answers yet: the questionnaire, or one click on an organisation type that keeps the reader on this chapter
+  function sidePick(kind) {
+    const items = D.sectors.filter((x) => x.selectable === "yes" && !D.parents[x.id].length);
+    return `<div class="side-pick"><p>${esc(t(kind === "acts" ? "sidePickActs" : "sidePickControls"))}</p>
+      <p><a class="btn btn-primary" href="#/start">${esc(t("whoQuiz"))}</a></p>
+      <p class="hint">${esc(t("sidePickOr"))}</p>
+      <div class="pills">${items.map((x) => `<a class="pill" href="#/guide?c=${esc(S.chapter)}&s=${encodeURIComponent(x.id)}">${esc(L(x, "label"))}</a>`).join("")}</div></div>`;
+  }
+  function drawSideControls(body) {
+    if (!D.controls[S.fw]) S.fw = "iso27001-2022";
+    const s = encodeURIComponent(S.sectors.join(",")).replace(/%2C/g, ",");
+    const chips = S.sectors.filter((id) => D.sectorById[id]).map((id) => `<span class="tag">${esc(L(D.sectorById[id], "label"))}</span>`).join("");
+    body.innerHTML = `<p class="aa-for">${chips} <a href="#/start">${esc(t("aaChange"))}</a></p>
+      <div class="ctl-tools ctl-tools-side">
+        <label class="ctl-fw"><span class="sr-only">${esc(t("framework"))}</span><select id="fw-select">${D.orgFrameworks.map((f) => `<option value="${esc(f.id)}"${S.fw === f.id ? " selected" : ""}>${esc(fwLabel(f))}</option>`).join("")}</select></label>
+        <label class="search ctl-search"><svg aria-hidden="true" viewBox="0 0 20 20" width="16" height="16"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input id="q" type="search" value="${esc(S.q)}" placeholder="${esc(t("ctlSearchPh"))}" aria-label="${esc(t("search"))}" autocomplete="off"></label></div>
+      <div id="ctl-head"></div><section class="ctl-results" id="ctl-list" aria-live="polite"></section>
+      <p class="aa-links"><a href="#/controls?s=${s}&fw=${esc(S.fw)}">${esc(t("sideFull"))}</a></p>`;
+    body.querySelector("#fw-select").addEventListener("change", (e) => { S.fw = e.target.value; drawSideControls(body); });
+    const q = body.querySelector("#q");
+    let timer;
+    q.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(() => { S.q = q.value; drawControls(); }, 200); });
+    drawControls();
+  }
+
   // ------------------------------------------------------------------ guide II.1: the reader's acts as chains
   // An act has direct requirements when its provisions are mapped to controls or it is a baseline security profile.
   // Chains keep only such acts: each sits under the nearest act above it that has them too, so a law that only
@@ -604,10 +660,7 @@
     try { const exp = expandedSectors(); return D.sources.filter((s) => sourceVisible(s, exp, true)); } finally { Object.assign(S, saved); }
   }
   function drawApplicable(box) {
-    if (!S.sectors.length) {
-      box.outerHTML = `<div class="aa"><p>${esc(t("aaNone"))} <a href="#/start">${esc(t("aaQuiz"))}</a></p></div>`;
-      return;
-    }
+    if (!S.sectors.length) { box.innerHTML = sidePick("acts"); return; }
     const acts = listedActs("core");
     const set = new Set(acts.map((x) => x.id));
     const rank = (id) => { const x = D.sourceById[id]; return [D.typeOrder.indexOf(x.type), x.adopted || "9999"]; };
@@ -652,8 +705,8 @@
     const eu = listedActs("reference");
     const s = encodeURIComponent(S.sectors.join(",")).replace(/%2C/g, ",");
     const chips = S.sectors.filter((id) => D.sectorById[id]).map((id) => `<span class="tag">${esc(L(D.sectorById[id], "label"))}</span>`).join("");
-    box.outerHTML = `<section class="aa" id="aa">
-      <div class="aa-head"><div><h2 class="aa-title">${esc(t("aaTitle"))}</h2><p class="aa-for">${chips} <a href="#/start">${esc(t("aaChange"))}</a></p></div>
+    box.innerHTML = `<section class="aa" id="aa">
+      <div class="aa-head"><p class="aa-for">${chips} <a href="#/start">${esc(t("aaChange"))}</a></p>
         <button type="button" class="btn btn-line" id="aa-full" aria-pressed="${String(actsFull)}">${esc(t(actsFull ? "chainsHide" : "chainsShow"))}</button></div>
       <p class="aa-summary">${esc(fmt(t("aaSummary"), acts.length, inChains, alone.length))}</p>
       ${chained.length ? `<h3>${esc(t("aaChains"))}</h3><p class="hint">${esc(t(actsFull ? "aaChainsHintFull" : "aaChainsHint"))}</p><div class="chains aa-chains">${chainsHtml}</div>` : ""}
@@ -665,9 +718,7 @@
     const btn = document.getElementById("aa-full");
     if (btn) btn.onclick = () => {
       actsFull = !actsFull;
-      const sec = document.getElementById("aa");
-      sec.outerHTML = `<div id="applicable-acts"></div>`;
-      drawApplicable(document.getElementById("applicable-acts"));
+      drawApplicable(box);
       const again = document.getElementById("aa-full");
       if (again) again.focus();
     };
@@ -818,7 +869,7 @@
     const unreviewed = shown.filter((m) => m.review_status !== "reviewed").length;
 
     head.innerHTML = `<div class="ctl-title"><div>
-        <h1>${esc(t("navControls"))}</h1>
+        ${S.view === "guide" ? "" : `<h1>${esc(t("navControls"))}</h1>`}
         <p class="ctl-summary">${esc(fmt(t("ctlSummary"), withDrivers, leafCount, provSet.size, srcSet.size))}${unreviewed ? ` <span class="warn-text">${esc(fmt(t("ctlUnreviewed"), unreviewed, shown.length))}</span>` : ""}</p></div>
       <details class="dl-menu"><summary class="btn btn-primary">${esc(t("exportsTitle"))}</summary>
         <div class="dl-list"><p class="dl-file">${esc(L(fw, "output"))}</p>

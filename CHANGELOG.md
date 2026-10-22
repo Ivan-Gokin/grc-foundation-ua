@@ -1,5 +1,11 @@
 # Changelog
 
+## Guide: acts and controls in a panel beside the text (2026-10-22)
+
+- II.1 "Applicable acts" shows the reader's acts as chains in a panel beside the chapter, and II.2 "Controls and the SoA" shows the reader's controls there (framework, search, rows that open in place, chains, jump to clause, SoA download, a link to the full Controls page). Both are filtered by the answers.
+- On wide screens the panel is a third column that follows the scroll and can be hidden; on narrower screens a button opens it as a drawer.
+- With no answers yet, the panel offers the four questions or one click on an organisation type that keeps the reader on the same chapter.
+
 ## Guide II.1: your applicable acts as chains (2026-10-22)
 
 - II.1 "Applicable acts" shows the acts for the reader's profile: first the regulatory chains, then the acts that stand on their own.
