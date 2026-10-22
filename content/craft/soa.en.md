@@ -1,12 +1,12 @@
 # Your Statement of Applicability
 
-The Statement of Applicability (SoA) lists every control of your framework and says whether you apply it and why. For NIST CSF 2.0 the same document is called a target profile. Yours is below, built from the previous steps:
+The Statement of Applicability (SoA) lists every control of your framework and says whether you apply it and why. For NIST CSF 2.0 the same document is called a target profile. Yours is below, built from the previous steps. The column on the left says whether you apply each control:
 
-- **Required by law** (locked): a provision of an act that binds you maps to this control. Open it to see which article asks for it.
-- **Required by the standard** (locked): ISO/IEC 27001 clauses 4-10, which every management system needs whatever the law says.
-- **Recommended:** it comes from a recommended act you accepted.
-- **Optional:** nothing in the law asks for it. Include it if your own risks call for it.
-- **Your own:** measures you add yourself.
+- **a lock:** required by law (open the row to see which article asks for it) or by ISO/IEC 27001 clauses 4-10, which every management system needs. It cannot be unticked;
+- **ticked:** recommended, because it comes from a recommended act you accepted. Untick it if it does not fit;
+- **unticked:** nothing asks for it. Tick it if your own risks call for it.
+
+Measures that the framework does not name go into the download as new rows.
 
 Three things to watch:
 

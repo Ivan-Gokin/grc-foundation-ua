@@ -1,5 +1,13 @@
 # Changelog
 
+## Act names with the date in words; the SoA picked on the left; two levels in the last step (2026-10-23)
+
+- Every act is named by its issuer, number and date in words, e.g. "CMU No. 373 dated 20 August 2022" / "КМУ № 373 від 20 серпня 2022 р.", across the site, the exports and the texts.
+- Last step: each control has a selector on the left. A lock marks the ones required by law or by ISO/IEC 27001 clauses 4-10 (they cannot be unticked); controls from accepted recommended acts start ticked; the rest start unticked; "Select all" and "Clear the optional ones". The download lists every control with Applicable yes or no.
+- Last step: the organisation level (ISO/IEC 27001 SoA or NIST CSF 2.0 target profile) and the information system level (NIST SP 800-53 Rev. 5) are two labelled tabs with their own colour and count; the SP 800-53 list is grouped under its 20 control families.
+- The boxes for your own requirements and controls are gone: add them as rows in the downloaded file.
+- ДСК is "Information for internal use (DSK)" in English and "Інформація для службового використання (ДСК)" in Ukrainian.
+
 ## Craft your baseline, Explore and Help me (2026-10-22)
 
 - New primary section "Craft your baseline" (`#/craft`): six steps, each with short plain-language guidance and then the answer for the reader. 1. About your organisation (three questions). 2. Your profile (the categories the law names, adjustable). 3. Who sets your rules (the bodies that issued the acts binding you). 4. Your framework (recommended by profile, with the reason: CSF 2.0 for CI, public sector and defence; ISO/IEC 27001 for banks because of NBU No. 95, and otherwise). 5. Your laws and regulations (mandatory acts as chains and locked; recommended acts to accept; EU law to follow; your own requirements). 6. Your Statement of Applicability (controls required by law or by ISO/IEC 27001 clauses 4-10, locked; controls from accepted acts; optional controls to include; your own controls; provisions no control covers; the NIST SP 800-53 target profile when the information processed calls for it).

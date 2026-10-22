@@ -254,7 +254,26 @@
 
   // ------------------------------------------------------------------ labels
   const typeLabel = (id) => L(D.types[id], "label") || id;
-  const sourceRef = (src) => (src ? L(src, "short_ref") || src.number || src.id : "");
+  // Acts are named by the issuer, the number and the date in words, so the date reads at a glance:
+  // "CMU No. 373 dated 20 August 2022", "КМУ № 373 від 20 серпня 2022 р."
+  const REF_TYPES = {
+    uk: [[/^Постанов[аи] Правління (Національного банку України|НБУ)/, "НБУ"], [/^Постанов[аи] (Кабінету Міністрів України|КМУ)/, "КМУ"], [/^Наказ Держспецзв[’']язку/, "Держспецзв’язку"],
+      [/^Закон України/, "Закон"], [/^Указ Президента України/, "Указ Президента"], [/^Наказ СБУ/, "СБУ"]],
+    en: [[/^NBU Board Resolutions?/, "NBU"], [/^CMU Resolutions?/, "CMU"], [/^SSSCIP Order/, "SSSCIP"], [/^Law of Ukraine/, "Law"], [/^SBU Order/, "SBU"]],
+  };
+  const MONTHS = {
+    uk: ["січня", "лютого", "березня", "квітня", "травня", "червня", "липня", "серпня", "вересня", "жовтня", "листопада", "грудня"],
+    en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+  };
+  function niceRef(ref) {
+    const lang = S.lang === "en" ? "en" : "uk";
+    let out = ref;
+    REF_TYPES[lang].forEach(([re, to]) => { out = out.replace(re, to); });
+    return out.replace(/\s+(of|від)\s+(\d{2})\.(\d{2})\.(\d{4})(?=$|[\s,;)])/g, (_, w, d, m, y) =>
+      lang === "en" ? ` dated ${+d} ${MONTHS.en[+m - 1]} ${y}` : ` від ${+d} ${MONTHS.uk[+m - 1]} ${y} р.`);
+  }
+  const rawRef = (src) => (src ? L(src, "short_ref") || src.number || src.id : "");
+  const sourceRef = (src) => niceRef(rawRef(src));
   const sourceTitle = (src) => L(src, "title") || sourceRef(src);
   const controlName = (fw, c) => (fw === "csf-2.0" && c.level === "subcategory" ? L(c, "text") : L(c, "name"));
   const statusLabel = (st) => ({ in_force: t("stInForce"), repealed: t("stRepealed"), not_yet_in_force: t("stNotYet"), draft: t("stDraft") }[st] || t("stUnknown"));
@@ -480,7 +499,7 @@
   }
   const CRAFT_STEPS = ["about", "profile", "actors", "framework", "acts", "soa"];
   const CRAFT_FROM = { context: 2, actors: 3, standard: 4, requirements: 5, soa: 6 }; // old guide chapters now live here
-  const CR = { recActs: new Set(), euActs: new Set(), ownReqs: [], optCtls: new Set(), ownCtls: [], fwChosen: false };
+  const CR = { recActs: new Set(), euActs: new Set(), picked: new Set(), unpicked: new Set(), fwChosen: false };
   const CSF_SECTORS = ["public-sector", "defence", "defence-industry", "cii-1-2", "cii-3-4", "ki"];
   // The framework the profile points to, and why
   function recFw() {
@@ -624,7 +643,8 @@
     }));
   }
 
-  // 5. The acts: mandatory ones as chains (locked), recommended to accept, EU law to follow, the reader's own
+  // 5. The acts: mandatory ones as chains (locked), recommended to accept, EU law to follow.
+  // The reader's own requirements (contracts, the parent company) are added later in the downloaded file.
   function craftActs(box) {
     const rec = withS(WITH_REC, () => listedActs("core")).filter((x) => x.binding !== "mandatory");
     const eu = withS(WITH_REC, () => listedActs("reference"));
@@ -632,37 +652,18 @@
       <span><a href="#/sources?act=${esc(x.id)}">${esc(sourceRef(x))}</a>${L(x, "description") ? `<span class="aa-desc block">${esc(L(x, "description"))}</span>` : ""}</span></label></li>`;
     box.innerHTML = `<div class="craft-card"><h3 class="craft-sub">${esc(t("craftRequired"))}</h3><div id="craft-mandatory"></div></div>
       ${rec.length ? `<div class="craft-card"><h3 class="craft-sub">${esc(fmt(t("craftRecActs"), rec.length))}</h3><ul class="aa-list">${rec.map((x) => check("rec", x)).join("")}</ul></div>` : ""}
-      ${eu.length ? `<div class="craft-card"><h3 class="craft-sub">${esc(fmt(t("aaEu"), eu.length))}</h3><ul class="aa-list">${eu.map((x) => check("eu", x)).join("")}</ul></div>` : ""}
-      <div class="craft-card"><h3 class="craft-sub">${esc(t("craftOwnReqs"))}</h3>
-        <ul class="own-list" id="own-reqs"></ul>
-        <form class="own-form" id="own-req-form" onsubmit="return false">
-          <label class="own-field"><span>${esc(t("craftOwnWhat"))}</span><input type="text" id="own-req-text" maxlength="300" placeholder="${esc(t("craftOwnReqPh"))}"></label>
-          <label class="own-field own-kind"><span>${esc(t("craftOwnKind"))}</span><select id="own-req-kind">${["contract", "parent", "internal", "standard", "other"].map((k) => `<option value="${k}">${esc(t("ownKind_" + k))}</option>`).join("")}</select></label>
-          <button type="submit" class="btn" id="own-req-add">${esc(t("craftAdd"))}</button></form></div>`;
+      ${eu.length ? `<div class="craft-card"><h3 class="craft-sub">${esc(fmt(t("aaEu"), eu.length))}</h3><ul class="aa-list">${eu.map((x) => check("eu", x)).join("")}</ul></div>` : ""}`;
     drawApplicable(box.querySelector("#craft-mandatory"), true);
     box.querySelectorAll("input[data-set]").forEach((c) => c.addEventListener("change", () => {
       const set = c.dataset.set === "rec" ? CR.recActs : CR.euActs;
       if (c.checked) set.add(c.value); else set.delete(c.value);
     }));
-    ownList(box.querySelector("#own-reqs"), CR.ownReqs, (r) => `${esc(r.text)} <span class="badge">${esc(t("ownKind_" + r.kind))}</span>`);
-    box.querySelector("#own-req-add").addEventListener("click", () => {
-      const input = box.querySelector("#own-req-text");
-      const text = input.value.trim();
-      if (!text) { input.focus(); return; }
-      CR.ownReqs.push({ text, kind: box.querySelector("#own-req-kind").value });
-      input.value = "";
-      ownList(box.querySelector("#own-reqs"), CR.ownReqs, (r) => `${esc(r.text)} <span class="badge">${esc(t("ownKind_" + r.kind))}</span>`);
-      input.focus();
-    });
-  }
-  // A list of the reader's own entries with a remove button each
-  function ownList(ul, arr, label) {
-    ul.innerHTML = arr.map((r, i) => `<li><span>${label(r)}</span><button type="button" class="link-btn" data-drop-own="${i}" aria-label="${esc(t("craftRemove"))}">${esc(t("craftRemove"))}</button></li>`).join("");
-    ul.querySelectorAll("[data-drop-own]").forEach((b) => b.addEventListener("click", () => { arr.splice(+b.dataset.dropOwn, 1); ownList(ul, arr, label); }));
   }
 
-  // 6. The SoA: required controls (locked), controls from accepted recommended acts, optional ones, the reader's own;
-  // and the NIST SP 800-53 target profile when the information processed calls for it
+  // 6. The SoA (or the CSF target profile) for the organisation, and the NIST SP 800-53 target profile for its
+  // information systems when the information processed calls for it. Two clearly labelled levels, one tab each.
+  // Every control has a selector on the left: required ones (by law or by ISO/IEC 27001 clauses 4-10) are locked in;
+  // controls from accepted recommended acts start selected; the rest start unselected.
   function craftRows() {
     if (!D.controls[S.fw]) S.fw = "iso27001-2022";
     const exp = expandedSectors();
@@ -677,104 +678,142 @@
       return { c, ds: req.concat(fromRec), kind };
     });
   }
+  const isLocked = (r) => r.kind === "required" || r.kind === "standard";
+  const isPicked = (r) => isLocked(r) || (r.kind === "recommended" ? !CR.unpicked.has(r.c.id) : CR.picked.has(r.c.id));
+  function setPicked(r, on) {
+    if (r.kind === "recommended") { if (on) CR.unpicked.delete(r.c.id); else CR.unpicked.add(r.c.id); }
+    else if (r.kind === "optional") { if (on) CR.picked.add(r.c.id); else CR.picked.delete(r.c.id); }
+  }
   const needsSystems = () => S.sectors.some((id) => ["public-sir", "public-restricted", "nato-info"].includes(id));
+  const SYS_STATE = { drafts: true, sb: true, sp: true, sl: true, sprofile: "none" };
+  let craftTab = "org";
   function craftSoa(box) {
     const rows = craftRows();
-    const n = (k) => rows.filter((r) => r.kind === k).length;
     const fw = fwRow(S.fw);
-    let body = "", last = null;
-    rows.forEach((r) => {
-      const g = topGroup(r.c);
-      if (g && g !== last) { last = g; body += `<h4 class="ctl-group">${esc(g.id)} ${esc(L(g, "name"))}</h4>`; }
-      body += soaRow(r);
-    });
+    const sys = needsSystems();
+    if (sys) guessBaseline();
+    const sysCount = sys ? withS({ ...SYS_STATE, q: "" }, () => systemRows().length) : 0;
+    const base = profilesOf("baseline").find((p) => p.id === S.baseline);
     const ai = rows.flatMap((r) => r.ds).filter((m) => m.review_status === "ai_draft").length;
-    const gaps = withS(MANDATORY, () => gapRows());
+    const picked = rows.filter(isPicked).length;
+    const level = (key, name, sub, count) => `<span class="level-tag">${esc(t(key))}</span><span class="level-name">${esc(name)}</span><span class="level-sub">${esc(sub)}</span>${count !== undefined ? `<span class="level-count">${esc(count)}</span>` : ""}`;
+    const orgName = fwLabel(fw), orgDoc = t(S.fw === "csf-2.0" ? "levelProfile" : "levelSoa");
+    const sysName = "NIST SP 800-53 Rev. 5", sysDoc = base ? L(base, "label") : t("levelSysDoc");
+    if (!sys) craftTab = "org";
     box.innerHTML = `<div class="craft-card">${answerHead("craftYourAnswer")}
-        <p class="craft-figure">${esc(fwLabel(fw))}: ${esc(fmt(t("craftSoaSum"), n("required") + n("standard"), n("recommended"), n("optional")))}</p>
+        <p>${esc(t(sys ? "levelLeadBoth" : "levelLeadOrg"))}</p>
         ${ai ? `<p class="warn-text">${esc(fmt(t("ctlUnreviewed"), ai, rows.flatMap((r) => r.ds).length))}</p>` : ""}
         <div class="craft-download"><button type="button" class="btn btn-primary" id="soa-xlsx">${esc(t("craftDownload"))}</button><button type="button" class="btn" id="soa-csv">CSV</button>
           <a href="${craftHref(4)}">${esc(t("craftChangeFw"))}</a></div></div>
-      <div class="craft-card"><div class="soa-legend"><span>${ICON_LOCK} ${esc(t("soaLocked"))}</span><span class="badge">${esc(t("soaRecommended"))}</span><span class="badge soa-opt">${esc(t("soaOptional"))}</span></div>
-        <div class="soa-list ctl-list" id="soa-list">${body}</div>${gapsHtml(gaps, fw)}</div>
-      <div class="craft-card"><h3 class="craft-sub">${esc(t("craftOwnCtls"))}</h3><p class="hint">${esc(t("craftOwnCtlsHint"))}</p>
-        <ul class="own-list" id="own-ctls"></ul>
-        <form class="own-form" onsubmit="return false"><label class="own-field"><span>${esc(t("craftOwnWhat"))}</span><input type="text" id="own-ctl-text" maxlength="300" placeholder="${esc(t("craftOwnCtlPh"))}"></label>
-          <button type="submit" class="btn" id="own-ctl-add">${esc(t("craftAdd"))}</button></form></div>
-      ${needsSystems() ? `<div class="craft-card"><details class="craft-sys"><summary><h3 class="craft-sub">${esc(t("toolSystem"))}</h3><span class="hint">${esc(t("craftSysHint"))}</span></summary><div id="craft-sys"></div></details></div>` : ""}`;
+      ${sys ? `<div class="level-tabs" role="tablist" aria-label="${esc(t("cs_soa"))}">
+          <button type="button" role="tab" id="tab-org" aria-controls="pane-org" aria-selected="${String(craftTab === "org")}" class="level-tab level-org">${level("levelOrg", orgName, orgDoc, fmt(t("levelPicked"), picked, rows.length))}</button>
+          <button type="button" role="tab" id="tab-sys" aria-controls="pane-sys" aria-selected="${String(craftTab === "sys")}" class="level-tab level-sys">${level("levelSys", sysName, sysDoc, fmt(t("toolSysSum"), sysCount))}</button></div>` : ""}
+      <section class="craft-card level-pane level-org" id="pane-org" role="${sys ? "tabpanel" : "region"}" aria-labelledby="${sys ? "tab-org" : "org-title"}"${craftTab === "org" ? "" : " hidden"}>
+        ${sys ? "" : `<h3 class="level-title" id="org-title">${level("levelOrg", orgName, orgDoc, fmt(t("levelPicked"), picked, rows.length))}</h3>`}
+        <div class="soa-legend"><span>${ICON_LOCK} ${esc(t("soaLocked"))}</span><span class="badge">${esc(t("soaRecommended"))}</span>
+          <span class="soa-bulk"><button type="button" class="link-btn" id="pick-all">${esc(t("soaPickAll"))}</button><button type="button" class="link-btn" id="pick-none">${esc(t("soaPickNone"))}</button></span></div>
+        <div class="soa-list ctl-list" id="soa-list"></div>
+        ${gapsHtml(withS(MANDATORY, () => gapRows()), fw)}</section>
+      ${sys ? `<section class="craft-card level-pane level-sys" id="pane-sys" role="tabpanel" aria-labelledby="tab-sys"${craftTab === "sys" ? "" : " hidden"}>
+        <p class="hint">${esc(t("craftSysHint"))}</p><div id="craft-sys"></div></section>` : ""}`;
     const list = box.querySelector("#soa-list");
+    const drawList = () => {
+      let body = "", last = null;
+      rows.forEach((r) => {
+        const g = topGroup(r.c);
+        if (g && g !== last) { last = g; body += `<h4 class="ctl-group">${esc(g.id)} ${esc(L(g, "name"))}</h4>`; }
+        body += soaRow(r);
+      });
+      list.innerHTML = body;
+    };
+    drawList();
+    const sumOrg = () => {
+      const n = fmt(t("levelPicked"), rows.filter(isPicked).length, rows.length);
+      box.querySelectorAll(".level-org .level-count").forEach((x) => { x.textContent = n; });
+    };
     list.addEventListener("toggle", (e) => {
       const d = e.target;
-      if (!d.matches || !d.matches("details.soa-row") || !d.open || d.dataset.drawn) return;
+      if (!d.matches || !d.matches("details.soa-detail") || !d.open || d.dataset.drawn) return;
       d.dataset.drawn = "1";
       const r = rows.find((x) => x.c.id === d.dataset.ctl);
       if (r) d.querySelector(".ctl-body").innerHTML = driversBody(r.c.id, r.ds);
     }, true);
     list.addEventListener("change", (e) => {
-      const c = e.target.closest("input[data-opt]");
+      const c = e.target.closest("input[data-pick]");
       if (!c) return;
-      if (c.checked) CR.optCtls.add(c.dataset.opt); else CR.optCtls.delete(c.dataset.opt);
+      const r = rows.find((x) => x.c.id === c.dataset.pick);
+      if (r) { setPicked(r, c.checked); c.closest(".soa-row").classList.toggle("soa-off", !c.checked); sumOrg(); }
     });
-    const ul = box.querySelector("#own-ctls");
-    ownList(ul, CR.ownCtls, (r) => esc(r.text));
-    box.querySelector("#own-ctl-add").addEventListener("click", () => {
-      const input = box.querySelector("#own-ctl-text");
-      const text = input.value.trim();
-      if (!text) { input.focus(); return; }
-      CR.ownCtls.push({ text });
-      input.value = "";
-      ownList(ul, CR.ownCtls, (r) => esc(r.text));
-      input.focus();
-    });
-    const sys = box.querySelector(".craft-sys");
-    if (sys) sys.addEventListener("toggle", () => { const b = box.querySelector("#craft-sys"); if (sys.open && !b.innerHTML) drawSideSystem(b); });
+    const bulk = (on) => { rows.filter((r) => !isLocked(r)).forEach((r) => setPicked(r, on)); drawList(); sumOrg(); };
+    box.querySelector("#pick-all").onclick = () => bulk(true);
+    box.querySelector("#pick-none").onclick = () => bulk(false);
+    if (sys) {
+      const sysBox = box.querySelector("#craft-sys");
+      const show = (tab) => {
+        craftTab = tab;
+        ["org", "sys"].forEach((k) => {
+          box.querySelector(`#tab-${k}`).setAttribute("aria-selected", String(k === tab));
+          box.querySelector(`#pane-${k}`).hidden = k !== tab;
+        });
+        if (tab === "sys" && !sysBox.innerHTML) drawSideSystem(sysBox);
+      };
+      box.querySelector("#tab-org").onclick = () => show("org");
+      box.querySelector("#tab-sys").onclick = () => show("sys");
+      box.querySelector(".level-tabs").addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+        const next = craftTab === "org" ? "sys" : "org";
+        show(next); box.querySelector(`#tab-${next}`).focus();
+      });
+      if (craftTab === "sys") drawSideSystem(sysBox);
+    }
     box.querySelector("#soa-xlsx").onclick = () => exportCraft("xlsx");
     box.querySelector("#soa-csv").onclick = () => exportCraft("csv");
   }
   function soaRow(r) {
+    const on = isPicked(r);
+    const sel = isLocked(r)
+      ? `<span class="soa-req" title="${esc(t(r.kind === "standard" ? "soaStandard" : "soaRequired"))}">${ICON_LOCK}<span class="sr-only">${esc(t(r.kind === "standard" ? "soaStandard" : "soaRequired"))}</span></span>`
+      : `<input type="checkbox" data-pick="${esc(r.c.id)}"${on ? " checked" : ""} aria-label="${esc(fmt(t("soaPickLabel"), r.c.id))}">`;
     const acts = uniq(r.ds.map((m) => D.provById[m.provision_id].source_id));
-    const head = `<span class="ctl-id">${esc(r.c.id)}</span><span class="ctl-name">${esc(controlName(S.fw, r.c))}</span>
-      <span class="ctl-acts">${esc(acts.map((id) => shortRef(D.sourceById[id])).join(" · "))}</span>`;
-    if (r.kind === "standard") {
-      return `<div class="soa-row soa-standard"><div class="ctl-head"><span class="ctl-id">${esc(r.c.id)}</span><span class="ctl-name">${esc(controlName(S.fw, r.c))}</span>
-        <span class="ctl-acts">${esc(t("soaStandard"))}</span><span class="soa-mark"><span class="soa-req" title="${esc(t("soaStandard"))}">${ICON_LOCK}</span></span></div></div>`;
-    }
-    if (r.kind === "optional") {
-      return `<div class="soa-row soa-optional"><label class="ctl-head"><span class="ctl-id">${esc(r.c.id)}</span><span class="ctl-name">${esc(controlName(S.fw, r.c))}</span>
-        <span class="ctl-acts"><input type="checkbox" data-opt="${esc(r.c.id)}"${CR.optCtls.has(r.c.id) ? " checked" : ""}> ${esc(t("soaInclude"))}</span></label></div>`;
-    }
-    const mark = r.kind === "required" ? `<span class="soa-req" title="${esc(t("soaRequired"))}">${ICON_LOCK}<span class="sr-only">${esc(t("soaRequired"))}</span></span>` : `<span class="badge">${esc(t("soaRecommended"))}</span>`;
-    return `<details class="soa-row" data-ctl="${esc(r.c.id)}"><summary class="ctl-head">${head}<span class="soa-mark">${mark}</span></summary><div class="ctl-body"></div></details>`;
+    const note = r.kind === "standard" ? `<span class="ctl-acts soa-std">${esc(t("soaStandard"))}</span>`
+      : `<span class="ctl-acts">${esc(acts.map((id) => shortRef(D.sourceById[id])).join(" · "))}</span>`;
+    const mark = r.kind === "recommended" ? `<span class="badge">${esc(t("soaRecommended"))}</span>` : "";
+    const head = `<span class="ctl-id">${esc(r.c.id)}</span><span class="ctl-name">${esc(controlName(S.fw, r.c))}</span>${note}<span class="soa-mark">${mark}</span>`;
+    const main = r.ds.length
+      ? `<details class="soa-detail" data-ctl="${esc(r.c.id)}"><summary class="ctl-head">${head}<span class="chev" aria-hidden="true"></span></summary><div class="ctl-body"></div></details>`
+      : `<div class="ctl-head soa-flat">${head}<span></span></div>`;
+    return `<div class="soa-row soa-${r.kind}${on ? "" : " soa-off"}"><div class="soa-sel">${sel}</div>${main}</div>`;
   }
-  // The download: the SoA, the acts (mandatory, accepted, followed, own) and, when needed, the system profile
+  // The download: every control with Applicable yes or no, the acts (mandatory, accepted, followed) and, when
+  // needed, the system profile. The reader adds their own controls and requirements as new rows.
   function exportCraft(kind) {
     const rows = craftRows();
-    const yes = S.lang === "uk" ? "так" : "Y";
-    const status = { required: t("soaRequired"), standard: t("soaStandard"), recommended: t("soaRecommended"), optional: t("soaOptionalIn") };
+    const yes = S.lang === "uk" ? "так" : "Y", no = S.lang === "uk" ? "ні" : "N";
+    const status = { required: t("soaRequired"), standard: t("soaStandard"), recommended: t("soaRecommended"), optional: t("soaOptional") };
     const why = { required: t("xWhyLaw"), standard: t("xWhyStandard"), recommended: t("xWhyRec"), optional: t("xWhyOwnDecision") };
     const soaHeader = [t("xControlId"), t("xControl"), t("xBaseline"), t("xDrivers"), t("xCoverage"), t("xParam"),
       t("xApplicable"), t("xReason"), t("xOrgValue"), t("xPolicy"), t("xPolicySuggested"), t("xOwner"), t("xStatus"), t("xEvidence")];
-    const soa = rows.filter((r) => r.kind !== "optional" || CR.optCtls.has(r.c.id)).map(({ c, ds, kind }) => {
+    const soa = rows.map((r) => {
+      const { c, ds, kind } = r;
+      const on = isPicked(r);
       const drv = ds.map((m) => { const p = D.provById[m.provision_id]; return `${sourceRef(D.sourceById[p.source_id])}, ${L(p, "ref")} [${GLYPH[m.relationship]} ${covLabel(m.coverage)}${reviewMark(m)}]`; }).join("\n");
       const cov = ds.length ? (ds.some((m) => m.coverage === "full") ? t("fullNote") : t("partialNote")) : "";
       const par = ds.filter((m) => L(m, "parameter")).map((m) => `${L(m, "parameter")} (${sourceRef(D.sourceById[D.provById[m.provision_id].source_id])}, ${L(D.provById[m.provision_id], "ref")})`).join("\n");
       const pol = [...new Set(ds.map((m) => L(m, "policy")).filter(Boolean))].join("\n");
-      return [c.id, controlName(S.fw, c), status[kind], drv, cov, par, yes, why[kind], "", "", pol, "", "", ""];
-    }).concat(CR.ownCtls.map((o, i) => [`OWN-${i + 1}`, o.text, t("soaOwn"), "", "", "", yes, t("xWhyOwnDecision"), "", "", "", "", "", ""]));
+      return [c.id, controlName(S.fw, c), status[kind], drv, cov, par, on ? yes : no, on ? why[kind] : "", "", "", pol, "", "", ""];
+    });
     if (kind === "csv") { downloadCsv(`baseline_${stamp()}.csv`, soaHeader, soa); return; }
     const actRow = (x, st) => [st, sourceRef(x), sourceTitle(x), typeLabel(x.type), L(x, "description"), D.mappedProvs[x.id] ? D.mappedProvs[x.id].size : "", x.url || ""];
-    const mandatory = withS(MANDATORY, () => listedActs("core"));
-    const acts = mandatory.map((x) => actRow(x, t("xActRequired")))
+    const acts = withS(MANDATORY, () => listedActs("core")).map((x) => actRow(x, t("xActRequired")))
       .concat(withS(WITH_REC, () => listedActs("core")).filter((x) => CR.recActs.has(x.id)).map((x) => actRow(x, t("xActAccepted"))))
-      .concat(withS(WITH_REC, () => listedActs("reference")).filter((x) => CR.euActs.has(x.id)).map((x) => actRow(x, t("xActFollowed"))))
-      .concat(CR.ownReqs.map((o) => [t("xActOwn"), o.text, "", t("ownKind_" + o.kind), "", "", ""]));
+      .concat(withS(WITH_REC, () => listedActs("reference")).filter((x) => CR.euActs.has(x.id)).map((x) => actRow(x, t("xActFollowed"))));
     const sheets = [
-      { name: S.fw === "csf-2.0" ? "Profile" : "SoA", header: soaHeader, rows: soa, widths: [10, 50, 16, 55, 12, 35, 12, 24, 30, 30, 40, 20, 20, 30] },
+      { name: S.fw === "csf-2.0" ? "Profile" : "SoA", header: soaHeader, rows: soa, widths: [10, 50, 18, 55, 12, 35, 12, 30, 30, 30, 40, 20, 20, 30] },
       { name: S.lang === "uk" ? "Акти" : "Acts", header: [t("xBaseline"), t("srcColRef"), t("xTitle"), t("xType"), t("xDescription"), t("xReqCount"), t("xUrl")], rows: acts, widths: [16, 40, 60, 20, 60, 12, 40] },
     ];
     if (needsSystems()) {
       guessBaseline();
-      const sys = systemRows();
+      const sys = withS({ ...SYS_STATE, q: "" }, () => systemRows());
       sheets.push({ name: "NIST SP 800-53", header: [t("sysColId"), "name_en", "name_uk_machine", t("sysColBaseline"), t("sysColParams"), t("sysColPlan"), t("sysColLaw"), t("xSource"), t("xApplicable"), t("xOrgValue"), t("xPolicy"), t("xStatus"), t("xEvidence")],
         rows: sys.map((c) => [c.id, c.name_en, c.name_uk_machine, c._base ? yes : "", c._base ? c[`${S.baseline}_params_uk`] || "" : "", c._plan.join(", "), c._law.join(", "), c._acts.map((id) => sourceRef(D.sourceById[id])).join("; "), "", "", "", "", ""]),
         widths: [12, 40, 40, 12, 40, 30, 30, 40, 12, 24, 24, 16, 24] });
@@ -831,6 +870,17 @@
     let timer;
     q.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(() => { S.q = q.value; redraw(); }, 200); });
   }
+  // The 20 control families of NIST SP 800-53 Rev. 5: headings in the list, so the reader can find their way
+  const FAMILIES_53 = {
+    AC: ["Access Control", "Керування доступом"], AT: ["Awareness and Training", "Обізнаність і навчання"], AU: ["Audit and Accountability", "Аудит і підзвітність"],
+    CA: ["Assessment, Authorization, and Monitoring", "Оцінювання, авторизація і моніторинг"], CM: ["Configuration Management", "Керування конфігурацією"],
+    CP: ["Contingency Planning", "Планування на випадок надзвичайних ситуацій"], IA: ["Identification and Authentication", "Ідентифікація та автентифікація"],
+    IR: ["Incident Response", "Реагування на інциденти"], MA: ["Maintenance", "Технічне обслуговування"], MP: ["Media Protection", "Захист носіїв"],
+    PE: ["Physical and Environmental Protection", "Фізичний захист і захист середовища"], PL: ["Planning", "Планування"], PM: ["Program Management", "Керування програмою"],
+    PS: ["Personnel Security", "Безпека персоналу"], PT: ["PII Processing and Transparency", "Обробка персональних даних і прозорість"], RA: ["Risk Assessment", "Оцінювання ризиків"],
+    SA: ["System and Services Acquisition", "Придбання систем і послуг"], SC: ["System and Communications Protection", "Захист систем і комунікацій"],
+    SI: ["System and Information Integrity", "Цілісність систем та інформації"], SR: ["Supply Chain Risk Management", "Керування ризиками ланцюга постачання"],
+  };
   // NIST SP 800-53 controls for the reader's systems, with where each one comes from
   function drawSideSystem(body) {
     guessBaseline();
@@ -846,11 +896,11 @@
       <p class="aa-links"><a href="#/controls?fw=${SYSTEM_FW}&b=${esc(S.baseline)}&s=${s}" id="sys-full">${esc(t("sideFull"))}</a></p>`;
     const list = body.querySelector("#sys-list");
     const draw = () => {
-      const rows = systemRows();
+      const rows = withS(SYS_STATE, () => systemRows());
       const n = (f) => rows.filter(f).length;
       const tag = (label) => `<span class="badge">${esc(label)}</span>`;
       list.innerHTML = `<p class="ctl-summary">${esc(fmt(t("toolSysSum"), rows.length))}. ${esc(fmt(t("kpiSysSub"), n((c) => c._base || c._sector), n((c) => c._plan.length), n((c) => c._law.length)))}</p>
-        <ul class="sys-list">${rows.map((c) => `<li><span class="ctl-id">${esc(c.id)}</span>
+        <ul class="sys-list">${rows.map((c, i) => `${i === 0 || rows[i - 1].family !== c.family ? `<li class="sys-family"><span class="ctl-id">${esc(c.family)}</span><span>${esc((FAMILIES_53[c.family] || [])[S.lang === "uk" ? 1 : 0] || "")}</span></li>` : ""}<li><span class="ctl-id">${esc(c.id)}</span>
           <span class="sys-name">${esc(S.lang === "uk" && c.name_uk_machine ? c.name_uk_machine : c.name_en)}</span>
           <span class="sys-tags">${c._base || c._sector ? tag(t("sysColBaseline")) : ""}${c._plan.length ? tag(t("sysColPlan")) : ""}${c._law.length ? tag(c._acts.length ? c._acts.map((id) => shortRef(D.sourceById[id])).join(" · ") : t("sysColLaw")) : ""}${c._ai ? ` <span class="badge rv-ai_draft">${esc(t("aiDraft"))}</span>` : ""}</span></li>`).join("")}</ul>`;
     };
@@ -967,16 +1017,7 @@
   let drawerOpen = false; // the profile's filters, shown under the profile bar
   const ctlExp = () => (S.all ? null : expandedSectors());
   const uniq = (xs) => [...new Set(xs)];
-  // Compact act names for collapsed rows ("NBU No. 4", "Закон № 2121-III"); the full citation shows once a row is open
-  const SHORT_TYPES = {
-    uk: [[/^Постанов[аи] Правління (Національного банку України|НБУ)/, "НБУ"], [/^Постанова (Кабінету Міністрів України|КМУ)/, "КМУ"], [/^Наказ Держспецзв[’']язку/, "Держспецзв’язку"], [/^Закон України/, "Закон"], [/^Указ Президента( України)?/, "Указ"]],
-    en: [[/^NBU Board Resolutions?/, "NBU"], [/^CMU Resolution/, "CMU"], [/^SSSCIP Order/, "SSSCIP"], [/^Law of Ukraine/, "Law"], [/^Presidential Decree/, "Decree"]],
-  };
-  function shortRef(src, withDate) {
-    let s = sourceRef(src);
-    (SHORT_TYPES[S.lang] || SHORT_TYPES.uk).forEach(([re, to]) => { s = s.replace(re, to); });
-    return withDate ? s : s.replace(/\s+(of|від)\s+\d{2}\.\d{2}\.\d{4}$/, "");
-  }
+  const shortRef = (src) => sourceRef(src); // one name for an act everywhere
 
   function renderControls() {
     if (S.fw === SYSTEM_FW) return renderSystem();
@@ -1043,7 +1084,7 @@
       const ds = (drivers[c.id] || []).slice().sort((a, b) => a.provision_id.localeCompare(b.provision_id));
       if (S.only && !ds.length) return;
       if (q) {
-        const hay = [c.id, controlName(S.fw, c), L(c, "name"), ...ds.map((m) => { const p = D.provById[m.provision_id]; const s = D.sourceById[p.source_id]; return `${sourceRef(s)} ${shortRef(s)} ${L(p, "ref")} ${L(p, "summary")} ${sourceTitle(s)}`; })].join(" ").toLowerCase();
+        const hay = [c.id, controlName(S.fw, c), L(c, "name"), ...ds.map((m) => { const p = D.provById[m.provision_id]; const s = D.sourceById[p.source_id]; return `${sourceRef(s)} ${rawRef(s)} ${L(p, "ref")} ${L(p, "summary")} ${sourceTitle(s)}`; })].join(" ").toLowerCase();
         if (!hay.includes(q)) return;
       }
       rows.push({ c, ds });
