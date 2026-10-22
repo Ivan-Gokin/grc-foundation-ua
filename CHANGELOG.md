@@ -1,5 +1,16 @@
 # Changelog
 
+## Controls page and header: less clutter (2026-10-22)
+
+- Header: four sections (Guide, Controls, Acts, About); the site name leads home. Methodology moved to the guide menu's reference group and the footer; the "Report" link moved to the footer.
+- Controls: the filter panel is replaced by a profile bar (the chosen organisation types as removable chips, "Edit" opens the filters, "Copy link") and one toolbar: framework, "My profile / All acts" (the unfiltered list for the framework), "By control / By act", search.
+- The three figure tiles became one summary line; the two download buttons became one "Download" menu.
+- Each control is one row: id, name, the acts behind it in short form and the relation symbols. A row opens in place and shows the provisions grouped by act, with the acts that amend them; the provision text is marked as the Ukrainian original when there is no translation; the parameter, where it belongs, caveat and mapping details are behind "Details".
+- "Show full chains" groups the acts of an open row under the law they were issued under (from source_relations.csv); laws outside the reader's profile are marked. Off by default: such laws empower the regulator and set no requirements of their own.
+- Jump to a clause, "Expand all / Collapse all", and a one-line legend under the table. "By act" lists each act with its provisions and the controls they map to.
+- Every provision has "Report an error": the mapping-error issue form opens with the provision, framework and control filled in.
+- Questionnaire: the figures are links (applicable acts, controls, gaps); when no control is mapped for the answers, the result says why and what to do instead of showing zeros.
+
 ## Header (2026-10-22)
 
 - The sections in the header are a segmented control: each section is a clear button and the current one is filled with the accent colour. "Intro" (the home page) is a section of its own, first in the row.

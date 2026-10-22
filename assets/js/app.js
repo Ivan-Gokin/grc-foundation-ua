@@ -52,6 +52,7 @@
     lang: null, view: "home", chapter: "roles", anchor: "", sectors: [], fw: "iso27001-2022", only: true, rec: true, drafts: true,
     repealed: false, context: false, q: "", type: "", baseline: "open", sprofile: "none", sb: true, sp: true, sl: true,
     scope: "core", mode: "list", pending: false, records: false, article: "",
+    all: false, by: "control", chains: false, // controls: ignore the profile, group by act, show the legal basis
   };
   const mdCache = {};
   const slugify = (text) => text.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, "").replace(/\s/g, "-");
@@ -161,13 +162,21 @@
     S.article = ARTICLES.includes(p.get("a")) ? p.get("a") : "";
     S.chapter = CHAPTERS.some((c) => c.id === p.get("c")) ? p.get("c") : CHAPTERS[0].id;
     S.act = p.get("act") || ""; // an ELI or id, e.g. from an /eli/... link resolved by 404.html
+    S.all = p.get("all") === "1";
+    S.by = p.get("by") === "act" ? "act" : "control";
+    S.chains = p.get("chains") === "1";
     return true;
   }
   function writeHash() {
     const p = new URLSearchParams();
     p.set("lang", S.lang);
     if (S.sectors.length) p.set("s", S.sectors.join(","));
-    if (S.view === "controls" && S.fw !== SYSTEM_FW) { p.set("fw", S.fw); p.set("only", S.only ? "1" : "0"); }
+    if (S.view === "controls" && S.fw !== SYSTEM_FW) {
+      p.set("fw", S.fw); p.set("only", S.only ? "1" : "0");
+      if (S.all) p.set("all", "1");
+      if (S.by === "act") p.set("by", "act");
+      if (S.chains) p.set("chains", "1");
+    }
     if (S.view === "controls" || S.view === "sources") { p.set("rec", S.rec ? "1" : "0"); }
     if (S.view === "controls" && S.fw !== SYSTEM_FW) p.set("drafts", S.drafts ? "1" : "0");
     if (S.view === "sources") {
@@ -263,22 +272,24 @@
     const inGuide = S.view === "guide" || S.view === "articles";
     const menu = `<details class="nav-menu" id="guide-menu"><summary${inGuide ? ' aria-current="page"' : ""}>${esc(t("navGuide"))}</summary>
       <div class="menu">${guideLinks(false)}</div></details>`;
-    const nav = [["home", "navHome"], ["controls", "navControls"], ["sources", "navSources"]].map(link).join("") + menu + [["method", "navMethod"], ["about", "navAbout"]].map(link).join("");
+    // Four sections; the site name leads home, Methodology sits in the footer and in the guide's reference group
+    const nav = menu + [["controls", "navControls"], ["sources", "navSources"], ["about", "navAbout"]].map(link).join("");
     const repo = (CFG.repoUrl || "").replace(/\/$/, "");
-    const report = repo ? `<a class="report" id="report" href="${esc(repo)}/issues/new?template=report.yml" target="_blank" rel="noopener" title="${esc(t("reportHint"))}">${ICON_FLAG}<span>${esc(t("report"))}</span></a>` : "";
     document.getElementById("header").innerHTML = `
-      <div class="brand">${BRAND_MARK}<div class="brand-text"><a href="#/home" class="brand-name">${esc(t("siteName"))}<span class="flag-ua" role="img" aria-label="${esc(t("flagUa"))}"></span></a><span class="brand-sub">${esc(t("siteSub"))}</span></div></div>
+      <div class="brand">${BRAND_MARK}<div class="brand-text"><a href="#/home" class="brand-name"${S.view === "home" ? ' aria-current="page"' : ""}>${esc(t("siteName"))}<span class="flag-ua" role="img" aria-label="${esc(t("flagUa"))}"></span></a></div></div>
       <nav class="nav" aria-label="${esc(t("siteName"))}">${nav}</nav>
-      <div class="header-tools">${report}<div class="theme-switch" id="theme" role="group" aria-label="${esc(t("themeGroup"))}"><button type="button" data-set="light" aria-label="${esc(t("themeLight"))}" title="${esc(t("themeLight"))}">${ICON_SUN}</button><button type="button" data-set="dark" aria-label="${esc(t("themeDark"))}" title="${esc(t("themeDark"))}">${ICON_MOON}</button></div><button class="lang" type="button" id="lang" aria-label="${esc(t("langSwitchLabel"))}">${esc(t("langSwitch"))}</button></div>`;
-    // the issue form gets the address of the page as it is at the moment of the click
-    const rep = document.getElementById("report");
-    if (rep) rep.addEventListener("click", () => { rep.href = `${repo}/issues/new?template=report.yml&page=${encodeURIComponent(location.href)}`; });
+      <div class="header-tools"><div class="theme-switch" id="theme" role="group" aria-label="${esc(t("themeGroup"))}"><button type="button" data-set="light" aria-label="${esc(t("themeLight"))}" title="${esc(t("themeLight"))}">${ICON_SUN}</button><button type="button" data-set="dark" aria-label="${esc(t("themeDark"))}" title="${esc(t("themeDark"))}">${ICON_MOON}</button></div><button class="lang" type="button" id="lang" aria-label="${esc(t("langSwitchLabel"))}">${esc(t("langSwitch"))}</button></div>`;
     document.getElementById("lang").onclick = () => { S.lang = S.lang === "uk" ? "en" : "uk"; store.set("grc-lang", S.lang); render(); };
     themeButton();
     const pv = document.getElementById("preview");
     if (pv) { pv.hidden = !CFG.preview; pv.textContent = CFG.preview ? t("previewBanner") : ""; }
     const meta = D.meta ? fmt(t("dataVersion"), D.meta.version, D.meta.date) : "";
-    document.getElementById("footer").innerHTML = `<p>${esc(t("footer"))} ${esc(meta)}</p>`;
+    const report = repo ? `<a id="report" href="${esc(repo)}/issues/new?template=report.yml" target="_blank" rel="noopener" title="${esc(t("reportHint"))}">${ICON_FLAG} ${esc(t("footerReport"))}</a>` : "";
+    document.getElementById("footer").innerHTML = `<p>${esc(t("footer"))} ${esc(meta)}</p>
+      <p class="footer-links"><a href="#/method">${esc(t("navMethod"))}</a>${report}${repo ? `<a href="${esc(repo)}" target="_blank" rel="noopener">GitHub</a>` : ""}</p>`;
+    // the issue form gets the address of the page as it is at the moment of the click
+    const rep = document.getElementById("report");
+    if (rep) rep.addEventListener("click", () => { rep.href = `${repo}/issues/new?template=report.yml&page=${encodeURIComponent(location.href)}`; });
   }
 
   function render() {
@@ -288,7 +299,7 @@
   }
 
   // ------------------------------------------------------------------ filter panel (shared)
-  function sectorChips() {
+  function sectorChips(withSearch = true) {
     const chip = (s) => `<label class="chip${D.parents[s.id].length ? " chip-sub" : ""}" title="${esc(L(s, "description"))}"><input type="checkbox" name="sector" value="${esc(s.id)}" ${S.sectors.includes(s.id) ? "checked" : ""}><span>${esc(L(s, "label"))}</span></label>`;
     const groups = D.groups.map((g) => {
       const items = D.sectors.filter((s) => s.selectable === "yes" && s.group === g.id);
@@ -297,7 +308,7 @@
     }).join("");
     return `<fieldset class="chips"><legend>${esc(t("orgType"))}</legend>
       <p class="hint">${esc(t("orgTypeHint"))} <a href="#/start">${esc(t("orgTypeQuiz"))}</a></p>
-      ${searchBox()}
+      ${withSearch ? searchBox() : ""}
       ${!S.sectors.length ? `<p class="none-note">${esc(t("orgTypeNone"))}</p>` : S.sectors.every((id) => id === "general") ? `<p class="none-note">${esc(t("orgTypeGeneral"))}</p>` : ""}
       ${groups}
     </fieldset>`;
@@ -322,7 +333,7 @@
     }
     const reset = root.querySelector("#reset");
     if (reset) reset.addEventListener("click", () => {
-      Object.assign(S, { sectors: [], only: true, rec: true, drafts: true, repealed: false, context: false, q: "", type: "", sb: true, sp: true, sl: true, pending: false, records: false });
+      Object.assign(S, { sectors: [], only: true, rec: true, drafts: true, repealed: false, context: false, q: "", type: "", sb: true, sp: true, sl: true, pending: false, records: false, all: false });
       render();
     });
   }
@@ -443,9 +454,9 @@
   }
   // Runs fn with the quiz answers as the current filters, then restores the reader's own filters.
   function withQuizState(fn) {
-    const keys = ["sectors", "fw", "q", "drafts", "rec", "only", "scope", "repealed", "pending", "context", "records"];
+    const keys = ["sectors", "fw", "q", "drafts", "rec", "only", "scope", "repealed", "pending", "context", "records", "all"];
     const saved = Object.fromEntries(keys.map((k) => [k, S[k]]));
-    Object.assign(S, { sectors: quizSectors(), fw: quizFw(), q: "", drafts: true, rec: true, only: true, scope: "core", repealed: false, pending: false, context: false, records: false });
+    Object.assign(S, { sectors: quizSectors(), fw: quizFw(), q: "", drafts: true, rec: true, only: true, scope: "core", repealed: false, pending: false, context: false, records: false, all: false });
     try { return fn(); } finally { Object.assign(S, saved); }
   }
   function renderStart() {
@@ -499,20 +510,28 @@
     const s = encodeURIComponent(sectors.join(",")).replace(/%2C/g, ",");
     const chips = sectors.length ? sectors.map((id) => `<span class="tag">${esc(L(D.sectorById[id], "label"))}</span>`).join("") : `<span class="tag">${esc(t("qNoSectors"))}</span>`;
     const why = QA.q4 === "auto" ? `<p class="hint">${esc(fmt(t("qAutoChosen"), fwLabel(f), t(fw === "csf-2.0" ? "qWhyCsf" : "qWhyIso")))}</p>` : "";
+    // Every figure opens the list behind it; with nothing mapped yet the reader is told why, not shown a zero
+    const actsHref = `#/sources?scope=core&s=${s}`;
+    const ctlHref = `#/controls?s=${s}&fw=${esc(fw)}`;
+    const repo = (CFG.repoUrl || "").replace(/\/$/, "");
+    const empty = !n.controls && !n.gaps;
+    const stats = empty
+      ? `<div class="q-empty"><h3>${esc(fmt(t("qEmptyTitle"), n.acts))}</h3><p>${esc(t("qEmptyText"))}</p>
+          <p class="q-links"><a class="btn btn-primary" href="${actsHref}">${esc(t("qEmptyActs"))}</a>${repo ? `<a href="${esc(repo)}/issues/new?template=report.yml" target="_blank" rel="noopener">${esc(t("qEmptyAsk"))}</a>` : ""}</p>
+          <p class="hint">${esc(t("qEmptyTip"))}</p></div>`
+      : `<div class="q-stats">
+          <a href="${actsHref}"><b>${n.acts}</b><span>${esc(t("qStatActs"))}</span></a>
+          <a href="${ctlHref}"><b>${n.controls}</b><span>${esc(fmt(t("qStatControls"), fwLabel(f)))}</span></a>
+          ${n.gaps ? `<a href="${ctlHref}#gaps"><b>${n.gaps}</b><span>${esc(t("qStatGaps"))}</span></a>` : `<div><b>0</b><span>${esc(t("qStatGaps"))}</span></div>`}
+        </div>${why}
+        <p class="q-links"><button type="button" class="btn" id="q-soa">${esc(fmt(t("exportSoaXlsx"), L(f, "output")))}</button></p>`;
     box.innerHTML = `<h2>${esc(t("qResultTitle"))}</h2>
       <p class="q-tags">${chips}</p>
-      <div class="q-stats">
-        <div><b>${n.acts}</b><span>${esc(t("qStatActs"))}</span></div>
-        <div><b>${n.controls}</b><span>${esc(fmt(t("qStatControls"), fwLabel(f)))}</span></div>
-        <div><b>${n.gaps}</b><span>${esc(t("qStatGaps"))}</span></div>
-      </div>${why}
-      <p class="q-links"><a class="btn btn-primary" href="#/controls?s=${s}&fw=${esc(fw)}">${esc(t("qOpenControls"))}</a>
-        <a class="btn" href="#/sources?scope=core&s=${s}">${esc(t("qOpenSources"))}</a>
-        <button type="button" class="btn" id="q-soa">${esc(fmt(t("exportSoaXlsx"), L(f, "output")))}</button></p>
+      ${stats}
       ${base ? `<div class="callout callout-goal"><p>${esc(t("qSystemNote"))}</p><p><a href="#/controls?fw=${SYSTEM_FW}&b=${base}&s=${s}">${esc(t("qOpenSystem"))} →</a></p></div>` : ""}
-      <p class="hint">${esc(t("qResultHint"))}</p>
-      <p class="hint">${esc(t("qGrc"))} <a href="#/method#${methodAnchor("grc")}">${esc(t("qGrcLink"))}</a>.</p>`;
-    box.querySelector("#q-soa").onclick = () => withQuizState(() => exportSoa(controlRows().rows, "xlsx"));
+      <p class="hint">${esc(t("qResultHint"))} ${esc(t("qGrc"))} <a href="#/method#${methodAnchor("grc")}">${esc(t("qGrcLink"))}</a>.</p>`;
+    const soa = box.querySelector("#q-soa");
+    if (soa) soa.onclick = () => withQuizState(() => exportSoa(controlRows().rows, "xlsx"));
   }
 
   // ------------------------------------------------------------------ guide
@@ -527,7 +546,7 @@
     groups.forEach(([stage, label]) => {
       const chs = CHAPTERS.filter((c) => c.stage === stage);
       const items = chs.map((c) => item(`#/guide?c=${c.id}`, c.id, chapterTitle(c.id))).join("")
-        + (stage === "ref" ? ARTICLES.map((a) => item(`#/articles?a=${a}`, a, t("art_" + a))).join("") : "");
+        + (stage === "ref" ? ARTICLES.map((a) => item(`#/articles?a=${a}`, a, t("art_" + a))).join("") + item("#/method", "method", t("navMethod")) : "");
       html += `${label ? `<p class="menu-group">${esc(label)}</p>` : ""}<ul>${items}</ul>`;
     });
     return html;
@@ -573,20 +592,78 @@
     const group = (tier, label) => `<p class="fw-group">${esc(label)}</p>${D.frameworks.filter((f) => f.tier === tier).map(radio).join("")}`;
     return `<fieldset><legend>${esc(t("framework"))}</legend>${group("organisation", t("fwGroupIsms"))}${group("system", t("fwGroupSystem"))}</fieldset>`;
   }
+  // The controls page: the reader's profile on top, then the toolbar, then one row per control that opens in place.
+  const OPEN = new Set(); // rows the reader has opened: "c:<control id>" or "a:<act id>"; kept while the page is used
+  let drawerOpen = false; // the profile's filters, shown under the profile bar
+  const ctlExp = () => (S.all ? null : expandedSectors());
+  const uniq = (xs) => [...new Set(xs)];
+  // Compact act names for collapsed rows ("NBU No. 4", "Закон № 2121-III"); the full citation shows once a row is open
+  const SHORT_TYPES = {
+    uk: [[/^Постанов[аи] Правління (Національного банку України|НБУ)/, "НБУ"], [/^Постанова (Кабінету Міністрів України|КМУ)/, "КМУ"], [/^Наказ Держспецзв[’']язку/, "Держспецзв’язку"], [/^Закон України/, "Закон"], [/^Указ Президента( України)?/, "Указ"]],
+    en: [[/^NBU Board Resolutions?/, "NBU"], [/^CMU Resolution/, "CMU"], [/^SSSCIP Order/, "SSSCIP"], [/^Law of Ukraine/, "Law"], [/^Presidential Decree/, "Decree"]],
+  };
+  function shortRef(src, withDate) {
+    let s = sourceRef(src);
+    (SHORT_TYPES[S.lang] || SHORT_TYPES.uk).forEach(([re, to]) => { s = s.replace(re, to); });
+    return withDate ? s : s.replace(/\s+(of|від)\s+\d{2}\.\d{2}\.\d{4}$/, "");
+  }
+
   function renderControls() {
     if (S.fw === SYSTEM_FW) return renderSystem();
     if (!D.controls[S.fw]) S.fw = "iso27001-2022";
-    const panel = `${fwPicker()}
-      ${sectorChips()}
-      <fieldset><legend>${esc(t("options"))}</legend>${toggle("only", t("optOnlyMapped"))}${toggle("rec", t("optRecommended"))}${toggle("drafts", t("optDrafts"))}</fieldset>
-`;
-    const main = workspace(panel, "controls-main");
-    bindPanel(app, (soft) => (soft ? (writeHash(), drawControls(main)) : render()));
-    drawControls(main);
+    app.innerHTML = `<div class="ctl-page">${profileBar(true)}
+      <div id="ctl-head"></div>${ctlToolbar()}
+      <section class="ctl-results" id="ctl-list" aria-live="polite"></section></div>`;
+    bindProfile(app);
+    const fwSel = app.querySelector("#fw-select");
+    fwSel.addEventListener("change", () => { S.fw = fwSel.value; render(); });
+    app.querySelectorAll("[data-scope-set]").forEach((b) => b.addEventListener("click", () => { S.all = b.dataset.scopeSet === "all"; render(); }));
+    app.querySelectorAll("[data-by]").forEach((b) => b.addEventListener("click", () => { S.by = b.dataset.by; render(); }));
+    drawControls();
+  }
+
+  // The reader's profile: the chosen organisation types as chips, with every filter behind "Edit"
+  function profileBar(withOptions) {
+    const chips = S.sectors.filter((id) => D.sectorById[id]).map((id) => {
+      const label = L(D.sectorById[id], "label");
+      return `<span class="pchip">${esc(label)}<button type="button" class="pchip-x" data-drop="${esc(id)}" aria-label="${esc(fmt(t("profileRemove"), label))}" title="${esc(fmt(t("profileRemove"), label))}">×</button></span>`;
+    }).join("");
+    const opts = withOptions ? `<fieldset><legend>${esc(t("options"))}</legend>${toggle("only", t("optOnlyMapped"))}${toggle("rec", t("optRecommended"))}${toggle("drafts", t("optDrafts"))}</fieldset>` : "";
+    return `<div class="profile-bar"><div class="profile-row">
+        ${chips || `<span class="muted">${esc(t("profileNone"))}</span>`}
+        <button type="button" class="link-btn" id="p-edit" aria-expanded="false" aria-controls="p-drawer">${esc(t("profileEdit"))}</button>
+        <span class="profile-gap"></span>
+        <button type="button" class="btn btn-line" id="p-copy">${esc(t("copyLink"))}</button></div>
+      <div class="profile-drawer" id="p-drawer" hidden>${sectorChips(false)}${opts}</div></div>`;
+  }
+  function bindProfile(root) {
+    const edit = root.querySelector("#p-edit"), drawer = root.querySelector("#p-drawer");
+    const show = (on) => { drawerOpen = on; drawer.hidden = !on; edit.setAttribute("aria-expanded", String(on)); };
+    show(drawerOpen);
+    edit.addEventListener("click", () => show(!drawerOpen));
+    root.querySelectorAll("[data-drop]").forEach((b) => b.addEventListener("click", () => { S.sectors = S.sectors.filter((x) => x !== b.dataset.drop); render(); }));
+    const copy = root.querySelector("#p-copy");
+    copy.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(location.href); copy.textContent = t("copied"); } catch (e) { window.prompt(t("copyLink"), location.href); }
+      setTimeout(() => { copy.textContent = t("copyLink"); }, 1800);
+    });
+    bindPanel(root, (soft) => (soft ? (writeHash(), drawControls()) : render()));
+  }
+
+  function ctlToolbar() {
+    const opt = (f) => `<option value="${esc(f.id)}"${S.fw === f.id ? " selected" : ""}>${esc(fwLabel(f))}</option>`;
+    const seg = (attr, label, items, cur) => `<div class="seg" role="group" aria-label="${esc(label)}">${items.map(([v, l]) => `<button type="button" data-${attr}="${esc(v)}" aria-pressed="${String(cur === v)}">${esc(l)}</button>`).join("")}</div>`;
+    return `<div class="ctl-tools">
+      <label class="ctl-fw"><span class="sr-only">${esc(t("framework"))}</span><select id="fw-select">${D.frameworks.map(opt).join("")}</select></label>
+      ${S.sectors.length ? seg("scope-set", t("scopeLabel"), [["mine", t("scopeMine")], ["all", t("scopeAll")]], S.all ? "all" : "mine") : ""}
+      ${seg("by", t("modeLabel"), [["control", t("byControl")], ["act", t("byAct")]], S.by)}
+      <label class="search ctl-search"><svg aria-hidden="true" viewBox="0 0 20 20" width="16" height="16"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="q" type="search" value="${esc(S.q)}" placeholder="${esc(t("ctlSearchPh"))}" aria-label="${esc(t("search"))}" autocomplete="off"></label>
+    </div>`;
   }
 
   function controlRows() {
-    const exp = expandedSectors();
+    const exp = ctlExp();
     const drivers = driversFor(S.fw, exp, S.drafts);
     const all = D.controls[S.fw];
     const leaf = all.filter((c) => ["subcategory", "requirement", "control"].includes(c.level));
@@ -596,7 +673,7 @@
       const ds = (drivers[c.id] || []).slice().sort((a, b) => a.provision_id.localeCompare(b.provision_id));
       if (S.only && !ds.length) return;
       if (q) {
-        const hay = [c.id, controlName(S.fw, c), L(c, "name"), ...ds.map((m) => { const p = D.provById[m.provision_id]; const s = D.sourceById[p.source_id]; return `${sourceRef(s)} ${L(p, "ref")} ${L(p, "summary")} ${sourceTitle(s)}`; })].join(" ").toLowerCase();
+        const hay = [c.id, controlName(S.fw, c), L(c, "name"), ...ds.map((m) => { const p = D.provById[m.provision_id]; const s = D.sourceById[p.source_id]; return `${sourceRef(s)} ${shortRef(s)} ${L(p, "ref")} ${L(p, "summary")} ${sourceTitle(s)}`; })].join(" ").toLowerCase();
         if (!hay.includes(q)) return;
       }
       rows.push({ c, ds });
@@ -604,7 +681,7 @@
     return { rows, leafCount: leaf.length, drivers, exp };
   }
 
-  // Key figures above a table: a label, one big number, one line under it
+  // Key figures above a table: a label, one big number, one line under it (the system view)
   function kpi(label, value, sub, cls) {
     return `<div class="kpi${cls ? " " + cls : ""}"><p class="kpi-label">${esc(label)}</p><p class="kpi-value">${esc(value)}</p>${sub ? `<p class="kpi-sub">${esc(sub)}</p>` : ""}</div>`;
   }
@@ -620,67 +697,108 @@
       : kpi(t("kpiAi"), "0", t("kpiAiNone"));
   }
 
-  function drawControls(main) {
+  const rowRender = {}; // row key -> function that draws the row again (after it is opened or closed)
+  function drawControls() {
+    const head = document.getElementById("ctl-head"), list = document.getElementById("ctl-list");
+    if (!head || !list) return;
     const { rows, leafCount, drivers } = controlRows();
     const fw = fwRow(S.fw);
     const withDrivers = Object.keys(drivers).length;
     const provSet = new Set(), srcSet = new Set();
     Object.values(drivers).flat().forEach((m) => { provSet.add(m.provision_id); srcSet.add(D.provById[m.provision_id].source_id); });
-    const partial = rows.filter((r) => r.ds.length && !r.ds.some((m) => m.coverage === "full")).length;
     const gaps = gapRows();
     const shown = rows.flatMap((r) => r.ds).concat(gaps);
-    const ai = shown.filter((m) => m.review_status === "ai_draft").length;
-    const groups = {};
-    D.controls[S.fw].forEach((c) => { groups[c.id] = c; });
+    const unreviewed = shown.filter((m) => m.review_status !== "reviewed").length;
 
-    let body = "";
-    let lastGroup = null;
-    rows.forEach(({ c, ds }) => {
-      const g = topGroup(c);
-      if (g && g !== lastGroup) {
-        lastGroup = g;
-        body += `<tr class="group"><th colspan="3" scope="colgroup">${esc(g.id)} ${esc(L(g, "name"))}</th></tr>`;
-      }
-      body += controlRow(c, ds);
-    });
+    head.innerHTML = `<div class="ctl-title"><div>
+        <h1>${esc(t("navControls"))}</h1>
+        <p class="ctl-summary">${esc(fmt(t("ctlSummary"), withDrivers, leafCount, provSet.size, srcSet.size))}${unreviewed ? ` <span class="warn-text">${esc(fmt(t("ctlUnreviewed"), unreviewed, shown.length))}</span>` : ""}</p></div>
+      <details class="dl-menu"><summary class="btn btn-primary">${esc(t("exportsTitle"))}</summary>
+        <div class="dl-list"><p class="dl-file">${esc(L(fw, "output"))}</p>
+          <button type="button" class="btn" id="x-xlsx">Excel</button><button type="button" class="btn" id="x-csv">CSV</button></div></details></div>`;
+    head.querySelector("#x-csv").onclick = () => exportSoa(rows, "csv");
+    head.querySelector("#x-xlsx").onclick = () => exportSoa(rows, "xlsx");
 
-    const outName = L(fw, "output");
-    main.innerHTML = `
-      <div class="results-head kpi-head">
-        <h1>${esc(fwLabel(fw))}</h1>
-        <div class="kpis">
-          ${kpi(t("kpiControls"), fmt(t("kpiOf"), withDrivers, leafCount), fmt(t("kpiControlsSub"), provSet.size, srcSet.size) + (partial ? " " + fmt(t("kpiPartial"), partial) : ""))}
-          ${kpiUpdated()}
-          ${kpiAi(ai, shown.length)}
-        </div>
-        <div class="head-notes">
-          <details class="key"><summary>${esc(t("dataLegend"))}</summary>${relLegend()}<p class="hint"><a href="#/method#${methodAnchor("mapping")}">${esc(t("legendMore"))}</a></p></details>
-          <ul class="notes">
-            <li>${esc(L(fw, "text_note"))}</li>
-          </ul>
-        </div>
-        <div class="exports exports-panel">
-          <p class="exports-title">${esc(t("exportsTitle"))}</p>
-          <div class="exports-btns">
-            <span class="exports-file">${esc(outName)}</span>
-            <button type="button" class="btn btn-primary" id="x-csv">CSV</button>
-            <button type="button" class="btn" id="x-xlsx">Excel</button>
-          </div>
-        </div>
-      </div>
-      ${rows.length ? `<div class="table-wrap"><table class="controls">
-        <thead><tr><th scope="col">${esc(t("colControl"))}</th><th scope="col">${esc(t("colDrivers"))}</th><th scope="col">${esc(t("colParam"))}</th></tr></thead>
-        <tbody>${body}</tbody></table></div>` : `<p class="empty">${esc(t("noControls"))}</p>${otherFwHint()}`}
-      ${gapsHtml(gaps, fw)}`;
-    const sw = main.querySelector("#switch-fw");
+    Object.keys(rowRender).forEach((k) => delete rowRender[k]);
+    let body = "", jump = [];
+    if (S.by === "act") body = actRowsHtml(rows);
+    else {
+      let lastGroup = null;
+      rows.forEach(({ c, ds }) => {
+        const g = topGroup(c);
+        if (g && g !== lastGroup) {
+          lastGroup = g;
+          const id = "grp-" + g.id.replace(/[^A-Za-z0-9]/g, "_");
+          jump.push([id, g.id]);
+          body += `<h2 class="ctl-group" id="${esc(id)}">${esc(g.id)} ${esc(L(g, "name"))}</h2>`;
+        }
+        const key = "c:" + c.id;
+        rowRender[key] = () => controlRow(c, ds);
+        body += controlRow(c, ds);
+      });
+    }
+    if (gaps.length) jump.push(["gaps", t("gapsJump")]);
+    const keys = Object.keys(rowRender);
+    const anyOpen = keys.some((k) => OPEN.has(k));
+    const rels = uniq(shown.map((m) => m.relationship)).filter((r) => GLYPH[r]);
+    list.innerHTML = `
+      <div class="ctl-bar">
+        ${S.by === "control" && jump.length > 1 ? `<nav class="jump" aria-label="${esc(t("jumpTo"))}">${jump.map(([id, label]) => `<a href="#${esc(id)}" data-jump-to="${esc(id)}">${esc(label)}</a>`).join("")}</nav>` : "<span></span>"}
+        <div class="ctl-bar-btns">
+          ${S.by === "control" && rows.length ? `<button type="button" class="btn btn-line" id="t-chains" aria-pressed="${String(S.chains)}">${esc(t(S.chains ? "chainsHide" : "chainsShow"))}</button>` : ""}
+          ${keys.length ? `<button type="button" class="btn btn-line" id="t-all">${esc(t(anyOpen ? "collapseAll" : "expandAll"))}</button>` : ""}
+        </div></div>
+      ${rows.length ? `<div class="ctl-list">${body}</div>` : `<p class="empty">${esc(t("noControls"))}</p>${otherFwHint()}`}
+      ${gapsHtml(gaps, fw)}
+      <p class="ctl-legend">${rels.map((r) => `${glyph(r)} ${esc(relWords(r))}`).join(" · ")}${S.chains && S.by === "control" ? ` · <span class="chain-arrow">↳</span> ${esc(t("rel_based_on"))}` : ""} · <a href="#/method#${methodAnchor("mapping")}">${esc(t("legendMore"))}</a><br>${esc(L(fw, "text_note"))}</p>`;
+
+    const sw = list.querySelector("#switch-fw");
     if (sw) sw.onclick = () => { S.fw = sw.dataset.fw; render(); };
-    main.querySelector("#x-csv").onclick = () => exportSoa(rows, "csv");
-    main.querySelector("#x-xlsx").onclick = () => exportSoa(rows, "xlsx");
+    const ch = list.querySelector("#t-chains");
+    if (ch) ch.onclick = () => { S.chains = !S.chains; writeHash(); drawControls(); };
+    const tall = list.querySelector("#t-all");
+    if (tall) tall.onclick = () => {
+      if (keys.some((k) => OPEN.has(k))) keys.forEach((k) => OPEN.delete(k)); else keys.forEach((k) => OPEN.add(k));
+      drawControls();
+    };
+    list.onclick = (e) => {
+      const rowHead = e.target.closest("[data-row]");
+      if (rowHead) {
+        const k = rowHead.dataset.row;
+        if (OPEN.has(k)) OPEN.delete(k); else OPEN.add(k);
+        const el = rowHead.closest(".ctl-row");
+        if (el && rowRender[k]) {
+          el.outerHTML = rowRender[k]();
+          const again = list.querySelector(`[data-row="${CSS.escape(k)}"]`);
+          if (again) again.focus();
+        }
+        const btn = list.querySelector("#t-all");
+        if (btn) btn.textContent = t(keys.some((x) => OPEN.has(x)) ? "collapseAll" : "expandAll");
+        return;
+      }
+      const go = e.target.closest("[data-goto]");
+      if (go) {
+        e.preventDefault();
+        S.by = "control"; OPEN.add("c:" + go.dataset.goto); S.anchor = "ctl-" + go.dataset.goto;
+        render();
+        return;
+      }
+      const j = e.target.closest("[data-jump-to]");
+      if (j) {
+        e.preventDefault();
+        const target = document.getElementById(j.dataset.jumpTo);
+        if (target) { if (target.tagName === "DETAILS") target.open = true; target.scrollIntoView({ behavior: "smooth", block: "start" }); }
+      }
+    };
+    if (S.anchor) {
+      const id = S.anchor; S.anchor = "";
+      setTimeout(() => { const x = document.getElementById(id); if (x) { if (x.tagName === "DETAILS") x.open = true; x.scrollIntoView({ block: "start" }); } }, 0);
+    }
   }
 
   // provisions checked against the whole framework with no counterpart (empty control_id)
   function gapRows() {
-    const exp = expandedSectors();
+    const exp = ctlExp();
     const q = S.q.trim().toLowerCase();
     return D.mappings.filter((m) => {
       if (m.framework_id !== S.fw || m.control_id || m.relationship !== "no_relationship") return false;
@@ -696,18 +814,19 @@
     if (!gaps.length) return "";
     const items = gaps.map((m) => {
       const p = D.provById[m.provision_id]; const src = D.sourceById[p.source_id];
-      const badge = m.review_status !== "reviewed" ? `<span class="badge rv-${esc(m.review_status)}">${esc(reviewLabel(m.review_status))}</span>` : "";
+      const badge = m.review_status === "reviewed" ? `<span class="badge cov-full">${esc(t("reviewed"))}</span>` : "";
       return `<li><span class="driver-ref">${esc(sourceRef(src))}, ${esc(L(p, "ref"))}</span> ${badge}
-        <p>${esc(L(p, "summary"))}</p>${L(m, "policy") ? `<p class="muted"><b>${esc(t("driverPolicy"))}:</b> ${esc(L(m, "policy"))}</p>` : ""}</li>`;
+        <p${isFallback(p, "summary") ? ' lang="uk"' : ""}>${esc(L(p, "summary"))}</p>${L(m, "policy") ? `<p class="muted"><b>${esc(t("driverPolicy"))}:</b> ${esc(L(m, "policy"))}</p>` : ""}
+        <p class="prov-links">${src.url ? `<a href="${esc(src.url)}" target="_blank" rel="noopener">${esc(t("openText"))} ↗</a>` : ""}${reportLink(m, "")}</p></li>`;
     }).join("");
-    return `<details class="gaps"><summary><h2>${esc(fmt(t("gapsTitle"), fwLabel(fw), gaps.length))}</h2></summary>
+    return `<details class="gaps" id="gaps"><summary><h2>${esc(fmt(t("gapsTitle"), fwLabel(fw), gaps.length))}</h2></summary>
       <p class="hint">${esc(t("gapsIntro"))}</p><ul class="gap-list">${items}</ul></details>`;
   }
 
   function otherFwHint() {
     const other = D.orgFrameworks.find((f) => f.id !== S.fw);
     if (!other) return "";
-    const n = Object.keys(driversFor(other.id, expandedSectors(), S.drafts)).length;
+    const n = Object.keys(driversFor(other.id, ctlExp(), S.drafts)).length;
     return n ? `<p><button type="button" class="btn" id="switch-fw" data-fw="${esc(other.id)}">${esc(fmt(t("switchFw"), fwLabel(other), n))}</button></p>` : "";
   }
 
@@ -718,37 +837,132 @@
     return cur || null;
   }
 
+  // One control: id, name, the acts behind it and their fit. Opening it shows the provisions, grouped by act.
   function controlRow(c, ds) {
-    const name = controlName(S.fw, c);
-    const drivers = ds.length ? `<ul class="drivers">${ds.map(driverItem).join("")}</ul>` : `<span class="muted">${esc(t("noDrivers"))}</span>`;
-    const params = ds.filter((m) => L(m, "parameter"));
-    const paramHtml = params.length
-      ? `<ul class="params">${params.map((m) => `<li>${esc(L(m, "parameter"))} <span class="muted">(${esc(sourceRef(D.sourceById[D.provById[m.provision_id].source_id]))}, ${esc(L(D.provById[m.provision_id], "ref"))})</span></li>`).join("")}</ul>${params.length > 1 ? `<p class="hint">${esc(t("strictest"))}</p>` : ""}`
-      : "";
-    return `<tr><th scope="row" class="ctl"><span class="ctl-id">${esc(c.id)}</span><span class="ctl-name">${esc(name)}</span></th>
-      <td data-label="${esc(t("colDrivers"))}">${drivers}</td><td data-label="${esc(t("colParam"))}">${paramHtml}</td></tr>`;
+    const key = "c:" + c.id;
+    const open = ds.length && OPEN.has(key);
+    const acts = uniq(ds.map((m) => D.provById[m.provision_id].source_id));
+    const fits = uniq(ds.map((m) => m.relationship)).filter((r) => GLYPH[r]);
+    return `<div class="ctl-row${open ? " open" : ""}" id="ctl-${esc(c.id)}">
+      <button type="button" class="ctl-head" data-row="${esc(key)}" aria-expanded="${String(!!open)}"${ds.length ? "" : " disabled"}>
+        <span class="ctl-id">${esc(c.id)}</span>
+        <span class="ctl-name">${esc(controlName(S.fw, c))}</span>
+        <span class="ctl-acts">${ds.length ? esc(acts.map((id) => shortRef(D.sourceById[id])).join(" · ")) : esc(t("noDrivers"))}</span>
+        <span class="ctl-fit">${fits.map((r) => glyph(r)).join("")}</span>
+        <span class="chev" aria-hidden="true"></span></button>
+      ${open ? `<div class="ctl-body">${driversBody(c.id, ds)}</div>` : ""}</div>`;
   }
 
-  function driverItem(m) {
+  // Later acts in force that amend this one: they change the requirement itself, so they always show
+  function amendedBy(id) {
+    return (D.relsIn[id] || []).filter((r) => r.relation === "amends" && D.sourceById[r.source_id] && IN_EFFECT(D.sourceById[r.source_id].status)).map((r) => D.sourceById[r.source_id]);
+  }
+  function actHead(src, extra) {
+    const am = amendedBy(src.id);
+    return `<p class="act-head"><span class="act-name">${esc(sourceRef(src))}</span>${extra || ""}${am.length ? ` <span class="act-amended">${esc(t("relIn_amends"))} ${esc(am.map((x) => shortRef(x, true)).join("; "))}</span>` : ""}</p>`;
+  }
+  // The legal-basis hierarchy of the register (the same relations the chains view draws)
+  const HIER_REL = new Set(["based_on", "transposes", "applies", "ensures_implementation_of"]);
+  const basisOf = (id) => uniq((D.relsOut[id] || []).filter((r) => HIER_REL.has(r.relation) && D.sourceById[r.related_id]).map((r) => r.related_id));
+  function driversBody(ctlId, ds) {
+    const bySrc = new Map();
+    ds.forEach((m) => { const sid = D.provById[m.provision_id].source_id; if (!bySrc.has(sid)) bySrc.set(sid, []); bySrc.get(sid).push(m); });
+    const block = (sid, ms, extra) => `<div class="act-block">${actHead(D.sourceById[sid], extra)}${ms.map((m) => provLine(m, ctlId)).join("")}</div>`;
+    if (!S.chains) return [...bySrc].map(([sid, ms]) => block(sid, ms)).join("");
+    // Full chains: each act goes under the law it shares with most other acts of this control (ties: a law in the
+    // reader's profile); its other bases are named beside it. Laws outside the profile are marked.
+    const exp = ctlExp();
+    const inProfile = (id) => !exp || sourceApplies(D.sourceById[id], exp);
+    const freq = {};
+    bySrc.forEach((_, sid) => basisOf(sid).forEach((pid) => { freq[pid] = (freq[pid] || 0) + 1; }));
+    const score = (pid) => freq[pid] * 10 + (inProfile(pid) ? 1 : 0);
+    const groups = new Map();
+    bySrc.forEach((ms, sid) => {
+      const ps = basisOf(sid);
+      const home = ps.slice().sort((a, b) => score(b) - score(a))[0] || "";
+      if (!groups.has(home)) groups.set(home, []);
+      groups.get(home).push([sid, ms, ps.filter((x) => x !== home)]);
+    });
+    const order = [...groups.keys()].sort((a, b) => (a === "" ? 1 : 0) - (b === "" ? 1 : 0) || (inProfile(b) ? 1 : 0) - (inProfile(a) ? 1 : 0));
+    return order.map((pid) => {
+      const kids = groups.get(pid).map(([sid, ms, also]) => block(sid, ms, also.length ? ` <span class="act-also">${esc(t("alsoUnder"))} ${esc(also.map((x) => shortRef(D.sourceById[x])).join(", "))}</span>` : "")).join("");
+      if (!pid) return `<div class="law-group"><p class="law-head muted">${esc(t("noBasis"))}</p><div class="law-kids">${kids}</div></div>`;
+      const law = D.sourceById[pid];
+      const own = inProfile(pid);
+      return `<div class="law-group${own ? "" : " law-pale"}"><p class="law-head"><b>${esc(sourceRef(law))}</b> <span class="muted">· ${esc(sourceTitle(law))}</span>${own ? "" : ` <span class="badge">${esc(t("notOnList"))}</span>`}</p><div class="law-kids">${kids}</div></div>`;
+    }).join("");
+  }
+
+  // A link that opens the "mapping error" issue form with the provision, framework and control filled in
+  function reportLink(m, ctlId) {
+    const repo = (CFG.repoUrl || "").replace(/\/$/, "");
+    if (!repo) return "";
+    const ctl = ctlId || m.control_id || "";
+    const q = new URLSearchParams({ template: "mapping-error.yml", provision: m.provision_id, framework: m.framework_id === "csf-2.0" ? "NIST CSF 2.0" : "ISO/IEC 27001:2022" });
+    if (ctl) q.set("control", ctl);
+    q.set("title", `${m.provision_id}${ctl ? " → " + ctl : ""}`);
+    return `<a href="${esc(repo)}/issues/new?${esc(q.toString())}" target="_blank" rel="noopener">${esc(t("reportMapping"))}</a>`;
+  }
+
+  // One provision: fit, reference and links on a line; its text (marked when it is the Ukrainian original), the
+  // author's note, and the rest of the mapping's details behind "More"
+  function provLine(m, ctlId) {
     const p = D.provById[m.provision_id];
     const src = D.sourceById[p.source_id];
-    const badges = [
-      `<span class="badge cov-${esc(m.coverage)}">${esc(covLabel(m.coverage))}</span>`,
-      m.review_status !== "reviewed" ? `<span class="badge rv-${esc(m.review_status)}">${esc(reviewLabel(m.review_status))}</span>` : "",
+    const orig = isFallback(p, "summary");
+    const more = [
+      L(m, "parameter") ? `<p><b>${esc(t("colParam"))}:</b> ${esc(L(m, "parameter"))}</p>` : "",
+      p.applies_to ? `<p><b>${esc(t("appliesOnly"))}:</b> ${p.applies_to.split(";").map((s) => esc(L(D.sectorById[s], "label") || s)).join("; ")}</p>` : "",
+      L(m, "policy") ? `<p><b>${esc(t("driverPolicy"))}:</b> ${esc(L(m, "policy"))}</p>` : "",
+      p.notes ? `<p><b>${esc(t("driverCaveat"))}:</b> <span${S.lang === "en" ? ' lang="uk"' : ""}>${esc(p.notes)}</span></p>` : "",
+      `<p class="muted">${esc(t("driverMeta"))}: ${esc(relWords(m.relationship))}, ${esc(m.rationale)}${m.strength ? `, ${esc(m.strength)}/10` : ""}; ${esc(reviewLabel(m.review_status))}; ${esc(m.mapped_by)}${m.reviewed_by ? `, ${esc(m.reviewed_by)}` : ""}; ${esc(m.date)}</p>`,
     ].join("");
-    const applies = p.applies_to ? `<p><b>${esc(t("appliesOnly"))}:</b> ${p.applies_to.split(";").map((s) => esc(L(D.sectorById[s], "label") || s)).join("; ")}</p>` : "";
-    const note = L(m, "notes") ? `<p><b>${esc(t("driverNote"))}:</b> ${esc(L(m, "notes"))}</p>` : "";
-    const policy = L(m, "policy") ? `<p><b>${esc(t("driverPolicy"))}:</b> ${esc(L(m, "policy"))}</p>` : "";
-    const caveat = p.notes ? `<p class="muted"><b>${esc(t("driverCaveat"))}:</b> ${esc(p.notes)}</p>` : "";
-    const link = src.url ? ` <a href="${esc(src.url)}" target="_blank" rel="noopener">${esc(t("openText"))}</a>` : "";
-    return `<li><details class="driver">
-      <summary>${glyph(m.relationship)}<span class="driver-main"><span class="driver-ref">${esc(sourceRef(src))}, ${esc(L(p, "ref"))}</span> ${badges}</span></summary>
-      <div class="driver-body">
-        <p><b>${esc(t("driverSummary"))}:</b> ${esc(L(p, "summary"))}</p>
-        <p><b>${esc(t("driverSource"))}:</b> ${esc(sourceTitle(src))}.${link}</p>
-        ${applies}${note}${policy}${caveat}
-        <p class="muted">${esc(t("driverMeta"))}: ${esc(relWords(m.relationship))}, ${esc(m.rationale)}${m.strength ? `, ${esc(m.strength)}/10` : ""}; ${esc(m.mapped_by)}${m.reviewed_by ? `, ${esc(m.reviewed_by)}` : ""}; ${esc(m.date)}</p>
-      </div></details></li>`;
+    return `<div class="prov">
+      <div class="prov-line"><span class="prov-fit">${glyph(m.relationship)} ${esc(covLabel(m.coverage))}</span>
+        <span class="prov-ref">${esc(L(p, "ref"))}${m.review_status === "reviewed" ? ` <span class="badge cov-full">${esc(t("reviewed"))}</span>` : ""}</span>
+        <span class="prov-links">${src.url ? `<a href="${esc(src.url)}" target="_blank" rel="noopener">${esc(t("openText"))} ↗</a>` : ""}${reportLink(m, ctlId)}</span></div>
+      ${L(p, "summary") ? `<p class="prov-text"${orig ? ' lang="uk"' : ""}>${esc(L(p, "summary"))}${orig ? ` <span class="prov-orig" lang="${esc(S.lang)}">${esc(t("originalUk"))}</span>` : ""}</p>` : ""}
+      ${L(m, "notes") ? `<p class="prov-note"><b>${esc(t("driverNote"))}:</b> <span${isFallback(m, "notes") ? ' lang="uk"' : ""}>${esc(L(m, "notes"))}</span></p>` : ""}
+      <details class="prov-more"><summary>${esc(t("provMore"))}</summary>${more}</details></div>`;
+  }
+
+  // "By act": each act with its provisions and the controls they map to
+  function actRowsHtml(rows) {
+    const bySrc = new Map();
+    rows.forEach(({ c, ds }) => ds.forEach((m) => {
+      const p = D.provById[m.provision_id];
+      if (!bySrc.has(p.source_id)) bySrc.set(p.source_id, new Map());
+      const pm = bySrc.get(p.source_id);
+      if (!pm.has(p.id)) pm.set(p.id, []);
+      pm.get(p.id).push([c, m]);
+    }));
+    const rank = (id) => D.typeOrder.indexOf(D.sourceById[id].type);
+    return [...bySrc.keys()]
+      .sort((a, b) => rank(a) - rank(b) || (D.sourceById[b].adopted || "").localeCompare(D.sourceById[a].adopted || ""))
+      .map((sid) => { const key = "a:" + sid; rowRender[key] = () => actRow(sid, bySrc.get(sid)); return actRow(sid, bySrc.get(sid)); })
+      .join("");
+  }
+  function actRow(sid, provMap) {
+    const key = "a:" + sid;
+    const open = OPEN.has(key);
+    const src = D.sourceById[sid];
+    const nCtl = new Set([...provMap.values()].flat().map(([c]) => c.id)).size;
+    const am = amendedBy(sid);
+    const body = open ? `<div class="ctl-body act-body">${am.length ? `<p class="act-head"><span class="act-amended">${esc(t("relIn_amends"))} ${esc(am.map((x) => shortRef(x, true)).join("; "))}</span></p>` : ""}${[...provMap].map(([pid, list]) => {
+      const p = D.provById[pid];
+      const orig = isFallback(p, "summary");
+      return `<div class="prov">
+        <div class="prov-line prov-line-act"><span class="prov-ref">${esc(L(p, "ref"))}</span>
+          <span class="prov-links">${src.url ? `<a href="${esc(src.url)}" target="_blank" rel="noopener">${esc(t("openText"))} ↗</a>` : ""}${reportLink(list[0][1], "")}</span></div>
+        ${L(p, "summary") ? `<p class="prov-text"${orig ? ' lang="uk"' : ""}>${esc(L(p, "summary"))}${orig ? ` <span class="prov-orig" lang="${esc(S.lang)}">${esc(t("originalUk"))}</span>` : ""}</p>` : ""}
+        <ul class="prov-ctls">${list.map(([c, m]) => `<li>${glyph(m.relationship)} <a href="#ctl-${esc(c.id)}" data-goto="${esc(c.id)}"><b>${esc(c.id)}</b> ${esc(controlName(S.fw, c))}</a></li>`).join("")}</ul></div>`;
+    }).join("")}</div>` : "";
+    return `<div class="ctl-row act-row${open ? " open" : ""}" id="act-${esc(sid)}">
+      <button type="button" class="ctl-head" data-row="${esc(key)}" aria-expanded="${String(open)}">
+        <span class="ctl-name act-title">${esc(sourceRef(src))}<span class="muted act-sub">${esc(sourceTitle(src))}</span></span>
+        <span class="ctl-acts">${esc(fmt(t("actCounts"), provMap.size, nCtl))}</span>
+        <span class="chev" aria-hidden="true"></span></button>
+      ${body}</div>`;
   }
 
   // ------------------------------------------------------------------ exports
