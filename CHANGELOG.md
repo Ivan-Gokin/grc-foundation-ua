@@ -1,5 +1,13 @@
 # Changelog
 
+## Guide in three stages, new home page (2026-10-22)
+
+- The guide follows three stages. I. Governance: roles and authorities, organisational context (the questionnaire), external actors (new), choosing the framework (now with what the sector suggests). II. Compliance: applicable acts (with the EU law worth following), controls and the SoA, information systems. III. Risk management: "Where the real work begins" and GRC engineering (new).
+- The integrated management system chapter is folded into GRC engineering, together with the GRC paragraph from step 1 and the tools section from stage 2; old links to it open GRC engineering.
+- External actors is a first draft from the register (Laws No. 2163-VIII, 4336-IX, 1882-IX, CMU Resolution No. 1426, the NBU and the SSSCIP as sector regulators); the map of the national system's actors is still to come.
+- Chapter numbers follow the stages (I.1-III.2); references between chapters, the Methodology and the blueprint are updated.
+- Home: the organisation types and the questionnaire sit in the top block; the three stages link to their chapters; a GRC engineering strip; "Help check the mappings" with a review meter counted from the data and four ways to help; "What changed" with the current data version, the changelog and the repository.
+
 ## Controls page and header: less clutter (2026-10-22)
 
 - Header: four sections (Guide, Controls, Acts, About); the site name leads home. Methodology moved to the guide menu's reference group and the footer; the "Report" link moved to the footer.

@@ -1,15 +1,15 @@
-# Step 1. Roles and authorities
+# I.1. Roles and authorities
 
-<p class="chapter-lead">Stage 1, "Governance", has six steps. If you have taken the <a href="#/start">questionnaire</a> and have an ISMS skeleton, these steps explain how to turn it into a system that works every day. Start with people: who decides, who does the work, who checks.</p>
+<p class="chapter-lead">Stage I, "Governance", has four steps: roles, the organisation's context, the external actors that govern it and the choice of framework. Stage II then turns them into your list of acts and your Statement of Applicability. Start with people: who decides, who does the work, who checks.</p>
 
 ## Three stages
 
-GRC engineering turns requirements, controls and evidence into data and code: secure configurations, automated checks, continuous monitoring. But you can only automate what has already been defined. The path has three stages:
+The guide follows three stages. What the first two produce is the foundation for automating controls ([GRC engineering](#/guide?c=grc)).
 
 <ol class="stages">
-<li><b>Governance</b><span>We decide who is responsible for security, what is required of us and how we manage it. The result is an integrated management system with a complete set of requirements. It is the prerequisite for everything else, and this is where this site helps.</span></li>
-<li><b>Compliance</b><span>What is required regardless of our wishes is applied to systems and automated: configurations, checks, evidence collection. Less time on routine.</span><a href="#/guide?c=compliance">Guide: stage 2 →</a></li>
-<li><b>Risk management</b><span>The freed-up resources go into resilience to a changing environment: new threats, new suppliers, new requirements.</span><a href="#/guide?c=risk">Guide: stage 3 →</a></li>
+<li><b>Governance</b><span>We decide who is responsible for security, describe the organisation, find out who governs it from outside and choose the framework.</span></li>
+<li><b>Compliance</b><span>We collect the acts that apply, and the EU law worth following, and turn them into the minimum set of controls: the Statement of Applicability. This is where this site helps most.</span><a href="#/guide?c=requirements">Guide: stage II →</a></li>
+<li><b>Risk management</b><span>Where the real work begins: with the legal minimum in place, we assess risks to our assets and decide what to add beyond it.</span><a href="#/guide?c=risk">Guide: stage III →</a></li>
 </ol>
 
 ## About this step

@@ -42,9 +42,11 @@
   const ARTICLES = ["isms-policy-case-studies", "grc-systems-overview"];
   // Guide chapters: content/guide/<id>.<lang>.md, grouped by stage in the menu and the side panel
   const CHAPTERS = [
-    ["roles", "1"], ["context", "1"], ["requirements", "1"], ["standard", "1"], ["soa", "1"], ["ims", "1"],
-    ["compliance", "2"], ["risk", "3"], ["glossary", "ref"],
+    ["roles", "1"], ["context", "1"], ["actors", "1"], ["standard", "1"],
+    ["requirements", "2"], ["soa", "2"], ["compliance", "2"],
+    ["risk", "3"], ["grc", "3"], ["glossary", "ref"],
   ].map(([id, stage]) => ({ id, stage }));
+  const CHAPTER_MOVED = { ims: "grc" }; // old chapter ids that live on under another name
   const IN_EFFECT = (st) => st === "in_force";
 
   const D = {}; // indexes
@@ -160,7 +162,8 @@
     if (p.has("scope")) S.scope = p.get("scope") === "reference" ? "reference" : "core";
     if (p.has("mode")) S.mode = p.get("mode") === "chains" ? "chains" : "list";
     S.article = ARTICLES.includes(p.get("a")) ? p.get("a") : "";
-    S.chapter = CHAPTERS.some((c) => c.id === p.get("c")) ? p.get("c") : CHAPTERS[0].id;
+    const ch = CHAPTER_MOVED[p.get("c")] || p.get("c");
+    S.chapter = CHAPTERS.some((c) => c.id === ch) ? ch : CHAPTERS[0].id;
     S.act = p.get("act") || ""; // an ELI or id, e.g. from an /eli/... link resolved by 404.html
     S.all = p.get("all") === "1";
     S.by = p.get("by") === "act" ? "act" : "control";
@@ -388,23 +391,41 @@
     app.innerHTML = `<article class="home" id="home-text"><p class="hint">${esc(t("loading"))}</p></article>`;
     const el = document.getElementById("home-text");
     if (!(await mdInto(el, "home"))) return;
-    const who = document.getElementById("home-who");
-    if (who) who.outerHTML = homeWho();
+    const fill = (id, html) => { const x = el.querySelector(`#${id}`); if (x) x.outerHTML = html; };
+    fill("home-who", homeWho());
+    fill("home-review", homeReview());
+    fill("home-changes", homeChanges());
     scrollToAnchor();
   }
-  // Step 1 of "How it works": the organisation types as links into the controls table, by group
+  // In the hero: the organisation types as links into the controls table, by group, and the questionnaire
   function homeWho() {
-    const pill = (href, label, cls, title) => `<a class="pill${cls ? " " + cls : ""}" href="${href}"${title ? ` title="${esc(title)}"` : ""}>${esc(label)}</a>`;
+    const pill = (href, label, title) => `<a class="pill" href="${href}"${title ? ` title="${esc(title)}"` : ""}>${esc(label)}</a>`;
     const groups = D.groups.map((g) => {
       const items = D.sectors.filter((s) => s.selectable === "yes" && s.group === g.id && !D.parents[s.id].length);
       if (!items.length) return "";
-      return `<div class="who-group"><h3>${esc(L(g, "label"))}</h3><div class="pills">${items.map((s) => pill(`#/controls?s=${encodeURIComponent(s.id)}`, L(s, "label"), "", L(s, "description"))).join("")}</div></div>`;
+      return `<div class="who-group"><h3>${esc(L(g, "label"))}</h3><div class="pills">${items.map((s) => pill(`#/controls?s=${encodeURIComponent(s.id)}`, L(s, "label"), L(s, "description"))).join("")}</div></div>`;
     }).join("");
     return `<section class="home-who" aria-labelledby="who-title">
-      <div class="who-head"><h3 id="who-title">${esc(t("whoTitle"))}</h3>
-        <div class="pills">${pill("#/controls?s=general", t("whoAll"), "pill-all")}${pill("#/start", t("whoQuiz"), "pill-quiz")}</div></div>
+      <h2 id="who-title">${esc(t("whoTitle"))}</h2>
       <div class="who-groups">${groups}</div>
+      <p class="who-foot"><a class="btn btn-primary" href="#/start">${esc(t("whoQuiz"))}</a><span>${esc(t("whoNone"))} <a href="#/controls?s=general">${esc(t("whoAll"))}</a></span></p>
     </section>`;
+  }
+  // How many mappings a second person has checked, counted from the data
+  function homeReview() {
+    const total = D.mappings.length;
+    const done = D.mappings.filter((m) => m.review_status === "reviewed").length;
+    const pct = total ? Math.round((done / total) * 100) : 0;
+    return `<div class="meter-box"><p class="meter-line"><b>${done}</b> ${esc(fmt(t("homeReviewed"), total))}<span class="muted">${pct}%</span></p>
+      <div class="meter" role="img" aria-label="${esc(fmt(t("homeReviewedAria"), done, total))}"><span style="width:${Math.max(pct, done ? 1 : 0)}%"></span></div></div>`;
+  }
+  // The current data version and what it changed; the full history is the changelog
+  function homeChanges() {
+    const repo = (CFG.repoUrl || "").replace(/\/$/, "");
+    const m = D.meta;
+    const note = m ? (S.lang === "uk" ? m.note_uk : m.note_en) : "";
+    return `${m ? `<p class="change-head"><b>${esc(m.version)}</b> <span class="muted">${esc(m.date)}</span></p><p>${esc(note)}</p>` : ""}
+      ${repo ? `<p class="change-links"><a href="${esc(repo)}/blob/${esc(CFG.branch || "main")}/CHANGELOG.md" target="_blank" rel="noopener">${esc(t("homeAllChanges"))}</a><a href="${esc(repo)}" target="_blank" rel="noopener">${esc(t("homeWatch"))}</a></p>` : ""}`;
   }
   function heroExample() {
     const ex = CFG.heroExample || {};
@@ -541,7 +562,7 @@
   function guideLinks(withCurrent, heads) {
     const cur = S.view === "guide" ? S.chapter : S.view === "articles" ? S.article : "";
     const item = (href, id, label) => `<li${withCurrent && id === cur ? ' class="current"' : ""}><a href="${href}"${id === cur ? ' aria-current="page"' : ""}>${esc(label)}</a>${withCurrent && id === cur && heads ? heads : ""}</li>`;
-    const groups = [["1", t("stage_1")], ["2", null], ["3", null], ["ref", t("stage_ref")]];
+    const groups = [["1", t("stage_1")], ["2", t("stage_2")], ["3", t("stage_3")], ["ref", t("stage_ref")]];
     let html = "";
     groups.forEach(([stage, label]) => {
       const chs = CHAPTERS.filter((c) => c.stage === stage);
@@ -556,7 +577,7 @@
     const ch = CHAPTERS[i];
     const el = docLayout(t("navGuide"));
     if (!(await mdInto(el, `guide/${ch.id}`))) return;
-    if (ch.stage === "1") el.insertAdjacentHTML("afterbegin", `<p class="kicker">${esc(t("stage_1"))}</p>`);
+    if (ch.stage !== "ref") el.insertAdjacentHTML("afterbegin", `<p class="kicker">${esc(t("stage_" + ch.stage))}</p>`);
     const legend = el.querySelector("#legend");
     if (legend) legend.outerHTML = relLegend();
     const prev = CHAPTERS[i - 1], next = CHAPTERS[i + 1];

@@ -1,35 +1,61 @@
 <section class="home-hero">
 
-<div class="hero-gate" aria-hidden="true"><svg viewBox="0 0 100 100"><defs><mask id="hero-letters" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100"><rect width="100" height="100" fill="#fff"></rect><path d="M54.55 23H45.45V33.6H54.55V28.3H50.76M64.25 66.15V55.55H73.34V60.85H64.25M68.79 60.85L73.34 66.15M35.75 55.55H26.66V66.15H35.75" fill="none" stroke="#000" stroke-width="2.84" stroke-linejoin="round" stroke-linecap="round"></path></mask></defs><path class="e-frame" fill-rule="evenodd" d="M67.44 6.36L96.52 43.29L79.07 86.93L32.56 93.64L3.48 56.71L20.93 13.07ZM65.96 10.07L92.56 43.86L76.6 83.79L34.04 89.93L7.44 56.14L23.4 16.21Z"></path><path class="e-arms" mask="url(#hero-letters)" d="M35.86 44.63L59.43 36.47L64.14 11.97L40.57 20.13ZM61.72 40.43L57.01 64.93L75.86 81.27L80.58 56.77ZM52.42 64.93L33.56 48.6L9.99 56.77L28.85 73.1Z"></path><path class="e-core" d="M36.84 47.47L58.77 39.87L54.39 62.67Z"></path></svg><p class="hero-lockup-name">GRC-фундамент<span class="flag-ua"></span></p></div>
+<div class="hero-copy">
 
-# Хочете розібратися, яким вимогам кібербезпеки ви маєте відповідати?
+# Яким вимогам кібербезпеки має відповідати ваша організація?
 
-Закони, постанови, накази, стандарти, політики НАТО: сотні документів, які посилаються один на одного і змінюються. GRC-фундамент показує, що з цього стосується саме вашої організації і якими заходами це закрити.
+Закони, постанови, накази, стандарти, політики НАТО: сотні документів, які посилаються один на одного і змінюються. Оберіть, хто ви, і отримайте заходи, що закривають застосовні до вас вимоги, кожен зі своєю правовою підставою.
 
-<p class="home-cta"><a class="btn btn-primary btn-lg" href="#/start">Підібрати вимоги</a><a class="btn btn-lg" href="#/sources">Переглянути всі акти</a></p>
+</div>
+
+<div id="home-who"></div>
 
 </section>
 
-## Яку задачу це вирішує
+## Три етапи, один шлях
 
-Ви отримуєте **мінімальний набір заходів**, які треба врахувати у вашій СУІБ або в профілі інформаційної системи, щоб відповідати застосовним до вас актам.
-
-- **Нічого не пропустити.** Лише акти, що стосуються вас, з ланцюгами «закон → постанова → наказ».
-- **Не робити двічі.** Один захід стандарту часто закриває вимоги кількох актів одразу.
-- **Мати підставу.** До кожного заходу видно пункти актів, які його вимагають, а перелік можна завантажити як проєкт Положення про застосовність.
-
-<div class="cards cards-2 levels">
-<a class="card" href="#/controls"><h3>Для організації</h3><p>Система управління за ISO/IEC 27001:2022 або NIST CSF 2.0</p></a>
-<a class="card" href="#/controls?fw=sp800-53r5"><h3>Для інформаційної системи</h3><p>Базові профілі безпеки за NIST SP 800-53 Rev. 5</p></a>
+<div class="home-stages">
+<div class="stage-card"><p class="stage-head"><span class="stage-num">I</span><b>Врядування</b></p><ol class="stage-steps">
+<li><a href="#/guide?c=roles">Ролі та повноваження</a></li>
+<li><a href="#/guide?c=context">Контекст організації</a><a class="stage-hint" href="#/start">4 запитання</a></li>
+<li><a href="#/guide?c=actors">Зовнішні суб'єкти</a><span class="stage-hint">держава і ваш регулятор</span></li>
+<li><a href="#/guide?c=standard">Вибір стандарту</a><span class="stage-hint">за галуззю</span></li>
+</ol></div>
+<div class="stage-card"><p class="stage-head"><span class="stage-num">II</span><b>Відповідність</b></p><ol class="stage-steps">
+<li><a href="#/guide?c=requirements">Застосовні акти</a><span class="stage-hint">+ право ЄС, за яким стежити</span></li>
+<li><a href="#/guide?c=soa">Заходи і ваша SoA</a><a class="stage-hint" href="#/controls">відкрити заходи</a></li>
+<li><a href="#/guide?c=compliance">Інформаційні системи</a><span class="stage-hint">NIST SP 800-53</span></li>
+</ol></div>
+<div class="stage-card"><p class="stage-head"><span class="stage-num">III</span><b>Управління ризиками</b></p>
+<p class="stage-text">Тут починається справжня робота: коли правовий мінімум закрито, ви оцінюєте ризики для своїх активів і вирішуєте, що додати понад нього.</p>
+<p class="stage-more"><a href="#/guide?c=risk">Читати про етап</a></p></div>
 </div>
 
-## Як це працює
+<div class="grc-wrap"><a class="grc-strip" href="#/guide?c=grc"><span class="grc-label">GRC-інженерія</span><span>Етапи I і II дають кожному активу мінімальний інтегрований набір вимог: основу для автоматизації заходів.</span><span class="grc-go">Читати →</span></a></div>
 
-<ol class="flow">
-<li><b>Хто ви</b><span>Оберіть тип організації нижче або дайте відповідь на чотири запитання.</span></li>
-<li><b>Що вас стосується</b><span>З реєстру лишаються лише застосовні акти.</span></li>
-<li><b>Що вони вимагають</b><span>Кожен акт розібрано до статті й пункту.</span></li>
-<li><b>Ваші заходи</b><span>Кожна вимога прив'язана до заходу стандарту.</span></li>
-</ol>
+<div class="home-panels">
+<section class="home-panel">
 
-<div id="home-who"></div>
+### Допоможіть перевірити зіставлення
+
+Зіставлення підготував ШІ; друга людина звіряє кожне з текстом акта в робочих книгах зіставлень на GitHub.
+
+<div id="home-review"></div>
+
+<p class="panel-label">Як ви можете допомогти</p>
+<ul class="help-list">
+<li><a href="#/controls"><b>Знайшли хибне зіставлення?</b><span>Натисніть «Повідомити про помилку» поруч із ним у Заходах</span></a></li>
+<li><a href="https://github.com/Ivan-Gokin/grc-foundation-ua/issues/new?template=new-or-changed-act.yml"><b>Бракує акта або його змінено?</b><span>Повідомте через коротку форму на GitHub</span></a></li>
+<li><a href="https://github.com/Ivan-Gokin/grc-foundation-ua/blob/main/CONTRIBUTING.md"><b>Добре знаєте акти?</b><span>Станьте другим рецензентом у робочих книгах зіставлень</span></a></li>
+<li><a href="https://github.com/Ivan-Gokin/grc-foundation-ua/issues/new?template=report.yml"><b>Чогось бракує для вашої роботи?</b><span>Запропонуйте</span></a></li>
+</ul>
+
+</section>
+<section class="home-panel">
+
+### Що змінилося
+
+<div id="home-changes"></div>
+
+</section>
+</div>

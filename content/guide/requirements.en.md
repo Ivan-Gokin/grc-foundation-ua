@@ -1,10 +1,10 @@
-# Step 3. Applicable requirements
+# II.1. Applicable acts
 
 *Covers: ISO/IEC 27001:2022, clause 4.2 and control A.5.31 · NIST CSF 2.0, GV.OC-03*
 
 **Goal.** Build your own list of requirements the organisation must meet or has chosen to meet, and give each an owner.
 
-In Ukraine, cybersecurity requirements are spread across documents at different levels, from international treaties and laws to orders of the SSSCIP (the State Service of Special Communications and Information Protection), NBU resolutions and NATO policies. The kinds of requirements and how they differ are described in the [Methodology](#/method#kinds-of-requirements). The [Legal sources](#/sources) view helps collect them.
+In Ukraine, cybersecurity requirements are spread across documents at different levels, from international treaties and laws to orders of the SSSCIP (the State Service of Special Communications and Information Protection), NBU resolutions and NATO policies. The kinds of requirements and how they differ are described in the [Methodology](#/method#kinds-of-requirements). The [Acts](#/sources) view helps collect them.
 
 1. **Download the list.** Choose who the requirements should concern and download the filtered list as CSV or Excel. It is the basis of your requirements register.
 2. **Mark applicability.** For each act: yes, no or unknown. For "unknown", note who should clarify it.
@@ -20,6 +20,8 @@ How to decide whether a document applies to you:
 | A draft law or an unratified treaty | Watch it, but do not build the system on it (hidden by default) |
 | EU law (the "Reference" tab) | Not directly binding for organisations operating only in Ukraine, but shows where the law is heading |
 | A repealed act (hidden by default) | Check that your documents no longer refer to it |
+
+**EU law worth following.** EU acts are not binding for organisations operating only in Ukraine, but they show where Ukrainian law is heading: Law No. 4336-IX of 27.03.2025 already brought Ukrainian law closer to NIS2, and the NBU's third-party risk requirements are the closest Ukrainian counterpart to DORA. The "Reference: EU law" tab lists the acts worth following for your profile; they never feed the controls table.
 
 **Result.** A register of applicable requirements with owners and sources. It is evidence for ISO/IEC 27001 control A.5.31 and NIST CSF outcome GV.OC-03.
 

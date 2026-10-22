@@ -1,4 +1,6 @@
-# Step 2. Organisational context
+# I.2. Organisational context
+
+<p class="chapter-lead">The <a href="#/start">questionnaire</a> covers the part of the context that decides which law applies to you: legal status, sector and the information you process. The rest of this step is what only you can describe.</p>
 
 *Covers: ISO/IEC 27001:2022, clauses 4.1-4.3 · NIST CSF 2.0, GV.OC*
 
@@ -14,13 +16,13 @@ Answer six questions.
 
 | Interested party | What they expect | Source of the requirement | How we address it |
 |---|---|---|---|
-| Regulator (e.g. SSSCIP) | Compliance with cyber protection requirements | Law, order | Through the requirements register, step 3 |
+| Regulator (e.g. SSSCIP) | Compliance with cyber protection requirements | Law, order | Through the register of applicable acts, II.1 |
 | Key customer | Protection of their data, incident notification | Contract, security annex | Contract requirements added to the register |
 | Employees | Protection of personal data | Law "On Personal Data Protection" | Personal data processing policy |
 
 **4. Dependencies.** What does the organisation depend on: IT outsourcing, cloud providers, software, telecom and energy suppliers? Which of these are critical for the services in question 1 (GV.OC-05)?
 
-**5. Internal factors.** Structure, culture, resources, existing management systems (quality, continuity, privacy). In step 6 the ISMS is integrated with them rather than built separately.
+**5. Internal factors.** Structure, culture, resources, existing management systems (quality, continuity, privacy). The ISMS is integrated with them rather than built separately ([GRC engineering](#/guide?c=grc)).
 
 Amendment 1:2024 to ISO/IEC 27001:2022 also requires you to decide whether climate change is a relevant issue. A reasoned "yes" or "no" is enough.
 

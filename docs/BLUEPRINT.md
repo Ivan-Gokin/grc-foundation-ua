@@ -205,7 +205,7 @@ Map each provision to both frameworks directly. Do not derive ISO mappings from 
 
 ### 3.6 Export columns
 
-The site exports what the reader sees and adds blank columns for the organisation's work. What to fill in is explained to readers in the guide (step 5, `content/guide/soa.*.md`); the columns are set by `exportSoa` in `assets/js/app.js`. For ISO 27001 it is a draft Statement of Applicability, for CSF 2.0 a draft target profile.
+The site exports what the reader sees and adds blank columns for the organisation's work. What to fill in is explained to readers in the guide (II.2, `content/guide/soa.*.md`); the columns are set by `exportSoa` in `assets/js/app.js`. For ISO 27001 it is a draft Statement of Applicability, for CSF 2.0 a draft target profile.
 
 ## 4. Maintaining the list of laws
 
