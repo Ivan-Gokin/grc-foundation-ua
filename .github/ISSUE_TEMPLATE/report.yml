@@ -1,0 +1,34 @@
+name: Неточність на сайті / Something is wrong on the site
+description: Помилка в даних, тексті чи роботі сайту / An error in the data, the text or how the site works
+labels: [report]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Сторінка / Page
+      description: Адресу підставлено автоматично; у ній можуть бути ваші фільтри, тож приберіть зайве, якщо не хочете ними ділитися. / Filled in automatically; it may contain your filters, so trim it if you prefer not to share them.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Що не так / What is wrong
+      options:
+        - Дані про акт (статус, дата, посилання, опис) / Act data (status, date, link, description)
+        - Зіставлення із заходом / Mapping to a control
+        - Кого стосується акт / Who the act applies to
+        - Текст сторінки / Page text
+        - Робота сайту / How the site works
+        - Інше / Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Опис / Details
+      description: Що саме неправильно і як має бути / What exactly is wrong and what it should be
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Джерело / Source
+      description: Посилання на акт чи документ, який це підтверджує (необов'язково) / A link to the act or document that supports it (optional)

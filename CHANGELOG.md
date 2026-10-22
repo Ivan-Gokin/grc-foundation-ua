@@ -1,5 +1,10 @@
 # Changelog
 
+## Header (2026-10-22)
+
+- The sections in the header are a segmented control: each section is a clear button and the current one is filled with the accent colour. "Intro" (the home page) is a section of its own, first in the row.
+- A "Report" button in the top right corner opens a new GitHub issue form ("Something is wrong on the site") with the address of the current page filled in; on narrow screens it shows only the flag icon. The privacy section on About says what the button sends and when.
+
 ## Preview banner (2026-10-19)
 
 - The lemon preview banner keeps dark text in the light theme too (it turned white there).

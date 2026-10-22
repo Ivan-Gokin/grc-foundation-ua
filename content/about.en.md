@@ -24,6 +24,7 @@ The site collects no data about you or your organisation: there is no sign-up, n
 - **The questionnaire** asks about your organisation only to set the filters. The answers go into the part of the page address after the "#" sign, which the browser does not send to the server, and are not stored anywhere else.
 - **Filters and downloads** run in your browser: tables and files are made on your device.
 - **Your browser remembers** only the language and the colour theme.
+- **The "Report" button** in the top right corner opens a form on GitHub with the address of the current page, filters included. Nothing is sent until you create the report yourself, and you can edit the address.
 - The site is hosted on **GitHub Pages**. Like any host, GitHub may record technical request data (including the IP address) under its [privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
 
 ## Licence

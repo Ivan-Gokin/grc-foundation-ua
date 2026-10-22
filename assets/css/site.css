@@ -840,3 +840,43 @@ a.card:hover { --ne: var(--accent); }
 .pill-quiz { border-style: dashed; }
 @media (max-width: 900px) { .who-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .who-groups { grid-template-columns: minmax(0, 1fr); } }
+
+/* ------------------------------------------------------------ header ribbon: sections as a segmented control */
+.nav {
+  flex: 0 1 auto; display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 2px;
+  border: 1px solid var(--rule); background: var(--paper); margin-right: auto;
+}
+.nav a, .nav-menu > summary {
+  display: block; padding: 7px 12px; border: 0; border-radius: 0; color: var(--ink); line-height: 1.3;
+  transition: color .15s, background-color .15s;
+}
+.nav a:hover, .nav-menu > summary:hover { background: var(--surface); color: var(--accent); }
+.nav a[aria-current="page"], .nav-menu > summary[aria-current="page"],
+.nav a[aria-current="page"]:hover, .nav-menu > summary[aria-current="page"]:hover {
+  background: var(--accent); color: var(--on-accent); border: 0; border-radius: 0; font-weight: 600;
+  clip-path: polygon(5px 0, calc(100% - 5px) 0, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0 calc(100% - 5px), 0 5px);
+}
+.nav-menu > summary[aria-current="page"]::after { color: inherit; }
+.nav-menu .menu a, .nav-menu .menu a:hover, .nav-menu .menu a[aria-current="page"] { clip-path: none; background: none; }
+.nav-menu .menu a:hover { background: var(--paper); color: var(--accent); }
+.nav-menu .menu a[aria-current="page"] { color: var(--seal); }
+
+/* "Found an error?": opens the issue form on GitHub */
+.report {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--rule);
+  color: var(--ink); text-decoration: none; font: 500 .85rem var(--sans); white-space: nowrap; background: var(--surface);
+}
+.report:hover { border-color: var(--accent); color: var(--accent); }
+.report svg { flex: none; }
+@media (max-width: 1250px) {
+  .report span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .report { padding: 6px 8px; }
+}
+@media (max-width: 1180px) {
+  .site-header { gap: 10px 16px; }
+  .header-tools { margin-left: auto; }
+  .nav { order: 3; display: flex; flex-basis: 100%; margin-right: 0; }
+}
+@media (max-width: 900px) {
+  .nav a, .nav-menu > summary { padding: 7px 10px; }
+}

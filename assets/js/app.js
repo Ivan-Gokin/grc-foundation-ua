@@ -17,6 +17,7 @@
   const BRAND_MARK = `<svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path class="bm-frame" fill-rule="evenodd" d="M67.44 6.36L96.52 43.29L79.07 86.93L32.56 93.64L3.48 56.71L20.93 13.07ZM65.96 10.07L92.56 43.86L76.6 83.79L34.04 89.93L7.44 56.14L23.4 16.21Z"/><path class="bm-arms" d="M35.86 44.63L59.43 36.47L64.14 11.97L40.57 20.13ZM61.72 40.43L57.01 64.93L75.86 81.27L80.58 56.77ZM52.42 64.93L33.56 48.6L9.99 56.77L28.85 73.1Z"/><path class="bm-core" d="M36.84 47.47L58.77 39.87L54.39 62.67Z"/></svg>`;
   // Theme switch icons: a sun and a crescent moon, drawn in the text colour of their button
   const ICON_SUN = `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></g></svg>`;
+  const ICON_FLAG = `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 21V4m0 0h11l-2 4 2 4H5"/></svg>`;
   const ICON_MOON = `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.2 14.6A8.6 8.6 0 0 1 9.4 3.8a8.6 8.6 0 1 0 10.8 10.8z"/></svg>`;
   // Theme: light or dark; with no choice made, the system setting decides (the page head sets a saved choice before paint)
   const DARK = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
@@ -262,11 +263,16 @@
     const inGuide = S.view === "guide" || S.view === "articles";
     const menu = `<details class="nav-menu" id="guide-menu"><summary${inGuide ? ' aria-current="page"' : ""}>${esc(t("navGuide"))}</summary>
       <div class="menu">${guideLinks(false)}</div></details>`;
-    const nav = [["controls", "navControls"], ["sources", "navSources"]].map(link).join("") + menu + [["method", "navMethod"], ["about", "navAbout"]].map(link).join("");
+    const nav = [["home", "navHome"], ["controls", "navControls"], ["sources", "navSources"]].map(link).join("") + menu + [["method", "navMethod"], ["about", "navAbout"]].map(link).join("");
+    const repo = (CFG.repoUrl || "").replace(/\/$/, "");
+    const report = repo ? `<a class="report" id="report" href="${esc(repo)}/issues/new?template=report.yml" target="_blank" rel="noopener" title="${esc(t("reportHint"))}">${ICON_FLAG}<span>${esc(t("report"))}</span></a>` : "";
     document.getElementById("header").innerHTML = `
       <div class="brand">${BRAND_MARK}<div class="brand-text"><a href="#/home" class="brand-name">${esc(t("siteName"))}<span class="flag-ua" role="img" aria-label="${esc(t("flagUa"))}"></span></a><span class="brand-sub">${esc(t("siteSub"))}</span></div></div>
       <nav class="nav" aria-label="${esc(t("siteName"))}">${nav}</nav>
-      <div class="header-tools"><div class="theme-switch" id="theme" role="group" aria-label="${esc(t("themeGroup"))}"><button type="button" data-set="light" aria-label="${esc(t("themeLight"))}" title="${esc(t("themeLight"))}">${ICON_SUN}</button><button type="button" data-set="dark" aria-label="${esc(t("themeDark"))}" title="${esc(t("themeDark"))}">${ICON_MOON}</button></div><button class="lang" type="button" id="lang" aria-label="${esc(t("langSwitchLabel"))}">${esc(t("langSwitch"))}</button></div>`;
+      <div class="header-tools">${report}<div class="theme-switch" id="theme" role="group" aria-label="${esc(t("themeGroup"))}"><button type="button" data-set="light" aria-label="${esc(t("themeLight"))}" title="${esc(t("themeLight"))}">${ICON_SUN}</button><button type="button" data-set="dark" aria-label="${esc(t("themeDark"))}" title="${esc(t("themeDark"))}">${ICON_MOON}</button></div><button class="lang" type="button" id="lang" aria-label="${esc(t("langSwitchLabel"))}">${esc(t("langSwitch"))}</button></div>`;
+    // the issue form gets the address of the page as it is at the moment of the click
+    const rep = document.getElementById("report");
+    if (rep) rep.addEventListener("click", () => { rep.href = `${repo}/issues/new?template=report.yml&page=${encodeURIComponent(location.href)}`; });
     document.getElementById("lang").onclick = () => { S.lang = S.lang === "uk" ? "en" : "uk"; store.set("grc-lang", S.lang); render(); };
     themeButton();
     const pv = document.getElementById("preview");
