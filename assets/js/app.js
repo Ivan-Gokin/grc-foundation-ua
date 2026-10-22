@@ -580,6 +580,8 @@
     if (ch.stage !== "ref") el.insertAdjacentHTML("afterbegin", `<p class="kicker">${esc(t("stage_" + ch.stage))}</p>`);
     const legend = el.querySelector("#legend");
     if (legend) legend.outerHTML = relLegend();
+    const aa = el.querySelector("#applicable-acts");
+    if (aa) drawApplicable(aa);
     const prev = CHAPTERS[i - 1], next = CHAPTERS[i + 1];
     el.insertAdjacentHTML("beforeend", `<nav class="pager" aria-label="${esc(t("navGuide"))}">
       ${prev ? `<a class="pager-prev" href="#/guide?c=${prev.id}"><span>${esc(t("chPrev"))}</span>${esc(chapterTitle(prev.id))}</a>` : "<span></span>"}
@@ -587,6 +589,90 @@
     buildToc(document.getElementById("toc"), el, true);
     scrollToAnchor();
   }
+  // ------------------------------------------------------------------ guide II.1: the reader's acts as chains
+  // An act has direct requirements when its provisions are mapped to controls or it is a baseline security profile.
+  // Chains keep only such acts: each sits under the nearest act above it that has them too, so a law that only
+  // empowers a regulator is skipped but the link through it is kept. Acts that only amend another act are shown on
+  // it ("amended by"). "Show full chains" puts every applicable act back.
+  let actsFull = false;
+  const hasReq = (id) => !!(D.mappedProvs[id] && D.mappedProvs[id].size) || D.profileSources.has(id);
+  // The register's default view for the reader's profile: in force, with requirements, records hidden
+  function listedActs(scope) {
+    const keys = ["scope", "repealed", "pending", "context", "records"];
+    const saved = Object.fromEntries(keys.map((k) => [k, S[k]]));
+    Object.assign(S, { scope, repealed: false, pending: false, context: false, records: false });
+    try { const exp = expandedSectors(); return D.sources.filter((s) => sourceVisible(s, exp, true)); } finally { Object.assign(S, saved); }
+  }
+  function drawApplicable(box) {
+    if (!S.sectors.length) {
+      box.outerHTML = `<div class="aa"><p>${esc(t("aaNone"))} <a href="#/start">${esc(t("aaQuiz"))}</a></p></div>`;
+      return;
+    }
+    const acts = listedActs("core");
+    const set = new Set(acts.map((x) => x.id));
+    const rank = (id) => { const x = D.sourceById[id]; return [D.typeOrder.indexOf(x.type), x.adopted || "9999"]; };
+    const byRank = (a, b) => { const ra = rank(a), rb = rank(b); return ra[0] - rb[0] || ra[1].localeCompare(rb[1]); };
+    const amender = (id) => !hasReq(id) && (D.relsOut[id] || []).some((r) => r.relation === "amends" && set.has(r.related_id));
+    const keep = new Set(acts.map((x) => x.id).filter((id) => !amender(id) && (actsFull || hasReq(id))));
+    const ups = (id) => (D.relsOut[id] || []).filter((r) => HIER_REL.has(r.relation)).map((r) => r.related_id);
+    const shownParent = (id) => {
+      const seen = new Set([id]);
+      let level = ups(id);
+      while (level.length) {
+        const hit = level.filter((p) => keep.has(p) && p !== id).sort(byRank)[0];
+        if (hit) return hit;
+        const next = [];
+        level.forEach((p) => { if (!seen.has(p)) { seen.add(p); next.push(...ups(p)); } });
+        level = next;
+      }
+      return null;
+    };
+    const kids = {}, parent = {};
+    [...keep].forEach((id) => { const p = shownParent(id); if (p) { parent[id] = p; (kids[p] = kids[p] || []).push(id); } });
+    const roots = [...keep].filter((id) => !parent[id]).sort(byRank);
+    const chained = roots.filter((id) => kids[id]);
+    const alone = roots.filter((id) => !kids[id]);
+    const others = acts.map((x) => x.id).filter((id) => !keep.has(id) && !amender(id)).sort(byRank);
+    const node = (id) => {
+      const x = D.sourceById[id];
+      const am = amendedBy(id);
+      const desc = L(x, "description");
+      return `<span class="aa-node${hasReq(id) ? "" : " aa-pale"}"><a href="#/sources?act=${esc(id)}">${esc(sourceRef(x))}</a> ${chainWeight(x)}
+        ${desc ? `<span class="aa-desc"${isFallback(x, "description") ? ' lang="uk"' : ""}>${esc(desc)}</span>` : ""}
+        ${am.length ? `<span class="act-amended">${esc(t("relIn_amends"))} ${esc(am.map((a) => shortRef(a, true)).join("; "))}</span>` : ""}</span>`;
+    };
+    let inChains = 0;
+    const walk = (id, depth, seen) => {
+      inChains++;
+      const ch = (kids[id] || []).filter((k) => !seen.has(k)).sort(byRank);
+      ch.forEach((k) => seen.add(k));
+      return `<li>${node(id)}${ch.length && depth < 8 ? `<ul>${ch.map((k) => walk(k, depth + 1, seen)).join("")}</ul>` : ""}</li>`;
+    };
+    const chainsHtml = chained.map((id) => `<ul class="tree aa-chain">${walk(id, 0, new Set([id]))}</ul>`).join("");
+    const eu = listedActs("reference");
+    const s = encodeURIComponent(S.sectors.join(",")).replace(/%2C/g, ",");
+    const chips = S.sectors.filter((id) => D.sectorById[id]).map((id) => `<span class="tag">${esc(L(D.sectorById[id], "label"))}</span>`).join("");
+    box.outerHTML = `<section class="aa" id="aa">
+      <div class="aa-head"><div><h2 class="aa-title">${esc(t("aaTitle"))}</h2><p class="aa-for">${chips} <a href="#/start">${esc(t("aaChange"))}</a></p></div>
+        <button type="button" class="btn btn-line" id="aa-full" aria-pressed="${String(actsFull)}">${esc(t(actsFull ? "chainsHide" : "chainsShow"))}</button></div>
+      <p class="aa-summary">${esc(fmt(t("aaSummary"), acts.length, inChains, alone.length))}</p>
+      ${chained.length ? `<h3>${esc(t("aaChains"))}</h3><p class="hint">${esc(t(actsFull ? "aaChainsHintFull" : "aaChainsHint"))}</p><div class="chains aa-chains">${chainsHtml}</div>` : ""}
+      ${alone.length ? `<h3>${esc(t("aaAlone"))}</h3><ul class="aa-list">${alone.map((id) => `<li>${node(id)}</li>`).join("")}</ul>` : ""}
+      ${others.length ? `<details class="aa-more"><summary>${esc(fmt(t("aaOther"), others.length))}</summary><p class="hint">${esc(t("aaOtherHint"))}</p><ul class="aa-list">${others.map((id) => `<li>${node(id)}</li>`).join("")}</ul></details>` : ""}
+      ${eu.length ? `<details class="aa-more"><summary>${esc(fmt(t("aaEu"), eu.length))}</summary><p class="hint">${esc(t("refNote"))}</p><ul class="aa-list">${eu.map((x) => `<li>${node(x.id)}</li>`).join("")}</ul></details>` : ""}
+      <p class="aa-links"><a href="#/sources?scope=core&s=${s}">${esc(t("aaOpenActs"))}</a><a href="#/controls?s=${s}">${esc(t("aaOpenControls"))}</a></p>
+    </section>`;
+    const btn = document.getElementById("aa-full");
+    if (btn) btn.onclick = () => {
+      actsFull = !actsFull;
+      const sec = document.getElementById("aa");
+      sec.outerHTML = `<div id="applicable-acts"></div>`;
+      drawApplicable(document.getElementById("applicable-acts"));
+      const again = document.getElementById("aa-full");
+      if (again) again.focus();
+    };
+  }
+
   async function renderMethod() {
     const el = docLayout(t("tocTitle"));
     if (!(await mdInto(el, "method"))) return;

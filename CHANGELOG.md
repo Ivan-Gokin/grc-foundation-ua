@@ -1,5 +1,11 @@
 # Changelog
 
+## Guide II.1: your applicable acts as chains (2026-10-22)
+
+- II.1 "Applicable acts" shows the acts for the reader's profile: first the regulatory chains, then the acts that stand on their own.
+- Chains keep only acts with direct requirements (provisions mapped to controls, or a baseline security profile). Each sits under the nearest act above it that has them too, so a law that only empowers a regulator is skipped while the link through it is kept. Acts that only amend another act are shown on it ("amended by").
+- Other applicable acts (empowering laws, acts not yet broken down into provisions) and the EU law worth following are listed in collapsed sections; "Show full chains" puts every act back into the trees.
+
 ## Guide in three stages, new home page (2026-10-22)
 
 - The guide follows three stages. I. Governance: roles and authorities, organisational context (the questionnaire), external actors (new), choosing the framework (now with what the sector suggests). II. Compliance: applicable acts (with the EU law worth following), controls and the SoA, information systems. III. Risk management: "Where the real work begins" and GRC engineering (new).

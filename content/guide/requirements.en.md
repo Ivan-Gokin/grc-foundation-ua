@@ -4,11 +4,13 @@
 
 **Goal.** Build your own list of requirements the organisation must meet or has chosen to meet, and give each an owner.
 
-In Ukraine, cybersecurity requirements are spread across documents at different levels, from international treaties and laws to orders of the SSSCIP (the State Service of Special Communications and Information Protection), NBU resolutions and NATO policies. The kinds of requirements and how they differ are described in the [Methodology](#/method#kinds-of-requirements). The [Acts](#/sources) view helps collect them.
+In Ukraine, cybersecurity requirements are spread across documents at different levels, from international treaties and laws to orders of the SSSCIP (the State Service of Special Communications and Information Protection), NBU resolutions and NATO policies. The kinds of requirements and how they differ are described in the [Methodology](#/method#kinds-of-requirements). The [Acts](#/sources) view helps collect them. For your profile they are below, grouped into chains.
+
+<div id="applicable-acts"></div>
 
 1. **Download the list.** Choose who the requirements should concern and download the filtered list as CSV or Excel. It is the basis of your requirements register.
 2. **Mark applicability.** For each act: yes, no or unknown. For "unknown", note who should clarify it.
-3. **Follow the chains.** For acts marked "yes", open the "Chains" tab: resolutions and orders adopted under a law apply to you too and are usually more specific than the law itself. The controls table shows each requirement once, from the most specific document, with the law and the resolution as its legal basis ([how this works](#/method#chains-of-acts-and-deduplication)).
+3. **Follow the chains.** Resolutions and orders adopted under a law apply to you too and are usually more specific than the law itself; the chains above show them under the act they were issued under. The controls table shows each requirement once, from the most specific document, with the law and the resolution as its legal basis ([how this works](#/method#chains-of-acts-and-deduplication)).
 4. **Add your own.** What a public register cannot contain: customer contracts, parent company requirements, internal decisions, voluntarily adopted standards.
 
 How to decide whether a document applies to you:
