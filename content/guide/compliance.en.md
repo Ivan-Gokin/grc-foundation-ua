@@ -1,12 +1,12 @@
-# II.3. Information systems
+# Information systems
 
-The Statement of Applicability covers the organisation. Stage II continues at the level of each information system: choosing its controls, setting their parameters and, later, checking them automatically.
+Your Statement of Applicability covers the organisation. Each information system then needs its own controls, with their parameters set and, later, checked automatically.
 
 ## Information system level
 
 The management system says what the organisation commits to. Each information system then needs specific technical and organisational controls with their parameters set. Ukrainian system-level requirements are built on NIST SP 800-53 (Security and Privacy Controls for Information Systems and Organizations).
 
-The NIST SP 800-53 controls for your profile are at the end of this chapter; the full view is in [Controls → Information system](#/controls?fw=sp800-53r5). Pick the baseline profile for the kind of information in the system. Each control shows where the requirement comes from: the baseline profile, the cyber protection plan or legislation. Start with the controls that are not in the baseline profile: they are the ones most often missed.
+If the information you process calls for them, the last step of [Craft your baseline](#/craft?step=6) lists the NIST SP 800-53 controls for your profile; the full view is in [Controls → Information system](#/controls?fw=sp800-53r5). Pick the baseline profile for the kind of information in the system. Each control shows where the requirement comes from: the baseline profile, the cyber protection plan or legislation. Start with the controls that are not in the baseline profile: they are the ones most often missed.
 
 ## A starting map for a public authority or a CI operator
 

@@ -1,6 +1,6 @@
-# III.2. GRC engineering
+# GRC engineering
 
-<p class="chapter-lead">What stages I and II produced is the foundation for automating controls: a minimal, integrated set of requirements for each asset.</p>
+<p class="chapter-lead">What you build when you <a href="#/craft?step=1">craft your baseline</a> is the foundation for automating controls: a minimal, integrated set of requirements for each asset.</p>
 
 *Covers: ISO/IEC 27001:2022, clauses 5-10 · harmonised structure of ISO management system standards · NIST CSF 2.0, GOVERN function*
 
@@ -8,7 +8,7 @@
 
 ## The foundation for automation
 
-GRC engineering turns requirements, controls and evidence into data and code: secure configurations, automated checks, continuous monitoring. But you can only automate what has already been defined. Stages I and II produce exactly that: a minimal, integrated set of requirements for each asset, every requirement with its legal basis, and one control meeting several acts at once. Automation cannot be built on top of contradictory requirements kept in different spreadsheets.
+GRC engineering turns requirements, controls and evidence into data and code: secure configurations, automated checks, continuous monitoring. But you can only automate what has already been defined. Crafting your baseline produces exactly that: a minimal, integrated set of requirements for each asset, every requirement with its legal basis, and one control meeting several acts at once. Automation cannot be built on top of contradictory requirements kept in different spreadsheets.
 
 ## What GRC is and why integrate
 
@@ -27,8 +27,8 @@ ISO management system standards share the same clauses 4-10, so they can be run 
 
 | Element | ISO clause | What to integrate |
 |---|---|---|
-| Context and scope | 4 | One context description for all systems (I.2) |
-| Leadership and policy | 5 | One top-level policy, roles and authorities (I.1) |
+| Context and scope | 4 | One context description for all systems (your profile) |
+| Leadership and policy | 5 | One top-level policy, [roles and authorities](#/guide?c=roles) |
 | Risks and opportunities | 6 | One risk assessment method with different impact categories |
 | Documented information | 7.5 | One set of rules for creating, approving and reviewing documents |
 | Competence and awareness | 7.2-7.3 | One training programme |

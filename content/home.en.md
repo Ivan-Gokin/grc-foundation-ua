@@ -12,26 +12,24 @@ Laws, resolutions, orders, standards, NATO policies: hundreds of documents that 
 
 </section>
 
-## Three stages, one path
+## How it works
 
 <div class="home-stages">
-<div class="stage-card"><p class="stage-head"><span class="stage-num">I</span><b>Governance</b></p><ol class="stage-steps">
-<li><a href="#/guide?c=roles">Roles and authorities</a></li>
-<li><a href="#/guide?c=context">Organisational context</a><a class="stage-hint" href="#/start">4 questions</a></li>
-<li><a href="#/guide?c=actors">External actors</a><span class="stage-hint">the state and your regulator</span></li>
-<li><a href="#/guide?c=standard">Choosing the framework</a><span class="stage-hint">by sector</span></li>
-</ol></div>
-<div class="stage-card"><p class="stage-head"><span class="stage-num">II</span><b>Compliance</b></p><ol class="stage-steps">
-<li><a href="#/guide?c=requirements">Applicable acts</a><span class="stage-hint">+ EU law to follow</span></li>
-<li><a href="#/guide?c=soa">Controls and your SoA</a><a class="stage-hint" href="#/controls">open the controls</a></li>
+<div class="stage-card stage-wide"><p class="stage-head"><b>Craft your baseline in six steps</b><span class="stage-hint">Plain language, a few minutes, nothing saved</span></p><ol class="stage-steps stage-numbered">
+<li><a href="#/craft?step=1">About your organisation</a><span class="stage-hint">three questions</span></li>
+<li><a href="#/craft?step=2">Your profile</a><span class="stage-hint">how the law sees you</span></li>
+<li><a href="#/craft?step=3">Who sets your rules</a><span class="stage-hint">the state and your regulator</span></li>
+<li><a href="#/craft?step=4">Your framework</a><span class="stage-hint">ISO/IEC 27001 or NIST CSF 2.0</span></li>
+<li><a href="#/craft?step=5">Your laws and regulations</a><span class="stage-hint">required, recommended, your own</span></li>
+<li><a href="#/craft?step=6">Your Statement of Applicability</a><span class="stage-hint">download as Excel</span></li>
+</ol><p class="stage-more"><a class="btn btn-primary" href="#/craft?step=1">Start</a></p></div>
+<div class="stage-card"><p class="stage-head"><b>Help me</b></p><ol class="stage-steps">
+<li><a href="#/guide?c=roles">Roles and authorities</a><span class="stage-hint">before you start</span></li>
 <li><a href="#/guide?c=compliance">Information systems</a><span class="stage-hint">NIST SP 800-53</span></li>
+<li><a href="#/guide?c=risk">Where the real work begins</a><span class="stage-hint">risks beyond the minimum</span></li>
+<li><a href="#/guide?c=grc">GRC engineering</a><span class="stage-hint">automating controls</span></li>
 </ol></div>
-<div class="stage-card"><p class="stage-head"><span class="stage-num">III</span><b>Risk management</b></p>
-<p class="stage-text">Where the real work begins: with the legal minimum in place, you assess the risks to your assets and decide what to add beyond it.</p>
-<p class="stage-more"><a href="#/guide?c=risk">Read the stage</a></p></div>
 </div>
-
-<div class="grc-wrap"><a class="grc-strip" href="#/guide?c=grc"><span class="grc-label">GRC engineering</span><span>Stages I and II give each asset a minimal, integrated set of requirements: the foundation for automating controls.</span><span class="grc-go">Read →</span></a></div>
 
 <div class="home-panels">
 <section class="home-panel">

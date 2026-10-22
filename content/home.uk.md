@@ -12,26 +12,24 @@
 
 </section>
 
-## Три етапи, один шлях
+## Як це працює
 
 <div class="home-stages">
-<div class="stage-card"><p class="stage-head"><span class="stage-num">I</span><b>Врядування</b></p><ol class="stage-steps">
-<li><a href="#/guide?c=roles">Ролі та повноваження</a></li>
-<li><a href="#/guide?c=context">Контекст організації</a><a class="stage-hint" href="#/start">4 запитання</a></li>
-<li><a href="#/guide?c=actors">Зовнішні суб'єкти</a><span class="stage-hint">держава і ваш регулятор</span></li>
-<li><a href="#/guide?c=standard">Вибір стандарту</a><span class="stage-hint">за галуззю</span></li>
-</ol></div>
-<div class="stage-card"><p class="stage-head"><span class="stage-num">II</span><b>Відповідність</b></p><ol class="stage-steps">
-<li><a href="#/guide?c=requirements">Застосовні акти</a><span class="stage-hint">+ право ЄС, за яким стежити</span></li>
-<li><a href="#/guide?c=soa">Заходи і ваша SoA</a><a class="stage-hint" href="#/controls">відкрити заходи</a></li>
+<div class="stage-card stage-wide"><p class="stage-head"><b>Сформуйте свій базовий рівень за шість кроків</b><span class="stage-hint">Простою мовою, кілька хвилин, нічого не зберігається</span></p><ol class="stage-steps stage-numbered">
+<li><a href="#/craft?step=1">Про вашу організацію</a><span class="stage-hint">три запитання</span></li>
+<li><a href="#/craft?step=2">Ваш профіль</a><span class="stage-hint">як вас бачить закон</span></li>
+<li><a href="#/craft?step=3">Хто встановлює вам правила</a><span class="stage-hint">держава і ваш регулятор</span></li>
+<li><a href="#/craft?step=4">Ваш стандарт</a><span class="stage-hint">ISO/IEC 27001 або NIST CSF 2.0</span></li>
+<li><a href="#/craft?step=5">Ваші закони й акти</a><span class="stage-hint">обов'язкові, рекомендовані, власні</span></li>
+<li><a href="#/craft?step=6">Ваше положення про застосовність</a><span class="stage-hint">завантаження в Excel</span></li>
+</ol><p class="stage-more"><a class="btn btn-primary" href="#/craft?step=1">Почати</a></p></div>
+<div class="stage-card"><p class="stage-head"><b>Допомога</b></p><ol class="stage-steps">
+<li><a href="#/guide?c=roles">Ролі та повноваження</a><span class="stage-hint">перед початком</span></li>
 <li><a href="#/guide?c=compliance">Інформаційні системи</a><span class="stage-hint">NIST SP 800-53</span></li>
+<li><a href="#/guide?c=risk">Тут починається справжня робота</a><span class="stage-hint">ризики понад мінімум</span></li>
+<li><a href="#/guide?c=grc">GRC-інженерія</a><span class="stage-hint">автоматизація заходів</span></li>
 </ol></div>
-<div class="stage-card"><p class="stage-head"><span class="stage-num">III</span><b>Управління ризиками</b></p>
-<p class="stage-text">Тут починається справжня робота: коли правовий мінімум закрито, ви оцінюєте ризики для своїх активів і вирішуєте, що додати понад нього.</p>
-<p class="stage-more"><a href="#/guide?c=risk">Читати про етап</a></p></div>
 </div>
-
-<div class="grc-wrap"><a class="grc-strip" href="#/guide?c=grc"><span class="grc-label">GRC-інженерія</span><span>Етапи I і II дають кожному активу мінімальний інтегрований набір вимог: основу для автоматизації заходів.</span><span class="grc-go">Читати →</span></a></div>
 
 <div class="home-panels">
 <section class="home-panel">

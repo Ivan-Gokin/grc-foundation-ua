@@ -18,6 +18,7 @@
   // Theme switch icons: a sun and a crescent moon, drawn in the text colour of their button
   const ICON_SUN = `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></g></svg>`;
   const ICON_FLAG = `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 21V4m0 0h11l-2 4 2 4H5"/></svg>`;
+  const ICON_LOCK = `<svg class="lock" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false"><path fill="currentColor" d="M4.5 7V5a3.5 3.5 0 0 1 7 0v2h.5a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1zm1.6 0h3.8V5a1.9 1.9 0 0 0-3.8 0z"/></svg>`;
   const ICON_MOON = `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.2 14.6A8.6 8.6 0 0 1 9.4 3.8a8.6 8.6 0 1 0 10.8 10.8z"/></svg>`;
   // Theme: light or dark; with no choice made, the system setting decides (the page head sets a saved choice before paint)
   const DARK = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
@@ -37,21 +38,20 @@
     });
   }
   if (DARK && DARK.addEventListener) DARK.addEventListener("change", themeButton);
-  const VIEWS = ["home", "start", "guide", "controls", "sources", "method", "articles", "about"];
+  const VIEWS = ["home", "craft", "guide", "controls", "sources", "method", "articles", "about"];
   const SYSTEM_FW = "sp800-53r5"; // the system-level framework, shown inside Controls
   const ARTICLES = ["isms-policy-case-studies", "grc-systems-overview"];
-  // Guide chapters: content/guide/<id>.<lang>.md, grouped by stage in the menu and the side panel
+  // "Help me" chapters: content/guide/<id>.<lang>.md, grouped in the menu and the side panel: what to settle before
+  // crafting the baseline, what comes after it, and reference. The baseline itself is "Craft your baseline".
   const CHAPTERS = [
-    ["roles", "1"], ["context", "1"], ["actors", "1"], ["standard", "1"],
-    ["requirements", "2"], ["soa", "2"], ["compliance", "2"],
-    ["risk", "3"], ["grc", "3"], ["glossary", "ref"],
+    ["roles", "before"], ["compliance", "after"], ["risk", "after"], ["grc", "after"], ["glossary", "ref"],
   ].map(([id, stage]) => ({ id, stage }));
   const CHAPTER_MOVED = { ims: "grc" }; // old chapter ids that live on under another name
   const IN_EFFECT = (st) => st === "in_force";
 
   const D = {}; // indexes
   const S = {   // state (mirrored in the URL hash)
-    lang: null, view: "home", chapter: "roles", anchor: "", sectors: [], fw: "iso27001-2022", only: true, rec: true, drafts: true,
+    lang: null, view: "home", chapter: "roles", step: 1, anchor: "", sectors: [], fw: "iso27001-2022", only: true, rec: true, drafts: true,
     repealed: false, context: false, q: "", type: "", baseline: "open", sprofile: "none", sb: true, sp: true, sl: true,
     scope: "core", mode: "list", pending: false, records: false, article: "",
     all: false, by: "control", chains: false, // controls: ignore the profile, group by act, show the legal basis
@@ -147,6 +147,7 @@
     const [route, anchor] = location.hash.replace(/^#\/?/, "").split("#");
     const [view, query] = route.split("?");
     S.view = VIEWS.includes(view) ? view : "home";
+    if (view === "start") { S.view = "craft"; S.step = 1; } // the old questionnaire
     if (view === "system") { S.view = "controls"; S.fw = SYSTEM_FW; } // old links
     if (view === "data") S.view = "about";
     try { S.anchor = anchor ? decodeURIComponent(anchor) : ""; } catch (e) { S.anchor = ""; }
@@ -164,6 +165,8 @@
     S.article = ARTICLES.includes(p.get("a")) ? p.get("a") : "";
     const ch = CHAPTER_MOVED[p.get("c")] || p.get("c");
     S.chapter = CHAPTERS.some((c) => c.id === ch) ? ch : CHAPTERS[0].id;
+    if (S.view === "guide" && CRAFT_FROM[ch]) { S.view = "craft"; S.step = CRAFT_FROM[ch]; } // chapters that became steps
+    if (S.view === "craft" && p.has("step")) S.step = Math.min(Math.max(parseInt(p.get("step"), 10) || 1, 1), 6);
     S.act = p.get("act") || ""; // an ELI or id, e.g. from an /eli/... link resolved by 404.html
     S.all = p.get("all") === "1";
     S.by = p.get("by") === "act" ? "act" : "control";
@@ -189,6 +192,7 @@
     }
     if (S.view === "articles" && S.article) p.set("a", S.article);
     if (S.view === "guide") p.set("c", S.chapter);
+    if (S.view === "craft") { p.set("step", S.step); if (S.step >= 4) p.set("fw", S.fw); }
     if (S.view === "controls" && S.fw === SYSTEM_FW) { p.set("fw", S.fw); p.set("b", S.baseline); if (S.sprofile !== "none") p.set("gp", S.sprofile); ["sb", "sp", "sl", "drafts"].forEach((k) => p.set(k, S[k] ? "1" : "0")); }
     if (S.q && (S.view === "controls" || S.view === "sources")) p.set("q", S.q);
     const next = `#/${S.view}?${p.toString()}`;
@@ -272,11 +276,13 @@
     document.documentElement.lang = S.lang === "uk" ? "uk" : "en";
     document.title = `${t("siteName")}: ${t("siteSub")}`;
     const link = ([v, k]) => `<a href="#/${v}" data-view="${v}" ${S.view === v ? 'aria-current="page"' : ""}>${esc(t(k))}</a>`;
-    const inGuide = S.view === "guide" || S.view === "articles";
-    const menu = `<details class="nav-menu" id="guide-menu"><summary${inGuide ? ' aria-current="page"' : ""}>${esc(t("navGuide"))}</summary>
-      <div class="menu">${guideLinks(false)}</div></details>`;
-    // Four sections; the site name leads home, Methodology sits in the footer and in the guide's reference group
-    const nav = menu + [["controls", "navControls"], ["sources", "navSources"], ["about", "navAbout"]].map(link).join("");
+    const cur = (on) => (on ? ' aria-current="page"' : "");
+    const menu = (id, label, on, body) => `<details class="nav-menu" id="${id}"><summary${cur(on)}>${esc(label)}</summary><div class="menu">${body}</div></details>`;
+    const sub = ([v, k]) => `<li><a href="#/${v}"${cur(S.view === v)}>${esc(t(k))}</a></li>`;
+    // Intro, the baseline wizard, the register to explore freely, and the help chapters; Methodology is also in the footer
+    const nav = link(["home", "navIntro"]) + link(["craft", "navCraft"])
+      + menu("explore-menu", t("navExplore"), S.view === "sources" || S.view === "controls", `<ul>${[["sources", "navSources"], ["controls", "navControls"]].map(sub).join("")}</ul>`)
+      + menu("help-menu", t("navHelp"), ["guide", "articles", "method", "about"].includes(S.view), guideLinks(false));
     const repo = (CFG.repoUrl || "").replace(/\/$/, "");
     document.getElementById("header").innerHTML = `
       <div class="brand">${BRAND_MARK}<div class="brand-text"><a href="#/home" class="brand-name"${S.view === "home" ? ' aria-current="page"' : ""}>${esc(t("siteName"))}<span class="flag-ua" role="img" aria-label="${esc(t("flagUa"))}"></span></a></div></div>
@@ -298,7 +304,7 @@
   function render() {
     renderShell();
     writeHash();
-    ({ home: renderHome, start: renderStart, guide: renderGuide, controls: renderControls, sources: renderSources, method: renderMethod, articles: renderArticles, about: renderAbout })[S.view]();
+    ({ home: renderHome, craft: renderCraft, guide: renderGuide, controls: renderControls, sources: renderSources, method: renderMethod, articles: renderArticles, about: renderAbout })[S.view]();
   }
 
   // ------------------------------------------------------------------ filter panel (shared)
@@ -310,7 +316,7 @@
       return `<details class="chip-group"${open ? " open" : ""}><summary>${esc(L(g, "label"))}</summary>${items.map(chip).join("")}</details>`;
     }).join("");
     return `<fieldset class="chips"><legend>${esc(t("orgType"))}</legend>
-      <p class="hint">${esc(t("orgTypeHint"))} <a href="#/start">${esc(t("orgTypeQuiz"))}</a></p>
+      <p class="hint">${esc(t("orgTypeHint"))} <a href="#/craft?step=1">${esc(t("orgTypeQuiz"))}</a></p>
       ${withSearch ? searchBox() : ""}
       ${!S.sectors.length ? `<p class="none-note">${esc(t("orgTypeNone"))}</p>` : S.sectors.every((id) => id === "general") ? `<p class="none-note">${esc(t("orgTypeGeneral"))}</p>` : ""}
       ${groups}
@@ -403,12 +409,12 @@
     const groups = D.groups.map((g) => {
       const items = D.sectors.filter((s) => s.selectable === "yes" && s.group === g.id && !D.parents[s.id].length);
       if (!items.length) return "";
-      return `<div class="who-group"><h3>${esc(L(g, "label"))}</h3><div class="pills">${items.map((s) => pill(`#/controls?s=${encodeURIComponent(s.id)}`, L(s, "label"), L(s, "description"))).join("")}</div></div>`;
+      return `<div class="who-group"><h3>${esc(L(g, "label"))}</h3><div class="pills">${items.map((s) => pill(`#/craft?step=2&s=${encodeURIComponent(s.id)}`, L(s, "label"), L(s, "description"))).join("")}</div></div>`;
     }).join("");
     return `<section class="home-who" aria-labelledby="who-title">
       <h2 id="who-title">${esc(t("whoTitle"))}</h2>
       <div class="who-groups">${groups}</div>
-      <p class="who-foot"><a class="btn btn-primary" href="#/start">${esc(t("whoQuiz"))}</a><span>${esc(t("whoNone"))} <a href="#/controls?s=general">${esc(t("whoAll"))}</a></span></p>
+      <p class="who-foot"><a class="btn btn-primary" href="#/craft?step=1">${esc(t("whoQuiz"))}</a><span>${esc(t("whoNone"))} <a href="#/craft?step=2&s=general">${esc(t("whoAll"))}</a></span></p>
     </section>`;
   }
   // How many mappings a second person has checked, counted from the data
@@ -445,9 +451,11 @@
       <figcaption>${esc(fmt(capT, provRef, c.id))}</figcaption></figure>`;
   }
 
-  // ------------------------------------------------------------------ questionnaire
-  // Four questions that set the sector filters and the framework. Answers live only in this variable and in
-  // the links of the result; nothing is sent or stored.
+  // ------------------------------------------------------------------ Craft your baseline
+  // Six steps. Each has short guidance (content/craft/<step>.<lang>.md) and then the answer for this reader:
+  // 1 the questionnaire, 2 the profile it gives, 3 who sets the rules, 4 the framework, 5 the acts, 6 the SoA.
+  // Mandatory acts and the controls they require cannot be removed; recommended ones can be accepted and the reader
+  // can add their own. Choices live only for this visit (nothing is stored) and end up in the download.
   const QUIZ = {
     q1: { multi: true, opts: [["public", ["public-sector"]], ["defence", ["defence"]], ["defind", ["defence-industry"]], ["finance", ["finance"]],
       ["telecom", ["telecom"]], ["infra", ["ics"]], ["health", ["health"]], ["cloud", ["cloud"]], ["platforms", ["platforms"]], ["trust", ["trust"]],
@@ -455,104 +463,323 @@
     q2: { multi: true, opts: [["pd", ["personal-data"]], ["sir", ["public-sir"]], ["restricted", ["public-restricted"]], ["secrets", ["state-secrets"]],
       ["nato", ["nato-info"]], ["none", []]] },
     q3: { multi: false, opts: [["no", []], ["c12", ["cii-1-2"]], ["c34", ["cii-3-4"]], ["unknown", ["ki"]]] },
-    q4: { multi: false, opts: [["auto", []], ["iso27001-2022", []], ["csf-2.0", []]] },
   };
   const QUIZ_EXCLUSIVE = { q1: "other", q2: "none" };
-  const QA = { q1: [], q2: ["pd"], q3: "no", q4: "auto", shown: false };
+  const QA = { q1: [], q2: ["pd"], q3: "no", touched: false };
   const quizSectors = () => [...new Set(["q1", "q2", "q3"].flatMap((q) => {
     const sel = [].concat(QA[q]);
     return QUIZ[q].opts.filter(([id]) => sel.includes(id)).flatMap(([, ids]) => ids);
   }))].filter((id) => D.sectorById[id]);
-  function quizFw() {
-    if (QA.q4 !== "auto") return QA.q4;
-    return QA.q3 !== "no" || QA.q1.some((x) => ["public", "defence", "defind"].includes(x)) ? "csf-2.0" : "iso27001-2022";
+  // The questionnaire's answers read back from a profile (a link or the home page's one-click types)
+  function quizFromSectors() {
+    if (QA.touched || !S.sectors.length) return;
+    ["q1", "q2"].forEach((q) => { QA[q] = QUIZ[q].opts.filter(([, ids]) => ids.length && ids.some((id) => S.sectors.includes(id))).map(([id]) => id); });
+    if (!QA.q2.length) QA.q2 = ["none"];
+    const c = QUIZ.q3.opts.find(([, ids]) => ids.length && ids.some((id) => S.sectors.includes(id)));
+    QA.q3 = c ? c[0] : "no";
   }
-  function quizBaseline() {
-    if (QA.q2.includes("nato")) return "nato";
-    if (QA.q2.includes("restricted")) return "dsk";
-    if (QA.q2.includes("sir")) return "open";
-    return "";
+  const CRAFT_STEPS = ["about", "profile", "actors", "framework", "acts", "soa"];
+  const CRAFT_FROM = { context: 2, actors: 3, standard: 4, requirements: 5, soa: 6 }; // old guide chapters now live here
+  const CR = { recActs: new Set(), euActs: new Set(), ownReqs: [], optCtls: new Set(), ownCtls: [], fwChosen: false };
+  const CSF_SECTORS = ["public-sector", "defence", "defence-industry", "cii-1-2", "cii-3-4", "ki"];
+  // The framework the profile points to, and why
+  function recFw() {
+    if (S.sectors.some((id) => CSF_SECTORS.includes(id))) return ["csf-2.0", "fwWhyCsf"];
+    if (S.sectors.includes("finance")) return ["iso27001-2022", "fwWhyBank"];
+    return ["iso27001-2022", "fwWhyIso"];
   }
-  // Runs fn with the quiz answers as the current filters, then restores the reader's own filters.
-  function withQuizState(fn) {
-    const keys = ["sectors", "fw", "q", "drafts", "rec", "only", "scope", "repealed", "pending", "context", "records", "all"];
-    const saved = Object.fromEntries(keys.map((k) => [k, S[k]]));
-    Object.assign(S, { sectors: quizSectors(), fw: quizFw(), q: "", drafts: true, rec: true, only: true, scope: "core", repealed: false, pending: false, context: false, records: false, all: false });
+  const sParam = () => encodeURIComponent(S.sectors.join(",")).replace(/%2C/g, ",");
+  const craftHref = (n) => `#/craft?step=${n}${S.sectors.length ? `&s=${sParam()}` : ""}`;
+  // Runs fn with some filters set (e.g. rec=false: only the mandatory acts), then puts the reader's filters back
+  function withS(patch, fn) {
+    const saved = Object.fromEntries(Object.keys(patch).map((k) => [k, S[k]]));
+    Object.assign(S, patch);
     try { return fn(); } finally { Object.assign(S, saved); }
   }
-  function renderStart() {
+  const MANDATORY = { rec: false, all: false, q: "", drafts: true };
+  const WITH_REC = { rec: true, all: false, q: "", drafts: true };
+
+  async function renderCraft() {
+    const n = S.step;
+    const step = CRAFT_STEPS[n - 1];
+    app.innerHTML = `<article class="craft"><div class="craft-body">
+      <nav class="craft-steps" aria-label="${esc(t("navCraft"))}"><p class="craft-label">${esc(t("navCraft"))}</p>
+        <ol>${CRAFT_STEPS.map((k, i) => `<li${i + 1 === n ? ' class="current"' : ""}><a href="${craftHref(i + 1)}"${i + 1 === n ? ' aria-current="step"' : ""}><span class="craft-num">${i + 1}</span><span>${esc(t("cs_" + k))}</span></a></li>`).join("")}</ol>
+        <p class="craft-note">${esc(t("craftNote"))}</p></nav>
+      <div class="craft-main">
+        <p class="kicker">${esc(fmt(t("craftStepOf"), n, CRAFT_STEPS.length))}</p>
+        <div class="prose craft-guide" id="craft-guide"><p class="hint">${esc(t("loading"))}</p></div>
+        <section class="craft-answer" id="craft-answer" aria-live="polite"></section>
+        <nav class="pager craft-pager" aria-label="${esc(t("navCraft"))}">
+          ${n > 1 ? `<a class="pager-prev" href="${craftHref(n - 1)}"><span>${esc(t("chPrev"))}</span>${esc(t("cs_" + CRAFT_STEPS[n - 2]))}</a>` : "<span></span>"}
+          ${n < CRAFT_STEPS.length && n > 1 ? `<a class="pager-next" href="${craftHref(n + 1)}"><span>${esc(t("chNext"))}</span>${esc(t("cs_" + CRAFT_STEPS[n]))}</a>` : ""}</nav>
+      </div></div></article>`;
+    const box = document.getElementById("craft-answer");
+    if (step !== "about" && !S.sectors.length) box.innerHTML = craftPick();
+    else ({ about: craftAbout, profile: craftProfile, actors: craftActors, framework: craftFramework, acts: craftActs, soa: craftSoa })[step](box);
+    const md = await loadMd(`content/craft/${step}.${S.lang}.md`);
+    const g = document.getElementById("craft-guide");
+    if (!g || S.view !== "craft" || S.step !== n) return;
+    renderMarkdown(g, md);
+    scrollToAnchor();
+  }
+  // No answers yet
+  function craftPick() {
+    const items = D.sectors.filter((x) => x.selectable === "yes" && !D.parents[x.id].length);
+    return `<div class="craft-card side-pick"><p>${esc(t("craftPickText"))}</p>
+      <p><a class="btn btn-primary" href="#/craft?step=1">${esc(t("craftStart"))}</a></p>
+      <p class="hint">${esc(t("sidePickOr"))}</p>
+      <div class="pills">${items.map((x) => `<a class="pill" href="#/craft?step=${S.step}&s=${encodeURIComponent(x.id)}">${esc(L(x, "label"))}</a>`).join("")}</div></div>`;
+  }
+  const answerHead = (key) => `<p class="craft-answer-label">${esc(t(key))}</p>`;
+
+  // 1. Three questions
+  function craftAbout(box) {
+    quizFromSectors();
     const opt = (q, [id]) => {
       const multi = QUIZ[q].multi;
       const on = multi ? QA[q].includes(id) : QA[q] === id;
       return `<label class="q-opt"><input type="${multi ? "checkbox" : "radio"}" name="${q}" value="${esc(id)}" ${on ? "checked" : ""}><span>${esc(t(`qo_${q}_${id}`))}</span></label>`;
     };
-    const question = (q, n) => `<fieldset class="q"><legend><span class="q-num">${n}</span>${esc(t(q))}</legend>
+    const question = (q, i) => `<fieldset class="q"><legend><span class="q-num">${i}</span>${esc(t(q))}</legend>
       ${t(q + "Hint") !== q + "Hint" ? `<p class="hint">${esc(t(q + "Hint"))}</p>` : ""}
       <div class="q-opts${QUIZ[q].opts.length > 6 ? " q-opts-wide" : ""}">${QUIZ[q].opts.map((o) => opt(q, o)).join("")}</div></fieldset>`;
-    app.innerHTML = `<article class="quiz">
-      <h1>${esc(t("qTitle"))}</h1><p class="lead-sm">${esc(t("qLead"))}</p>
-      <form id="quiz" onsubmit="return false">${["q1", "q2", "q3", "q4"].map((q, i) => question(q, i + 1)).join("")}
-        <div class="q-actions"><button type="submit" class="btn btn-primary btn-lg" id="q-go">${esc(t("qGo"))}</button>
-          <a class="q-skip" href="#/sources?scope=core&s=">${esc(t("qSkip"))}</a></div>
-        <p class="q-privacy">${esc(t("qPrivacy"))}</p></form>
-      <section class="q-result" id="q-result" aria-live="polite"${QA.shown ? "" : " hidden"}></section></article>`;
-    const form = document.getElementById("quiz");
-    const result = document.getElementById("q-result");
+    box.innerHTML = `<form id="quiz" class="quiz" onsubmit="return false">${["q1", "q2", "q3"].map((q, i) => question(q, i + 1)).join("")}
+      <div class="q-actions"><button type="submit" class="btn btn-primary btn-lg" id="q-go">${esc(t("craftToProfile"))}</button>
+        <a class="q-skip" href="#/sources?scope=core&s=">${esc(t("qSkip"))}</a></div></form>`;
+    const form = box.querySelector("#quiz");
     form.addEventListener("change", (e) => {
       const q = e.target.name;
       if (!QUIZ[q]) return;
+      QA.touched = true;
       if (QUIZ[q].multi) {
         const ex = QUIZ_EXCLUSIVE[q];
         if (e.target.checked && e.target.value === ex) form.querySelectorAll(`input[name="${q}"]`).forEach((x) => { if (x.value !== ex) x.checked = false; });
         else if (e.target.checked) { const x = form.querySelector(`input[name="${q}"][value="${ex}"]`); if (x) x.checked = false; }
         QA[q] = [...form.querySelectorAll(`input[name="${q}"]:checked`)].map((x) => x.value);
       } else QA[q] = e.target.value;
-      if (QA.shown) drawQuizResult(result);
     });
-    document.getElementById("q-go").addEventListener("click", () => {
-      QA.shown = true;
-      result.hidden = false;
-      drawQuizResult(result);
-      result.scrollIntoView({ behavior: "smooth", block: "start" });
+    box.querySelector("#q-go").addEventListener("click", () => {
+      S.sectors = quizSectors();
+      if (!S.sectors.length) S.sectors = ["general"];
+      if (!CR.fwChosen) S.fw = recFw()[0];
+      location.hash = craftHref(2);
     });
-    if (QA.shown) drawQuizResult(result);
   }
-  function drawQuizResult(box) {
-    const sectors = quizSectors(), fw = quizFw(), base = quizBaseline();
-    const f = fwRow(fw);
-    const n = withQuizState(() => {
-      const exp = expandedSectors();
-      return {
-        acts: D.sources.filter((src) => sourceVisible(src, exp, true)).length,
-        controls: Object.keys(driversFor(fw, exp, true)).length,
-        gaps: gapRows().length,
-      };
+
+  // 2. The profile the answers give, grouped as in the register; adjustable here
+  function craftProfile(box) {
+    const groups = D.groups.map((g) => {
+      const items = S.sectors.map((id) => D.sectorById[id]).filter((x) => x && x.group === g.id);
+      if (!items.length) return "";
+      return `<div class="prof-group"><p class="prof-group-label">${esc(L(g, "label"))}</p><ul>${items.map((x) => `<li><b>${esc(L(x, "label"))}</b>${L(x, "description") ? `<span>${esc(L(x, "description"))}</span>` : ""}</li>`).join("")}</ul></div>`;
+    }).join("");
+    const acts = withS(MANDATORY, () => listedActs("core")).length;
+    box.innerHTML = `<div class="craft-card">${answerHead("craftYourAnswer")}
+      <div class="prof-groups">${groups || `<p>${esc(t("orgTypeGeneral"))}</p>`}</div>
+      <p class="craft-figure">${esc(fmt(t("craftProfileActs"), acts))}</p>
+      <details class="craft-adjust"><summary>${esc(t("craftAdjust"))}</summary>${sectorChips(false)}</details></div>`;
+    bindPanel(box, () => { QA.touched = false; render(); });
+    const det = box.querySelector(".craft-adjust");
+    if (craftAdjustOpen) det.open = true;
+    det.addEventListener("toggle", () => { craftAdjustOpen = det.open; });
+  }
+  let craftAdjustOpen = false;
+
+  // 3. Who issued the acts that apply: the bodies that set the rules for this reader
+  function craftActors(box) {
+    const acts = withS(MANDATORY, () => listedActs("core"));
+    const byIssuer = new Map();
+    acts.forEach((x) => {
+      const type = D.types[x.type];
+      const who = (type && L(type, "issuer")) || t("craftIntl");
+      if (!byIssuer.has(who)) byIssuer.set(who, []);
+      byIssuer.get(who).push(x);
     });
-    const s = encodeURIComponent(sectors.join(",")).replace(/%2C/g, ",");
-    const chips = sectors.length ? sectors.map((id) => `<span class="tag">${esc(L(D.sectorById[id], "label"))}</span>`).join("") : `<span class="tag">${esc(t("qNoSectors"))}</span>`;
-    const why = QA.q4 === "auto" ? `<p class="hint">${esc(fmt(t("qAutoChosen"), fwLabel(f), t(fw === "csf-2.0" ? "qWhyCsf" : "qWhyIso")))}</p>` : "";
-    // Every figure opens the list behind it; with nothing mapped yet the reader is told why, not shown a zero
-    const actsHref = `#/sources?scope=core&s=${s}`;
-    const ctlHref = `#/controls?s=${s}&fw=${esc(fw)}`;
-    const repo = (CFG.repoUrl || "").replace(/\/$/, "");
-    const empty = !n.controls && !n.gaps;
-    const stats = empty
-      ? `<div class="q-empty"><h3>${esc(fmt(t("qEmptyTitle"), n.acts))}</h3><p>${esc(t("qEmptyText"))}</p>
-          <p class="q-links"><a class="btn btn-primary" href="${actsHref}">${esc(t("qEmptyActs"))}</a>${repo ? `<a href="${esc(repo)}/issues/new?template=report.yml" target="_blank" rel="noopener">${esc(t("qEmptyAsk"))}</a>` : ""}</p>
-          <p class="hint">${esc(t("qEmptyTip"))}</p></div>`
-      : `<div class="q-stats">
-          <a href="${actsHref}"><b>${n.acts}</b><span>${esc(t("qStatActs"))}</span></a>
-          <a href="${ctlHref}"><b>${n.controls}</b><span>${esc(fmt(t("qStatControls"), fwLabel(f)))}</span></a>
-          ${n.gaps ? `<a href="${ctlHref}#gaps"><b>${n.gaps}</b><span>${esc(t("qStatGaps"))}</span></a>` : `<div><b>0</b><span>${esc(t("qStatGaps"))}</span></div>`}
-        </div>${why}
-        <p class="q-links"><button type="button" class="btn" id="q-soa">${esc(fmt(t("exportSoaXlsx"), L(f, "output")))}</button></p>`;
-    box.innerHTML = `<h2>${esc(t("qResultTitle"))}</h2>
-      <p class="q-tags">${chips}</p>
-      ${stats}
-      ${base ? `<div class="callout callout-goal"><p>${esc(t("qSystemNote"))}</p><p><a href="#/controls?fw=${SYSTEM_FW}&b=${base}&s=${s}">${esc(t("qOpenSystem"))} →</a></p></div>` : ""}
-      <p class="hint">${esc(t("qResultHint"))} ${esc(t("qGrc"))} <a href="#/method#${methodAnchor("grc")}">${esc(t("qGrcLink"))}</a>.</p>`;
-    const soa = box.querySelector("#q-soa");
-    if (soa) soa.onclick = () => withQuizState(() => exportSoa(controlRows().rows, "xlsx"));
+    const rows = [...byIssuer].sort((a, b) => b[1].length - a[1].length).map(([who, xs]) => {
+      const types = uniq(xs.map((x) => x.type));
+      return `<li><span class="actor-name">${esc(who)}</span><span class="actor-count">${esc(fmt(t("craftActs"), xs.length))}</span>
+        <span class="actor-acts">${esc(xs.slice(0, 4).map((x) => shortRef(x, true)).join("; "))}${xs.length > 4 ? "…" : ""}</span>
+        <a href="#/sources?scope=core&rec=0&s=${sParam()}${types.length === 1 ? `&type=${esc(types[0])}` : ""}">${esc(t("craftSeeActs"))}</a></li>`;
+    }).join("");
+    box.innerHTML = `<div class="craft-card">${answerHead("craftYourAnswer")}<ul class="actor-list">${rows}</ul></div>`;
+  }
+
+  // 4. The recommended framework, with the reason, and the choice
+  function craftFramework(box) {
+    const [rec, why] = recFw();
+    if (!CR.fwChosen) S.fw = rec;
+    const exp = expandedSectors();
+    const count = (fw) => withS(MANDATORY, () => Object.keys(driversFor(fw, exp, true)).length);
+    const leafs = (fw) => D.controls[fw].filter((c) => ["subcategory", "requirement", "control"].includes(c.level)).length;
+    box.innerHTML = `<div class="craft-card">${answerHead("craftYourAnswer")}
+      <p class="craft-figure">${esc(fmt(t("craftFwRec"), fwLabel(fwRow(rec))))}</p><p>${esc(t(why))}</p>
+      <fieldset class="fw-choice"><legend>${esc(t("craftFwPick"))}</legend>
+        ${D.orgFrameworks.map((f) => `<label class="fw-option${S.fw === f.id ? " on" : ""}"><input type="radio" name="craft-fw" value="${esc(f.id)}"${S.fw === f.id ? " checked" : ""}>
+          <span><b>${esc(fwLabel(f))}</b>${f.id === rec ? ` <span class="badge cov-full">${esc(t("craftRecommended"))}</span>` : ""}
+          <span class="hint block">${esc(fmt(t("craftFwCount"), count(f.id), leafs(f.id)))}</span></span></label>`).join("")}</fieldset></div>`;
+    box.querySelectorAll('input[name="craft-fw"]').forEach((r) => r.addEventListener("change", () => {
+      S.fw = r.value; CR.fwChosen = true; writeHash();
+      box.querySelectorAll(".fw-option").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
+    }));
+  }
+
+  // 5. The acts: mandatory ones as chains (locked), recommended to accept, EU law to follow, the reader's own
+  function craftActs(box) {
+    const rec = withS(WITH_REC, () => listedActs("core")).filter((x) => x.binding !== "mandatory");
+    const eu = withS(WITH_REC, () => listedActs("reference"));
+    const check = (set, x) => `<li><label class="craft-check"><input type="checkbox" data-set="${set}" value="${esc(x.id)}"${(set === "rec" ? CR.recActs : CR.euActs).has(x.id) ? " checked" : ""}>
+      <span><a href="#/sources?act=${esc(x.id)}">${esc(sourceRef(x))}</a>${L(x, "description") ? `<span class="aa-desc block">${esc(L(x, "description"))}</span>` : ""}</span></label></li>`;
+    box.innerHTML = `<div class="craft-card"><h3 class="craft-sub">${esc(t("craftRequired"))}</h3><div id="craft-mandatory"></div></div>
+      ${rec.length ? `<div class="craft-card"><h3 class="craft-sub">${esc(fmt(t("craftRecActs"), rec.length))}</h3><ul class="aa-list">${rec.map((x) => check("rec", x)).join("")}</ul></div>` : ""}
+      ${eu.length ? `<div class="craft-card"><h3 class="craft-sub">${esc(fmt(t("aaEu"), eu.length))}</h3><ul class="aa-list">${eu.map((x) => check("eu", x)).join("")}</ul></div>` : ""}
+      <div class="craft-card"><h3 class="craft-sub">${esc(t("craftOwnReqs"))}</h3>
+        <ul class="own-list" id="own-reqs"></ul>
+        <form class="own-form" id="own-req-form" onsubmit="return false">
+          <label class="own-field"><span>${esc(t("craftOwnWhat"))}</span><input type="text" id="own-req-text" maxlength="300" placeholder="${esc(t("craftOwnReqPh"))}"></label>
+          <label class="own-field own-kind"><span>${esc(t("craftOwnKind"))}</span><select id="own-req-kind">${["contract", "parent", "internal", "standard", "other"].map((k) => `<option value="${k}">${esc(t("ownKind_" + k))}</option>`).join("")}</select></label>
+          <button type="submit" class="btn" id="own-req-add">${esc(t("craftAdd"))}</button></form></div>`;
+    drawApplicable(box.querySelector("#craft-mandatory"), true);
+    box.querySelectorAll("input[data-set]").forEach((c) => c.addEventListener("change", () => {
+      const set = c.dataset.set === "rec" ? CR.recActs : CR.euActs;
+      if (c.checked) set.add(c.value); else set.delete(c.value);
+    }));
+    ownList(box.querySelector("#own-reqs"), CR.ownReqs, (r) => `${esc(r.text)} <span class="badge">${esc(t("ownKind_" + r.kind))}</span>`);
+    box.querySelector("#own-req-add").addEventListener("click", () => {
+      const input = box.querySelector("#own-req-text");
+      const text = input.value.trim();
+      if (!text) { input.focus(); return; }
+      CR.ownReqs.push({ text, kind: box.querySelector("#own-req-kind").value });
+      input.value = "";
+      ownList(box.querySelector("#own-reqs"), CR.ownReqs, (r) => `${esc(r.text)} <span class="badge">${esc(t("ownKind_" + r.kind))}</span>`);
+      input.focus();
+    });
+  }
+  // A list of the reader's own entries with a remove button each
+  function ownList(ul, arr, label) {
+    ul.innerHTML = arr.map((r, i) => `<li><span>${label(r)}</span><button type="button" class="link-btn" data-drop-own="${i}" aria-label="${esc(t("craftRemove"))}">${esc(t("craftRemove"))}</button></li>`).join("");
+    ul.querySelectorAll("[data-drop-own]").forEach((b) => b.addEventListener("click", () => { arr.splice(+b.dataset.dropOwn, 1); ownList(ul, arr, label); }));
+  }
+
+  // 6. The SoA: required controls (locked), controls from accepted recommended acts, optional ones, the reader's own;
+  // and the NIST SP 800-53 target profile when the information processed calls for it
+  function craftRows() {
+    if (!D.controls[S.fw]) S.fw = "iso27001-2022";
+    const exp = expandedSectors();
+    const required = withS(MANDATORY, () => driversFor(S.fw, exp, true));
+    const all = withS(WITH_REC, () => driversFor(S.fw, exp, true));
+    const leaf = D.controls[S.fw].filter((c) => ["subcategory", "requirement", "control"].includes(c.level));
+    return leaf.map((c) => {
+      const req = (required[c.id] || []).slice().sort((a, b) => a.provision_id.localeCompare(b.provision_id));
+      const fromRec = (all[c.id] || []).filter((m) => !req.includes(m) && CR.recActs.has(D.provById[m.provision_id].source_id));
+      // ISO/IEC 27001 clauses 4-10 are required by the standard itself, whatever the law says
+      const kind = req.length ? "required" : fromRec.length ? "recommended" : c.level === "requirement" ? "standard" : "optional";
+      return { c, ds: req.concat(fromRec), kind };
+    });
+  }
+  const needsSystems = () => S.sectors.some((id) => ["public-sir", "public-restricted", "nato-info"].includes(id));
+  function craftSoa(box) {
+    const rows = craftRows();
+    const n = (k) => rows.filter((r) => r.kind === k).length;
+    const fw = fwRow(S.fw);
+    let body = "", last = null;
+    rows.forEach((r) => {
+      const g = topGroup(r.c);
+      if (g && g !== last) { last = g; body += `<h4 class="ctl-group">${esc(g.id)} ${esc(L(g, "name"))}</h4>`; }
+      body += soaRow(r);
+    });
+    const ai = rows.flatMap((r) => r.ds).filter((m) => m.review_status === "ai_draft").length;
+    const gaps = withS(MANDATORY, () => gapRows());
+    box.innerHTML = `<div class="craft-card">${answerHead("craftYourAnswer")}
+        <p class="craft-figure">${esc(fwLabel(fw))}: ${esc(fmt(t("craftSoaSum"), n("required") + n("standard"), n("recommended"), n("optional")))}</p>
+        ${ai ? `<p class="warn-text">${esc(fmt(t("ctlUnreviewed"), ai, rows.flatMap((r) => r.ds).length))}</p>` : ""}
+        <div class="craft-download"><button type="button" class="btn btn-primary" id="soa-xlsx">${esc(t("craftDownload"))}</button><button type="button" class="btn" id="soa-csv">CSV</button>
+          <a href="${craftHref(4)}">${esc(t("craftChangeFw"))}</a></div></div>
+      <div class="craft-card"><div class="soa-legend"><span>${ICON_LOCK} ${esc(t("soaLocked"))}</span><span class="badge">${esc(t("soaRecommended"))}</span><span class="badge soa-opt">${esc(t("soaOptional"))}</span></div>
+        <div class="soa-list ctl-list" id="soa-list">${body}</div>${gapsHtml(gaps, fw)}</div>
+      <div class="craft-card"><h3 class="craft-sub">${esc(t("craftOwnCtls"))}</h3><p class="hint">${esc(t("craftOwnCtlsHint"))}</p>
+        <ul class="own-list" id="own-ctls"></ul>
+        <form class="own-form" onsubmit="return false"><label class="own-field"><span>${esc(t("craftOwnWhat"))}</span><input type="text" id="own-ctl-text" maxlength="300" placeholder="${esc(t("craftOwnCtlPh"))}"></label>
+          <button type="submit" class="btn" id="own-ctl-add">${esc(t("craftAdd"))}</button></form></div>
+      ${needsSystems() ? `<div class="craft-card"><details class="craft-sys"><summary><h3 class="craft-sub">${esc(t("toolSystem"))}</h3><span class="hint">${esc(t("craftSysHint"))}</span></summary><div id="craft-sys"></div></details></div>` : ""}`;
+    const list = box.querySelector("#soa-list");
+    list.addEventListener("toggle", (e) => {
+      const d = e.target;
+      if (!d.matches || !d.matches("details.soa-row") || !d.open || d.dataset.drawn) return;
+      d.dataset.drawn = "1";
+      const r = rows.find((x) => x.c.id === d.dataset.ctl);
+      if (r) d.querySelector(".ctl-body").innerHTML = driversBody(r.c.id, r.ds);
+    }, true);
+    list.addEventListener("change", (e) => {
+      const c = e.target.closest("input[data-opt]");
+      if (!c) return;
+      if (c.checked) CR.optCtls.add(c.dataset.opt); else CR.optCtls.delete(c.dataset.opt);
+    });
+    const ul = box.querySelector("#own-ctls");
+    ownList(ul, CR.ownCtls, (r) => esc(r.text));
+    box.querySelector("#own-ctl-add").addEventListener("click", () => {
+      const input = box.querySelector("#own-ctl-text");
+      const text = input.value.trim();
+      if (!text) { input.focus(); return; }
+      CR.ownCtls.push({ text });
+      input.value = "";
+      ownList(ul, CR.ownCtls, (r) => esc(r.text));
+      input.focus();
+    });
+    const sys = box.querySelector(".craft-sys");
+    if (sys) sys.addEventListener("toggle", () => { const b = box.querySelector("#craft-sys"); if (sys.open && !b.innerHTML) drawSideSystem(b); });
+    box.querySelector("#soa-xlsx").onclick = () => exportCraft("xlsx");
+    box.querySelector("#soa-csv").onclick = () => exportCraft("csv");
+  }
+  function soaRow(r) {
+    const acts = uniq(r.ds.map((m) => D.provById[m.provision_id].source_id));
+    const head = `<span class="ctl-id">${esc(r.c.id)}</span><span class="ctl-name">${esc(controlName(S.fw, r.c))}</span>
+      <span class="ctl-acts">${esc(acts.map((id) => shortRef(D.sourceById[id])).join(" · "))}</span>`;
+    if (r.kind === "standard") {
+      return `<div class="soa-row soa-standard"><div class="ctl-head"><span class="ctl-id">${esc(r.c.id)}</span><span class="ctl-name">${esc(controlName(S.fw, r.c))}</span>
+        <span class="ctl-acts">${esc(t("soaStandard"))}</span><span class="soa-mark"><span class="soa-req" title="${esc(t("soaStandard"))}">${ICON_LOCK}</span></span></div></div>`;
+    }
+    if (r.kind === "optional") {
+      return `<div class="soa-row soa-optional"><label class="ctl-head"><span class="ctl-id">${esc(r.c.id)}</span><span class="ctl-name">${esc(controlName(S.fw, r.c))}</span>
+        <span class="ctl-acts"><input type="checkbox" data-opt="${esc(r.c.id)}"${CR.optCtls.has(r.c.id) ? " checked" : ""}> ${esc(t("soaInclude"))}</span></label></div>`;
+    }
+    const mark = r.kind === "required" ? `<span class="soa-req" title="${esc(t("soaRequired"))}">${ICON_LOCK}<span class="sr-only">${esc(t("soaRequired"))}</span></span>` : `<span class="badge">${esc(t("soaRecommended"))}</span>`;
+    return `<details class="soa-row" data-ctl="${esc(r.c.id)}"><summary class="ctl-head">${head}<span class="soa-mark">${mark}</span></summary><div class="ctl-body"></div></details>`;
+  }
+  // The download: the SoA, the acts (mandatory, accepted, followed, own) and, when needed, the system profile
+  function exportCraft(kind) {
+    const rows = craftRows();
+    const yes = S.lang === "uk" ? "так" : "Y";
+    const status = { required: t("soaRequired"), standard: t("soaStandard"), recommended: t("soaRecommended"), optional: t("soaOptionalIn") };
+    const why = { required: t("xWhyLaw"), standard: t("xWhyStandard"), recommended: t("xWhyRec"), optional: t("xWhyOwnDecision") };
+    const soaHeader = [t("xControlId"), t("xControl"), t("xBaseline"), t("xDrivers"), t("xCoverage"), t("xParam"),
+      t("xApplicable"), t("xReason"), t("xOrgValue"), t("xPolicy"), t("xPolicySuggested"), t("xOwner"), t("xStatus"), t("xEvidence")];
+    const soa = rows.filter((r) => r.kind !== "optional" || CR.optCtls.has(r.c.id)).map(({ c, ds, kind }) => {
+      const drv = ds.map((m) => { const p = D.provById[m.provision_id]; return `${sourceRef(D.sourceById[p.source_id])}, ${L(p, "ref")} [${GLYPH[m.relationship]} ${covLabel(m.coverage)}${reviewMark(m)}]`; }).join("\n");
+      const cov = ds.length ? (ds.some((m) => m.coverage === "full") ? t("fullNote") : t("partialNote")) : "";
+      const par = ds.filter((m) => L(m, "parameter")).map((m) => `${L(m, "parameter")} (${sourceRef(D.sourceById[D.provById[m.provision_id].source_id])}, ${L(D.provById[m.provision_id], "ref")})`).join("\n");
+      const pol = [...new Set(ds.map((m) => L(m, "policy")).filter(Boolean))].join("\n");
+      return [c.id, controlName(S.fw, c), status[kind], drv, cov, par, yes, why[kind], "", "", pol, "", "", ""];
+    }).concat(CR.ownCtls.map((o, i) => [`OWN-${i + 1}`, o.text, t("soaOwn"), "", "", "", yes, t("xWhyOwnDecision"), "", "", "", "", "", ""]));
+    if (kind === "csv") { downloadCsv(`baseline_${stamp()}.csv`, soaHeader, soa); return; }
+    const actRow = (x, st) => [st, sourceRef(x), sourceTitle(x), typeLabel(x.type), L(x, "description"), D.mappedProvs[x.id] ? D.mappedProvs[x.id].size : "", x.url || ""];
+    const mandatory = withS(MANDATORY, () => listedActs("core"));
+    const acts = mandatory.map((x) => actRow(x, t("xActRequired")))
+      .concat(withS(WITH_REC, () => listedActs("core")).filter((x) => CR.recActs.has(x.id)).map((x) => actRow(x, t("xActAccepted"))))
+      .concat(withS(WITH_REC, () => listedActs("reference")).filter((x) => CR.euActs.has(x.id)).map((x) => actRow(x, t("xActFollowed"))))
+      .concat(CR.ownReqs.map((o) => [t("xActOwn"), o.text, "", t("ownKind_" + o.kind), "", "", ""]));
+    const sheets = [
+      { name: S.fw === "csf-2.0" ? "Profile" : "SoA", header: soaHeader, rows: soa, widths: [10, 50, 16, 55, 12, 35, 12, 24, 30, 30, 40, 20, 20, 30] },
+      { name: S.lang === "uk" ? "Акти" : "Acts", header: [t("xBaseline"), t("srcColRef"), t("xTitle"), t("xType"), t("xDescription"), t("xReqCount"), t("xUrl")], rows: acts, widths: [16, 40, 60, 20, 60, 12, 40] },
+    ];
+    if (needsSystems()) {
+      guessBaseline();
+      const sys = systemRows();
+      sheets.push({ name: "NIST SP 800-53", header: [t("sysColId"), "name_en", "name_uk_machine", t("sysColBaseline"), t("sysColParams"), t("sysColPlan"), t("sysColLaw"), t("xSource"), t("xApplicable"), t("xOrgValue"), t("xPolicy"), t("xStatus"), t("xEvidence")],
+        rows: sys.map((c) => [c.id, c.name_en, c.name_uk_machine, c._base ? yes : "", c._base ? c[`${S.baseline}_params_uk`] || "" : "", c._plan.join(", "), c._law.join(", "), c._acts.map((id) => sourceRef(D.sourceById[id])).join("; "), "", "", "", "", ""]),
+        widths: [12, 40, 40, 12, 40, 30, 30, 40, 12, 24, 24, 16, 24] });
+    }
+    downloadWorkbook(`baseline_${stamp()}.xlsx`, sheets);
   }
 
   // ------------------------------------------------------------------ guide
@@ -560,14 +787,14 @@
   // Links to every chapter (grouped by stage) and article: the header menu and the guide's side panel.
   // current: the open chapter or article id, whose headings the side panel lists under it.
   function guideLinks(withCurrent, heads) {
-    const cur = S.view === "guide" ? S.chapter : S.view === "articles" ? S.article : "";
+    const cur = S.view === "guide" ? S.chapter : S.view === "articles" ? S.article : S.view === "method" || S.view === "about" ? S.view : "";
     const item = (href, id, label) => `<li${withCurrent && id === cur ? ' class="current"' : ""}><a href="${href}"${id === cur ? ' aria-current="page"' : ""}>${esc(label)}</a>${withCurrent && id === cur && heads ? heads : ""}</li>`;
-    const groups = [["1", t("stage_1")], ["2", t("stage_2")], ["3", t("stage_3")], ["ref", t("stage_ref")]];
+    const groups = [["before", t("stage_before")], ["after", t("stage_after")], ["ref", t("stage_ref")]];
     let html = "";
     groups.forEach(([stage, label]) => {
       const chs = CHAPTERS.filter((c) => c.stage === stage);
       const items = chs.map((c) => item(`#/guide?c=${c.id}`, c.id, chapterTitle(c.id))).join("")
-        + (stage === "ref" ? ARTICLES.map((a) => item(`#/articles?a=${a}`, a, t("art_" + a))).join("") + item("#/method", "method", t("navMethod")) : "");
+        + (stage === "ref" ? ARTICLES.map((a) => item(`#/articles?a=${a}`, a, t("art_" + a))).join("") + item("#/method", "method", t("navMethod")) + item("#/about", "about", t("navAbout")) : "");
       html += `${label ? `<p class="menu-group">${esc(label)}</p>` : ""}<ul>${items}</ul>`;
     });
     return html;
@@ -575,28 +802,21 @@
   async function renderGuide() {
     const i = CHAPTERS.findIndex((c) => c.id === S.chapter);
     const ch = CHAPTERS[i];
-    const el = docLayout(t("navGuide"));
+    const el = docLayout(t("navHelp"));
     if (!(await mdInto(el, `guide/${ch.id}`))) return;
     if (ch.stage !== "ref") el.insertAdjacentHTML("afterbegin", `<p class="kicker">${esc(t("stage_" + ch.stage))}</p>`);
     const legend = el.querySelector("#legend");
     if (legend) legend.outerHTML = relLegend();
-    if (TOOLS[ch.id]) drawTool(TOOLS[ch.id], el);
     const prev = CHAPTERS[i - 1], next = CHAPTERS[i + 1];
-    el.insertAdjacentHTML("beforeend", `<nav class="pager" aria-label="${esc(t("navGuide"))}">
+    el.insertAdjacentHTML("beforeend", `<nav class="pager" aria-label="${esc(t("navHelp"))}">
       ${prev ? `<a class="pager-prev" href="#/guide?c=${prev.id}"><span>${esc(t("chPrev"))}</span>${esc(chapterTitle(prev.id))}</a>` : "<span></span>"}
       ${next ? `<a class="pager-next" href="#/guide?c=${next.id}"><span>${esc(t("chNext"))}</span>${esc(chapterTitle(next.id))}</a>` : ""}</nav>`);
     buildToc(document.getElementById("toc"), el, true);
     scrollToAnchor();
   }
-  // ------------------------------------------------------------------ guide: the matching tool at the end of a chapter
-  // II.1 has the reader's acts, II.2 their controls, II.3 the NIST SP 800-53 controls of their systems, all filtered
-  // by the answers. The box is collapsed by default; its summary carries the key figure, and a link near the top of
-  // the chapter opens it. Once opened it stays open from chapter to chapter until the reader closes it.
-  const TOOLS = { requirements: "acts", soa: "controls", compliance: "system" };
-  let toolOpen = false;
+  // ------------------------------------------------------------------ the NIST SP 800-53 target profile (craft step 6)
   let sysBaseGuessed = false;
-  const TOOL_TITLE = { acts: "aaTitle", controls: "sideControls", system: "toolSystem" };
-  // The baseline profile that the kind of information in the answers points to (as the questionnaire does)
+  // The baseline profile that the kind of information in the answers points to
   function guessBaseline() {
     if (sysBaseGuessed) return;
     sysBaseGuessed = true;
@@ -604,54 +824,6 @@
     else if (S.sectors.includes("public-restricted")) S.baseline = "dsk";
     else if (S.sectors.includes("public-sir")) S.baseline = "open";
   }
-  function toolFigure(kind) {
-    if (!S.sectors.length) return t("toolPick");
-    if (kind === "acts") return fmt(t("toolActsSum"), listedActs("core").length);
-    if (kind === "controls") {
-      if (!D.controls[S.fw]) S.fw = "iso27001-2022";
-      const { leafCount, drivers } = controlRows();
-      return fmt(t("toolCtlSum"), Object.keys(drivers).length, leafCount, fwLabel(fwRow(S.fw)));
-    }
-    guessBaseline();
-    return fmt(t("toolSysSum"), systemRows().length);
-  }
-  function drawTool(kind, el) {
-    const title = t(TOOL_TITLE[kind]);
-    const figure = toolFigure(kind);
-    el.insertAdjacentHTML("beforeend", `<section class="tool-box" id="tool-box"><details id="tool-details"${toolOpen ? " open" : ""}>
-      <summary><span class="tool-title">${esc(title)}</span><span class="tool-figure">${esc(figure)}</span></summary>
-      <div class="tool-body" id="tool-body"></div></details></section>`);
-    // a link near the top: after the goal, or after the lead
-    const anchor = el.querySelector(".callout-goal") || el.querySelector(".step-refs") || el.querySelector("h1");
-    if (anchor) anchor.insertAdjacentHTML("afterend", `<p class="tool-jump"><a href="#tool-box" id="tool-jump">↓ ${esc(title)}: ${esc(figure)}</a></p>`);
-    const det = el.querySelector("#tool-details"), body = el.querySelector("#tool-body");
-    let drawn = false;
-    const fill = () => {
-      if (drawn) return;
-      drawn = true;
-      if (!S.sectors.length) body.innerHTML = sidePick(kind);
-      else if (kind === "acts") drawApplicable(body);
-      else if (kind === "controls") drawSideControls(body);
-      else drawSideSystem(body);
-    };
-    if (det.open) fill();
-    det.addEventListener("toggle", () => { toolOpen = det.open; if (det.open) fill(); });
-    const jump = el.querySelector("#tool-jump");
-    if (jump) jump.addEventListener("click", (e) => {
-      e.preventDefault();
-      det.open = true;
-      el.querySelector("#tool-box").scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  }
-  // No answers yet: the questionnaire, or one click on an organisation type that keeps the reader on this chapter
-  function sidePick(kind) {
-    const items = D.sectors.filter((x) => x.selectable === "yes" && !D.parents[x.id].length);
-    return `<div class="side-pick"><p>${esc(t({ acts: "sidePickActs", controls: "sidePickControls", system: "sidePickSystem" }[kind]))}</p>
-      <p><a class="btn btn-primary" href="#/start">${esc(t("whoQuiz"))}</a></p>
-      <p class="hint">${esc(t("sidePickOr"))}</p>
-      <div class="pills">${items.map((x) => `<a class="pill" href="#/guide?c=${esc(S.chapter)}&s=${encodeURIComponent(x.id)}">${esc(L(x, "label"))}</a>`).join("")}</div></div>`;
-  }
-  const profileLine = () => `<p class="aa-for">${S.sectors.filter((id) => D.sectorById[id]).map((id) => `<span class="tag">${esc(L(D.sectorById[id], "label"))}</span>`).join("")} <a href="#/start">${esc(t("aaChange"))}</a></p>`;
   const searchField = () => `<label class="search ctl-search"><svg aria-hidden="true" viewBox="0 0 20 20" width="16" height="16"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       <input id="q" type="search" value="${esc(S.q)}" placeholder="${esc(t("ctlSearchPh"))}" aria-label="${esc(t("search"))}" autocomplete="off"></label>`;
   function bindSearch(body, redraw) {
@@ -659,27 +831,13 @@
     let timer;
     q.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(() => { S.q = q.value; redraw(); }, 200); });
   }
-  function drawSideControls(body) {
-    if (!D.controls[S.fw]) S.fw = "iso27001-2022";
-    const s = encodeURIComponent(S.sectors.join(",")).replace(/%2C/g, ",");
-    body.innerHTML = `${profileLine()}
-      <div class="ctl-tools">
-        <label class="ctl-fw"><span class="sr-only">${esc(t("framework"))}</span><select id="fw-select">${D.orgFrameworks.map((f) => `<option value="${esc(f.id)}"${S.fw === f.id ? " selected" : ""}>${esc(fwLabel(f))}</option>`).join("")}</select></label>
-        ${searchField()}</div>
-      <div id="ctl-head"></div><section class="ctl-results" id="ctl-list" aria-live="polite"></section>
-      <p class="aa-links"><a href="#/controls?s=${s}&fw=${esc(S.fw)}">${esc(t("sideFull"))}</a></p>`;
-    body.querySelector("#fw-select").addEventListener("change", (e) => { S.fw = e.target.value; drawSideControls(body); });
-    bindSearch(body, drawControls);
-    drawControls();
-  }
-  // II.3: NIST SP 800-53 controls for the reader's systems, with where each one comes from
+  // NIST SP 800-53 controls for the reader's systems, with where each one comes from
   function drawSideSystem(body) {
     guessBaseline();
     const bases = profilesOf("baseline");
     if (!bases.some((p) => p.id === S.baseline)) S.baseline = "none";
     const s = encodeURIComponent(S.sectors.join(",")).replace(/%2C/g, ",");
-    body.innerHTML = `${profileLine()}
-      <div class="ctl-tools">
+    body.innerHTML = `<div class="ctl-tools">
         <label class="ctl-fw"><span class="sr-only">${esc(t("sysBaseline"))}</span><select id="base-select">
           <option value="none"${S.baseline === "none" ? " selected" : ""}>${esc(t("sysBaseline"))}: ${esc(t("sysNone0"))}</option>
           ${bases.map((p) => `<option value="${esc(p.id)}"${S.baseline === p.id ? " selected" : ""}>${esc(L(p, "label"))}</option>`).join("")}</select></label>
@@ -705,7 +863,7 @@
     draw();
   }
 
-  // ------------------------------------------------------------------ guide II.1: the reader's acts as chains
+  // ------------------------------------------------------------------ craft step 5: the reader's mandatory acts as chains
   // An act has direct requirements when its provisions are mapped to controls or it is a baseline security profile.
   // Chains keep only such acts: each sits under the nearest act above it that has them too, so a law that only
   // empowers a regulator is skipped but the link through it is kept. Acts that only amend another act are shown on
@@ -720,8 +878,7 @@
     try { const exp = expandedSectors(); return D.sources.filter((s) => sourceVisible(s, exp, true)); } finally { Object.assign(S, saved); }
   }
   function drawApplicable(box) {
-    if (!S.sectors.length) { box.innerHTML = sidePick("acts"); return; }
-    const acts = listedActs("core");
+    const acts = withS(MANDATORY, () => listedActs("core"));
     const set = new Set(acts.map((x) => x.id));
     const rank = (id) => { const x = D.sourceById[id]; return [D.typeOrder.indexOf(x.type), x.adopted || "9999"]; };
     const byRank = (a, b) => { const ra = rank(a), rb = rank(b); return ra[0] - rb[0] || ra[1].localeCompare(rb[1]); };
@@ -762,18 +919,13 @@
       return `<li>${node(id)}${ch.length && depth < 8 ? `<ul>${ch.map((k) => walk(k, depth + 1, seen)).join("")}</ul>` : ""}</li>`;
     };
     const chainsHtml = chained.map((id) => `<ul class="tree aa-chain">${walk(id, 0, new Set([id]))}</ul>`).join("");
-    const eu = listedActs("reference");
-    const s = encodeURIComponent(S.sectors.join(",")).replace(/%2C/g, ",");
-    const chips = S.sectors.filter((id) => D.sectorById[id]).map((id) => `<span class="tag">${esc(L(D.sectorById[id], "label"))}</span>`).join("");
     box.innerHTML = `<section class="aa" id="aa">
-      <div class="aa-head"><p class="aa-for">${chips} <a href="#/start">${esc(t("aaChange"))}</a></p>
+      <div class="aa-head"><p class="aa-summary">${esc(fmt(t("aaSummary"), acts.length, inChains, alone.length))}</p>
         <button type="button" class="btn btn-line" id="aa-full" aria-pressed="${String(actsFull)}">${esc(t(actsFull ? "chainsHide" : "chainsShow"))}</button></div>
-      <p class="aa-summary">${esc(fmt(t("aaSummary"), acts.length, inChains, alone.length))}</p>
-      ${chained.length ? `<h3>${esc(t("aaChains"))}</h3><p class="hint">${esc(t(actsFull ? "aaChainsHintFull" : "aaChainsHint"))}</p><div class="chains aa-chains">${chainsHtml}</div>` : ""}
-      ${alone.length ? `<h3>${esc(t("aaAlone"))}</h3><ul class="aa-list">${alone.map((id) => `<li>${node(id)}</li>`).join("")}</ul>` : ""}
+      ${chained.length ? `<h4>${esc(t("aaChains"))}</h4><p class="hint">${esc(t(actsFull ? "aaChainsHintFull" : "aaChainsHint"))}</p><div class="chains aa-chains">${chainsHtml}</div>` : ""}
+      ${alone.length ? `<h4>${esc(t("aaAlone"))}</h4><ul class="aa-list">${alone.map((id) => `<li>${node(id)}</li>`).join("")}</ul>` : ""}
       ${others.length ? `<details class="aa-more"><summary>${esc(fmt(t("aaOther"), others.length))}</summary><p class="hint">${esc(t("aaOtherHint"))}</p><ul class="aa-list">${others.map((id) => `<li>${node(id)}</li>`).join("")}</ul></details>` : ""}
-      ${eu.length ? `<details class="aa-more"><summary>${esc(fmt(t("aaEu"), eu.length))}</summary><p class="hint">${esc(t("refNote"))}</p><ul class="aa-list">${eu.map((x) => `<li>${node(x.id)}</li>`).join("")}</ul></details>` : ""}
-      <p class="aa-links"><a href="#/sources?scope=core&s=${s}">${esc(t("aaOpenActs"))}</a><a href="#/controls?s=${s}">${esc(t("aaOpenControls"))}</a></p>
+      <p class="aa-links"><a href="#/sources?scope=core&s=${sParam()}&rec=0">${esc(t("aaOpenActs"))}</a></p>
     </section>`;
     const btn = document.getElementById("aa-full");
     if (btn) btn.onclick = () => {
@@ -1213,15 +1365,21 @@
     });
     return xlsxLoading;
   }
-  async function downloadXlsx(name, sheet, header, rows, widths) {
-    const fw = S.fw, sectors = S.sectors.join(", ") || "all"; // read before the await: the quiz restores the filters
+  function downloadXlsx(name, sheet, header, rows, widths) {
+    return downloadWorkbook(name, [{ name: sheet, header, rows, widths }]);
+  }
+  // Several sheets, each with filters on and its header frozen, and an "about" sheet with the version and the link
+  async function downloadWorkbook(name, sheets) {
+    const fw = S.fw, sectors = S.sectors.join(", ") || "all"; // read before the await
     await loadXlsx();
-    const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
-    ws["!cols"] = (widths || header.map(() => 24)).map((w) => ({ wch: w }));
-    ws["!autofilter"] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: rows.length, c: header.length - 1 } }) };
-    ws["!freeze"] = { xSplit: 1, ySplit: 1 };
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, sheet.slice(0, 31));
+    sheets.forEach(({ name: sheet, header, rows, widths }) => {
+      const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
+      ws["!cols"] = (widths || header.map(() => 24)).map((w) => ({ wch: w }));
+      ws["!autofilter"] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: rows.length, c: header.length - 1 } }) };
+      ws["!freeze"] = { xSplit: 1, ySplit: 1 };
+      XLSX.utils.book_append_sheet(wb, ws, sheet.slice(0, 31));
+    });
     const ai = D.mappings.filter((m) => m.framework_id === fw && m.review_status === "ai_draft").length;
     const meta = [["note", ai ? t("aiFileNote") : ""], ["version", D.meta ? D.meta.version : ""], ["date", new Date().toISOString().slice(0, 10)], ["framework", fw], ["sectors", sectors], ["url", location.href]];
     XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(meta), "about");
@@ -1470,7 +1628,7 @@
         <ul class="files">${ARTICLES.map((a) => `<li class="file"><a class="file-name" href="#/articles?a=${a}">${esc(t("art_" + a))}</a><p>${esc(t("artd_" + a))}</p></li>`).join("")}</ul></article>`;
       return;
     }
-    const el = docLayout(t("navGuide"));
+    const el = docLayout(t("navHelp"));
     if (!(await mdInto(el, `articles/${S.article}`))) return;
     buildToc(document.getElementById("toc"), el, true);
     scrollToAnchor();
@@ -1687,14 +1845,15 @@
       return;
     }
     window.addEventListener("hashchange", () => { if (readHash()) { render(); window.scrollTo(0, 0); } });
-    // the guide menu in the header closes on a click outside it or on Escape
+    // the header menus close on a click outside them or on Escape; opening one closes the other
+    const menus = () => [...document.querySelectorAll(".nav-menu")];
     document.addEventListener("click", (e) => {
-      const m = document.getElementById("guide-menu");
-      if (m && m.open && !m.contains(e.target)) m.open = false;
+      menus().forEach((m) => { if (m.open && !m.contains(e.target)) m.open = false; });
+      if (e.target.closest(".nav-menu .menu a")) menus().forEach((m) => { m.open = false; });
     });
     document.addEventListener("keydown", (e) => {
-      const m = document.getElementById("guide-menu");
-      if (e.key === "Escape" && m && m.open) { m.open = false; m.querySelector("summary").focus(); }
+      if (e.key !== "Escape") return;
+      menus().forEach((m) => { if (m.open) { m.open = false; m.querySelector("summary").focus(); } });
     });
     render();
   }

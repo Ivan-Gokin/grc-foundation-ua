@@ -1,22 +1,12 @@
-# I.1. Roles and authorities
+# Roles and authorities
 
-<p class="chapter-lead">Stage I, "Governance", has four steps: roles, the organisation's context, the external actors that govern it and the choice of framework. Stage II then turns them into your list of acts and your Statement of Applicability. Start with people: who decides, who does the work, who checks.</p>
+<p class="chapter-lead">Settle this before you <a href="#/craft?step=1">craft your baseline</a>: every requirement and control on it needs someone who owns it. Start with people: who decides, who does the work, who checks.</p>
 
-## Three stages
-
-The guide follows three stages. What the first two produce is the foundation for automating controls ([GRC engineering](#/guide?c=grc)).
-
-<ol class="stages">
-<li><b>Governance</b><span>We decide who is responsible for security, describe the organisation, find out who governs it from outside and choose the framework.</span></li>
-<li><b>Compliance</b><span>We collect the acts that apply, and the EU law worth following, and turn them into the minimum set of controls: the Statement of Applicability. This is where this site helps most.</span><a href="#/guide?c=requirements">Guide: stage II →</a></li>
-<li><b>Risk management</b><span>Where the real work begins: with the legal minimum in place, we assess risks to our assets and decide what to add beyond it.</span><a href="#/guide?c=risk">Guide: stage III →</a></li>
-</ol>
-
-## About this step
+## Why it matters
 
 *Covers: ISO/IEC 27001:2022, clauses 5.1, 5.3 and controls A.5.2-A.5.4 · NIST CSF 2.0, GV.RR*
 
-**Goal.** Decide who makes information security decisions, who is responsible for carrying them out and who checks independently. Without this the remaining steps have no owners: nobody updates the requirements register, nobody accepts risks, and policies are signed by people without the authority to enforce them.
+**Goal.** Decide who makes information security decisions, who is responsible for carrying them out and who checks independently. Without this your baseline has no owners: nobody updates the requirements register, nobody accepts risks, and policies are signed by people without the authority to enforce them.
 
 ## Who is responsible for what
 

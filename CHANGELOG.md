@@ -1,5 +1,13 @@
 # Changelog
 
+## Craft your baseline, Explore and Help me (2026-10-22)
+
+- New primary section "Craft your baseline" (`#/craft`): six steps, each with short plain-language guidance and then the answer for the reader. 1. About your organisation (three questions). 2. Your profile (the categories the law names, adjustable). 3. Who sets your rules (the bodies that issued the acts binding you). 4. Your framework (recommended by profile, with the reason: CSF 2.0 for CI, public sector and defence; ISO/IEC 27001 for banks because of NBU No. 95, and otherwise). 5. Your laws and regulations (mandatory acts as chains and locked; recommended acts to accept; EU law to follow; your own requirements). 6. Your Statement of Applicability (controls required by law or by ISO/IEC 27001 clauses 4-10, locked; controls from accepted acts; optional controls to include; your own controls; provisions no control covers; the NIST SP 800-53 target profile when the information processed calls for it).
+- The download is one Excel workbook: SoA or target profile with a status and a reason for each control, the acts (required, accepted, followed, own), the NIST SP 800-53 profile when needed, and "about". Choices are kept only for the visit; nothing is stored.
+- Header: Intro, Craft your baseline, Explore (Acts, Controls: the full register with filters, as before) and Help me (Roles and authorities; Information systems, Where the real work begins, GRC engineering; glossary, articles, methodology, about).
+- The chapters Organisational context, External actors, Choosing the framework, Applicable acts and Controls and the SoA became steps 2-6 and are removed from the guide; their old links and `#/start` open the matching step. Chapter numbers (I.1-III.2) are gone; references are updated. The end-of-chapter tool boxes are removed.
+- Buttons follow the brand's cut corners: the primary button has four, every other button, pill, segmented control and chip has two (top right, bottom left), with the cut edge drawn in the border colour.
+
 ## Guide: the matching tool at the end of the chapter, collapsed (2026-10-22)
 
 - The side panel became a box at the end of the chapter, collapsed by default. Its summary carries the key figure (e.g. "Your controls · 111 of 118"); a link near the top of the chapter opens it and scrolls to it. Once opened, it stays open from chapter to chapter until closed.

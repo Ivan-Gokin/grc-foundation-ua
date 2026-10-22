@@ -17,7 +17,7 @@ The main value is the data; the site only presents it. The rules it is built by 
 
 ## Base standards
 
-The basis is the standards Ukrainian regulators rely on: **ISO/IEC 27001:2022** and **NIST CSF 2.0** for the organisation's management system, and **NIST SP 800-53 Rev. 5** for information systems. How to choose between the first two is described in the guide: [I.4](#/guide?c=standard).
+The basis is the standards Ukrainian regulators rely on: **ISO/IEC 27001:2022** and **NIST CSF 2.0** for the organisation's management system, and **NIST SP 800-53 Rev. 5** for information systems. How to choose between the first two: [Craft your baseline, step 4](#/craft?step=4).
 
 NIST standards are not one document but a family of different types. The most common mistake is confusing a management framework with a control catalogue:
 
