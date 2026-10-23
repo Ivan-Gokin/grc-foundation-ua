@@ -1,5 +1,15 @@
 # Changelog
 
+## Answer first, a pinned download, a clearer home page, the mapping roadmap (2026-10-23)
+
+- Each step of "Craft your baseline" shows its title and one paragraph, then the answer; the rest of the guidance is behind "Why this, and what to do". The browser tab names the step, and focus moves to its heading after each step change (the same for every page).
+- Step 6: the selected count and the download stay pinned to the bottom of the screen while the list scrolls; after step 6, "What next" leads to "Where the real work begins".
+- Step 5: with no chains of acts, the summary and headings no longer mention chains.
+- Step 1: "facilities" instead of "objects" in the critical infrastructure question.
+- Home: "Answer three questions" is the main button in the top block; the organisation types come second, with "Any other organisation" for shops, offices, schools and services.
+- About: a mapping roadmap. Laws first, then regulations for banks, critical infrastructure, government, defence and NATO, and everything else, each with its progress counted from the data.
+- Data: the Law Enforcement Directive and the ePrivacy Directive are no longer suggested for "personal data" (they concern law-enforcement authorities and electronic communications providers); NATO AC/35-D/2000-REV7, 2001-REV2 and 2002-REV4 are marked as superseded by the next revision; the two ND TZI 25 documents are named apart (TR EOT-95, TR TZI-PEMVN-95).
+
 ## Act names with the date in words; the SoA picked on the left; two levels in the last step (2026-10-23)
 
 - Every act is named by its issuer, number and date in words, e.g. "CMU No. 373 dated 20 August 2022" / "КМУ № 373 від 20 серпня 2022 р.", across the site, the exports and the texts.

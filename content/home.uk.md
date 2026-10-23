@@ -4,7 +4,9 @@
 
 # Яким вимогам кібербезпеки має відповідати ваша організація?
 
-Закони, постанови, накази, стандарти, політики НАТО: сотні документів, які посилаються один на одного і змінюються. Оберіть, хто ви, і отримайте заходи, що закривають застосовні до вас вимоги, кожен зі своєю правовою підставою.
+Закони, постанови, накази, стандарти, політики НАТО: сотні документів, які посилаються один на одного і змінюються. Дайте відповідь на три запитання й отримайте застосовні до вас акти і положення про застосовність, де кожен захід має правову підставу.
+
+<p class="home-cta"><a class="btn btn-primary btn-lg" href="#/craft?step=1">Відповісти на три запитання</a><span class="cta-note">Близько хвилини. Нічого не зберігається і не надсилається.</span></p>
 
 </div>
 
@@ -15,14 +17,14 @@
 ## Як це працює
 
 <div class="home-stages">
-<div class="stage-card stage-wide"><p class="stage-head"><b>Сформуйте свій базовий рівень за шість кроків</b><span class="stage-hint">Простою мовою, кілька хвилин, нічого не зберігається</span></p><ol class="stage-steps stage-numbered">
+<div class="stage-card stage-wide"><p class="stage-head"><b>Сформуйте свій базовий рівень за шість кроків</b></p><ol class="stage-steps stage-numbered">
 <li><a href="#/craft?step=1">Про вашу організацію</a><span class="stage-hint">три запитання</span></li>
 <li><a href="#/craft?step=2">Ваш профіль</a><span class="stage-hint">як вас бачить закон</span></li>
 <li><a href="#/craft?step=3">Хто встановлює вам правила</a><span class="stage-hint">держава і ваш регулятор</span></li>
 <li><a href="#/craft?step=4">Ваш стандарт</a><span class="stage-hint">ISO/IEC 27001 або NIST CSF 2.0</span></li>
 <li><a href="#/craft?step=5">Ваші закони й акти</a><span class="stage-hint">обов'язкові, рекомендовані, власні</span></li>
 <li><a href="#/craft?step=6">Ваше положення про застосовність</a><span class="stage-hint">завантаження в Excel</span></li>
-</ol><p class="stage-more"><a class="btn btn-primary" href="#/craft?step=1">Почати</a></p></div>
+</ol></div>
 <div class="stage-card"><p class="stage-head"><b>Допомога</b></p><ol class="stage-steps">
 <li><a href="#/guide?c=roles">Ролі та повноваження</a><span class="stage-hint">перед початком</span></li>
 <li><a href="#/guide?c=compliance">Інформаційні системи</a><span class="stage-hint">NIST SP 800-53</span></li>

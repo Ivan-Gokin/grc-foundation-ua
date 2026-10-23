@@ -31,6 +31,10 @@ The site collects no data about you or your organisation: there is no sign-up, n
 
 The whole project — data, texts and code — is under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): you may use, change and share it, including commercially, as long as you credit the source. How to credit it and the status of third-party material (including ISO texts, which are not reproduced) are in the [README](https://github.com/Ivan-Gokin/grc-foundation-ua#licence).
 
+## Mapping roadmap
+
+<div id="about-roadmap"></div>
+
 ## Plans
 
 <div id="about-plans"></div>

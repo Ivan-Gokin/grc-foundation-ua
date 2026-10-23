@@ -4,7 +4,9 @@
 
 # Which cybersecurity requirements must your organisation meet?
 
-Laws, resolutions, orders, standards, NATO policies: hundreds of documents that refer to each other and keep changing. Pick who you are and get the controls that meet the ones that apply, each with its legal basis.
+Laws, resolutions, orders, standards, NATO policies: hundreds of documents that refer to each other and keep changing. Answer three questions and get the laws that apply to you and your Statement of Applicability, each control with its legal basis.
+
+<p class="home-cta"><a class="btn btn-primary btn-lg" href="#/craft?step=1">Answer three questions</a><span class="cta-note">About a minute. Nothing is saved or sent.</span></p>
 
 </div>
 
@@ -15,14 +17,14 @@ Laws, resolutions, orders, standards, NATO policies: hundreds of documents that 
 ## How it works
 
 <div class="home-stages">
-<div class="stage-card stage-wide"><p class="stage-head"><b>Craft your baseline in six steps</b><span class="stage-hint">Plain language, a few minutes, nothing saved</span></p><ol class="stage-steps stage-numbered">
+<div class="stage-card stage-wide"><p class="stage-head"><b>Craft your baseline in six steps</b></p><ol class="stage-steps stage-numbered">
 <li><a href="#/craft?step=1">About your organisation</a><span class="stage-hint">three questions</span></li>
 <li><a href="#/craft?step=2">Your profile</a><span class="stage-hint">how the law sees you</span></li>
 <li><a href="#/craft?step=3">Who sets your rules</a><span class="stage-hint">the state and your regulator</span></li>
 <li><a href="#/craft?step=4">Your framework</a><span class="stage-hint">ISO/IEC 27001 or NIST CSF 2.0</span></li>
 <li><a href="#/craft?step=5">Your laws and regulations</a><span class="stage-hint">required, recommended, your own</span></li>
 <li><a href="#/craft?step=6">Your Statement of Applicability</a><span class="stage-hint">download as Excel</span></li>
-</ol><p class="stage-more"><a class="btn btn-primary" href="#/craft?step=1">Start</a></p></div>
+</ol></div>
 <div class="stage-card"><p class="stage-head"><b>Help me</b></p><ol class="stage-steps">
 <li><a href="#/guide?c=roles">Roles and authorities</a><span class="stage-hint">before you start</span></li>
 <li><a href="#/guide?c=compliance">Information systems</a><span class="stage-hint">NIST SP 800-53</span></li>

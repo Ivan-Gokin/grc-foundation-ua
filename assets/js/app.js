@@ -320,10 +320,22 @@
     if (rep) rep.addEventListener("click", () => { rep.href = `${repo}/issues/new?template=report.yml&page=${encodeURIComponent(location.href)}`; });
   }
 
+  // The browser tab names the page; after the reader follows a link, focus moves to the new page's heading
+  let focusNext = false;
+  function setTitle(page) { document.title = page ? `${page} — ${t("siteName")}` : `${t("siteName")}: ${t("siteSub")}`; }
+  function focusHeading(root) {
+    if (!focusNext) return;
+    focusNext = false;
+    const h = (root || app).querySelector("h1");
+    if (!h) return;
+    h.setAttribute("tabindex", "-1");
+    h.focus({ preventScroll: true });
+  }
   function render() {
     renderShell();
     writeHash();
     ({ home: renderHome, craft: renderCraft, guide: renderGuide, controls: renderControls, sources: renderSources, method: renderMethod, articles: renderArticles, about: renderAbout })[S.view]();
+    if (S.view === "controls" || S.view === "sources") { setTitle(t(S.view === "controls" ? "navControls" : "navSources")); focusHeading(); }
   }
 
   // ------------------------------------------------------------------ filter panel (shared)
@@ -395,6 +407,9 @@
     const md = await loadMd(`content/${name}.${lang}.md`);
     if (S.view !== view || S.lang !== lang || S.chapter + S.article !== key || !el.isConnected) return false;
     renderMarkdown(el, md);
+    const h1 = el.querySelector("h1");
+    setTitle(name === "home" || !h1 ? "" : h1.textContent.trim());
+    focusHeading(el);
     return true;
   }
   function scrollToAnchor() {
@@ -433,7 +448,7 @@
     return `<section class="home-who" aria-labelledby="who-title">
       <h2 id="who-title">${esc(t("whoTitle"))}</h2>
       <div class="who-groups">${groups}</div>
-      <p class="who-foot"><a class="btn btn-primary" href="#/craft?step=1">${esc(t("whoQuiz"))}</a><span>${esc(t("whoNone"))} <a href="#/craft?step=2&s=general">${esc(t("whoAll"))}</a></span></p>
+      <p class="who-foot"><span>${esc(t("whoNone"))}</span> <a class="pill pill-any" href="#/craft?step=2&s=personal-data">${esc(t("whoAll"))}</a></p>
     </section>`;
   }
   // How many mappings a second person has checked, counted from the data
@@ -527,21 +542,38 @@
         <p class="craft-note">${esc(t("craftNote"))}</p></nav>
       <div class="craft-main">
         <p class="kicker">${esc(fmt(t("craftStepOf"), n, CRAFT_STEPS.length))}</p>
-        <div class="prose craft-guide" id="craft-guide"><p class="hint">${esc(t("loading"))}</p></div>
+        <div class="prose craft-guide" id="craft-guide"><h1>${esc(t("cs_" + step))}</h1></div>
+        <details class="craft-why" id="craft-why" hidden${craftWhyOpen ? " open" : ""}><summary>${esc(t("craftWhy"))}</summary><div class="prose" id="craft-why-body"></div></details>
         <section class="craft-answer" id="craft-answer" aria-live="polite"></section>
         <nav class="pager craft-pager" aria-label="${esc(t("navCraft"))}">
           ${n > 1 ? `<a class="pager-prev" href="${craftHref(n - 1)}"><span>${esc(t("chPrev"))}</span>${esc(t("cs_" + CRAFT_STEPS[n - 2]))}</a>` : "<span></span>"}
-          ${n < CRAFT_STEPS.length && n > 1 ? `<a class="pager-next" href="${craftHref(n + 1)}"><span>${esc(t("chNext"))}</span>${esc(t("cs_" + CRAFT_STEPS[n]))}</a>` : ""}</nav>
+          ${n < CRAFT_STEPS.length && n > 1 ? `<a class="pager-next" href="${craftHref(n + 1)}"><span>${esc(t("chNext"))}</span>${esc(t("cs_" + CRAFT_STEPS[n]))}</a>` : ""}
+          ${n === CRAFT_STEPS.length ? `<a class="pager-next" href="#/guide?c=risk"><span>${esc(t("craftAfter"))}</span>${esc(chapterTitle("risk"))}</a>` : ""}</nav>
       </div></div></article>`;
+    setTitle(`${t("cs_" + step)} · ${t("navCraft")}`);
+    const why = document.getElementById("craft-why");
+    why.addEventListener("toggle", () => { craftWhyOpen = why.open; });
     const box = document.getElementById("craft-answer");
     if (step !== "about" && !S.sectors.length) box.innerHTML = craftPick();
     else ({ about: craftAbout, profile: craftProfile, actors: craftActors, framework: craftFramework, acts: craftActs, soa: craftSoa })[step](box);
     const md = await loadMd(`content/craft/${step}.${S.lang}.md`);
     const g = document.getElementById("craft-guide");
     if (!g || S.view !== "craft" || S.step !== n) return;
-    renderMarkdown(g, md);
+    // the heading and the first paragraph stay on top; everything else waits behind "Why this, and what to do"
+    const tmp = document.createElement("div");
+    renderMarkdown(tmp, md);
+    const h1 = tmp.querySelector("h1");
+    const lead = h1 && h1.nextElementSibling && h1.nextElementSibling.tagName === "P" ? h1.nextElementSibling : null;
+    g.innerHTML = "";
+    if (h1) g.appendChild(h1);
+    if (lead) g.appendChild(lead);
+    const body = document.getElementById("craft-why-body");
+    while (tmp.firstChild) body.appendChild(tmp.firstChild);
+    why.hidden = !body.textContent.trim();
+    focusHeading(g);
     scrollToAnchor();
   }
+  let craftWhyOpen = false;
   // No answers yet
   function craftPick() {
     const items = D.sectors.filter((x) => x.selectable === "yes" && !D.parents[x.id].length);
@@ -703,8 +735,7 @@
     box.innerHTML = `<div class="craft-card">${answerHead("craftYourAnswer")}
         <p>${esc(t(sys ? "levelLeadBoth" : "levelLeadOrg"))}</p>
         ${ai ? `<p class="warn-text">${esc(fmt(t("ctlUnreviewed"), ai, rows.flatMap((r) => r.ds).length))}</p>` : ""}
-        <div class="craft-download"><button type="button" class="btn btn-primary" id="soa-xlsx">${esc(t("craftDownload"))}</button><button type="button" class="btn" id="soa-csv">CSV</button>
-          <a href="${craftHref(4)}">${esc(t("craftChangeFw"))}</a></div></div>
+        <p class="craft-links"><a href="${craftHref(4)}">${esc(t("craftChangeFw"))}</a></p></div>
       ${sys ? `<div class="level-tabs" role="tablist" aria-label="${esc(t("cs_soa"))}">
           <button type="button" role="tab" id="tab-org" aria-controls="pane-org" aria-selected="${String(craftTab === "org")}" class="level-tab level-org">${level("levelOrg", orgName, orgDoc, fmt(t("levelPicked"), picked, rows.length))}</button>
           <button type="button" role="tab" id="tab-sys" aria-controls="pane-sys" aria-selected="${String(craftTab === "sys")}" class="level-tab level-sys">${level("levelSys", sysName, sysDoc, fmt(t("toolSysSum"), sysCount))}</button></div>` : ""}
@@ -715,7 +746,10 @@
         <div class="soa-list ctl-list" id="soa-list"></div>
         ${gapsHtml(withS(MANDATORY, () => gapRows()), fw)}</section>
       ${sys ? `<section class="craft-card level-pane level-sys" id="pane-sys" role="tabpanel" aria-labelledby="tab-sys"${craftTab === "sys" ? "" : " hidden"}>
-        <p class="hint">${esc(t("craftSysHint"))}</p><div id="craft-sys"></div></section>` : ""}`;
+        <p class="hint">${esc(t("craftSysHint"))}</p><div id="craft-sys"></div></section>` : ""}
+      <div class="soa-bar" role="region" aria-label="${esc(t("craftDownload"))}">
+        <span class="soa-bar-count level-org"><span class="level-count">${esc(fmt(t("levelPicked"), picked, rows.length))}</span></span>
+        <button type="button" class="btn btn-primary" id="soa-xlsx">${esc(t("craftDownload"))}</button><button type="button" class="btn" id="soa-csv">CSV</button></div>`;
     const list = box.querySelector("#soa-list");
     const drawList = () => {
       let body = "", last = null;
@@ -970,10 +1004,10 @@
     };
     const chainsHtml = chained.map((id) => `<ul class="tree aa-chain">${walk(id, 0, new Set([id]))}</ul>`).join("");
     box.innerHTML = `<section class="aa" id="aa">
-      <div class="aa-head"><p class="aa-summary">${esc(fmt(t("aaSummary"), acts.length, inChains, alone.length))}</p>
+      <div class="aa-head"><p class="aa-summary">${esc(chained.length ? fmt(t("aaSummary"), acts.length, inChains, alone.length) : fmt(t("aaSummaryFlat"), acts.length, alone.length))}</p>
         <button type="button" class="btn btn-line" id="aa-full" aria-pressed="${String(actsFull)}">${esc(t(actsFull ? "chainsHide" : "chainsShow"))}</button></div>
       ${chained.length ? `<h4>${esc(t("aaChains"))}</h4><p class="hint">${esc(t(actsFull ? "aaChainsHintFull" : "aaChainsHint"))}</p><div class="chains aa-chains">${chainsHtml}</div>` : ""}
-      ${alone.length ? `<h4>${esc(t("aaAlone"))}</h4><ul class="aa-list">${alone.map((id) => `<li>${node(id)}</li>`).join("")}</ul>` : ""}
+      ${alone.length ? `<h4>${esc(t(chained.length ? "aaAlone" : "aaDirect"))}</h4><ul class="aa-list">${alone.map((id) => `<li>${node(id)}</li>`).join("")}</ul>` : ""}
       ${others.length ? `<details class="aa-more"><summary>${esc(fmt(t("aaOther"), others.length))}</summary><p class="hint">${esc(t("aaOtherHint"))}</p><ul class="aa-list">${others.map((id) => `<li>${node(id)}</li>`).join("")}</ul></details>` : ""}
       <p class="aa-links"><a href="#/sources?scope=core&s=${sParam()}&rec=0">${esc(t("aaOpenActs"))}</a></p>
     </section>`;
@@ -1848,10 +1882,47 @@
   async function renderAbout() {
     const el = docLayout(t("tocTitle"));
     if (!(await mdInto(el, "about"))) return;
+    const road = el.querySelector("#about-roadmap");
+    if (road) road.outerHTML = roadmapHtml();
     const plans = el.querySelector("#about-plans");
     if (plans) plans.outerHTML = `<p>${esc(t("plansIntro"))}</p><ul class="plans">${(t("plans") || []).map(([h, d]) => `<li><b>${esc(h)}</b> ${esc(d)}</li>`).join("")}</ul>`;
     buildToc(document.getElementById("toc"), el, false);
     scrollToAnchor();
+  }
+  // Mapping roadmap: laws first, then regulations sector by sector. Each act in force that sets requirements goes to
+  // the first milestone it belongs to; progress is counted from the data (acts with mapped provisions, reviewed mappings).
+  const MILESTONES = [
+    ["laws", (x) => x.type === "law"],
+    ["banks", (x, sec) => x.type === "nbu_resolution" || sec.has("finance")],
+    ["ci", (x, sec) => ["ki", "kii", "cii-1-2", "cii-3-4", "ics"].some((id) => sec.has(id))],
+    ["gov", (x, sec) => ["public-sector", "ncs-bodies", "state-ir", "public-sir", "public-restricted"].some((id) => sec.has(id))],
+    ["mil", (x, sec) => x.type === "nato_policy" || ["defence", "defence-industry", "nato-info", "state-secrets"].some((id) => sec.has(id))],
+    ["other", () => true],
+  ];
+  function roadmapHtml() {
+    const acts = D.sources.filter((x) => x.scope === "core" && IN_EFFECT(x.status) && x.role === "requirements");
+    const buckets = MILESTONES.map(() => []);
+    acts.forEach((x) => {
+      const sec = new Set((D.applBySource[x.id] || []).map((a) => a.sector_id));
+      buckets[MILESTONES.findIndex(([, test]) => test(x, sec))].push(x);
+    });
+    let current = -1;
+    const items = MILESTONES.map(([id], i) => {
+      const xs = buckets[i];
+      const done = xs.filter((x) => D.mappedProvs[x.id] && D.mappedProvs[x.id].size).length;
+      const ids = new Set(xs.map((x) => x.id));
+      const ms = D.mappings.filter((m) => m.control_id && D.provById[m.provision_id] && ids.has(D.provById[m.provision_id].source_id));
+      const rev = ms.filter((m) => m.review_status === "reviewed").length;
+      const complete = xs.length && done === xs.length && rev === ms.length;
+      if (!complete && current < 0) current = i;
+      const state = complete ? "done" : i === current ? "now" : "next";
+      const pct = xs.length ? Math.round((done / xs.length) * 100) : 0;
+      return `<li class="ms ms-${state}"><div class="ms-head"><span class="ms-num">${i + 1}</span><b>${esc(t("ms_" + id))}</b><span class="badge">${esc(t("msState_" + state))}</span></div>
+        <p class="ms-text">${esc(t("msText_" + id))}</p>
+        <div class="meter" role="img" aria-label="${esc(fmt(t("msActs"), done, xs.length))}"><span style="width:${Math.max(pct, done ? 1 : 0)}%"></span></div>
+        <p class="ms-figs">${esc(fmt(t("msActs"), done, xs.length))}${ms.length ? ` · ${esc(fmt(t("msReviewed"), rev, ms.length))}` : ""}</p></li>`;
+    }).join("");
+    return `<p>${esc(t("msIntro"))}</p><ol class="milestones">${items}</ol>`;
   }
   // Methodology placeholders: the data version, the maintainer links and the open data files
   function fillMethod(el) {
@@ -1885,7 +1956,7 @@
       app.innerHTML = `<p class="notice">${esc(fmt(t("loadError"), e.message))}</p>`;
       return;
     }
-    window.addEventListener("hashchange", () => { if (readHash()) { render(); window.scrollTo(0, 0); } });
+    window.addEventListener("hashchange", () => { if (readHash()) { focusNext = true; render(); window.scrollTo(0, 0); } });
     // the header menus close on a click outside them or on Escape; opening one closes the other
     const menus = () => [...document.querySelectorAll(".nav-menu")];
     document.addEventListener("click", (e) => {
