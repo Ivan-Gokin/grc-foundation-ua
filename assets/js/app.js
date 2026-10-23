@@ -2023,12 +2023,26 @@
 
   // ------------------------------------------------------------------ about
   // The text is content/about.<lang>.md; the version, links, data files and plans are filled in here.
+  // Acknowledgements: content/contributors.csv (name, contribution in both languages, optional link). While it is empty,
+  // the page invites the reader to be the first.
+  async function thanksHtml() {
+    const text = await loadMd("content/contributors.csv");
+    const rows = text ? Papa.parse(text, { header: true, skipEmptyLines: true }).data.filter((r) => (r.name || "").trim()) : [];
+    if (!rows.length) return `<div class="thanks-empty"><p><b>${esc(t("thanksEmpty"))}</b> ${esc(t("thanksEmptyText"))}</p><p><a href="#ways">${esc(t("thanksHow"))}</a></p></div>`;
+    return `<table class="thanks"><thead><tr><th>${esc(t("thanksName"))}</th><th>${esc(t("thanksWhat"))}</th></tr></thead><tbody>${rows.map((r) => {
+      const name = r.url && /^https?:\/\//.test(r.url) ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.name)}</a>` : esc(r.name);
+      return `<tr><td>${name}</td><td>${esc(L(r, "contribution"))}</td></tr>`;
+    }).join("")}</tbody></table>`;
+  }
   // How to contribute: where help is needed (the review meter), the ways to help, contacts
   async function renderContribute() {
     const el = docLayout(t("tocTitle"));
     if (!(await mdInto(el, "contribute"))) return;
     const box = el.querySelector("#contrib-review");
     if (box) box.outerHTML = homeReview() + reviewByArea();
+    const thanks = el.querySelector("#contrib-thanks");
+    if (thanks) thanks.outerHTML = await thanksHtml();
+    el.querySelectorAll('a[href="#ways"]').forEach((x) => x.addEventListener("click", (e) => { e.preventDefault(); const w = el.querySelector("#ways"); if (w) w.scrollIntoView({ behavior: "smooth", block: "start" }); }));
     buildToc(document.getElementById("toc"), el, false);
     scrollToAnchor();
   }

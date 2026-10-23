@@ -1,5 +1,10 @@
 # Changelog
 
+## How to contribute: acknowledgements (2026-10-23)
+
+- New "Acknowledgements" section: a Name and Contribution table read from `content/contributors.csv` (name, contribution in Ukrainian and English, an optional link). While it is empty, it invites the reader to be the first and points to the ways to help.
+- The page lead no longer names the author: the project's quality depends on other GRC practitioners taking part.
+
 ## Home: a description and one button into the questionnaire (2026-10-23)
 
 - The top block of the home page no longer asks the first question. It says what the questionnaire does ("Let's define your context and find the requirements that fit"), lists the three questions, and has one button, "Start the questionnaire", which opens step 1. "Not sure, or just looking?" stays under it.

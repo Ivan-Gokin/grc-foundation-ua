@@ -1,6 +1,6 @@
 # Як долучитися
 
-<p class="chapter-lead">GRC-фундамент — некомерційний відкритий проєкт <b>Івана Гокіна</b>. Він настільки добрий, наскільки його перевіряють: практики, які знають акти, застосовують заходи й помічають, що не так або чого бракує.</p>
+<p class="chapter-lead">GRC-фундамент — некомерційний відкритий проєкт. Його якість залежить від участі інших GRC-фахівців: тих, хто знає акти, застосовує заходи на практиці й помічає, що не так або чого бракує.</p>
 
 ## Де допомога потрібна найбільше
 
@@ -12,7 +12,7 @@
 
 ## Як допомогти
 
-<ul class="help-list">
+<ul class="help-list" id="ways">
 <li><a href="#/controls"><b>Знайшли хибне зіставлення?</b><span>Натисніть «Повідомити про помилку» поруч із ним у Заходах: форма відкриється із заповненими положенням і заходом</span></a></li>
 <li><a href="https://github.com/Ivan-Gokin/grc-foundation-ua/issues/new?template=new-or-changed-act.yml" target="_blank" rel="noopener"><b>Бракує акта або його змінено?</b><span>Повідомте через коротку форму на GitHub</span></a></li>
 <li><a href="https://github.com/Ivan-Gokin/grc-foundation-ua/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener"><b>Добре знаєте акти?</b><span>Станьте другим рецензентом у робочих книгах зіставлень</span></a></li>
@@ -20,6 +20,12 @@
 </ul>
 
 Зміни до даних, текстів чи коду можна запропонувати через pull request на [GitHub](https://github.com/Ivan-Gokin/grc-foundation-ua).
+
+## Подяки
+
+Люди, які зробили GRC-фундамент кращим.
+
+<div id="contrib-thanks"></div>
 
 ## Співпраця
 

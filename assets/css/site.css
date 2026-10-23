@@ -1421,3 +1421,9 @@ h2.craft-answer-label { font-size: .85rem; }
 .home-start .q-skip-top { margin: 14px 0 0; }
 .home-who .hq-step { margin: 0; font: 600 .8rem var(--display); font-stretch: 85%; text-transform: uppercase; letter-spacing: .14em; color: var(--accent) !important; }
 .home-who .q-skip-top { font-size: .88rem; line-height: 1.5; }
+
+/* How to contribute: acknowledgements */
+.thanks-empty { padding: 14px 18px; border: 1px dashed var(--rule); background: var(--surface); }
+.thanks-empty p { margin: 0; }
+.thanks-empty p + p { margin-top: 6px; }
+#ways { scroll-margin-top: 96px; }
