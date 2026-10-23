@@ -1,5 +1,15 @@
 # Changelog
 
+## The wizard keeps its answers; thin data said plainly; a self-explaining workbook (2026-10-23)
+
+- "Craft your baseline" keeps its own profile and framework apart from the filters in Explore: opening an act, the Acts register or the NIST SP 800-53 page no longer wipes or changes the answers, and the header link resumes where the reader left. Links from the wizard no longer switch off recommended acts in Explore.
+- Until the reader picks a framework, the wizard follows the recommendation for the current profile, also when a link opens a later step directly; a framework picked on purpose stays in the link (`fwc=1`).
+- Once the reader has made a choice (an act accepted, a control ticked, a framework picked), leaving or reloading the page asks first; the question stops after the download. "Start over" in the step list clears everything (a second click confirms).
+- Step 4 recommends the framework the acts are actually mapped to when the sector's usual one has nothing yet, and says so; when neither has anything, it says that too. Step 6 says plainly when no control is required by law and offers to switch to the framework that has some.
+- Step 6: ISO/IEC 27001 clauses 4–10 are a separate block, not counted as SoA rows; the pinned bar's count follows the open tab; a "Skip to the download" link for keyboard users; "Your answer" is the h2 of each step.
+- The workbook (`soa_…xlsx` or `target-profile_…xlsx`): README first (profile, framework, data version, link, what each sheet and column means, the relation symbols), then SoA or Target profile, Clauses 4–10, No counterpart (provisions no control covers), Acts (with Owner, Reviewed on, Notes and rows for your own requirements), Regulators (role, contact, channel, reporting deadline to fill in) and, when needed, NIST SP 800-53 (clear column names; Applicable pre-filled for the baseline profile). Headers and the first columns are frozen in every sheet.
+- Links write plain commas (`s=finance,personal-data`); "1 act" instead of "1 acts".
+
 ## A way out at the top of the questionnaire (2026-10-23)
 
 - At the top of the questions, on the home page and in step 1: "Not sure, or just looking?" with two links, "Requirements for any organisation" (the baseline for every organisation, step 2) and "All acts" (the full register). It replaces the "Skip" link that sat at the bottom of step 1.

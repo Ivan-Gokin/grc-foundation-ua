@@ -1,6 +1,6 @@
 # Your profile
 
-This is how the law sees your organisation. Each line below is a category that acts in force name directly, such as "bank", "owner of a critical infrastructure facility" or "processes personal data". If a line is wrong, or one is missing, adjust the profile: everything that follows depends on it.
+This is how the law sees your organisation: the categories that acts in force name directly, such as "bank", "owner of a critical infrastructure facility" or "processes personal data". If one is wrong or missing, adjust the profile: everything that follows depends on it.
 
 The law is only part of the picture. Before you move on, write down for yourself, in a page or two:
 

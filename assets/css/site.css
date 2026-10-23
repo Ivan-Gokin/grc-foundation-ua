@@ -1388,3 +1388,21 @@ h1[tabindex="-1"]:focus { outline: none; }
 .q-skip-top a { white-space: nowrap; }
 .craft .q-skip-top { margin: 0; }
 .home-who.home-q .q-skip-top { font-size: .88rem; line-height: 1.5; margin: 4px 0 10px; }
+
+/* the wizard: notices for thin data, the clauses block, Start over, the skip link to the download */
+.craft-notice { margin: 10px 0 0; padding: 10px 14px; border-left: 3px solid var(--warn, #b26a00); background: var(--surface-2); font-size: .95rem; }
+.craft-notice .link-btn { display: inline; padding: 0; }
+h2.craft-answer-label { font-size: .85rem; }
+.soa-clauses { margin: 0 0 16px; border: 1px solid var(--rule); background: var(--surface-2); }
+.soa-clauses > summary { cursor: pointer; padding: 10px 14px; font-weight: 500; list-style: none; }
+.soa-clauses > summary::-webkit-details-marker { display: none; }
+.soa-clauses > summary::before { content: "▸ "; color: var(--accent); }
+.soa-clauses[open] > summary::before { content: "▾ "; }
+.soa-clauses > .hint { margin: 0 14px 10px; }
+.soa-clauses .ctl-list { border-width: 1px 0 0; }
+.soa-annex { margin: 4px 0 10px; font-size: 1rem; }
+.craft-links { display: flex; flex-wrap: wrap; gap: 6px 20px; }
+.skip-dl { position: absolute; left: -9999px; }
+.skip-dl:focus { position: static; }
+.craft-reset { margin: 10px 0 0; }
+.craft-reset .link-btn { font-size: .85rem; padding: 0; }

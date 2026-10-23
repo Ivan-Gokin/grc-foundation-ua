@@ -167,6 +167,13 @@
     S.chapter = CHAPTERS.some((c) => c.id === ch) ? ch : CHAPTERS[0].id;
     if (S.view === "guide" && CRAFT_FROM[ch]) { S.view = "craft"; S.step = CRAFT_FROM[ch]; } // chapters that became steps
     if (S.view === "craft" && p.has("step")) S.step = Math.min(Math.max(parseInt(p.get("step"), 10) || 1, 1), 6);
+    if (S.view === "craft") {
+      // a link with s= or fw= sets the wizard's answers; a plain link (the header) resumes them, whatever Explore did
+      if (p.has("s")) W.sectors = S.sectors.slice(); else if (W.sectors) S.sectors = W.sectors.slice();
+      if (ORG_FWS.includes(p.get("fw"))) W.fw = p.get("fw"); else if (W.fw) S.fw = W.fw;
+      if (!ORG_FWS.includes(S.fw)) S.fw = W.fw || "iso27001-2022";
+      if (p.get("fwc") === "1") CR.fwChosen = true; // a link to a framework the reader picked on purpose
+    }
     S.act = p.get("act") || ""; // an ELI or id, e.g. from an /eli/... link resolved by 404.html
     S.all = p.get("all") === "1";
     S.by = p.get("by") === "act" ? "act" : "control";
@@ -192,10 +199,10 @@
     }
     if (S.view === "articles" && S.article) p.set("a", S.article);
     if (S.view === "guide") p.set("c", S.chapter);
-    if (S.view === "craft") { p.set("step", S.step); if (S.step >= 4) p.set("fw", S.fw); }
+    if (S.view === "craft") { p.set("step", S.step); if (S.step >= 4) { p.set("fw", S.fw); if (CR.fwChosen) p.set("fwc", "1"); } }
     if (S.view === "controls" && S.fw === SYSTEM_FW) { p.set("fw", S.fw); p.set("b", S.baseline); if (S.sprofile !== "none") p.set("gp", S.sprofile); ["sb", "sp", "sl", "drafts"].forEach((k) => p.set(k, S[k] ? "1" : "0")); }
     if (S.q && (S.view === "controls" || S.view === "sources")) p.set("q", S.q);
-    const next = `#/${S.view}?${p.toString()}`;
+    const next = `#/${S.view}?${p.toString().replace(/%2C/g, ",")}`; // plain commas: s=finance,personal-data
     if (location.hash !== next) history.replaceState(null, "", next);
   }
 
@@ -540,13 +547,34 @@
   }
   const CRAFT_STEPS = ["about", "profile", "actors", "framework", "acts", "soa"];
   const CRAFT_FROM = { context: 2, actors: 3, standard: 4, requirements: 5, soa: 6 }; // old guide chapters now live here
-  const CR = { recActs: new Set(), euActs: new Set(), picked: new Set(), unpicked: new Set(), fwChosen: false };
+  const CR = { recActs: new Set(), euActs: new Set(), picked: new Set(), unpicked: new Set(), fwChosen: false, dirty: false };
+  const W = { sectors: null, fw: null }; // the wizard's own profile and framework (Explore keeps its filters in S)
+  const ORG_FWS = ["iso27001-2022", "csf-2.0"];
+  const QA_START = { q1: [], q2: ["pd"], q3: "no", touched: false };
+  // choices made after the questions; once there are any, leaving the page asks first
+  const markDirty = () => { CR.dirty = true; };
+  window.addEventListener("beforeunload", (e) => { if (CR.dirty) { e.preventDefault(); e.returnValue = ""; } });
+  function craftReset() {
+    Object.assign(QA, JSON.parse(JSON.stringify(QA_START)));
+    ["recActs", "euActs", "picked", "unpicked"].forEach((k) => CR[k].clear());
+    Object.assign(CR, { fwChosen: false, dirty: false });
+    Object.assign(W, { sectors: null, fw: null });
+    S.sectors = [];
+    sysBaseGuessed = false;
+    location.hash = "#/craft?step=1";
+  }
   const CSF_SECTORS = ["public-sector", "defence", "defence-industry", "cii-1-2", "cii-3-4", "ki"];
-  // The framework the profile points to, and why
+  // How many controls of a framework have legal drivers for this profile (mandatory acts only)
+  const lawCount = (fw) => withS(MANDATORY, () => Object.keys(driversFor(fw, expandedSectors(), true)).length);
+  // The framework the profile points to, and why: the sector rule, unless the acts mapped so far give that framework
+  // nothing and the other one something. Returns [framework, reason key, reason arguments, note key].
   function recFw() {
-    if (S.sectors.some((id) => CSF_SECTORS.includes(id))) return ["csf-2.0", "fwWhyCsf"];
-    if (S.sectors.includes("finance")) return ["iso27001-2022", "fwWhyBank"];
-    return ["iso27001-2022", "fwWhyIso"];
+    const rule = S.sectors.some((id) => CSF_SECTORS.includes(id)) ? ["csf-2.0", "fwWhyCsf"]
+      : S.sectors.includes("finance") ? ["iso27001-2022", "fwWhyBank"] : ["iso27001-2022", "fwWhyIso"];
+    const other = rule[0] === "csf-2.0" ? "iso27001-2022" : "csf-2.0";
+    const n = lawCount(rule[0]), m = lawCount(other);
+    if (!n && m) return [other, "fwWhyCoverage", [fwLabel(fwRow(other)), m, fwLabel(fwRow(rule[0]))], ""];
+    return [rule[0], rule[1], [], !n && !m ? "fwNoneMapped" : ""];
   }
   const sParam = () => encodeURIComponent(S.sectors.join(",")).replace(/%2C/g, ",");
   const craftHref = (n) => `#/craft?step=${n}${S.sectors.length ? `&s=${sParam()}` : ""}`;
@@ -560,12 +588,17 @@
   const WITH_REC = { rec: true, all: false, q: "", drafts: true };
 
   async function renderCraft() {
+    // until the reader picks a framework, it follows the recommendation for the current profile
+    if (!CR.fwChosen && S.sectors.length) { S.fw = recFw()[0]; writeHash(); }
+    W.sectors = S.sectors.slice();
+    if (ORG_FWS.includes(S.fw)) W.fw = S.fw;
     const n = S.step;
     const step = CRAFT_STEPS[n - 1];
     app.innerHTML = `<article class="craft"><div class="craft-body">
       <nav class="craft-steps" aria-label="${esc(t("navCraft"))}"><p class="craft-label">${esc(t("navCraft"))}</p>
         <ol>${CRAFT_STEPS.map((k, i) => `<li${i + 1 === n ? ' class="current"' : ""}><a href="${craftHref(i + 1)}"${i + 1 === n ? ' aria-current="step"' : ""}><span class="craft-num">${i + 1}</span><span>${esc(t("cs_" + k))}</span></a></li>`).join("")}</ol>
-        <p class="craft-note">${esc(t("craftNote"))}</p></nav>
+        <p class="craft-note">${esc(t("craftNote"))}</p>
+        <p class="craft-reset"><button type="button" class="link-btn" id="craft-reset">${esc(t("craftReset"))}</button></p></nav>
       <div class="craft-main">
         <p class="kicker">${esc(fmt(t("craftStepOf"), n, CRAFT_STEPS.length))}</p>
         <div class="prose craft-guide" id="craft-guide"><h1>${esc(t("cs_" + step))}</h1></div>
@@ -577,6 +610,13 @@
           ${n === CRAFT_STEPS.length ? `<a class="pager-next" href="#/guide?c=risk"><span>${esc(t("craftAfter"))}</span>${esc(chapterTitle("risk"))}</a>` : ""}</nav>
       </div></div></article>`;
     setTitle(`${t("cs_" + step)} · ${t("navCraft")}`);
+    const reset = document.getElementById("craft-reset");
+    let armed = null;
+    reset.onclick = () => {
+      if (armed) { clearTimeout(armed); craftReset(); return; }
+      reset.textContent = t("craftResetConfirm");
+      armed = setTimeout(() => { armed = null; reset.textContent = t("craftReset"); }, 4000);
+    };
     const why = document.getElementById("craft-why");
     why.addEventListener("toggle", () => { craftWhyOpen = why.open; });
     const box = document.getElementById("craft-answer");
@@ -611,7 +651,7 @@
       <p class="hint">${esc(t("sidePickOr"))}</p>
       <div class="pills">${items.map((x) => `<a class="pill" href="#/craft?step=${S.step}&s=${encodeURIComponent(x.id)}">${esc(L(x, "label"))}</a>`).join("")}</div></div>`;
   }
-  const answerHead = (key) => `<p class="craft-answer-label">${esc(t(key))}</p>`;
+  const answerHead = (key) => `<h2 class="craft-answer-label">${esc(t(key))}</h2>`;
 
   // 1. Three questions
   function craftAbout(box) {
@@ -678,28 +718,28 @@
     });
     const rows = [...byIssuer].sort((a, b) => b[1].length - a[1].length).map(([who, xs]) => {
       const types = uniq(xs.map((x) => x.type));
-      return `<li><span class="actor-name">${esc(who)}</span><span class="actor-count">${esc(fmt(t("craftActs"), xs.length))}</span>
+      return `<li><span class="actor-name">${esc(who)}</span><span class="actor-count">${esc(fmt(t(xs.length === 1 ? "craftActs1" : "craftActs"), xs.length))}</span>
         <span class="actor-acts">${esc(xs.slice(0, 4).map((x) => shortRef(x, true)).join("; "))}${xs.length > 4 ? "…" : ""}</span>
-        <a href="#/sources?scope=core&rec=0&s=${sParam()}${types.length === 1 ? `&type=${esc(types[0])}` : ""}">${esc(t("craftSeeActs"))}</a></li>`;
+        <a href="#/sources?scope=core&s=${sParam()}${types.length === 1 ? `&type=${esc(types[0])}` : ""}">${esc(t("craftSeeActs"))}</a></li>`;
     }).join("");
     box.innerHTML = `<div class="craft-card">${answerHead("craftYourAnswer")}<ul class="actor-list">${rows}</ul></div>`;
   }
 
   // 4. The recommended framework, with the reason, and the choice
   function craftFramework(box) {
-    const [rec, why] = recFw();
+    const [rec, why, args, note] = recFw();
     if (!CR.fwChosen) S.fw = rec;
-    const exp = expandedSectors();
-    const count = (fw) => withS(MANDATORY, () => Object.keys(driversFor(fw, exp, true)).length);
+    const count = lawCount;
     const leafs = (fw) => D.controls[fw].filter((c) => ["subcategory", "requirement", "control"].includes(c.level)).length;
     box.innerHTML = `<div class="craft-card">${answerHead("craftYourAnswer")}
-      <p class="craft-figure">${esc(fmt(t("craftFwRec"), fwLabel(fwRow(rec))))}</p><p>${esc(t(why))}</p>
+      <p class="craft-figure">${esc(fmt(t("craftFwRec"), fwLabel(fwRow(rec))))}</p><p>${esc(fmt(t(why), ...args))}</p>
+      ${note ? `<p class="craft-notice">${esc(t(note))}</p>` : ""}
       <fieldset class="fw-choice"><legend>${esc(t("craftFwPick"))}</legend>
         ${D.orgFrameworks.map((f) => `<label class="fw-option${S.fw === f.id ? " on" : ""}"><input type="radio" name="craft-fw" value="${esc(f.id)}"${S.fw === f.id ? " checked" : ""}>
           <span><b>${esc(fwLabel(f))}</b>${f.id === rec ? ` <span class="badge cov-full">${esc(t("craftRecommended"))}</span>` : ""}
           <span class="hint block">${esc(fmt(t("craftFwCount"), count(f.id), leafs(f.id)))}</span></span></label>`).join("")}</fieldset></div>`;
     box.querySelectorAll('input[name="craft-fw"]').forEach((r) => r.addEventListener("change", () => {
-      S.fw = r.value; CR.fwChosen = true; writeHash();
+      S.fw = r.value; W.fw = r.value; CR.fwChosen = true; markDirty(); writeHash();
       box.querySelectorAll(".fw-option").forEach((l) => l.classList.toggle("on", l.querySelector("input").checked));
     }));
   }
@@ -711,13 +751,14 @@
     const eu = withS(WITH_REC, () => listedActs("reference"));
     const check = (set, x) => `<li><label class="craft-check"><input type="checkbox" data-set="${set}" value="${esc(x.id)}"${(set === "rec" ? CR.recActs : CR.euActs).has(x.id) ? " checked" : ""}>
       <span><a href="#/sources?act=${esc(x.id)}">${esc(sourceRef(x))}</a>${L(x, "description") ? `<span class="aa-desc block">${esc(L(x, "description"))}</span>` : ""}</span></label></li>`;
-    box.innerHTML = `<div class="craft-card"><h3 class="craft-sub">${esc(t("craftRequired"))}</h3><div id="craft-mandatory"></div></div>
+    box.innerHTML = `<h2 class="sr-only">${esc(t("craftYourAnswer"))}</h2><div class="craft-card"><h3 class="craft-sub">${esc(t("craftRequired"))}</h3><div id="craft-mandatory"></div></div>
       ${rec.length ? `<div class="craft-card"><h3 class="craft-sub">${esc(fmt(t("craftRecActs"), rec.length))}</h3><ul class="aa-list">${rec.map((x) => check("rec", x)).join("")}</ul></div>` : ""}
       ${eu.length ? `<div class="craft-card"><h3 class="craft-sub">${esc(fmt(t("aaEu"), eu.length))}</h3><ul class="aa-list">${eu.map((x) => check("eu", x)).join("")}</ul></div>` : ""}`;
     drawApplicable(box.querySelector("#craft-mandatory"), true);
     box.querySelectorAll("input[data-set]").forEach((c) => c.addEventListener("change", () => {
       const set = c.dataset.set === "rec" ? CR.recActs : CR.euActs;
       if (c.checked) set.add(c.value); else set.delete(c.value);
+      markDirty();
     }));
   }
 
@@ -742,6 +783,7 @@
   const isLocked = (r) => r.kind === "required" || r.kind === "standard";
   const isPicked = (r) => isLocked(r) || (r.kind === "recommended" ? !CR.unpicked.has(r.c.id) : CR.picked.has(r.c.id));
   function setPicked(r, on) {
+    markDirty();
     if (r.kind === "recommended") { if (on) CR.unpicked.delete(r.c.id); else CR.unpicked.add(r.c.id); }
     else if (r.kind === "optional") { if (on) CR.picked.add(r.c.id); else CR.picked.delete(r.c.id); }
   }
@@ -756,7 +798,13 @@
     const sysCount = sys ? withS({ ...SYS_STATE, q: "" }, () => systemRows().length) : 0;
     const base = profilesOf("baseline").find((p) => p.id === S.baseline);
     const ai = rows.flatMap((r) => r.ds).filter((m) => m.review_status === "ai_draft").length;
-    const picked = rows.filter(isPicked).length;
+    // ISO/IEC 27001 clauses 4-10 are not Annex A controls: they get their own block and are not counted as SoA rows
+    const clauses = rows.filter((r) => r.c.level === "requirement");
+    const soaRows = rows.filter((r) => r.c.level !== "requirement");
+    const picked = soaRows.filter(isPicked).length;
+    const byLaw = rows.filter((r) => r.kind === "required").length;
+    const otherFw = S.fw === "csf-2.0" ? "iso27001-2022" : "csf-2.0";
+    const otherN = byLaw ? 0 : lawCount(otherFw);
     const level = (key, name, sub, count) => `<span class="level-tag">${esc(t(key))}</span><span class="level-name">${esc(name)}</span><span class="level-sub">${esc(sub)}</span>${count !== undefined ? `<span class="level-count">${esc(count)}</span>` : ""}`;
     const orgName = fwLabel(fw), orgDoc = t(S.fw === "csf-2.0" ? "levelProfile" : "levelSoa");
     const sysName = "NIST SP 800-53 Rev. 5", sysDoc = base ? L(base, "label") : t("levelSysDoc");
@@ -764,35 +812,46 @@
     box.innerHTML = `<div class="craft-card">${answerHead("craftYourAnswer")}
         <p>${esc(t(sys ? "levelLeadBoth" : "levelLeadOrg"))}</p>
         ${ai ? `<p class="warn-text">${esc(fmt(t("ctlUnreviewed"), ai, rows.flatMap((r) => r.ds).length))}</p>` : ""}
-        <p class="craft-links"><a href="${craftHref(4)}">${esc(t("craftChangeFw"))}</a></p></div>
+        ${byLaw ? "" : `<p class="craft-notice">${esc(fmt(t("soaNoLaw"), fwLabel(fw)))}${otherN ? ` <button type="button" class="link-btn" id="soa-switch">${esc(fmt(t("soaSwitch"), fwLabel(fwRow(otherFw)), otherN))}</button>` : ""}</p>`}
+        <p class="craft-links"><a href="${craftHref(4)}">${esc(t("craftChangeFw"))}</a><a href="#soa-xlsx" class="skip-dl" id="skip-dl">${esc(t("craftSkipDl"))}</a></p></div>
       ${sys ? `<div class="level-tabs" role="tablist" aria-label="${esc(t("cs_soa"))}">
-          <button type="button" role="tab" id="tab-org" aria-controls="pane-org" aria-selected="${String(craftTab === "org")}" class="level-tab level-org">${level("levelOrg", orgName, orgDoc, fmt(t("levelPicked"), picked, rows.length))}</button>
+          <button type="button" role="tab" id="tab-org" aria-controls="pane-org" aria-selected="${String(craftTab === "org")}" class="level-tab level-org">${level("levelOrg", orgName, orgDoc, fmt(t("levelPicked"), picked, soaRows.length))}</button>
           <button type="button" role="tab" id="tab-sys" aria-controls="pane-sys" aria-selected="${String(craftTab === "sys")}" class="level-tab level-sys">${level("levelSys", sysName, sysDoc, fmt(t("toolSysSum"), sysCount))}</button></div>` : ""}
       <section class="craft-card level-pane level-org" id="pane-org" role="${sys ? "tabpanel" : "region"}" aria-labelledby="${sys ? "tab-org" : "org-title"}"${craftTab === "org" ? "" : " hidden"}>
-        ${sys ? "" : `<h3 class="level-title" id="org-title">${level("levelOrg", orgName, orgDoc, fmt(t("levelPicked"), picked, rows.length))}</h3>`}
+        ${sys ? "" : `<h3 class="level-title" id="org-title">${level("levelOrg", orgName, orgDoc, fmt(t("levelPicked"), picked, soaRows.length))}</h3>`}
         <div class="soa-legend"><span>${ICON_LOCK} ${esc(t("soaLocked"))}</span><span class="badge">${esc(t("soaRecommended"))}</span>
           <span class="soa-bulk"><button type="button" class="link-btn" id="pick-all">${esc(t("soaPickAll"))}</button><button type="button" class="link-btn" id="pick-none">${esc(t("soaPickNone"))}</button></span></div>
+        ${clauses.length ? `<details class="soa-clauses"><summary>${esc(fmt(t("soaClauses"), clauses.length))}</summary><p class="hint">${esc(t("soaClausesHint"))}</p><div class="soa-list ctl-list" id="soa-clauses"></div></details>
+        <h3 class="soa-annex">${esc(t("soaAnnex"))}</h3>` : ""}
         <div class="soa-list ctl-list" id="soa-list"></div>
         ${gapsHtml(withS(MANDATORY, () => gapRows()), fw)}</section>
       ${sys ? `<section class="craft-card level-pane level-sys" id="pane-sys" role="tabpanel" aria-labelledby="tab-sys"${craftTab === "sys" ? "" : " hidden"}>
         <p class="hint">${esc(t("craftSysHint"))}</p><div id="craft-sys"></div></section>` : ""}
       <div class="soa-bar" role="region" aria-label="${esc(t("craftDownload"))}">
-        <span class="soa-bar-count level-org"><span class="level-count">${esc(fmt(t("levelPicked"), picked, rows.length))}</span></span>
+        <span class="soa-bar-count"><span class="level-count" id="bar-count">${esc(craftTab === "sys" ? fmt(t("toolSysSum"), sysCount) : fmt(t("levelPicked"), picked, soaRows.length))}</span></span>
         <button type="button" class="btn btn-primary" id="soa-xlsx">${esc(t("craftDownload"))}</button><button type="button" class="btn" id="soa-csv">CSV</button></div>`;
-    const list = box.querySelector("#soa-list");
-    const drawList = () => {
+    const list = box.querySelector("#pane-org");
+    const listHtml = (xs) => {
       let body = "", last = null;
-      rows.forEach((r) => {
+      xs.forEach((r) => {
         const g = topGroup(r.c);
         if (g && g !== last) { last = g; body += `<h4 class="ctl-group">${esc(g.id)} ${esc(L(g, "name"))}</h4>`; }
         body += soaRow(r);
       });
-      list.innerHTML = body;
+      return body;
+    };
+    const drawList = () => {
+      box.querySelector("#soa-list").innerHTML = listHtml(soaRows);
+      const cl = box.querySelector("#soa-clauses");
+      if (cl) cl.innerHTML = listHtml(clauses);
     };
     drawList();
+    const sw = box.querySelector("#soa-switch");
+    if (sw) sw.onclick = () => { S.fw = otherFw; CR.fwChosen = true; markDirty(); render(); };
     const sumOrg = () => {
-      const n = fmt(t("levelPicked"), rows.filter(isPicked).length, rows.length);
+      const n = fmt(t("levelPicked"), soaRows.filter(isPicked).length, soaRows.length);
       box.querySelectorAll(".level-org .level-count").forEach((x) => { x.textContent = n; });
+      if (craftTab === "org") box.querySelector("#bar-count").textContent = n;
     };
     list.addEventListener("toggle", (e) => {
       const d = e.target;
@@ -819,6 +878,7 @@
           box.querySelector(`#pane-${k}`).hidden = k !== tab;
         });
         if (tab === "sys" && !sysBox.innerHTML) drawSideSystem(sysBox);
+        box.querySelector("#bar-count").textContent = tab === "sys" ? fmt(t("toolSysSum"), sysCount) : fmt(t("levelPicked"), soaRows.filter(isPicked).length, soaRows.length);
       };
       box.querySelector("#tab-org").onclick = () => show("org");
       box.querySelector("#tab-sys").onclick = () => show("sys");
@@ -829,6 +889,7 @@
       });
       if (craftTab === "sys") drawSideSystem(sysBox);
     }
+    box.querySelector("#skip-dl").onclick = (e) => { e.preventDefault(); box.querySelector("#soa-xlsx").focus(); };
     box.querySelector("#soa-xlsx").onclick = () => exportCraft("xlsx");
     box.querySelector("#soa-csv").onclick = () => exportCraft("csv");
   }
@@ -847,41 +908,92 @@
       : `<div class="ctl-head soa-flat">${head}<span></span></div>`;
     return `<div class="soa-row soa-${r.kind}${on ? "" : " soa-off"}"><div class="soa-sel">${sel}</div>${main}</div>`;
   }
-  // The download: every control with Applicable yes or no, the acts (mandatory, accepted, followed) and, when
-  // needed, the system profile. The reader adds their own controls and requirements as new rows.
+  // The download. README first (what each sheet is, the columns, the symbols, the profile and the data version),
+  // then the SoA or target profile, ISO clauses 4-10, the provisions no control covers, the acts, the bodies that set
+  // the rules and, when needed, NIST SP 800-53. Blank columns are for the organisation's own work; its own controls
+  // and requirements go in as new rows.
   function exportCraft(kind) {
     const rows = craftRows();
+    const fwName = fwLabel(fwRow(S.fw));
     const yes = S.lang === "uk" ? "так" : "Y", no = S.lang === "uk" ? "ні" : "N";
-    const status = { required: t("soaRequired"), standard: t("soaStandard"), recommended: t("soaRecommended"), optional: t("soaOptional") };
+    const reqBy = { required: t("xByLaw"), standard: "ISO/IEC 27001", recommended: t("xByRec"), optional: t("xByNone") };
     const why = { required: t("xWhyLaw"), standard: t("xWhyStandard"), recommended: t("xWhyRec"), optional: t("xWhyOwnDecision") };
-    const soaHeader = [t("xControlId"), t("xControl"), t("xBaseline"), t("xDrivers"), t("xCoverage"), t("xParam"),
-      t("xApplicable"), t("xReason"), t("xOrgValue"), t("xPolicy"), t("xPolicySuggested"), t("xOwner"), t("xStatus"), t("xEvidence")];
-    const soa = rows.map((r) => {
-      const { c, ds, kind } = r;
+    const drivers = (ds) => ds.map((m) => { const p = D.provById[m.provision_id]; return `${sourceRef(D.sourceById[p.source_id])}, ${L(p, "ref")} [${GLYPH[m.relationship]} ${covLabel(m.coverage)}${reviewMark(m)}]`; }).join("\n");
+    const params = (ds) => ds.filter((m) => L(m, "parameter")).map((m) => `${L(m, "parameter")} (${sourceRef(D.sourceById[D.provById[m.provision_id].source_id])}, ${L(D.provById[m.provision_id], "ref")})`).join("\n");
+    const ctlRow = (r) => {
       const on = isPicked(r);
-      const drv = ds.map((m) => { const p = D.provById[m.provision_id]; return `${sourceRef(D.sourceById[p.source_id])}, ${L(p, "ref")} [${GLYPH[m.relationship]} ${covLabel(m.coverage)}${reviewMark(m)}]`; }).join("\n");
-      const cov = ds.length ? (ds.some((m) => m.coverage === "full") ? t("fullNote") : t("partialNote")) : "";
-      const par = ds.filter((m) => L(m, "parameter")).map((m) => `${L(m, "parameter")} (${sourceRef(D.sourceById[D.provById[m.provision_id].source_id])}, ${L(D.provById[m.provision_id], "ref")})`).join("\n");
-      const pol = [...new Set(ds.map((m) => L(m, "policy")).filter(Boolean))].join("\n");
-      return [c.id, controlName(S.fw, c), status[kind], drv, cov, par, on ? yes : no, on ? why[kind] : "", "", "", pol, "", "", ""];
-    });
-    if (kind === "csv") { downloadCsv(`baseline_${stamp()}.csv`, soaHeader, soa); return; }
-    const actRow = (x, st) => [st, sourceRef(x), sourceTitle(x), typeLabel(x.type), L(x, "description"), D.mappedProvs[x.id] ? D.mappedProvs[x.id].size : "", x.url || ""];
-    const acts = withS(MANDATORY, () => listedActs("core")).map((x) => actRow(x, t("xActRequired")))
+      const cov = r.ds.length ? (r.ds.some((m) => m.coverage === "full") ? t("fullNote") : t("partialNote")) : "";
+      const pol = [...new Set(r.ds.map((m) => L(m, "policy")).filter(Boolean))].join("\n");
+      return [r.c.id, controlName(S.fw, r.c), reqBy[r.kind], drivers(r.ds), cov, params(r.ds), on ? yes : no, on ? why[r.kind] : "", "", "", pol, "", "", ""];
+    };
+    const ctlHeader = [t("xControlId"), t("xControl"), t("xReqBy"), t("xDrivers"), t("xCoverage"), t("xParam"),
+      t("xApplicable"), t("xReason"), t("xOrgValue"), t("xPolicy"), t("xPolicySuggested"), t("xOwner"), t("xStatus"), t("xEvidence")];
+    const ctlWidths = [10, 50, 16, 55, 12, 35, 12, 30, 30, 30, 40, 20, 20, 30];
+    const soaRows = rows.filter((r) => r.c.level !== "requirement"), clauses = rows.filter((r) => r.c.level === "requirement");
+    const soaName = S.fw === "csf-2.0" ? t("xSheetProfile") : "SoA";
+    const fileBase = `${S.fw === "csf-2.0" ? "target-profile" : "soa"}_${stamp()}`;
+    if (kind === "csv") { downloadCsv(`${fileBase}.csv`, ctlHeader, soaRows.map(ctlRow)); return; }
+    const sheets = [];
+    sheets.push({ name: soaName, header: ctlHeader, rows: soaRows.map(ctlRow), widths: ctlWidths, freeze: [1, 1] });
+    if (clauses.length) sheets.push({ name: t("xSheetClauses"), header: ctlHeader, rows: clauses.map(ctlRow), widths: ctlWidths, freeze: [1, 1] });
+    // provisions of the acts that bind you that no control of the framework covers
+    const gaps = withS(MANDATORY, () => gapRows());
+    sheets.push({ name: t("xSheetGaps"), header: [t("srcColRef"), t("xProvision"), t("xRequires"), t("xPolicySuggested"), t("xPolicy"), t("xOwner"), t("xStatus"), t("xEvidence")],
+      rows: gaps.map((m) => { const p = D.provById[m.provision_id]; return [sourceRef(D.sourceById[p.source_id]), L(p, "ref"), L(p, "summary"), L(m, "policy"), "", "", "", ""]; }),
+      widths: [36, 20, 60, 40, 30, 20, 20, 30], freeze: [2, 1] });
+    // the acts, with room for an owner and the reader's own requirements
+    const actRow = (x, st) => [st, sourceRef(x), sourceTitle(x), typeLabel(x.type), L(x, "description"), D.mappedProvs[x.id] ? D.mappedProvs[x.id].size : "", x.url || "", "", "", ""];
+    const mandatory = withS(MANDATORY, () => listedActs("core"));
+    const acts = mandatory.map((x) => actRow(x, t("xActRequired")))
       .concat(withS(WITH_REC, () => listedActs("core")).filter((x) => CR.recActs.has(x.id)).map((x) => actRow(x, t("xActAccepted"))))
-      .concat(withS(WITH_REC, () => listedActs("reference")).filter((x) => CR.euActs.has(x.id)).map((x) => actRow(x, t("xActFollowed"))));
-    const sheets = [
-      { name: S.fw === "csf-2.0" ? "Profile" : "SoA", header: soaHeader, rows: soa, widths: [10, 50, 18, 55, 12, 35, 12, 30, 30, 30, 40, 20, 20, 30] },
-      { name: S.lang === "uk" ? "Акти" : "Acts", header: [t("xBaseline"), t("srcColRef"), t("xTitle"), t("xType"), t("xDescription"), t("xReqCount"), t("xUrl")], rows: acts, widths: [16, 40, 60, 20, 60, 12, 40] },
-    ];
+      .concat(withS(WITH_REC, () => listedActs("reference")).filter((x) => CR.euActs.has(x.id)).map((x) => actRow(x, t("xActFollowed"))))
+      .concat([1, 2, 3].map(() => [t("xActOwn"), "", "", "", "", "", "", "", "", ""]));
+    sheets.push({ name: t("xSheetActs"), header: [t("xActWhy"), t("srcColRef"), t("xTitle"), t("xType"), t("xDescription"), t("xReqCount"), t("xUrl"), t("xOwner"), t("xReviewed"), t("xNotes")],
+      rows: acts, widths: [22, 40, 60, 20, 60, 12, 40, 20, 14, 30], freeze: [2, 1] });
+    // the bodies whose acts bind you, with room for their role, contacts and reporting deadlines
+    const byIssuer = new Map();
+    mandatory.forEach((x) => { const who = L(D.types[x.type], "issuer") || t("craftIntl"); if (!byIssuer.has(who)) byIssuer.set(who, []); byIssuer.get(who).push(x); });
+    sheets.push({ name: t("xSheetRegulators"), header: [t("xBody"), t("xActsCount"), t("xActsList"), t("xRoleYou"), t("xContact"), t("xChannel"), t("xDeadline"), t("xOwner")],
+      rows: [...byIssuer].sort((a, b) => b[1].length - a[1].length).map(([who, xs]) => [who, xs.length, xs.map((x) => sourceRef(x)).join("\n"), "", "", "", "", ""]),
+      widths: [36, 10, 50, 30, 30, 24, 24, 20], freeze: [1, 1] });
+    let sysNote = "";
     if (needsSystems()) {
       guessBaseline();
       const sys = withS({ ...SYS_STATE, q: "" }, () => systemRows());
-      sheets.push({ name: "NIST SP 800-53", header: [t("sysColId"), "name_en", "name_uk_machine", t("sysColBaseline"), t("sysColParams"), t("sysColPlan"), t("sysColLaw"), t("xSource"), t("xApplicable"), t("xOrgValue"), t("xPolicy"), t("xStatus"), t("xEvidence")],
-        rows: sys.map((c) => [c.id, c.name_en, c.name_uk_machine, c._base ? yes : "", c._base ? c[`${S.baseline}_params_uk`] || "" : "", c._plan.join(", "), c._law.join(", "), c._acts.map((id) => sourceRef(D.sourceById[id])).join("; "), "", "", "", "", ""]),
-        widths: [12, 40, 40, 12, 40, 30, 30, 40, 12, 24, 24, 16, 24] });
+      const base = profilesOf("baseline").find((p) => p.id === S.baseline);
+      sysNote = base ? L(base, "label") : "";
+      sheets.push({ name: "NIST SP 800-53", header: [t("sysColId"), t("x53Name"), t("x53NameUk"), t("sysColBaseline"), t("sysColParams"), t("sysColPlan"), t("sysColLaw"), t("xSource"), t("xApplicable"), t("xOrgValue"), t("xPolicy"), t("xStatus"), t("xEvidence")],
+        rows: sys.map((c) => [c.id, c.name_en, c.name_uk_machine, c._base ? yes : "", c._base ? c[`${S.baseline}_params_uk`] || "" : "", c._plan.join(", "), c._law.join(", "), c._acts.map((id) => sourceRef(D.sourceById[id])).join("; "), c._base ? yes : "", "", "", "", ""]),
+        widths: [12, 40, 40, 12, 40, 30, 30, 40, 12, 24, 24, 16, 24], freeze: [1, 1] });
     }
-    downloadWorkbook(`baseline_${stamp()}.xlsx`, sheets);
+    // README: the profile, the data version, the sheets, the columns and the symbols
+    const ai = rows.flatMap((r) => r.ds).filter((m) => m.review_status === "ai_draft").length;
+    const prof = S.sectors.map((id) => L(D.sectorById[id], "label")).filter(Boolean).join("; ");
+    const readme = [
+      [t("xRmTitle"), ""],
+      [t("xRmProfile"), prof || t("orgTypeGeneral")],
+      [t("xRmFramework"), fwName],
+      [t("xRmData"), D.meta ? fmt(t("dataVersion"), D.meta.version, D.meta.date) : ""],
+      [t("xRmMade"), new Date().toISOString().slice(0, 10)],
+      [t("xRmLink"), location.href],
+      [t("xRmAi"), ai ? t("aiFileNote") : ""],
+      ["", ""],
+      [t("xRmSheets"), ""],
+      ...sheets.map((sh) => [sh.name, t(sh.name === soaName ? (S.fw === "csf-2.0" ? "xRmSheetProfile" : "xRmSheetSoa") : sh.name === "NIST SP 800-53" ? "xRmSheet53" : ({ [t("xSheetClauses")]: "xRmSheetClauses", [t("xSheetGaps")]: "xRmSheetGaps", [t("xSheetActs")]: "xRmSheetActs", [t("xSheetRegulators")]: "xRmSheetRegulators" }[sh.name])) + (sh.name === "NIST SP 800-53" && sysNote ? ` (${sysNote})` : "")]),
+      ["", ""],
+      [t("xRmColumns"), ""],
+      [t("xReqBy"), t("xRmReqBy")],
+      [t("xApplicable"), t("xRmApplicable")],
+      [t("xCoverage"), t("xRmCoverage")],
+      [t("xParam"), t("xRmParam")],
+      [`${t("xOwner")}, ${t("xStatus")}, ${t("xEvidence")}`, t("xRmBlank")],
+      ["", ""],
+      [t("xRmSymbols"), ""],
+      ...["equal", "subset_of", "superset_of", "intersects_with"].map((r) => [GLYPH[r], relWords(r)]),
+    ];
+    sheets.unshift({ name: "README", header: [t("xRmItem"), t("xRmWhat")], rows: readme, widths: [34, 110], freeze: [0, 1], noFilter: true });
+    downloadWorkbook(`${fileBase}.xlsx`, sheets, { noAbout: true });
+    CR.dirty = false; // the choices are in the file now
   }
 
   // ------------------------------------------------------------------ guide
@@ -1038,7 +1150,7 @@
       ${chained.length ? `<h4>${esc(t("aaChains"))}</h4><p class="hint">${esc(t(actsFull ? "aaChainsHintFull" : "aaChainsHint"))}</p><div class="chains aa-chains">${chainsHtml}</div>` : ""}
       ${alone.length ? `<h4>${esc(t(chained.length ? "aaAlone" : "aaDirect"))}</h4><ul class="aa-list">${alone.map((id) => `<li>${node(id)}</li>`).join("")}</ul>` : ""}
       ${others.length ? `<details class="aa-more"><summary>${esc(fmt(t("aaOther"), others.length))}</summary><p class="hint">${esc(t("aaOtherHint"))}</p><ul class="aa-list">${others.map((id) => `<li>${node(id)}</li>`).join("")}</ul></details>` : ""}
-      <p class="aa-links"><a href="#/sources?scope=core&s=${sParam()}&rec=0">${esc(t("aaOpenActs"))}</a></p>
+      <p class="aa-links"><a href="#/sources?scope=core&s=${sParam()}">${esc(t("aaOpenActs"))}</a></p>
     </section>`;
     const btn = document.getElementById("aa-full");
     if (btn) btn.onclick = () => {
@@ -1472,22 +1584,42 @@
   function downloadXlsx(name, sheet, header, rows, widths) {
     return downloadWorkbook(name, [{ name: sheet, header, rows, widths }]);
   }
-  // Several sheets, each with filters on and its header frozen, and an "about" sheet with the version and the link
-  async function downloadWorkbook(name, sheets) {
+  // Several sheets, each with filters on and its header (and first column) frozen. SheetJS CE does not write frozen
+  // panes, so the sheet XML is patched in the finished file. Without opts.noAbout an "about" sheet is added.
+  async function downloadWorkbook(name, sheets, opts = {}) {
     const fw = S.fw, sectors = S.sectors.join(", ") || "all"; // read before the await
     await loadXlsx();
     const wb = XLSX.utils.book_new();
-    sheets.forEach(({ name: sheet, header, rows, widths }) => {
+    const all = sheets.map((sh) => ({ freeze: [1, 1], ...sh }));
+    all.forEach(({ name: sheet, header, rows, widths, noFilter }) => {
       const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
       ws["!cols"] = (widths || header.map(() => 24)).map((w) => ({ wch: w }));
-      ws["!autofilter"] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: rows.length, c: header.length - 1 } }) };
-      ws["!freeze"] = { xSplit: 1, ySplit: 1 };
+      if (!noFilter) ws["!autofilter"] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: rows.length, c: header.length - 1 } }) };
       XLSX.utils.book_append_sheet(wb, ws, sheet.slice(0, 31));
     });
-    const ai = D.mappings.filter((m) => m.framework_id === fw && m.review_status === "ai_draft").length;
-    const meta = [["note", ai ? t("aiFileNote") : ""], ["version", D.meta ? D.meta.version : ""], ["date", new Date().toISOString().slice(0, 10)], ["framework", fw], ["sectors", sectors], ["url", location.href]];
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(meta), "about");
-    XLSX.writeFile(wb, name);
+    if (!opts.noAbout) {
+      const ai = D.mappings.filter((m) => m.framework_id === fw && m.review_status === "ai_draft").length;
+      const meta = [["note", ai ? t("aiFileNote") : ""], ["version", D.meta ? D.meta.version : ""], ["date", new Date().toISOString().slice(0, 10)], ["framework", fw], ["sectors", sectors], ["url", location.href]];
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(meta), "about");
+      all.push({ freeze: [0, 0] });
+    }
+    let out = XLSX.write(wb, { type: "array", bookType: "xlsx" });
+    try {
+      const zip = XLSX.CFB.read(new Uint8Array(out), { type: "array" });
+      all.forEach(({ freeze: [x, y] }, i) => {
+        if (!x && !y) return;
+        const e = XLSX.CFB.find(zip, `/xl/worksheets/sheet${i + 1}.xml`);
+        if (!e) return;
+        const cell = XLSX.utils.encode_cell({ r: y, c: x });
+        const pane = x && y ? "bottomRight" : y ? "bottomLeft" : "topRight";
+        const xml = new TextDecoder().decode(new Uint8Array(e.content)).replace(/<sheetView([^>]*)\/>/,
+          `<sheetView$1><pane${x ? ` xSplit="${x}"` : ""}${y ? ` ySplit="${y}"` : ""} topLeftCell="${cell}" activePane="${pane}" state="frozen"/><selection pane="${pane}" activeCell="${cell}" sqref="${cell}"/></sheetView>`);
+        e.content = new TextEncoder().encode(xml);
+        e.size = e.content.length;
+      });
+      out = XLSX.CFB.write(zip, { fileType: "zip", type: "array" });
+    } catch (err) { /* the file still opens, only without frozen panes */ }
+    download(name, new Blob([out instanceof ArrayBuffer || ArrayBuffer.isView(out) ? out : new Uint8Array(out)], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
   }
   const stamp = () => `${S.fw}${S.sectors.length ? "_" + S.sectors.join("-") : ""}_${new Date().toISOString().slice(0, 10)}`;
 
