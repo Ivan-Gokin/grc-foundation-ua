@@ -1,5 +1,9 @@
 # Changelog
 
+## Questionnaire: question 2 without "None of these" (2026-10-23)
+
+- Question 2 now asks "Do you process any categories of information protected by law?" ("Чи обробляєте ви категорії інформації, захищені законом?"); leaving every option unticked means none, so the "None of these" option is gone. The Ukrainian options read in the nominative case to match.
+
 ## The wizard keeps its answers; thin data said plainly; a self-explaining workbook (2026-10-23)
 
 - "Craft your baseline" keeps its own profile and framework apart from the filters in Explore: opening an act, the Acts register or the NIST SP 800-53 page no longer wipes or changes the answers, and the header link resumes where the reader left. Links from the wizard no longer switch off recommended acts in Explore.

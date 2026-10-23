@@ -528,10 +528,10 @@
       ["telecom", ["telecom"]], ["infra", ["ics"]], ["health", ["health"]], ["cloud", ["cloud"]], ["platforms", ["platforms"]], ["trust", ["trust"]],
       ["vendors", ["vendors"]], ["suppliers", ["ict-suppliers", "security-services"]], ["ai", ["ai"]], ["other", []]] },
     q2: { multi: true, opts: [["pd", ["personal-data"]], ["sir", ["public-sir"]], ["restricted", ["public-restricted"]], ["secrets", ["state-secrets"]],
-      ["nato", ["nato-info"]], ["none", []]] },
+      ["nato", ["nato-info"]]] },
     q3: { multi: false, opts: [["no", []], ["c12", ["cii-1-2"]], ["c34", ["cii-3-4"]], ["unknown", ["ki"]]] },
   };
-  const QUIZ_EXCLUSIVE = { q1: "other", q2: "none" };
+  const QUIZ_EXCLUSIVE = { q1: "other" }; // question 2 has no "none": nothing ticked means none
   const QA = { q1: [], q2: ["pd"], q3: "no", touched: false };
   const quizSectors = () => [...new Set(["q1", "q2", "q3"].flatMap((q) => {
     const sel = [].concat(QA[q]);
@@ -541,7 +541,6 @@
   function quizFromSectors() {
     if (QA.touched || !S.sectors.length) return;
     ["q1", "q2"].forEach((q) => { QA[q] = QUIZ[q].opts.filter(([, ids]) => ids.length && ids.some((id) => S.sectors.includes(id))).map(([id]) => id); });
-    if (!QA.q2.length) QA.q2 = ["none"];
     const c = QUIZ.q3.opts.find(([, ids]) => ids.length && ids.some((id) => S.sectors.includes(id)));
     QA.q3 = c ? c[0] : "no";
   }
