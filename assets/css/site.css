@@ -58,7 +58,7 @@
   --math: "Cambria Math", "STIX Two Math", "Noto Sans Math", "Segoe UI Symbol", serif;
   --radius: 2px;
   --notch: 8px;
-  --notch-all: polygon(var(--notch) 0, calc(100% - var(--notch)) 0, 100% var(--notch), 100% calc(100% - var(--notch)), calc(100% - var(--notch)) 100%, var(--notch) 100%, 0 calc(100% - var(--notch)), 0 var(--notch));
+  --notch-all: polygon(0 0, calc(100% - var(--notch)) 0, 100% var(--notch), 100% 100%, var(--notch) 100%, 0 calc(100% - var(--notch))); /* the brand cut: top right and bottom left only */
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -661,7 +661,7 @@ a.card h3 { color: var(--seal); }
 .theme-switch { position: relative; display: inline-flex; padding: 2px; border: 1px solid var(--rule); background: var(--paper); }
 .theme-switch::before {
   content: ""; position: absolute; top: 2px; bottom: 2px; left: 2px; width: calc(50% - 2px);
-  background: var(--accent); clip-path: polygon(5px 0, calc(100% - 5px) 0, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0 calc(100% - 5px), 0 5px);
+  background: var(--accent); clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
   transition: transform .2s ease;
 }
 .theme-switch[data-current="dark"]::before { transform: translateX(100%); }
@@ -854,7 +854,7 @@ a.card:hover { --ne: var(--accent); }
 .nav a[aria-current="page"], .nav-menu > summary[aria-current="page"],
 .nav a[aria-current="page"]:hover, .nav-menu > summary[aria-current="page"]:hover {
   background: var(--accent); color: var(--on-accent); border: 0; border-radius: 0; font-weight: 600;
-  clip-path: polygon(5px 0, calc(100% - 5px) 0, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0 calc(100% - 5px), 0 5px);
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
 }
 .nav-menu > summary[aria-current="page"]::after { color: inherit; }
 .nav-menu .menu a, .nav-menu .menu a:hover, .nav-menu .menu a[aria-current="page"] { clip-path: none; background: none; }
@@ -1289,7 +1289,7 @@ a.stage-hint { color: var(--accent); }
 .home-who .pill { --nb: var(--surface-2); --ne: var(--rule); }
 .home-who .pill:hover { --ne: var(--accent); }
 .pill-all { --nb: var(--seal); --ne: var(--seal); }
-.btn-primary { --bn: var(--notch); clip-path: polygon(var(--bn) 0, calc(100% - var(--bn)) 0, 100% var(--bn), 100% calc(100% - var(--bn)), calc(100% - var(--bn)) 100%, var(--bn) 100%, 0 calc(100% - var(--bn)), 0 var(--bn)); }
+.btn-primary { --bn: var(--notch); clip-path: polygon(0 0, calc(100% - var(--bn)) 0, 100% var(--bn), 100% 100%, var(--bn) 100%, 0 calc(100% - var(--bn))); }
 
 /* home: the questionnaire is the main action; the sector shortcuts come second */
 .home-hero .home-cta { align-items: center; gap: 10px 16px; margin-top: 24px; }
@@ -1346,3 +1346,19 @@ a.stage-hint { color: var(--accent); }
 .ms .dmeter { margin-top: 8px; }
 /* a heading focused after navigation (for screen readers) needs no focus ring */
 h1[tabindex="-1"]:focus { outline: none; }
+
+/* the header ribbon: the navigation group and the theme switch cut like a card. The navigation holds the dropdown
+   menus, so its corners are painted over (header colour, then the cut edge) instead of clipped. */
+.nav { position: relative; }
+.nav::before, .nav::after { content: ""; position: absolute; width: var(--notch); height: var(--notch); pointer-events: none; z-index: 2; }
+.nav::before { top: -1px; right: -1px; background: linear-gradient(to bottom left, var(--surface) calc(50% - .7px), var(--rule) calc(50% - .7px), var(--rule) calc(50% + .7px), transparent calc(50% + .7px)); }
+.nav::after { bottom: -1px; left: -1px; background: linear-gradient(to top right, var(--surface) calc(50% - .7px), var(--rule) calc(50% - .7px), var(--rule) calc(50% + .7px), transparent calc(50% + .7px)); }
+.theme-switch, .nav-menu .menu {
+  --nb: var(--paper); --ne: var(--rule);
+  clip-path: polygon(0 0, calc(100% - var(--notch)) 0, 100% var(--notch), 100% 100%, var(--notch) 100%, 0 calc(100% - var(--notch)));
+  background:
+    linear-gradient(to bottom left, transparent 50%, var(--ne) 50%, var(--ne) calc(50% + 1.2px), transparent calc(50% + 1.2px)) right top / var(--notch) var(--notch) no-repeat border-box,
+    linear-gradient(to top right, transparent 50%, var(--ne) 50%, var(--ne) calc(50% + 1.2px), transparent calc(50% + 1.2px)) left bottom / var(--notch) var(--notch) no-repeat border-box,
+    var(--nb);
+}
+.nav-menu .menu { --nb: var(--surface); border-radius: 0; }

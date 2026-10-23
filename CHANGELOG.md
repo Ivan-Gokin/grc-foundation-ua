@@ -1,5 +1,10 @@
 # Changelog
 
+## The brand cut on two corners only; the header ribbon (2026-10-23)
+
+- Every cut corner is now top right and bottom left, as in the design system: primary buttons, the current item in the header, the theme switch thumb.
+- The header navigation group and the theme switch are cut the same way, with the cut edge drawn; so are the dropdown menus.
+
 ## Meters and cut corners from the design system (2026-10-23)
 
 - Progress is shown with the design system's Meter: a row of equal segments (one segment is 4%), filled in a series colour, empty ones outlined, the exact figure to the right. Used for the mapping roadmap on About (acts mapped, mappings reviewed) and for the review meter on the home page.
