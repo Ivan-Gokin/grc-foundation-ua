@@ -1371,3 +1371,16 @@ h1[tabindex="-1"]:focus { outline: none; }
 .dmeter-none { grid-column: 2 / -1; font-size: .9rem; color: var(--muted); }
 @media (max-width: 600px) { .dmeter-none { grid-column: 1 / -1; } }
 .area-meters { margin-bottom: 18px; }
+
+/* home: the questionnaire's first question in the hero */
+.home-q .hq-step { margin: 0; font: 600 .8rem var(--display); font-stretch: 85%; text-transform: uppercase; letter-spacing: .14em; color: var(--accent) !important; }
+.home-q h2 { margin: 2px 0 4px; }
+.home-q .hint { margin: 0 0 8px; }
+.home-q .q-opts { margin: 0 0 14px; }
+.home-q .q-opt { font-size: .95rem; }
+.home-q .who-foot { gap: 10px 16px; }
+.craft .q { scroll-margin-top: 96px; }
+@media (max-width: 900px) { .craft .q { scroll-margin-top: 12px; } }
+.home-who.home-q > h2 { font-size: 1.35rem; }
+.home-q .hint { font-size: .92rem; }
+@media (max-width: 900px) { .home-stages { grid-template-columns: minmax(0, 1fr); } }

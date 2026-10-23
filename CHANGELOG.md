@@ -1,5 +1,11 @@
 # Changelog
 
+## Home: the questionnaire starts on the home page (2026-10-23)
+
+- The top block of the home page is now the questionnaire's first question, "What does your organisation do?". "Next question" carries the answer into "Craft your baseline" and opens it at question 2. It replaces the list of organisation types and the separate "Answer three questions" button.
+- On phones the "How it works" cards stack in one column again.
+- Ukrainian step counters read "Крок 1 із 6" and "Запитання 1 із 3", so the З in capitals is not mistaken for a 3.
+
 ## How to contribute: mappings checked by industry (2026-10-23)
 
 - Under the overall review meter, "Checked by industry" shows how many mappings a person has checked for laws, banks and the financial sector, critical infrastructure, government, defence and NATO, and everything else, grouped as in the mapping roadmap.

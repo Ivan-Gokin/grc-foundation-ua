@@ -6,7 +6,6 @@
 
 Laws, resolutions, orders, standards, NATO policies: hundreds of documents that refer to each other and keep changing. Answer three questions and get the laws that apply to you and your Statement of Applicability, each control with its legal basis.
 
-<p class="home-cta"><a class="btn btn-primary btn-lg" href="#/craft?step=1">Answer three questions</a><span class="cta-note">About a minute. Nothing is saved or sent.</span></p>
 
 </div>
 

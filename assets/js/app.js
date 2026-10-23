@@ -433,24 +433,38 @@
     const el = document.getElementById("home-text");
     if (!(await mdInto(el, "home"))) return;
     const fill = (id, html) => { const x = el.querySelector(`#${id}`); if (x) x.outerHTML = html; };
-    fill("home-who", homeWho());
+    fill("home-who", homeQuiz());
+    bindHomeQuiz(el);
     fill("home-review", homeReview());
     fill("home-changes", homeChanges());
     scrollToAnchor();
   }
-  // In the hero: the organisation types as links into the controls table, by group, and the questionnaire
-  function homeWho() {
-    const pill = (href, label, title) => `<a class="pill" href="${href}"${title ? ` title="${esc(title)}"` : ""}>${esc(label)}</a>`;
-    const groups = D.groups.map((g) => {
-      const items = D.sectors.filter((s) => s.selectable === "yes" && s.group === g.id && !D.parents[s.id].length);
-      if (!items.length) return "";
-      return `<div class="who-group"><h3>${esc(L(g, "label"))}</h3><div class="pills">${items.map((s) => pill(`#/craft?step=2&s=${encodeURIComponent(s.id)}`, L(s, "label"), L(s, "description"))).join("")}</div></div>`;
-    }).join("");
-    return `<section class="home-who" aria-labelledby="who-title">
-      <h2 id="who-title">${esc(t("whoTitle"))}</h2>
-      <div class="who-groups">${groups}</div>
-      <p class="who-foot"><span>${esc(t("whoNone"))}</span> <a class="pill pill-any" href="#/craft?step=2&s=personal-data">${esc(t("whoAll"))}</a></p>
+  // In the hero: the questionnaire's first question. "Next question" carries the answer into "Craft your baseline"
+  // and opens it at question 2.
+  function homeQuiz() {
+    const opts = QUIZ.q1.opts.map(([id]) => `<label class="q-opt"><input type="checkbox" name="hq1" value="${esc(id)}"${QA.q1.includes(id) ? " checked" : ""}><span>${esc(t(`qo_q1_${id}`))}</span></label>`).join("");
+    return `<section class="home-who home-q" aria-labelledby="hq-title">
+      <p class="hq-step">${esc(fmt(t("hqStep"), 1, 3))}</p>
+      <h2 id="hq-title">${esc(t("q1"))}</h2>
+      ${t("q1Hint") !== "q1Hint" ? `<p class="hint">${esc(t("q1Hint"))}</p>` : ""}
+      <div class="q-opts q-opts-wide" id="hq-opts">${opts}</div>
+      <p class="who-foot"><button type="button" class="btn btn-primary btn-lg" id="hq-go">${esc(t("hqNext"))}</button><span class="cta-note">${esc(t("hqNote"))}</span></p>
     </section>`;
+  }
+  function bindHomeQuiz(root) {
+    const box = root.querySelector("#hq-opts"), go = root.querySelector("#hq-go");
+    if (!box || !go) return;
+    box.addEventListener("change", (e) => {
+      const ex = QUIZ_EXCLUSIVE.q1;
+      if (e.target.checked && e.target.value === ex) box.querySelectorAll("input").forEach((x) => { if (x.value !== ex) x.checked = false; });
+      else if (e.target.checked) { const x = box.querySelector(`input[value="${ex}"]`); if (x) x.checked = false; }
+    });
+    go.addEventListener("click", () => {
+      QA.q1 = [...box.querySelectorAll("input:checked")].map((x) => x.value);
+      if (!QA.q1.length) QA.q1 = [QUIZ_EXCLUSIVE.q1];
+      QA.touched = true;
+      location.hash = "#/craft?step=1#q-2";
+    });
   }
   // The design system's Meter: a row of equal segments (one segment = 4%), filled in a series colour, empty ones
   // outlined; the exact figure stands to the right, so colour never replaces the number
@@ -581,6 +595,9 @@
     const body = document.getElementById("craft-why-body");
     while (tmp.firstChild) body.appendChild(tmp.firstChild);
     why.hidden = !body.textContent.trim();
+    // arriving from the home page's first question: continue at question 2
+    const q = /^q-\d$/.test(S.anchor) && document.getElementById(S.anchor);
+    if (q && focusNext) { focusNext = false; const first = q.querySelector("input"); if (first) first.focus({ preventScroll: true }); }
     focusHeading(g);
     scrollToAnchor();
   }
@@ -603,7 +620,7 @@
       const on = multi ? QA[q].includes(id) : QA[q] === id;
       return `<label class="q-opt"><input type="${multi ? "checkbox" : "radio"}" name="${q}" value="${esc(id)}" ${on ? "checked" : ""}><span>${esc(t(`qo_${q}_${id}`))}</span></label>`;
     };
-    const question = (q, i) => `<fieldset class="q"><legend><span class="q-num">${i}</span>${esc(t(q))}</legend>
+    const question = (q, i) => `<fieldset class="q" id="q-${i}"><legend><span class="q-num">${i}</span>${esc(t(q))}</legend>
       ${t(q + "Hint") !== q + "Hint" ? `<p class="hint">${esc(t(q + "Hint"))}</p>` : ""}
       <div class="q-opts${QUIZ[q].opts.length > 6 ? " q-opts-wide" : ""}">${QUIZ[q].opts.map((o) => opt(q, o)).join("")}</div></fieldset>`;
     box.innerHTML = `<form id="quiz" class="quiz" onsubmit="return false">${["q1", "q2", "q3"].map((q, i) => question(q, i + 1)).join("")}
