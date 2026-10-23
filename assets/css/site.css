@@ -1308,3 +1308,41 @@ a.stage-hint { color: var(--accent); }
 .ms-now .badge { background: var(--accent-tint); }
 .prose .ms-text { margin: 6px 0 8px; font-size: .95rem; color: var(--muted); }
 .prose .ms-figs { margin: 6px 0 0; font-size: .88rem; }
+
+/* Meter (design system): equal segments with a gap; filled ones in a series colour, empty ones only outlined in
+   rule; the exact figure to the right in IBM Plex Sans with tabular digits */
+.dmeter { display: grid; grid-template-columns: minmax(0, 170px) auto minmax(0, 1fr); align-items: center; gap: 4px 14px; margin: 6px 0 0; --seg: var(--series-blue); }
+.dmeter:not(:has(.dmeter-label)) { grid-template-columns: auto minmax(0, 1fr); }
+.dmeter-teal { --seg: var(--series-teal); }
+.dmeter-label { font-size: .9rem; color: var(--ink); }
+.dmeter-bar { display: flex; gap: 3px; }
+.dmeter-bar i { display: block; width: 10px; height: 16px; box-sizing: border-box; background: var(--seg); }
+.dmeter-bar i.e { background: transparent; border: 1.5px solid var(--rule); }
+.dmeter-v { font: 600 .95rem var(--sans); font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+.dmeter-of { font-weight: 400; color: var(--muted); }
+.dmeter-legend, .prose .dmeter-legend { margin: 4px 0 0; font-size: .82rem; color: var(--muted); }
+@media (max-width: 600px) {
+  .dmeter { grid-template-columns: auto minmax(0, 1fr); }
+  .dmeter-label { grid-column: 1 / -1; }
+  .dmeter-bar { gap: 2px; }
+  .dmeter-bar i { width: 7px; height: 14px; }
+}
+
+/* cut corners on the remaining cards: top right and bottom left, the cut edge drawn in the border colour */
+.stage-card, .home-panel, .ms, .fw-option, .home-who {
+  --nb: var(--surface); --ne: var(--rule);
+  clip-path: polygon(0 0, calc(100% - var(--notch)) 0, 100% var(--notch), 100% 100%, var(--notch) 100%, 0 calc(100% - var(--notch)));
+  background:
+    linear-gradient(to bottom left, transparent 50%, var(--ne) 50%, var(--ne) calc(50% + 1.2px), transparent calc(50% + 1.2px)) right top / var(--notch) var(--notch) no-repeat border-box,
+    linear-gradient(to top right, transparent 50%, var(--ne) 50%, var(--ne) calc(50% + 1.2px), transparent calc(50% + 1.2px)) left bottom / var(--notch) var(--notch) no-repeat border-box,
+    var(--nb);
+}
+.fw-option { --nb: var(--paper); }
+.fw-option.on { --ne: var(--accent); }
+.home-who { --ne: var(--frame-label); }
+.ms { border-left-width: 1px; border-top: 4px solid var(--rule); }
+.ms-now { border-top-color: var(--accent); }
+.ms-done { border-top-color: var(--teal); }
+.ms .dmeter { margin-top: 8px; }
+/* a heading focused after navigation (for screen readers) needs no focus ring */
+h1[tabindex="-1"]:focus { outline: none; }

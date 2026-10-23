@@ -1,5 +1,10 @@
 # Changelog
 
+## Meters and cut corners from the design system (2026-10-23)
+
+- Progress is shown with the design system's Meter: a row of equal segments (one segment is 4%), filled in a series colour, empty ones outlined, the exact figure to the right. Used for the mapping roadmap on About (acts mapped, mappings reviewed) and for the review meter on the home page.
+- Cut corners (top right and bottom left, with the cut edge drawn) on the remaining cards: the home page's step and help cards, its "Help check the mappings" and "What changed" panels, the "Know your sector" block, the roadmap milestones and the framework options.
+
 ## Answer first, a pinned download, a clearer home page, the mapping roadmap (2026-10-23)
 
 - Each step of "Craft your baseline" shows its title and one paragraph, then the answer; the rest of the guidance is behind "Why this, and what to do". The browser tab names the step, and focus moves to its heading after each step change (the same for every page).

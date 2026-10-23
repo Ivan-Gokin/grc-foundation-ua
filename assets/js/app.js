@@ -451,13 +451,23 @@
       <p class="who-foot"><span>${esc(t("whoNone"))}</span> <a class="pill pill-any" href="#/craft?step=2&s=personal-data">${esc(t("whoAll"))}</a></p>
     </section>`;
   }
+  // The design system's Meter: a row of equal segments (one segment = 4%), filled in a series colour, empty ones
+  // outlined; the exact figure stands to the right, so colour never replaces the number
+  const METER_SEGS = 25;
+  function meterHtml(label, value, total, series) {
+    const on = total ? Math.min(METER_SEGS, Math.max(value ? 1 : 0, Math.round((value / total) * METER_SEGS))) : 0;
+    const segs = Array.from({ length: METER_SEGS }, (_, i) => `<i${i < on ? "" : ' class="e"'}></i>`).join("");
+    return `<div class="dmeter${series ? " dmeter-" + series : ""}">${label ? `<span class="dmeter-label">${esc(label)}</span>` : ""}
+      <span class="dmeter-bar" role="img" aria-label="${esc(`${label ? label + ": " : ""}${value} / ${total}`)}">${segs}</span>
+      <span class="dmeter-v">${value}<span class="dmeter-of"> / ${total}</span></span></div>`;
+  }
   // How many mappings a second person has checked, counted from the data
   function homeReview() {
     const total = D.mappings.length;
     const done = D.mappings.filter((m) => m.review_status === "reviewed").length;
     const pct = total ? Math.round((done / total) * 100) : 0;
-    return `<div class="meter-box"><p class="meter-line"><b>${done}</b> ${esc(fmt(t("homeReviewed"), total))}<span class="muted">${pct}%</span></p>
-      <div class="meter" role="img" aria-label="${esc(fmt(t("homeReviewedAria"), done, total))}"><span style="width:${Math.max(pct, done ? 1 : 0)}%"></span></div></div>`;
+    return `<div class="meter-box"><p class="meter-line">${esc(t("homeReviewedLabel"))}<span class="muted">${pct}%</span></p>
+      ${meterHtml("", done, total, "teal")}<p class="dmeter-legend">${esc(t("meterLegend"))}</p></div>`;
   }
   // The current data version and what it changed; the full history is the changelog
   function homeChanges() {
@@ -1916,13 +1926,11 @@
       const complete = xs.length && done === xs.length && rev === ms.length;
       if (!complete && current < 0) current = i;
       const state = complete ? "done" : i === current ? "now" : "next";
-      const pct = xs.length ? Math.round((done / xs.length) * 100) : 0;
       return `<li class="ms ms-${state}"><div class="ms-head"><span class="ms-num">${i + 1}</span><b>${esc(t("ms_" + id))}</b><span class="badge">${esc(t("msState_" + state))}</span></div>
         <p class="ms-text">${esc(t("msText_" + id))}</p>
-        <div class="meter" role="img" aria-label="${esc(fmt(t("msActs"), done, xs.length))}"><span style="width:${Math.max(pct, done ? 1 : 0)}%"></span></div>
-        <p class="ms-figs">${esc(fmt(t("msActs"), done, xs.length))}${ms.length ? ` · ${esc(fmt(t("msReviewed"), rev, ms.length))}` : ""}</p></li>`;
+        ${meterHtml(t("msActsLabel"), done, xs.length, "blue")}${meterHtml(t("msRevLabel"), rev, ms.length, "teal")}</li>`;
     }).join("");
-    return `<p>${esc(t("msIntro"))}</p><ol class="milestones">${items}</ol>`;
+    return `<p>${esc(t("msIntro"))}</p><p class="dmeter-legend">${esc(t("meterLegend"))}</p><ol class="milestones">${items}</ol>`;
   }
   // Methodology placeholders: the data version, the maintainer links and the open data files
   function fillMethod(el) {
