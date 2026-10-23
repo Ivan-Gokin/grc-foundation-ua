@@ -1,5 +1,9 @@
 # Changelog
 
+## How to contribute: mappings checked by industry (2026-10-23)
+
+- Under the overall review meter, "Checked by industry" shows how many mappings a person has checked for laws, banks and the financial sector, critical infrastructure, government, defence and NATO, and everything else, grouped as in the mapping roadmap.
+
 ## Guides and How to contribute (2026-10-23)
 
 - The "Help me" menu is now "Guides": it holds the guidance chapters for the reader.

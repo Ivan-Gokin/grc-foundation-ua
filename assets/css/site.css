@@ -1366,3 +1366,8 @@ h1[tabindex="-1"]:focus { outline: none; }
 .prose .help-list { padding-left: 0; }
 .prose .help-list li { margin: 0; }
 .prose .help-list a span { font-size: .92rem; }
+.area-title, .prose .area-title { margin: 18px 0 4px; font-size: 1rem; }
+.area-meters .dmeter { margin: 8px 0 0; }
+.dmeter-none { grid-column: 2 / -1; font-size: .9rem; color: var(--muted); }
+@media (max-width: 600px) { .dmeter-none { grid-column: 1 / -1; } }
+.area-meters { margin-bottom: 18px; }

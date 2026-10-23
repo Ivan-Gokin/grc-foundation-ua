@@ -1895,7 +1895,7 @@
     const el = docLayout(t("tocTitle"));
     if (!(await mdInto(el, "contribute"))) return;
     const box = el.querySelector("#contrib-review");
-    if (box) box.outerHTML = homeReview();
+    if (box) box.outerHTML = homeReview() + reviewByArea();
     buildToc(document.getElementById("toc"), el, false);
     scrollToAnchor();
   }
@@ -1919,20 +1919,31 @@
     ["mil", (x, sec) => x.type === "nato_policy" || ["defence", "defence-industry", "nato-info", "state-secrets"].some((id) => sec.has(id))],
     ["other", () => true],
   ];
-  function roadmapHtml() {
+  // Per milestone: its acts, how many are mapped, its mappings and how many of them a person has reviewed
+  function milestoneStats() {
     const acts = D.sources.filter((x) => x.scope === "core" && IN_EFFECT(x.status) && x.role === "requirements");
     const buckets = MILESTONES.map(() => []);
     acts.forEach((x) => {
       const sec = new Set((D.applBySource[x.id] || []).map((a) => a.sector_id));
       buckets[MILESTONES.findIndex(([, test]) => test(x, sec))].push(x);
     });
-    let current = -1;
-    const items = MILESTONES.map(([id], i) => {
+    return MILESTONES.map(([id], i) => {
       const xs = buckets[i];
-      const done = xs.filter((x) => D.mappedProvs[x.id] && D.mappedProvs[x.id].size).length;
       const ids = new Set(xs.map((x) => x.id));
       const ms = D.mappings.filter((m) => m.control_id && D.provById[m.provision_id] && ids.has(D.provById[m.provision_id].source_id));
-      const rev = ms.filter((m) => m.review_status === "reviewed").length;
+      return { id, xs, done: xs.filter((x) => D.mappedProvs[x.id] && D.mappedProvs[x.id].size).length, ms, rev: ms.filter((m) => m.review_status === "reviewed").length };
+    });
+  }
+  // How to contribute: mappings checked by a person, by area (the roadmap's milestones)
+  function reviewByArea() {
+    const rows = milestoneStats().map(({ id, ms, rev }) => ms.length
+      ? meterHtml(t("ms_" + id), rev, ms.length, "teal")
+      : `<div class="dmeter"><span class="dmeter-label">${esc(t("ms_" + id))}</span><span class="dmeter-none">${esc(t("areaNotMapped"))}</span></div>`).join("");
+    return `<h3 class="area-title">${esc(t("areaTitle"))}</h3><div class="area-meters">${rows}</div>`;
+  }
+  function roadmapHtml() {
+    let current = -1;
+    const items = milestoneStats().map(({ id, xs, done, ms, rev }, i) => {
       const complete = xs.length && done === xs.length && rev === ms.length;
       if (!complete && current < 0) current = i;
       const state = complete ? "done" : i === current ? "now" : "next";
