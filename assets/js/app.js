@@ -441,10 +441,11 @@
   }
   // In the hero: the questionnaire's first question. "Next question" carries the answer into "Craft your baseline"
   // and opens it at question 2.
+  const quizSkip = () => `<p class="q-skip-top">${esc(t("qSkipLead"))} <a href="#/craft?step=2&s=general">${esc(t("qSkipAll"))}</a><span aria-hidden="true"> · </span><a href="#/sources?scope=core&s=">${esc(t("qSkipBrowse"))}</a></p>`;
   function homeQuiz() {
     const opts = QUIZ.q1.opts.map(([id]) => `<label class="q-opt"><input type="checkbox" name="hq1" value="${esc(id)}"${QA.q1.includes(id) ? " checked" : ""}><span>${esc(t(`qo_q1_${id}`))}</span></label>`).join("");
     return `<section class="home-who home-q" aria-labelledby="hq-title">
-      <p class="hq-step">${esc(fmt(t("hqStep"), 1, 3))}</p>
+      <p class="hq-step">${esc(fmt(t("hqStep"), 1, 3))}</p>${quizSkip()}
       <h2 id="hq-title">${esc(t("q1"))}</h2>
       ${t("q1Hint") !== "q1Hint" ? `<p class="hint">${esc(t("q1Hint"))}</p>` : ""}
       <div class="q-opts q-opts-wide" id="hq-opts">${opts}</div>
@@ -623,9 +624,9 @@
     const question = (q, i) => `<fieldset class="q" id="q-${i}"><legend><span class="q-num">${i}</span>${esc(t(q))}</legend>
       ${t(q + "Hint") !== q + "Hint" ? `<p class="hint">${esc(t(q + "Hint"))}</p>` : ""}
       <div class="q-opts${QUIZ[q].opts.length > 6 ? " q-opts-wide" : ""}">${QUIZ[q].opts.map((o) => opt(q, o)).join("")}</div></fieldset>`;
-    box.innerHTML = `<form id="quiz" class="quiz" onsubmit="return false">${["q1", "q2", "q3"].map((q, i) => question(q, i + 1)).join("")}
+    box.innerHTML = `${quizSkip()}<form id="quiz" class="quiz" onsubmit="return false">${["q1", "q2", "q3"].map((q, i) => question(q, i + 1)).join("")}
       <div class="q-actions"><button type="submit" class="btn btn-primary btn-lg" id="q-go">${esc(t("craftToProfile"))}</button>
-        <a class="q-skip" href="#/sources?scope=core&s=">${esc(t("qSkip"))}</a></div></form>`;
+</div></form>`;
     const form = box.querySelector("#quiz");
     form.addEventListener("change", (e) => {
       const q = e.target.name;

@@ -1,5 +1,9 @@
 # Changelog
 
+## A way out at the top of the questionnaire (2026-10-23)
+
+- At the top of the questions, on the home page and in step 1: "Not sure, or just looking?" with two links, "Requirements for any organisation" (the baseline for every organisation, step 2) and "All acts" (the full register). It replaces the "Skip" link that sat at the bottom of step 1.
+
 ## Home: the questionnaire starts on the home page (2026-10-23)
 
 - The top block of the home page is now the questionnaire's first question, "What does your organisation do?". "Next question" carries the answer into "Craft your baseline" and opens it at question 2. It replaces the list of organisation types and the separate "Answer three questions" button.
