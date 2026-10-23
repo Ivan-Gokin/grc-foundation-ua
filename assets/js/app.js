@@ -440,39 +440,23 @@
     const el = document.getElementById("home-text");
     if (!(await mdInto(el, "home"))) return;
     const fill = (id, html) => { const x = el.querySelector(`#${id}`); if (x) x.outerHTML = html; };
-    fill("home-who", homeQuiz());
-    bindHomeQuiz(el);
+    fill("home-who", homeStart());
     fill("home-review", homeReview());
     fill("home-changes", homeChanges());
     scrollToAnchor();
   }
-  // In the hero: the questionnaire's first question. "Next question" carries the answer into "Craft your baseline"
-  // and opens it at question 2.
+  // "Not sure, or just looking?": the way past the questions, on Home and in step 1
   const quizSkip = () => `<p class="q-skip-top">${esc(t("qSkipLead"))} <a href="#/craft?step=2&s=general">${esc(t("qSkipAll"))}</a><span aria-hidden="true"> · </span><a href="#/sources?scope=core&s=">${esc(t("qSkipBrowse"))}</a></p>`;
-  function homeQuiz() {
-    const opts = QUIZ.q1.opts.map(([id]) => `<label class="q-opt"><input type="checkbox" name="hq1" value="${esc(id)}"${QA.q1.includes(id) ? " checked" : ""}><span>${esc(t(`qo_q1_${id}`))}</span></label>`).join("");
-    return `<section class="home-who home-q" aria-labelledby="hq-title">
-      <p class="hq-step">${esc(fmt(t("hqStep"), 1, 3))}</p>${quizSkip()}
-      <h2 id="hq-title">${esc(t("q1"))}</h2>
-      ${t("q1Hint") !== "q1Hint" ? `<p class="hint">${esc(t("q1Hint"))}</p>` : ""}
-      <div class="q-opts q-opts-wide" id="hq-opts">${opts}</div>
-      <p class="who-foot"><button type="button" class="btn btn-primary btn-lg" id="hq-go">${esc(t("hqNext"))}</button><span class="cta-note">${esc(t("hqNote"))}</span></p>
+  // In the hero: what the questionnaire does and one button into it; the questions themselves are in step 1
+  function homeStart() {
+    return `<section class="home-who home-start" aria-labelledby="hs-title">
+      <p class="hq-step">${esc(t("navCraft"))}</p>
+      <h2 id="hs-title">${esc(t("hsTitle"))}</h2>
+      <p class="hs-text">${esc(t("hsText"))}</p>
+      <ol class="hs-steps">${["hsQ1", "hsQ2", "hsQ3"].map((k) => `<li>${esc(t(k))}</li>`).join("")}</ol>
+      <p class="who-foot"><a class="btn btn-primary btn-lg" href="#/craft?step=1">${esc(t("hsGo"))}</a><span class="cta-note">${esc(t("hqNote"))}</span></p>
+      ${quizSkip()}
     </section>`;
-  }
-  function bindHomeQuiz(root) {
-    const box = root.querySelector("#hq-opts"), go = root.querySelector("#hq-go");
-    if (!box || !go) return;
-    box.addEventListener("change", (e) => {
-      const ex = QUIZ_EXCLUSIVE.q1;
-      if (e.target.checked && e.target.value === ex) box.querySelectorAll("input").forEach((x) => { if (x.value !== ex) x.checked = false; });
-      else if (e.target.checked) { const x = box.querySelector(`input[value="${ex}"]`); if (x) x.checked = false; }
-    });
-    go.addEventListener("click", () => {
-      QA.q1 = [...box.querySelectorAll("input:checked")].map((x) => x.value);
-      if (!QA.q1.length) QA.q1 = [QUIZ_EXCLUSIVE.q1];
-      QA.touched = true;
-      location.hash = "#/craft?step=1#q-2";
-    });
   }
   // The design system's Meter: a row of equal segments (one segment = 4%), filled in a series colour, empty ones
   // outlined; the exact figure stands to the right, so colour never replaces the number

@@ -1406,3 +1406,18 @@ h2.craft-answer-label { font-size: .85rem; }
 .skip-dl:focus { position: static; }
 .craft-reset { margin: 10px 0 0; }
 .craft-reset .link-btn { font-size: .85rem; padding: 0; }
+
+/* home: what the questionnaire does, and one button into it */
+.home-who.home-start > h2 { font-size: 1.45rem; line-height: 1.25; margin: 4px 0 10px; }
+.home-hero .home-start .hs-text { font-size: 1rem; color: var(--ink); margin: 0 0 12px; }
+.hs-steps { list-style: none; counter-reset: hs; margin: 0 0 18px; padding: 0; }
+.hs-steps li { counter-increment: hs; position: relative; padding: 9px 0 9px 40px; border-top: 1px solid var(--rule); }
+.hs-steps li:last-child { border-bottom: 1px solid var(--rule); }
+.hs-steps li::before {
+  content: counter(hs); position: absolute; left: 0; top: 7px; width: 26px; height: 26px; display: grid; place-items: center;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background: var(--seal-tint); color: var(--accent); font: 600 .8rem var(--sans);
+}
+.home-start .who-foot { border-top: 0; padding-top: 0; }
+.home-start .q-skip-top { margin: 14px 0 0; }
+.home-who .hq-step { margin: 0; font: 600 .8rem var(--display); font-stretch: 85%; text-transform: uppercase; letter-spacing: .14em; color: var(--accent) !important; }
+.home-who .q-skip-top { font-size: .88rem; line-height: 1.5; }

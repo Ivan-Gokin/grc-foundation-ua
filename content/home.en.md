@@ -4,7 +4,7 @@
 
 # Which cybersecurity requirements must your organisation meet?
 
-Laws, resolutions, orders, standards, NATO policies: hundreds of documents that refer to each other and keep changing. Answer three questions and get the laws that apply to you and your Statement of Applicability, each control with its legal basis.
+Laws, resolutions, orders, standards, NATO policies: hundreds of documents that refer to each other and keep changing. This site turns them into the requirements that apply to you.
 
 
 </div>

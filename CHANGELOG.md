@@ -1,5 +1,10 @@
 # Changelog
 
+## Home: a description and one button into the questionnaire (2026-10-23)
+
+- The top block of the home page no longer asks the first question. It says what the questionnaire does ("Let's define your context and find the requirements that fit"), lists the three questions, and has one button, "Start the questionnaire", which opens step 1. "Not sure, or just looking?" stays under it.
+- The hero text no longer repeats the description.
+
 ## Questionnaire: question 2 without "None of these" (2026-10-23)
 
 - Question 2 now asks "Do you process any categories of information protected by law?" ("Чи обробляєте ви категорії інформації, захищені законом?"); leaving every option unticked means none, so the "None of these" option is gone. The Ukrainian options read in the nominative case to match.
