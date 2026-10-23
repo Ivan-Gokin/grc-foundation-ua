@@ -1,5 +1,10 @@
 # Changelog
 
+## Guides and How to contribute (2026-10-23)
+
+- The "Help me" menu is now "Guides": it holds the guidance chapters for the reader.
+- New "How to contribute" page in the header (`#/contribute`): where help is needed most (the review meter and a link to the mapping roadmap), the ways to help, and how to work with the author. It gathers what was split between the home page's "How you can help" and About's "Cooperation and feedback"; both now point to it.
+
 ## The brand cut on two corners only; the header ribbon (2026-10-23)
 
 - Every cut corner is now top right and bottom left, as in the design system: primary buttons, the current item in the header, the theme switch thumb.

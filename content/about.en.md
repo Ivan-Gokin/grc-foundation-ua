@@ -9,13 +9,7 @@ This is a reference tool, not legal advice. Applicability and mappings are the a
 
 ## Cooperation and feedback
 
-The project is built and maintained by **Ivan Gokin**. It is a non-commercial open source project, and it relies on feedback. The most helpful things are:
-
-- errors in mappings and in which acts apply to whom;
-- new and amended acts that are not in the register yet;
-- what is missing for your work.
-
-Report them through [GitHub Issues](https://github.com/Ivan-Gokin/grc-foundation-ua/issues) or propose changes with a pull request. For cooperation, use in your organisation or in training, write to the author: [LinkedIn](https://www.linkedin.com/in/ivan-gokin-2ba0a4136/), [GitHub](https://github.com/Ivan-Gokin).
+The project is built and maintained by **Ivan Gokin**. How to report errors, suggest acts, review mappings or work together: [How to contribute](#/contribute).
 
 ## Privacy
 

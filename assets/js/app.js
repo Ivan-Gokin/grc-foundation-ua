@@ -38,10 +38,10 @@
     });
   }
   if (DARK && DARK.addEventListener) DARK.addEventListener("change", themeButton);
-  const VIEWS = ["home", "craft", "guide", "controls", "sources", "method", "articles", "about"];
+  const VIEWS = ["home", "craft", "guide", "controls", "sources", "method", "articles", "about", "contribute"];
   const SYSTEM_FW = "sp800-53r5"; // the system-level framework, shown inside Controls
   const ARTICLES = ["isms-policy-case-studies", "grc-systems-overview"];
-  // "Help me" chapters: content/guide/<id>.<lang>.md, grouped in the menu and the side panel: what to settle before
+  // "Guides" chapters: content/guide/<id>.<lang>.md, grouped in the menu and the side panel: what to settle before
   // crafting the baseline, what comes after it, and reference. The baseline itself is "Craft your baseline".
   const CHAPTERS = [
     ["roles", "before"], ["compliance", "after"], ["risk", "after"], ["grc", "after"], ["glossary", "ref"],
@@ -301,7 +301,8 @@
     // Intro, the baseline wizard, the register to explore freely, and the help chapters; Methodology is also in the footer
     const nav = link(["home", "navIntro"]) + link(["craft", "navCraft"])
       + menu("explore-menu", t("navExplore"), S.view === "sources" || S.view === "controls", `<ul>${[["sources", "navSources"], ["controls", "navControls"]].map(sub).join("")}</ul>`)
-      + menu("help-menu", t("navHelp"), ["guide", "articles", "method", "about"].includes(S.view), guideLinks(false));
+      + menu("help-menu", t("navHelp"), ["guide", "articles", "method", "about"].includes(S.view), guideLinks(false))
+      + link(["contribute", "navContribute"]);
     const repo = (CFG.repoUrl || "").replace(/\/$/, "");
     document.getElementById("header").innerHTML = `
       <div class="brand">${BRAND_MARK}<div class="brand-text"><a href="#/home" class="brand-name"${S.view === "home" ? ' aria-current="page"' : ""}>${esc(t("siteName"))}<span class="flag-ua" role="img" aria-label="${esc(t("flagUa"))}"></span></a></div></div>
@@ -334,7 +335,7 @@
   function render() {
     renderShell();
     writeHash();
-    ({ home: renderHome, craft: renderCraft, guide: renderGuide, controls: renderControls, sources: renderSources, method: renderMethod, articles: renderArticles, about: renderAbout })[S.view]();
+    ({ home: renderHome, craft: renderCraft, guide: renderGuide, controls: renderControls, sources: renderSources, method: renderMethod, articles: renderArticles, about: renderAbout, contribute: renderContribute })[S.view]();
     if (S.view === "controls" || S.view === "sources") { setTitle(t(S.view === "controls" ? "navControls" : "navSources")); focusHeading(); }
   }
 
@@ -1889,6 +1890,15 @@
 
   // ------------------------------------------------------------------ about
   // The text is content/about.<lang>.md; the version, links, data files and plans are filled in here.
+  // How to contribute: where help is needed (the review meter), the ways to help, contacts
+  async function renderContribute() {
+    const el = docLayout(t("tocTitle"));
+    if (!(await mdInto(el, "contribute"))) return;
+    const box = el.querySelector("#contrib-review");
+    if (box) box.outerHTML = homeReview();
+    buildToc(document.getElementById("toc"), el, false);
+    scrollToAnchor();
+  }
   async function renderAbout() {
     const el = docLayout(t("tocTitle"));
     if (!(await mdInto(el, "about"))) return;

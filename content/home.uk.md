@@ -25,7 +25,7 @@
 <li><a href="#/craft?step=5">Ваші закони й акти</a><span class="stage-hint">обов'язкові, рекомендовані, власні</span></li>
 <li><a href="#/craft?step=6">Ваше положення про застосовність</a><span class="stage-hint">завантаження в Excel</span></li>
 </ol></div>
-<div class="stage-card"><p class="stage-head"><b>Допомога</b></p><ol class="stage-steps">
+<div class="stage-card"><p class="stage-head"><b>Посібники</b></p><ol class="stage-steps">
 <li><a href="#/guide?c=roles">Ролі та повноваження</a><span class="stage-hint">перед початком</span></li>
 <li><a href="#/guide?c=compliance">Інформаційні системи</a><span class="stage-hint">NIST SP 800-53</span></li>
 <li><a href="#/guide?c=risk">Тут починається справжня робота</a><span class="stage-hint">ризики понад мінімум</span></li>
@@ -42,13 +42,7 @@
 
 <div id="home-review"></div>
 
-<p class="panel-label">Як ви можете допомогти</p>
-<ul class="help-list">
-<li><a href="#/controls"><b>Знайшли хибне зіставлення?</b><span>Натисніть «Повідомити про помилку» поруч із ним у Заходах</span></a></li>
-<li><a href="https://github.com/Ivan-Gokin/grc-foundation-ua/issues/new?template=new-or-changed-act.yml"><b>Бракує акта або його змінено?</b><span>Повідомте через коротку форму на GitHub</span></a></li>
-<li><a href="https://github.com/Ivan-Gokin/grc-foundation-ua/blob/main/CONTRIBUTING.md"><b>Добре знаєте акти?</b><span>Станьте другим рецензентом у робочих книгах зіставлень</span></a></li>
-<li><a href="https://github.com/Ivan-Gokin/grc-foundation-ua/issues/new?template=report.yml"><b>Чогось бракує для вашої роботи?</b><span>Запропонуйте</span></a></li>
-</ul>
+<p class="panel-more"><a href="#/contribute">Як долучитися →</a></p>
 
 </section>
 <section class="home-panel">

@@ -25,7 +25,7 @@ Laws, resolutions, orders, standards, NATO policies: hundreds of documents that 
 <li><a href="#/craft?step=5">Your laws and regulations</a><span class="stage-hint">required, recommended, your own</span></li>
 <li><a href="#/craft?step=6">Your Statement of Applicability</a><span class="stage-hint">download as Excel</span></li>
 </ol></div>
-<div class="stage-card"><p class="stage-head"><b>Help me</b></p><ol class="stage-steps">
+<div class="stage-card"><p class="stage-head"><b>Guides</b></p><ol class="stage-steps">
 <li><a href="#/guide?c=roles">Roles and authorities</a><span class="stage-hint">before you start</span></li>
 <li><a href="#/guide?c=compliance">Information systems</a><span class="stage-hint">NIST SP 800-53</span></li>
 <li><a href="#/guide?c=risk">Where the real work begins</a><span class="stage-hint">risks beyond the minimum</span></li>
@@ -42,13 +42,7 @@ AI drafted the mappings; a second person checks each one against the act in the 
 
 <div id="home-review"></div>
 
-<p class="panel-label">How you can help</p>
-<ul class="help-list">
-<li><a href="#/controls"><b>Found a wrong mapping?</b><span>Use "Report an error" next to it in Controls</span></a></li>
-<li><a href="https://github.com/Ivan-Gokin/grc-foundation-ua/issues/new?template=new-or-changed-act.yml"><b>An act is missing or has changed?</b><span>Tell us through a short GitHub form</span></a></li>
-<li><a href="https://github.com/Ivan-Gokin/grc-foundation-ua/blob/main/CONTRIBUTING.md"><b>Know the acts well?</b><span>Become a second reviewer in the mapping workbooks</span></a></li>
-<li><a href="https://github.com/Ivan-Gokin/grc-foundation-ua/issues/new?template=report.yml"><b>Missing something for your work?</b><span>Suggest it</span></a></li>
-</ul>
+<p class="panel-more"><a href="#/contribute">How to contribute →</a></p>
 
 </section>
 <section class="home-panel">

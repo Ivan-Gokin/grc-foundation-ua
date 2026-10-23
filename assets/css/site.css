@@ -1362,3 +1362,7 @@ h1[tabindex="-1"]:focus { outline: none; }
     var(--nb);
 }
 .nav-menu .menu { --nb: var(--surface); border-radius: 0; }
+.panel-more { margin: 12px 0 0; }
+.prose .help-list { padding-left: 0; }
+.prose .help-list li { margin: 0; }
+.prose .help-list a span { font-size: .92rem; }
