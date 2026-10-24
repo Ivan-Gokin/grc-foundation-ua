@@ -17,7 +17,7 @@
 
 <div class="home-stages">
 <div class="stage-card stage-wide"><p class="stage-head"><b>Сформуйте свій базовий рівень за шість кроків</b></p><ol class="stage-steps stage-numbered">
-<li><a href="#/craft?step=1">Про вашу організацію</a><span class="stage-hint">три запитання</span></li>
+<li><a href="#/craft?step=1">Про вашу організацію</a><span class="stage-hint">чотири запитання</span></li>
 <li><a href="#/craft?step=2">Ваш профіль</a><span class="stage-hint">як вас бачить закон</span></li>
 <li><a href="#/craft?step=3">Хто встановлює вам правила</a><span class="stage-hint">держава і ваш регулятор</span></li>
 <li><a href="#/craft?step=4">Ваш стандарт</a><span class="stage-hint">ISO/IEC 27001 або NIST CSF 2.0</span></li>

@@ -65,7 +65,7 @@ sectors ──< applicability >── sources ──< provisions ──< mapping
 | `source_types.csv` | a type of source (law, CMU resolution, ND TZI, EU act...) | `id`, labels, issuer |
 | `sectors.csv` | an entity type the reader can pick ("who it concerns") | `id`, `parent`, `group`, `selectable` |
 | `sector_groups.csv` | a group of entity types in the filter | `id`, labels |
-| `applicability.csv` | "source X concerns entity type Y" | `source_id`, `sector_id`, `basis`, `verified` |
+| `applicability.csv` | "source X concerns entity type Y" (optionally "and also Z") | `source_id`, `sector_id`, `requires`, `basis`, `verified` |
 | `source_relations.csv` | a link in a regulatory chain | `source_id`, `relation`, `related_id`, `basis_uk`, `source_url`, `confidence` |
 | `provisions.csv` (from «Вимоги» in `mappings/*.xlsx`) | one requirement inside a source (article, paragraph) | `id`, `source_id`, `ref_uk`, `provision_type`, `applies_to` |
 | `mappings.csv` (from the framework sheets in `mappings/*.xlsx`) | provision-to-control relationship | `provision_id`, `framework_id`, `control_id`, `relationship`, `coverage`, `parameter_uk` |
@@ -136,12 +136,15 @@ Each act is tagged with the entity types it concerns (`applicability.csv`). The 
 
 - **legal status:** critical infrastructure operators, CII owners, public sector, national cybersecurity system bodies, Defence Forces;
 - **information processed:** state information resources and restricted information, state secrets, NATO information, personal data;
-- **sector or service:** finance, electronic communications, trust services, cloud and data centres, digital platforms, healthcare, industrial control systems, AI, defence industry;
-- **suppliers:** software and hardware manufacturers, ICT suppliers, cybersecurity service providers.
+- **sector or service:** finance, electronic communications, trust services, digital platforms, healthcare, industrial control systems, defence industry;
+- **suppliers:** software and hardware manufacturers, ICT suppliers, cybersecurity service providers;
+- **technologies provided or used:** cloud and data centre providers (`cloud`), cloud service users (`cloud-users`), AI developers and providers (`ai`), AI system users (`ai-users`).
 
 `general` ("all organisations") is not selectable: it is always included. Acts that only set state policy or a regulator's own procedures carry no entity tag and have `role=context`.
 
 A type can have several parents (`parent` separated by `;`). The criticality categories `cii-1-2` and `cii-3-4` sit under both `ki` and `kii`, and `public-sir` / `public-restricted` under both `state-ir` and `public-sector`. They exist because the SSSCIP baseline measures apply per category.
+
+"And" rules: `requires` lists further types (separated by `;`) that must also be in the profile for the row to count. NBU Resolution No. 99 has `finance` with `requires=cloud-users`, so it shows for a bank that uses cloud services, not for every bank; the Law on Cloud Services has `public-sector` with `requires=cloud-users` next to a plain `cloud` row for providers.
 
 Selection logic: choosing a type includes its parents and `general` when matching acts (choosing `cii-3-4` shows acts tagged `ki`, `kii`, `cii-3-4` or `general`). For provisions with `applies_to`, choosing a broad type also includes the narrower ones (choosing `ki` shows the baseline measures for both criticality groups).
 

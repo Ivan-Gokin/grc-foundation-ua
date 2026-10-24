@@ -159,6 +159,9 @@ def main():
         if r["sector_id"] not in sectors:
             err("applicability.csv", r, f"unknown sector '{r['sector_id']}'")
         check_enum("applicability.csv", r, "verified", "yesno")
+        for req in filter(None, (r.get("requires") or "").split(";")):
+            if req not in sectors:
+                err("applicability.csv", r, f"unknown sector '{req}' in requires")
         covered.add(r["source_id"])
     for r in src_rows:
         if r["id"] not in covered and r["status"] != "repealed" and r["role"] == "requirements":

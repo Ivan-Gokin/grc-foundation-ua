@@ -222,9 +222,12 @@
     expandedSectors().forEach((id) => out.add(id));
     return out;
   }
+  // "and" rules: an applicability row may require other sectors too (e.g. a bank that also uses cloud services)
+  const rowRequires = (a) => (a.requires || "").split(";").filter(Boolean);
+  const applLabel = (a) => [a.sector_id, ...rowRequires(a)].map((id) => L(D.sectorById[id], "label") || id).join(" + ");
   function sourceApplies(src, exp) {
     if (!exp) return true;
-    return (D.applBySource[src.id] || []).some((a) => exp.has(a.sector_id));
+    return (D.applBySource[src.id] || []).some((a) => exp.has(a.sector_id) && rowRequires(a).every((id) => exp.has(id)));
   }
   // forSources=false: the controls table (only Ukrainian acts in force drive controls)
   function sourceVisible(src, exp, forSources) {
@@ -453,7 +456,7 @@
       <p class="hq-step">${esc(t("navCraft"))}</p>
       <h2 id="hs-title">${esc(t("hsTitle"))}</h2>
       <p class="hs-text">${esc(t("hsText"))}</p>
-      <ol class="hs-steps">${["hsQ1", "hsQ2", "hsQ3"].map((k) => `<li>${esc(t(k))}</li>`).join("")}</ol>
+      <ol class="hs-steps">${["hsQ1", "hsQ2", "hsQ3", "hsQ4"].map((k) => `<li>${esc(t(k))}</li>`).join("")}</ol>
       <p class="who-foot"><a class="btn btn-primary btn-lg" href="#/craft?step=1">${esc(t("hsGo"))}</a><span class="cta-note">${esc(t("hqNote"))}</span></p>
       ${quizSkip()}
     </section>`;
@@ -509,22 +512,24 @@
   // can add their own. Choices live only for this visit (nothing is stored) and end up in the download.
   const QUIZ = {
     q1: { multi: true, opts: [["public", ["public-sector"]], ["defence", ["defence"]], ["defind", ["defence-industry"]], ["finance", ["finance"]],
-      ["telecom", ["telecom"]], ["infra", ["ics"]], ["health", ["health"]], ["cloud", ["cloud"]], ["platforms", ["platforms"]], ["trust", ["trust"]],
-      ["vendors", ["vendors"]], ["suppliers", ["ict-suppliers", "security-services"]], ["ai", ["ai"]], ["other", []]] },
+      ["telecom", ["telecom"]], ["infra", ["ics"]], ["health", ["health"]], ["platforms", ["platforms"]], ["trust", ["trust"]],
+      ["vendors", ["vendors"]], ["suppliers", ["ict-suppliers", "security-services"]], ["other", []]] },
     q2: { multi: true, opts: [["pd", ["personal-data"]], ["sir", ["public-sir"]], ["restricted", ["public-restricted"]], ["secrets", ["state-secrets"]],
       ["nato", ["nato-info"]]] },
     q3: { multi: false, opts: [["no", []], ["c12", ["cii-1-2"]], ["c34", ["cii-3-4"]], ["unknown", ["ki"]]] },
+    // nothing ticked means none, as in question 2
+    q4: { multi: true, opts: [["cloudProvide", ["cloud"]], ["cloudUse", ["cloud-users"]], ["aiProvide", ["ai"]], ["aiUse", ["ai-users"]]] },
   };
   const QUIZ_EXCLUSIVE = { q1: "other" }; // question 2 has no "none": nothing ticked means none
-  const QA = { q1: [], q2: ["pd"], q3: "no", touched: false };
-  const quizSectors = () => [...new Set(["q1", "q2", "q3"].flatMap((q) => {
+  const QA = { q1: [], q2: ["pd"], q3: "no", q4: [], touched: false };
+  const quizSectors = () => [...new Set(["q1", "q2", "q3", "q4"].flatMap((q) => {
     const sel = [].concat(QA[q]);
     return QUIZ[q].opts.filter(([id]) => sel.includes(id)).flatMap(([, ids]) => ids);
   }))].filter((id) => D.sectorById[id]);
   // The questionnaire's answers read back from a profile (a link or the home page's one-click types)
   function quizFromSectors() {
     if (QA.touched || !S.sectors.length) return;
-    ["q1", "q2"].forEach((q) => { QA[q] = QUIZ[q].opts.filter(([, ids]) => ids.length && ids.some((id) => S.sectors.includes(id))).map(([id]) => id); });
+    ["q1", "q2", "q4"].forEach((q) => { QA[q] = QUIZ[q].opts.filter(([, ids]) => ids.length && ids.some((id) => S.sectors.includes(id))).map(([id]) => id); });
     const c = QUIZ.q3.opts.find(([, ids]) => ids.length && ids.some((id) => S.sectors.includes(id)));
     QA.q3 = c ? c[0] : "no";
   }
@@ -533,7 +538,7 @@
   const CR = { recActs: new Set(), euActs: new Set(), picked: new Set(), unpicked: new Set(), fwChosen: false, dirty: false };
   const W = { sectors: null, fw: null }; // the wizard's own profile and framework (Explore keeps its filters in S)
   const ORG_FWS = ["iso27001-2022", "csf-2.0"];
-  const QA_START = { q1: [], q2: ["pd"], q3: "no", touched: false };
+  const QA_START = { q1: [], q2: ["pd"], q3: "no", q4: [], touched: false };
   // choices made after the questions; once there are any, leaving the page asks first
   const markDirty = () => { CR.dirty = true; };
   window.addEventListener("beforeunload", (e) => { if (CR.dirty) { e.preventDefault(); e.returnValue = ""; } });
@@ -636,7 +641,7 @@
   }
   const answerHead = (key) => `<h2 class="craft-answer-label">${esc(t(key))}</h2>`;
 
-  // 1. Three questions
+  // 1. Four questions
   function craftAbout(box) {
     quizFromSectors();
     const opt = (q, [id]) => {
@@ -647,7 +652,7 @@
     const question = (q, i) => `<fieldset class="q" id="q-${i}"><legend><span class="q-num">${i}</span>${esc(t(q))}</legend>
       ${t(q + "Hint") !== q + "Hint" ? `<p class="hint">${esc(t(q + "Hint"))}</p>` : ""}
       <div class="q-opts${QUIZ[q].opts.length > 6 ? " q-opts-wide" : ""}">${QUIZ[q].opts.map((o) => opt(q, o)).join("")}</div></fieldset>`;
-    box.innerHTML = `${quizSkip()}<form id="quiz" class="quiz" onsubmit="return false">${["q1", "q2", "q3"].map((q, i) => question(q, i + 1)).join("")}
+    box.innerHTML = `${quizSkip()}<form id="quiz" class="quiz" onsubmit="return false">${["q1", "q2", "q3", "q4"].map((q, i) => question(q, i + 1)).join("")}
       <div class="q-actions"><button type="submit" class="btn btn-primary btn-lg" id="q-go">${esc(t("craftToProfile"))}</button>
 </div></form>`;
     const form = box.querySelector("#quiz");
@@ -1741,7 +1746,7 @@
     if (!rows.length) return `<p class="empty">${esc(t("srcNone"))}</p>`;
     const body = rows.map((s) => {
       const n = (D.provsBySource[s.id] || []).length;
-      const sectors = (D.applBySource[s.id] || []).map((a) => `<span class="tag">${esc(L(D.sectorById[a.sector_id], "label"))}</span>`).join("");
+      const sectors = (D.applBySource[s.id] || []).map((a) => `<span class="tag">${esc(applLabel(a))}</span>`).join("");
       const title = sourceTitle(s);
       const concerns = L(s, "concerns");
       const comment = s.comment_uk && s.comment_uk !== L(s, "description")
@@ -1833,7 +1838,7 @@
     const header = ["id", "ELI", "No.", t("xType"), t("xNumber"), t("xAdopted"), t("srcColRef"), t("xTitle"), t("xDescription"), t("concerns"), t("xStatusSrc"),
       t("xBinding"), t("xRole"), t("xSectors"), t("xVerified"), t("xUrl")];
     const data = rows.map((s) => [s.id, eliAbs(s.eli), s.register_no, typeLabel(s.type), s.number, s.adopted, sourceRef(s), sourceTitle(s), L(s, "description"), L(s, "concerns"), statusLabel(s.status),
-      s.binding === "mandatory" ? t("bMandatory") : t("bRecommended"), roleLabel(s.role) || "", (D.applBySource[s.id] || []).map((a) => L(D.sectorById[a.sector_id], "label")).join("; "),
+      s.binding === "mandatory" ? t("bMandatory") : t("bRecommended"), roleLabel(s.role) || "", (D.applBySource[s.id] || []).map(applLabel).join("; "),
       s.last_verified, s.url]);
     const name = `${S.scope === "core" ? "legal-sources" : "eu-reference"}${S.sectors.length ? "_" + S.sectors.join("-") : ""}_${new Date().toISOString().slice(0, 10)}`;
     if (kind === "xlsx") downloadXlsx(`${name}.xlsx`, "Sources", header, data, [22, 40, 6, 18, 12, 12, 34, 60, 60, 50, 14, 14, 14, 40, 12, 40]);

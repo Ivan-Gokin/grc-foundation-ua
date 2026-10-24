@@ -171,7 +171,9 @@ def readable_workbook(path, meta, sources, types, sectors, appl, relations, prov
     eli = lambda s: s["eli"] if s["eli"].startswith("http") else site + s["eli"]  # full IRI on the published site
     tags = {}
     for a in appl:
-        tags.setdefault(a["source_id"], []).append(sectors[a["sector_id"]]["label_uk"])
+        label = sectors[a["sector_id"]]["label_uk"]
+        reqs = [sectors[x]["label_uk"] for x in (a.get("requires") or "").split(";") if x in sectors]
+        tags.setdefault(a["source_id"], []).append(" + ".join([label] + reqs))
     wb = openpyxl.Workbook()
     about = wb.active
     about.title = "Про файл"

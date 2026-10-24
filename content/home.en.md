@@ -17,7 +17,7 @@ Laws, resolutions, orders, standards, NATO policies: hundreds of documents that 
 
 <div class="home-stages">
 <div class="stage-card stage-wide"><p class="stage-head"><b>Craft your baseline in six steps</b></p><ol class="stage-steps stage-numbered">
-<li><a href="#/craft?step=1">About your organisation</a><span class="stage-hint">three questions</span></li>
+<li><a href="#/craft?step=1">About your organisation</a><span class="stage-hint">four questions</span></li>
 <li><a href="#/craft?step=2">Your profile</a><span class="stage-hint">how the law sees you</span></li>
 <li><a href="#/craft?step=3">Who sets your rules</a><span class="stage-hint">the state and your regulator</span></li>
 <li><a href="#/craft?step=4">Your framework</a><span class="stage-hint">ISO/IEC 27001 or NIST CSF 2.0</span></li>

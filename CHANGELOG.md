@@ -1,5 +1,11 @@
 # Changelog
 
+## Cloud and AI: providers and users apart, with "and" rules (2026-10-24)
+
+- A fourth question in "Craft your baseline": "Do you provide or use cloud services or artificial intelligence systems?" (provide cloud or data centre services; use cloud or a third-party data centre; develop or supply AI systems; use AI systems). Cloud and AI left question 1. The filters have a matching group, "Technologies you provide or use", with two new types: cloud service users (`cloud-users`) and AI system users (`ai-users`); `cloud` and `ai` now mean providers.
+- Applicability rows can require further types (`requires` in `applicability.csv`): NBU Resolution No. 99 now applies to a bank that uses cloud services; the Law on Cloud Services, CMU Resolution No. 154, SSSCIP Order No. 505 and bill No. 16123 apply to public bodies and CII owners that use cloud services (and to providers as before); SSSCIP Order No. 154 (AI) applies to AI users instead of every organisation; the AI Act, the Digital Omnibus on AI and the CoE AI convention also cover AI users. The Acts register and the data workbook show such rows as "Financial sector + Cloud service users". Validation checks the new column.
+- Texts say "four questions" where they said three.
+
 ## How to contribute: acknowledgements (2026-10-23)
 
 - New "Acknowledgements" section: a Name and Contribution table read from `content/contributors.csv` (name, contribution in Ukrainian and English, an optional link). While it is empty, it invites the reader to be the first and points to the ways to help.

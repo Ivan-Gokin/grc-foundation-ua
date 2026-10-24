@@ -3,3 +3,4 @@ status,0,Правовий статус,Legal status
 info,1,"Інформація, яку ви обробляєте",Information you process
 industry,2,Галузь або послуга,Sector or service
 supply,3,Постачальники та надавачі послуг,Suppliers and service providers
+tech,4,"Технології, які ви надаєте або використовуєте",Technologies you provide or use
