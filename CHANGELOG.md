@@ -1,5 +1,11 @@
 # Changelog
 
+## Register: SSSCIP Order No. 771 on secure internet access (2026-10-29)
+
+- SSSCIP Order No. 771 of 30.08.2023, the regulation on the system of secure internet access for public bodies, added with `role=context` and the `national-cyber-system` tag (register number 300). The map of the national cybersecurity system cites it as the basis of the cyber-protection services the state provides to public bodies.
+- One chain link: the order ensures implementation of the organisational and technical model of cyber protection (Resolution No. 1426), `verified=no`.
+- Details come from the SSSCIP page that publishes the order; the text has not yet been checked, so `last_verified` is empty.
+
 ## Register: institutional acts of the national cybersecurity system (2026-10-29)
 
 - Eleven acts that set who holds which powers in the national cybersecurity system, added with `role=context` and the `national-cyber-system` tag (so the questionnaire does not offer them as requirements): the laws on the NSDC (No. 183/98-VR), the SBU (No. 2229-XII), the National Police (No. 580-VIII), intelligence (No. 912-IX), counter-intelligence activity (No. 374-IV), defence (No. 1932-XII), the prosecutor's office (No. 1697-VII), the Parliamentary Commissioner for Human Rights (No. 776/97-VR) and diplomatic service (No. 1764-VIII); Presidential Decree No. 242/2016 on the NCCC; CMU Order No. 631-r of 24.06.2026, the 2026 action plan for the Cybersecurity Strategy. Register numbers 289–299.
