@@ -1,5 +1,12 @@
 # Changelog
 
+## Register: institutional acts of the national cybersecurity system (2026-10-29)
+
+- Eleven acts that set who holds which powers in the national cybersecurity system, added with `role=context` and the `national-cyber-system` tag (so the questionnaire does not offer them as requirements): the laws on the NSDC (No. 183/98-VR), the SBU (No. 2229-XII), the National Police (No. 580-VIII), intelligence (No. 912-IX), counter-intelligence activity (No. 374-IV), defence (No. 1932-XII), the prosecutor's office (No. 1697-VII), the Parliamentary Commissioner for Human Rights (No. 776/97-VR) and diplomatic service (No. 1764-VIII); Presidential Decree No. 242/2016 on the NCCC; CMU Order No. 631-r of 24.06.2026, the 2026 action plan for the Cybersecurity Strategy. Register numbers 289–299.
+- A new act type, CMU Order (`cmu_order`, ELI path `eli/ua/cmu/order/<year>/<number>`), for Cabinet orders (розпорядження); the sort order of the types after it moves down by one.
+- Two chain links: Decree No. 242/2016 is based on the NSDC law; Order No. 631-r ensures implementation of the Cybersecurity Strategy (Decree No. 447/2021). Both `verified=no`.
+- Details were taken from open sources; the texts have not yet been checked on zakon.rada.gov.ua, so `last_verified` is empty. The acts are added so that the map of the national cybersecurity system can reference the same register instead of keeping its own list.
+
 ## Cloud and AI: providers and users apart, with "and" rules (2026-10-24)
 
 - A fourth question in "Craft your baseline": "Do you provide or use cloud services or artificial intelligence systems?" (provide cloud or data centre services; use cloud or a third-party data centre; develop or supply AI systems; use AI systems). Cloud and AI left question 1. The filters have a matching group, "Technologies you provide or use", with two new types: cloud service users (`cloud-users`) and AI system users (`ai-users`); `cloud` and `ai` now mean providers.
