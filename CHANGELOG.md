@@ -1,5 +1,11 @@
 # Changelog
 
+## Register: Laws No. 2163-VIII and No. 3475-IV checked against the text (2026-10-30)
+
+- The Law on the Basic Principles of Cybersecurity (No. 2163-VIII, edition of 19.10.2025) and the Law on SSSCIP (No. 3475-IV, edition of 20.04.2025) were read on zakon.rada.gov.ua: both are in force, and the current editions name Law No. 4336-IX as the basis of the amendments. `last_verified` is set to 2026-10-30 for both.
+- The two chain links "No. 4336-IX amends No. 2163-VIII" and "No. 4336-IX amends No. 3475-IV" are now `verified=yes`.
+- The map of the national cybersecurity system checked its roles against the same texts; this change records that check in the register.
+
 ## Register: SSSCIP Order No. 771 on secure internet access (2026-10-29)
 
 - SSSCIP Order No. 771 of 30.08.2023, the regulation on the system of secure internet access for public bodies, added with `role=context` and the `national-cyber-system` tag (register number 300). The map of the national cybersecurity system cites it as the basis of the cyber-protection services the state provides to public bodies.
