@@ -1,5 +1,14 @@
 # Changelog
 
+## Register: NATO security and information-management directives (2026-11-10)
+
+- Three newer revisions of NATO security directives, with the older ones updated: AC/35-D/2000-REV9 on personnel security (in force from 01.07.2025; REV8 now `repealed`), AC/35-D/2003-REV5 on classified project and industrial security (REV4 now `repealed`), and AC/35-D/2004-REV4, the primary directive on CIS security (11.11.2024). REV4 replaces AC/35-D/2004-REV3 except its Appendix 2, and Section 4 of AC/35-D/2005-REV3, so both stay in force with `amends` links and a comment.
+- Six publicly disclosed NATO information-management documents: the Records Policy C-M(2011)0043, the Policy on the Retention and Disposition of NATO Information C-M(2009)0021, the Policy on the Public Disclosure of NATO Information C-M(2008)0116-REV1, the Directive on the Public Disclosure of NATO Information AC/324-D(2014)0010-REV2 and the Directive on the Management of Records Generated on Operational Deployment C-M(2012)0014 (all `domain=records`), plus the NATO Personal Data Protection Framework Policy.
+- Seven restricted documents listed by reference only, each cited in a public NATO text: AC/35-D/2020 (protection of CIS handling non-classified NATO information), AC/35-D/1035 (security risk management process), AC/35-D/1029-REV1 (security education and awareness), AC/35-D/1043 (national personnel security clearance procedures), AC/35-D/1038-REV3 (non-NATO entities; VST 01.008.005-2021 adopts it identically), AC/322-D(2015)0031 (cryptographic security for NATO information in the CIS of non-NATO nations) and AC/322-D(2004)0024-REV2 (NATO PKI certificate policy). The last two are confirmed by the NISP Baseline 16 catalogue.
+- Register numbers 301–316; 35 applicability rows copied from the closest existing NATO document (`verified=no`); 13 chain links (`repeals`, `amends`, `cites`, `applies`), all `verified=no`.
+- Fixes: AC/322-D/0052-REV2 lost its URL, which pointed to a different document (AC/35-D/2004-REV2 of 06.12.2010). No public copy was found, so it is now `restricted`. AC/35-D/2002-REV5 now links to the NATO Archives copy.
+- `last_verified` is set only for the documents whose public text was opened. Restricted documents keep it empty, because their titles and dates come from citations in other documents.
+
 ## Register: SSSCIP Order No. 771 on secure internet access (2026-10-29)
 
 - SSSCIP Order No. 771 of 30.08.2023, the regulation on the system of secure internet access for public bodies, added with `role=context` and the `national-cyber-system` tag (register number 300). The map of the national cybersecurity system cites it as the basis of the cyber-protection services the state provides to public bodies.

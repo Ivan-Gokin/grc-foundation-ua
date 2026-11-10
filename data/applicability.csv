@@ -523,3 +523,38 @@ ua-ssscip-154-2026,ai-users,,review 2026-10-24: owners of state and private syst
 eu-reg-2024-1689,ai-users,,review 2026-10-24: deployers of AI systems,no
 eu-reg-2026-1744,ai-users,,review 2026-10-24: deployers of AI systems,no
 intl-coe-cets-225,ai-users,,review 2026-10-24: users of AI systems,no
+nato-ac-35-d-2000-rev9,nato-info,,"same entity types as the previous revision, review-2026-11-10",no
+nato-ac-35-d-2000-rev9,defence,,"same entity types as the previous revision, review-2026-11-10",no
+nato-ac-35-d-2003-rev5,nato-info,,"same entity types as the previous revision, review-2026-11-10",no
+nato-ac-35-d-2003-rev5,defence,,"same entity types as the previous revision, review-2026-11-10",no
+nato-ac-35-d-2003-rev5,defence-industry,,"same entity types as the previous revision, review-2026-11-10",no
+nato-ac-35-d-2004-rev4,nato-info,,"same entity types as the previous revision, review-2026-11-10",no
+nato-ac-35-d-2004-rev4,defence,,"same entity types as the previous revision, review-2026-11-10",no
+nato-ac-35-d-2020,nato-info,,"NATO information handling, review-2026-11-10",no
+nato-ac-35-d-2020,defence,,"NATO information handling, review-2026-11-10",no
+nato-ac-35-d-1035,nato-info,,"NATO information handling, review-2026-11-10",no
+nato-ac-35-d-1035,defence,,"NATO information handling, review-2026-11-10",no
+nato-ac-35-d-1029-rev1,nato-info,,"NATO information handling, review-2026-11-10",no
+nato-ac-35-d-1029-rev1,defence,,"NATO information handling, review-2026-11-10",no
+nato-ac-35-d-1043,nato-info,,"NATO information handling, review-2026-11-10",no
+nato-ac-35-d-1043,defence,,"NATO information handling, review-2026-11-10",no
+nato-ac-322-d-2004-0024-rev2,nato-info,,"NATO information handling, review-2026-11-10",no
+nato-ac-322-d-2004-0024-rev2,defence,,"NATO information handling, review-2026-11-10",no
+nato-c-m-2011-0043,nato-info,,"NATO information handling, review-2026-11-10",no
+nato-c-m-2011-0043,defence,,"NATO information handling, review-2026-11-10",no
+nato-c-m-2009-0021,nato-info,,"NATO information handling, review-2026-11-10",no
+nato-c-m-2009-0021,defence,,"NATO information handling, review-2026-11-10",no
+nato-c-m-2008-0116-rev1,nato-info,,"NATO information handling, review-2026-11-10",no
+nato-c-m-2008-0116-rev1,defence,,"NATO information handling, review-2026-11-10",no
+nato-ac-324-d-2014-0010-rev2,nato-info,,"NATO information handling, review-2026-11-10",no
+nato-ac-324-d-2014-0010-rev2,defence,,"NATO information handling, review-2026-11-10",no
+nato-c-m-2012-0014,nato-info,,"NATO information handling, review-2026-11-10",no
+nato-c-m-2012-0014,defence,,"NATO information handling, review-2026-11-10",no
+nato-personal-data-protection-framework-policy,nato-info,,"NATO information handling, review-2026-11-10",no
+nato-personal-data-protection-framework-policy,defence,,"NATO information handling, review-2026-11-10",no
+nato-ac-35-d-1038-rev3,nato-info,,"non-NATO entities exchanging information with NATO, review-2026-11-10",no
+nato-ac-35-d-1038-rev3,defence,,"non-NATO entities exchanging information with NATO, review-2026-11-10",no
+nato-ac-35-d-1038-rev3,public-sector,,"non-NATO entities exchanging information with NATO, review-2026-11-10",no
+nato-ac-322-d-2015-0031,nato-info,,"non-NATO entities exchanging information with NATO, review-2026-11-10",no
+nato-ac-322-d-2015-0031,defence,,"non-NATO entities exchanging information with NATO, review-2026-11-10",no
+nato-ac-322-d-2015-0031,public-sector,,"non-NATO entities exchanging information with NATO, review-2026-11-10",no
