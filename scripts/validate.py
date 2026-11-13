@@ -237,9 +237,15 @@ def main():
             err("provisions.csv", r, f"id must start with '{r['source_id']}:'")
         check_enum("provisions.csv", r, "provision_type")
         check_grounds("provisions.csv", r, "notes", "Застереження")
-        for s in filter(None, r["applies_to"].split(";")):
-            if s not in sectors:
-                err("provisions.csv", r, f"unknown sector '{s}' in applies_to")
+        # ';' = any of the terms; '+' = all parts of a term; '!' = the part must NOT apply (public-sector+!banks)
+        for term in filter(None, r["applies_to"].split(";")):
+            parts = term.split("+")
+            for part in parts:
+                s = part[1:] if part.startswith("!") else part
+                if s not in sectors:
+                    err("provisions.csv", r, f"unknown sector '{s}' in applies_to")
+            if all(x.startswith("!") for x in parts):
+                err("provisions.csv", r, f"applies_to term '{term}' needs at least one sector without '!'")
 
     seen, mapped = set(), set()
     for r in map_rows:

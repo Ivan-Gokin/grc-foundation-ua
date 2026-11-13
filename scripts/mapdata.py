@@ -44,7 +44,7 @@ PROV_COLS = [
     ("ref_uk", "Пункт", 32, "Посилання на пункт так, як його цитують: п. 40 розділу IV; ст. 8 ч. 2. Унікальне в межах акта."),
     ("summary_uk", "Вимога", 70, "Що вимагає положення, своїми словами."),
     ("provision_type", "Тип", 13, "обов'язок - зіставляється; делегує - лише доручає іншому акту; визначення - сфера чи терміни."),
-    ("applies_to", "Стосується лише", 22, "Необов'язково: типи суб'єктів з data/sectors.csv через ';', якщо положення вужче за акт."),
+    ("applies_to", "Стосується лише", 22, "Необов'язково, якщо положення вужче за акт: типи суб'єктів з data/sectors.csv. «;» - будь-який з, «+» - усі разом, «!» - крім: «banks;public-sector+!banks»."),
     ("notes", "Застереження", 40, "Редакція, з якою працювали, що треба звірити."),
     ("grounds", "Підстава", 16, "Необов'язково. Порожньо = текст акта. «припущення автора», «позиція регулятора» (з джерелом) або «усталена практика», якщо Вимога чи «Стосується лише» спирається на тлумачення; тоді в Застереженні речення з датою, що починається з цієї назви."),
     ("ref_en", "Пункт (EN)", 24, "Необов'язково."),
@@ -72,7 +72,7 @@ LINK_COLS = [
 ]
 # column order of the generated data/provisions.csv and data/mappings.csv
 PROVISION_FIELDS = ["id", "source_id", "ref_uk", "ref_en", "summary_uk", "summary_en", "provision_type", "applies_to", "notes",
-                    "grounds"]
+                    "grounds", "act_condition_uk", "act_condition_en", "checked_edition"]  # last three: from sources.csv
 MAPPING_FIELDS = ["provision_id", "framework_id", "control_id", "relationship", "rationale", "strength", "coverage",
                   "parameter_uk", "parameter_en", "notes_uk", "notes_en", "policy_uk", "policy_en", "mapped_by",
                   "reviewed_by", "review_status", "date", "grounds"]

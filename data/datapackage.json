@@ -154,6 +154,21 @@
             "name": "notes",
             "type": "string",
             "description": "Maintainer notes."
+          },
+          {
+            "name": "checked_edition",
+            "type": "string",
+            "description": "The edition the provisions were last checked against: date and amending act (e.g. 'ред. 19.06.2026, постанова НБУ № 66/2026')."
+          },
+          {
+            "name": "act_condition_uk",
+            "type": "string",
+            "description": "A condition that applies to every provision of the act (e.g. who it binds and in what part). The build copies it to every provision row."
+          },
+          {
+            "name": "act_condition_en",
+            "type": "string",
+            "description": "Same in English."
           }
         ]
       }
@@ -491,6 +506,21 @@
             "name": "grounds",
             "type": "string",
             "description": "What the row rests on: text (the act itself; the default) | assumption (the author's working assumption) | regulator (a published position of the regulator) | practice (established practice). Anything but text has a dated sentence starting with its label in the notes. On a provision it concerns the requirement text or its applies_to."
+          },
+          {
+            "name": "act_condition_uk",
+            "type": "string",
+            "description": "Copied from sources.csv at build time."
+          },
+          {
+            "name": "act_condition_en",
+            "type": "string",
+            "description": "Copied from sources.csv at build time."
+          },
+          {
+            "name": "checked_edition",
+            "type": "string",
+            "description": "Copied from sources.csv at build time."
           }
         ]
       },

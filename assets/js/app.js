@@ -247,8 +247,9 @@
   function provisionVisible(p, exp) {
     if (!p || !sourceVisible(D.sourceById[p.source_id], exp, false)) return false;
     if (!exp || !p.applies_to) return true;
+    // ';' = any of the terms; '+' = every part of a term; '!' = the reader must not be in that sector
     const down = selectedDown();
-    return p.applies_to.split(";").some((s) => down.has(s));
+    return p.applies_to.split(";").some((term) => term.split("+").every((x) => (x.startsWith("!") ? !exp.has(x.slice(1)) : down.has(x))));
   }
   function driversFor(fw, exp, includeDrafts) {
     const out = {};
@@ -1191,6 +1192,11 @@
   let drawerOpen = false; // the profile's filters, shown under the profile bar
   const ctlExp = () => (S.all ? null : expandedSectors());
   const uniq = (xs) => [...new Set(xs)];
+  // applies_to in words: "Банки; Державний сектор і не Банки"
+  const appliesText = (a) => a.split(";").filter(Boolean).map((term) => term.split("+").map((x) => {
+    const neg = x.startsWith("!"), id = neg ? x.slice(1) : x;
+    return (neg ? t("notWord") + " " : "") + (L(D.sectorById[id], "label") || id);
+  }).join(" " + t("andWord") + " ")).join("; ");
   // "N of these mappings rest on an interpretation" with the kinds, or nothing
   function groundsNote(ms) {
     const n = {};
@@ -1505,7 +1511,8 @@
     const orig = isFallback(p, "summary");
     const more = [
       L(m, "parameter") ? `<p><b>${esc(t("colParam"))}:</b> ${esc(L(m, "parameter"))}</p>` : "",
-      p.applies_to ? `<p><b>${esc(t("appliesOnly"))}:</b> ${p.applies_to.split(";").map((s) => esc(L(D.sectorById[s], "label") || s)).join("; ")}</p>` : "",
+      p.applies_to ? `<p><b>${esc(t("appliesOnly"))}:</b> ${esc(appliesText(p.applies_to))}</p>` : "",
+      L(src, "act_condition") ? `<p><b>${esc(t("actCondition"))}:</b> ${esc(L(src, "act_condition"))}</p>` : "",
       groundsOf(m) ? `<p><b>${esc(t("colGrounds"))}:</b> ${esc(groundsLabel(groundsOf(m)))}. ${esc(t("groundsHint"))}</p>` : "",
       L(m, "policy") ? `<p><b>${esc(t("driverPolicy"))}:</b> ${esc(L(m, "policy"))}</p>` : "",
       p.notes ? `<p><b>${esc(t("driverCaveat"))}:</b> <span${S.lang === "en" ? ' lang="uk"' : ""}>${esc(p.notes)}</span></p>` : "",
@@ -1777,6 +1784,8 @@
         <td data-label="${esc(t("srcColStatus"))}">${sourceBadges(s)}${n ? `<p class="muted small">${esc(fmt(t("provisionsCount"), n))}</p>` : ""}</td>
         <td data-label="${esc(t("srcColDesc"))}"><p${isFallback(s, "description") ? ' lang="uk"' : ""}>${esc(L(s, "description"))}</p>
           ${concerns ? `<p class="concerns"><b>${esc(t("concerns"))}</b> ${esc(concerns)}</p>` : ""}
+          ${L(s, "act_condition") ? `<p class="concerns"><b>${esc(t("actCondition"))}:</b> ${esc(L(s, "act_condition"))}</p>` : ""}
+          ${s.checked_edition ? `<p class="muted small">${esc(t("checkedEdition"))}: <span lang="uk">${esc(s.checked_edition)}</span></p>` : ""}
           ${sectors ? `<p class="tags">${sectors}</p>` : ""}${comment}</td>
         <td data-label="${esc(t("srcColChain"))}">${relLinks(s)}</td></tr>`;
     }).join("");
@@ -1855,12 +1864,12 @@
 
   function exportSources(rows, kind) {
     const header = ["id", "ELI", "No.", t("xType"), t("xNumber"), t("xAdopted"), t("srcColRef"), t("xTitle"), t("xDescription"), t("concerns"), t("xStatusSrc"),
-      t("xBinding"), t("xRole"), t("xSectors"), t("xVerified"), t("xUrl")];
+      t("xBinding"), t("xRole"), t("xSectors"), t("xVerified"), t("checkedEdition"), t("actCondition"), t("xUrl")];
     const data = rows.map((s) => [s.id, eliAbs(s.eli), s.register_no, typeLabel(s.type), s.number, s.adopted, sourceRef(s), sourceTitle(s), L(s, "description"), L(s, "concerns"), statusLabel(s.status),
       s.binding === "mandatory" ? t("bMandatory") : t("bRecommended"), roleLabel(s.role) || "", (D.applBySource[s.id] || []).map(applLabel).join("; "),
-      s.last_verified, s.url]);
+      s.last_verified, s.checked_edition || "", L(s, "act_condition") || "", s.url]);
     const name = `${S.scope === "core" ? "legal-sources" : "eu-reference"}${S.sectors.length ? "_" + S.sectors.join("-") : ""}_${new Date().toISOString().slice(0, 10)}`;
-    if (kind === "xlsx") downloadXlsx(`${name}.xlsx`, "Sources", header, data, [22, 40, 6, 18, 12, 12, 34, 60, 60, 50, 14, 14, 14, 40, 12, 40]);
+    if (kind === "xlsx") downloadXlsx(`${name}.xlsx`, "Sources", header, data, [22, 40, 6, 18, 12, 12, 34, 60, 60, 50, 14, 14, 14, 40, 12, 30, 50, 40]);
     else downloadCsv(`${name}.csv`, header, data);
   }
 
