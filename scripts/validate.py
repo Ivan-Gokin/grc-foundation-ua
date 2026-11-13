@@ -227,6 +227,13 @@ def main():
     prov_rows, map_rows, wb_errors = mapdata.read_all(set(controls))
     errors.extend(wb_errors)
     provisions = {r["id"] for r in prov_rows}
+    # retired codes stay retired: a deleted provision's code is never given to a new provision
+    for r in load("retired_provisions.csv"):
+        if r["id"] in provisions:
+            errors.append(f"retired_provisions.csv:{r['_line']}: code '{r['id']}' was retired on {r['retired']} and must not be reused")
+        for x in filter(None, r["replaced_by"].split(";")):
+            if x not in provisions:
+                errors.append(f"retired_provisions.csv:{r['_line']}: replaced_by '{x}' is not a provision")
     for r in prov_rows:
         if not PROV_RE.match(r["id"]):
             err("", r, f"code '{r['id'].split(':', 1)[-1]}' has invalid characters (use a-z, 0-9, '.', ':', '-')")

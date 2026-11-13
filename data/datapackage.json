@@ -899,6 +899,41 @@
       "title": "ELI metadata (JSON-LD)",
       "description": "Generated at publication by scripts/build.py from sources.csv and source_relations.csv: every act as eli:LegalResource (drafts as eli:Work) with its ELI, type, dates, force and the regulatory chains as ELI ontology 1.5 / ELI-DL properties.",
       "x-source": "data/source_relations.csv"
+    },
+    {
+      "name": "retired-provisions",
+      "path": "retired_provisions.csv",
+      "format": "csv",
+      "encoding": "utf-8",
+      "description": "Provision codes that were deleted (duplicates merged into another row, or rows that were not obligations). A retired code is never reused; validate.py checks it.",
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "The retired provision id (<source_id>:<code>)."
+          },
+          {
+            "name": "retired",
+            "type": "string",
+            "description": "Date retired (YYYY-MM-DD)."
+          },
+          {
+            "name": "replaced_by",
+            "type": "string",
+            "description": "';'-separated provision ids that now carry its content, if any."
+          },
+          {
+            "name": "decision",
+            "type": "string",
+            "description": "Ruling or decision id in the review log."
+          },
+          {
+            "name": "note_uk",
+            "type": "string"
+          }
+        ]
+      }
     }
   ],
   "homepage": "https://ivan-gokin.github.io/grc-foundation-ua/"
