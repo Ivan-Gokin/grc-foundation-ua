@@ -36,10 +36,12 @@ ENUMS = {
     "coverage": {"full", "partial", "none"},
     "review_status": {"ai_draft", "draft", "imported", "reviewed"},
     "yesno": {"yes", "no"},
+    "grounds": {"", "text", "assumption", "regulator", "practice"},
 }
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9.\-]*$")
 PROV_RE = re.compile(r"^[a-z0-9][a-z0-9.\-]*:[A-Za-z0-9.:\-]+$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+ANY_DATE_RE = re.compile(r"\d{4}-\d{2}(-\d{2})?")
 ELI_OFFICIAL_RE = re.compile(r"^http://data\.europa\.eu/eli/[a-z_]+/\d{4}/\d+/oj$")
 ELI_LOCAL_RE = re.compile(r"^eli/(ua|int|nato|eu)/[a-z0-9.\-]+(/[a-z0-9.\-]+)+$")
 
@@ -70,6 +72,20 @@ def check_enum(name, row, field, enum=None):
     v = row.get(field, "")
     if v not in ENUMS[enum or field]:
         err(name, row, f"{field}='{v}' not in {sorted(ENUMS[enum or field])}")
+
+
+def check_grounds(name, row, notes_field, notes_header):
+    """A row that rests on something other than the act text says so in its notes: a sentence that starts with the
+    label (e.g. «Припущення автора (2026-11-13): ...») and carries a date, so a reader sees what it rests on and since when."""
+    check_enum(name, row, "grounds")
+    g = row.get("grounds", "")
+    if g in ("", "text") or g not in mapdata.GROUNDS:
+        return
+    label = mapdata.GROUNDS[g]
+    notes = row.get(notes_field, "")
+    i = notes.lower().find(label.lower())
+    if i < 0 or not ANY_DATE_RE.search(notes[i:i + len(label) + 40]):
+        err(name, row, f"grounds «{label}» needs a dated sentence in «{notes_header}» that starts with «{label[0].upper() + label[1:]} (YYYY-MM-DD): ...»")
 
 
 def unique(name, rows, key="id", pattern=ID_RE):
@@ -220,6 +236,7 @@ def main():
         elif not r["id"].startswith(r["source_id"] + ":"):
             err("provisions.csv", r, f"id must start with '{r['source_id']}:'")
         check_enum("provisions.csv", r, "provision_type")
+        check_grounds("provisions.csv", r, "notes", "Застереження")
         for s in filter(None, r["applies_to"].split(";")):
             if s not in sectors:
                 err("provisions.csv", r, f"unknown sector '{s}' in applies_to")
@@ -242,6 +259,7 @@ def main():
                 err("mappings.csv", r, f"map to a subcategory/requirement/control, not a {c['level']} ('{r['control_id']}')")
         for f in ("relationship", "rationale", "coverage", "review_status"):
             check_enum("mappings.csv", r, f)
+        check_grounds("mappings.csv", r, "notes_uk", "Примітка")
         if r["strength"] and not (r["strength"].isdigit() and 1 <= int(r["strength"]) <= 10):
             err("mappings.csv", r, "strength must be an integer 1-10 or empty")
         if r["relationship"] == "no_relationship" and r["coverage"] != "none":
@@ -286,6 +304,10 @@ def main():
         warnings.append(f"{drafts['draft']} mappings are drafts")
     if drafts.get("ai_draft"):
         warnings.append(f"{drafts['ai_draft']} mappings are AI-generated and not yet reviewed by a person")
+    grounds = Counter(r["grounds"] for r in prov_rows + map_rows if r.get("grounds") not in ("", "text"))
+    if grounds:
+        warnings.append("rows that rest on an interpretation, not the act text: "
+                        + ", ".join(f"{mapdata.GROUNDS.get(k, k)} {n}" for k, n in sorted(grounds.items())))
 
     if stats:
         print("Sources by scope:", dict(Counter(r["scope"] for r in src_rows)))
@@ -295,6 +317,7 @@ def main():
         print(f"Provisions: {len(provisions)} ({len(provisions - mapped)} unmapped)")
         print("Mappings by framework:", dict(Counter(r["framework_id"] for r in map_rows)))
         print("Mappings by review status:", dict(drafts))
+        print("Rows by grounds (non-text):", dict(grounds))
         no_prov = sorted(sources - {r["source_id"] for r in prov_rows})
         print(f"Sources without any provisions: {len(no_prov)} of {len(sources)}")
 

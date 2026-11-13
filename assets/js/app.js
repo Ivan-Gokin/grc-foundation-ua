@@ -290,7 +290,15 @@
   const roleLabel = (r) => ({ context: t("roleContext"), procedural: t("roleProcedural"), amending: t("roleAmending") }[r] || "");
   const reviewLabel = (r) => ({ ai_draft: t("aiDraft"), draft: t("draft"), imported: t("imported"), reviewed: t("reviewed") }[r] || r);
   const isDraft = (m) => m.review_status === "draft" || m.review_status === "ai_draft";
-  const reviewMark = (m) => (isDraft(m) ? ", " + reviewLabel(m.review_status) : "");
+  const reviewMark = (m) => (isDraft(m) ? ", " + reviewLabel(m.review_status) : "") + (groundsOf(m) ? ", " + groundsLabel(groundsOf(m)) : "");
+  // What a mapping rests on when it is not the act text: the mapping's own grounds, else its provision's
+  // (an author's working assumption, a regulator's position, established practice). "" for the act text.
+  const groundsOf = (m) => {
+    const own = m.grounds && m.grounds !== "text" ? m.grounds : ((D.provById[m.provision_id] || {}).grounds || "");
+    return own && own !== "text" ? own : "";
+  };
+  const groundsLabel = (g) => t("gr_" + g) || g;
+  const groundsBadge = (g) => (g ? ` <span class="badge gr-${esc(g)}" title="${esc(t("groundsHint"))}">${esc(groundsLabel(g))}</span>` : "");
   const covLabel = (c) => (c === "full" ? t("fullNote") : c === "partial" ? t("partialNote") : c);
   const relWords = (r) => (t("rel") || {})[r] || r;
   const fwRow = (id) => D.frameworks.find((f) => f.id === id);
@@ -800,6 +808,7 @@
     box.innerHTML = `<div class="craft-card">${answerHead("craftYourAnswer")}
         <p>${esc(t(sys ? "levelLeadBoth" : "levelLeadOrg"))}</p>
         ${ai ? `<p class="warn-text">${esc(fmt(t("ctlUnreviewed"), ai, rows.flatMap((r) => r.ds).length))}</p>` : ""}
+        ${groundsNote(rows.flatMap((r) => r.ds))}
         ${byLaw ? "" : `<p class="craft-notice">${esc(fmt(t("soaNoLaw"), fwLabel(fw)))}${otherN ? ` <button type="button" class="link-btn" id="soa-switch">${esc(fmt(t("soaSwitch"), fwLabel(fwRow(otherFw)), otherN))}</button>` : ""}</p>`}
         <p class="craft-links"><a href="${craftHref(4)}">${esc(t("craftChangeFw"))}</a><a href="#soa-xlsx" class="skip-dl" id="skip-dl">${esc(t("craftSkipDl"))}</a></p></div>
       ${sys ? `<div class="level-tabs" role="tablist" aria-label="${esc(t("cs_soa"))}">
@@ -889,7 +898,8 @@
     const acts = uniq(r.ds.map((m) => D.provById[m.provision_id].source_id));
     const note = r.kind === "standard" ? `<span class="ctl-acts soa-std">${esc(t("soaStandard"))}</span>`
       : `<span class="ctl-acts">${esc(acts.map((id) => shortRef(D.sourceById[id])).join(" · "))}</span>`;
-    const mark = r.kind === "recommended" ? `<span class="badge">${esc(t("soaRecommended"))}</span>` : "";
+    const mark = (r.kind === "recommended" ? `<span class="badge">${esc(t("soaRecommended"))}</span>` : "")
+      + uniq(r.ds.map(groundsOf).filter(Boolean)).map(groundsBadge).join("");
     const head = `<span class="ctl-id">${esc(r.c.id)}</span><span class="ctl-name">${esc(controlName(S.fw, r.c))}</span>${note}<span class="soa-mark">${mark}</span>`;
     const main = r.ds.length
       ? `<details class="soa-detail" data-ctl="${esc(r.c.id)}"><summary class="ctl-head">${head}<span class="chev" aria-hidden="true"></span></summary><div class="ctl-body"></div></details>`
@@ -965,6 +975,7 @@
       [t("xRmMade"), new Date().toISOString().slice(0, 10)],
       [t("xRmLink"), location.href],
       [t("xRmAi"), ai ? t("aiFileNote") : ""],
+      [t("colGrounds"), rows.flatMap((r) => r.ds).some((m) => groundsOf(m)) ? t("groundsFileNote") : ""],
       ["", ""],
       [t("xRmSheets"), ""],
       ...sheets.map((sh) => [sh.name, t(sh.name === soaName ? (S.fw === "csf-2.0" ? "xRmSheetProfile" : "xRmSheetSoa") : sh.name === "NIST SP 800-53" ? "xRmSheet53" : ({ [t("xSheetClauses")]: "xRmSheetClauses", [t("xSheetGaps")]: "xRmSheetGaps", [t("xSheetActs")]: "xRmSheetActs", [t("xSheetRegulators")]: "xRmSheetRegulators" }[sh.name])) + (sh.name === "NIST SP 800-53" && sysNote ? ` (${sysNote})` : "")]),
@@ -1180,6 +1191,13 @@
   let drawerOpen = false; // the profile's filters, shown under the profile bar
   const ctlExp = () => (S.all ? null : expandedSectors());
   const uniq = (xs) => [...new Set(xs)];
+  // "N of these mappings rest on an interpretation" with the kinds, or nothing
+  function groundsNote(ms) {
+    const n = {};
+    ms.forEach((m) => { const g = groundsOf(m); if (g) n[g] = (n[g] || 0) + 1; });
+    const parts = Object.keys(n).sort().map((g) => `${groundsLabel(g)}: ${n[g]}`);
+    return parts.length ? `<p class="hint grounds-note">${esc(fmt(t("groundsCount"), parts.join(", ")))}</p>` : "";
+  }
   const shortRef = (src) => sourceRef(src); // one name for an act everywhere
 
   function renderControls() {
@@ -1286,7 +1304,7 @@
 
     head.innerHTML = `<div class="ctl-title"><div>
         ${S.view === "guide" ? "" : `<h1>${esc(t("navControls"))}</h1>`}
-        <p class="ctl-summary">${esc(fmt(t("ctlSummary"), withDrivers, leafCount, provSet.size, srcSet.size))}${unreviewed ? ` <span class="warn-text">${esc(fmt(t("ctlUnreviewed"), unreviewed, shown.length))}</span>` : ""}</p></div>
+        <p class="ctl-summary">${esc(fmt(t("ctlSummary"), withDrivers, leafCount, provSet.size, srcSet.size))}${unreviewed ? ` <span class="warn-text">${esc(fmt(t("ctlUnreviewed"), unreviewed, shown.length))}</span>` : ""}</p>${groundsNote(shown)}</div>
       <details class="dl-menu"><summary class="btn btn-primary">${esc(t("exportsTitle"))}</summary>
         <div class="dl-list"><p class="dl-file">${esc(L(fw, "output"))}</p>
           <button type="button" class="btn" id="x-xlsx">Excel</button><button type="button" class="btn" id="x-csv">CSV</button></div></details></div>`;
@@ -1488,13 +1506,14 @@
     const more = [
       L(m, "parameter") ? `<p><b>${esc(t("colParam"))}:</b> ${esc(L(m, "parameter"))}</p>` : "",
       p.applies_to ? `<p><b>${esc(t("appliesOnly"))}:</b> ${p.applies_to.split(";").map((s) => esc(L(D.sectorById[s], "label") || s)).join("; ")}</p>` : "",
+      groundsOf(m) ? `<p><b>${esc(t("colGrounds"))}:</b> ${esc(groundsLabel(groundsOf(m)))}. ${esc(t("groundsHint"))}</p>` : "",
       L(m, "policy") ? `<p><b>${esc(t("driverPolicy"))}:</b> ${esc(L(m, "policy"))}</p>` : "",
       p.notes ? `<p><b>${esc(t("driverCaveat"))}:</b> <span${S.lang === "en" ? ' lang="uk"' : ""}>${esc(p.notes)}</span></p>` : "",
       `<p class="muted">${esc(t("driverMeta"))}: ${esc(relWords(m.relationship))}, ${esc(m.rationale)}${m.strength ? `, ${esc(m.strength)}/10` : ""}; ${esc(reviewLabel(m.review_status))}; ${esc(m.mapped_by)}${m.reviewed_by ? `, ${esc(m.reviewed_by)}` : ""}; ${esc(m.date)}</p>`,
     ].join("");
     return `<div class="prov">
       <div class="prov-line"><span class="prov-fit">${glyph(m.relationship)} ${esc(covLabel(m.coverage))}</span>
-        <span class="prov-ref">${esc(L(p, "ref"))}${m.review_status === "reviewed" ? ` <span class="badge cov-full">${esc(t("reviewed"))}</span>` : ""}</span>
+        <span class="prov-ref">${esc(L(p, "ref"))}${m.review_status === "reviewed" ? ` <span class="badge cov-full">${esc(t("reviewed"))}</span>` : ""}${groundsBadge(groundsOf(m))}</span>
         <span class="prov-links">${src.url ? `<a href="${esc(src.url)}" target="_blank" rel="noopener">${esc(t("openText"))} ↗</a>` : ""}${reportLink(m, ctlId)}</span></div>
       ${L(p, "summary") ? `<p class="prov-text"${orig ? ' lang="uk"' : ""}>${esc(L(p, "summary"))}${orig ? ` <span class="prov-orig" lang="${esc(S.lang)}">${esc(t("originalUk"))}</span>` : ""}</p>` : ""}
       ${L(m, "notes") ? `<p class="prov-note"><b>${esc(t("driverNote"))}:</b> <span${isFallback(m, "notes") ? ' lang="uk"' : ""}>${esc(L(m, "notes"))}</span></p>` : ""}

@@ -486,6 +486,11 @@
           {
             "name": "notes",
             "type": "string"
+          },
+          {
+            "name": "grounds",
+            "type": "string",
+            "description": "What the row rests on: text (the act itself; the default) | assumption (the author's working assumption) | regulator (a published position of the regulator) | practice (established practice). Anything but text has a dated sentence starting with its label in the notes. On a provision it concerns the requirement text or its applies_to."
           }
         ]
       },
@@ -577,6 +582,11 @@
           {
             "name": "date",
             "type": "string"
+          },
+          {
+            "name": "grounds",
+            "type": "string",
+            "description": "What the row rests on: text (the act itself; the default) | assumption (the author's working assumption) | regulator (a published position of the regulator) | practice (established practice). Anything but text has a dated sentence starting with its label in the notes. On a mapping it concerns the link or its parameter; if text, the provision's grounds apply."
           }
         ]
       },
