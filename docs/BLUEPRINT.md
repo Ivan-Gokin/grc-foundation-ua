@@ -2,7 +2,7 @@
 
 [Українською](BLUEPRINT.uk.md)
 
-This document describes what the project consists of, how the data is modelled, and how to maintain it. It is written for maintainers and contributors. Readers of the site do not need it.
+This document describes what the project consists of, how the data is modelled, and how to maintain it. It is written for maintainers and contributors. Readers of the site do not need it. To build the same thing for another country, start with [REUSE.md](REUSE.md).
 
 ## 1. What the project is
 
@@ -35,7 +35,9 @@ data/meta.json             data version and date shown on the site
 scripts/validate.py        data checks
 scripts/build.py           builds the site into _site/ (adds the generated files, see below)
 scripts/mapdata.py         reads and writes the mapping workbooks
-docs/                      this blueprint
+docs/                      this blueprint, the reuse guide (REUSE.md), review records (review-YYYY-MM/)
+tools/review/              AI review tooling: segment views, prompt templates, edit operations, ledger
+data/retired_provisions.csv  provision codes deleted during review: never reused (validate.py enforces it)
 .github/                   the publish workflow, issue and pull request templates
 ```
 
@@ -145,6 +147,8 @@ Each act is tagged with the entity types it concerns (`applicability.csv`). The 
 A type can have several parents (`parent` separated by `;`). The criticality categories `cii-1-2` and `cii-3-4` sit under both `ki` and `kii`, and `public-sir` / `public-restricted` under both `state-ir` and `public-sector`. They exist because the SSSCIP baseline measures apply per category.
 
 "And" rules: `requires` lists further types (separated by `;`) that must also be in the profile for the row to count. NBU Resolution No. 99 has `finance` with `requires=cloud-users`, so it shows for a bank that uses cloud services, not for every bank; the Law on Cloud Services has `public-sector` with `requires=cloud-users` next to a plain `cloud` row for providers.
+
+Provision scope (`applies_to`) is an expression over sector codes: `;` separates alternatives (OR), `+` joins conditions (AND), and `!` negates a code (NOT). For example, `public-sector+!banks;public-sector+state-secrets` means "public sector, but not banks; or public sector with state secrets". Every term needs at least one code without `!`. Who the whole act binds or excludes goes in `act_condition_uk` / `act_condition_en` in `sources.csv`; the site shows it on every row of the act.
 
 Selection logic: choosing a type includes its parents and `general` when matching acts (choosing `cii-3-4` shows acts tagged `ki`, `kii`, `cii-3-4` or `general`). For provisions with `applies_to`, choosing a broad type also includes the narrower ones (choosing `ki` shows the baseline measures for both criticality groups).
 
