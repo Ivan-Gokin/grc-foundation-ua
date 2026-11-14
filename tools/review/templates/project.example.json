@@ -1,0 +1,10 @@
+{
+ "PROJECT": "\"GRC-фундамент для України\" (https://ivan-gokin.github.io/grc-foundation-ua/)",
+ "JURISDICTION": "Ukrainian",
+ "DATA_LANGUAGE": "Ukrainian",
+ "SOURCES_RULE": "Use only primary sources: the print on zakon.rada.gov.ua or the issuing body's own site (bank.gov.ua, cip.gov.ua). Mirrors (iplex, dtkt) are never the basis of a check; if you can only reach a mirror, say so and mark the row «[ПЕРЕВІРИТИ: ...]».",
+ "CHECK_NOTE": "«звірено з друком zakon.rada, <дата>»",
+ "SCOPE_RULES": "Rows of an act carry only what that act (and the delegated acts it makes binding for the row's obligation) requires. Content of acts that get their own workbook later is recorded as NEXT-PHASE <act>: in the action, not imported.",
+ "CLOSED_CLASSES": "the classes listed as closed in the contract and the decision ledger",
+ "REPO": "/path/to/your/repo"
+}
