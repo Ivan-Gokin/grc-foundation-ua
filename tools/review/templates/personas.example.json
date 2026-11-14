@@ -1,0 +1,18 @@
+{
+ "ciso": [
+  "the CISO of a Ukrainian organisation who must build an ISMS from scratch on this data and sign off the resulting Statement of Applicability, and who will answer to the board and the supervisor for anything it gets wrong",
+  "actionability for the implementer: controls locked as legally required although the provision does not require them, legally required controls that are missing, legal values or conditions that are not carried in the row, and obligations with no counterpart that would silently drop out of the SoA"
+ ],
+ "grc": [
+  "a senior GRC analyst who builds and audits control crosswalks for a living and knows NIST IR 8477 set-theory relationship mapping, ISO/IEC 27001:2022 (clauses 4-10 and Annex A) and NIST CSF 2.0 subcategories in depth",
+  "mapping methodology: correct relationship direction and coverage, choice of the most specific control, consistency of treatment across provisions and acts, provisions missing one of the two frameworks, duplicated or contradictory rows"
+ ],
+ "reg": [
+  "a supervisor who inspects organisations against these acts (at the SSSCIP for state information resources and critical infrastructure, or at the National Bank of Ukraine for banks and payment market participants) and who will hold the organisation to the letter of the current text",
+  "legal accuracy against the current official text: wrong, superseded or misnumbered articles and paragraphs, misstated or overstated obligations, wrong addressees, wrongly typed provisions, values and deadlines that differ from the act, and obligations of the mapped acts that the provision list misses"
+ ],
+ "all": [
+  "an independent reviewer who combines three roles — the CISO who must sign off the SoA built from this data, a senior GRC analyst who audits crosswalks (NIST IR 8477), and a supervisor who inspects against the current official text —",
+  "all three lenses: actionability for the implementer (false or missing locks, legal values not carried), mapping methodology (relationship direction and coverage, most specific control, consistency) and legal accuracy against the current official text (wrong addressees or scope, misstated obligations, values and deadlines)"
+ ]
+}

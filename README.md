@@ -13,6 +13,7 @@
 ### Супровід
 
 - **Що де лежить і як влаштовано дані:** [`docs/BLUEPRINT.uk.md`](docs/BLUEPRINT.uk.md).
+- **Як відтворити проєкт для іншої країни** (технічне рішення, розгортання, стандарти й нотації, робота з Claude, рецензування, інтеграція з GRC-системами): [`docs/REUSE.md`](docs/REUSE.md), англійською; інструменти рецензування — [`tools/review/`](tools/review/README.md).
 - **Як внести зміни** (зіставлення в Excel, решта даних у CSV, перевірка й локальне збирання): [`CONTRIBUTING.md`](CONTRIBUTING.md).
 - **Публікація.** Кожна зміна в `main` перевіряється і публікується на GitHub Pages автоматично (`.github/workflows/site.yml`, джерело Pages: GitHub Actions); pull request лише перевіряється. Зібраний сайт зберігається з кожним запуском: Actions → запуск → Artifacts → `site`.
 - **Попередній режим.** Поки дані вичитуються, сайт закрито від пошукових систем (`<meta name="robots" content="noindex">` в `index.html`) і на кожній сторінці є банер. Коли дані буде перевірено, видаліть цей рядок з `index.html` і поставте `preview: false` в `assets/js/config.js`.
@@ -47,6 +48,7 @@ This file is for those who maintain the repository.
 ### Maintenance
 
 - **What is where and how the data is modelled:** [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md).
+- **How to build the same for another country** (technical solution, deployment, standards and notations, working with Claude, the review method, GRC integration): [`docs/REUSE.md`](docs/REUSE.md); review tooling in [`tools/review/`](tools/review/README.md).
 - **How to make changes** (mappings in Excel, other data in CSV, checks and a local build): [`CONTRIBUTING.md`](CONTRIBUTING.md).
 - **Publishing.** Every change to `main` is checked and published to GitHub Pages automatically (`.github/workflows/site.yml`, Pages source: GitHub Actions); pull requests are only checked. The built site is kept with every run: Actions → the run → Artifacts → `site`.
 - **Preview mode.** While the data is being reviewed, the site is closed to search engines (`<meta name="robots" content="noindex">` in `index.html`) and every page shows a banner. When the data is reviewed, delete that line from `index.html` and set `preview: false` in `assets/js/config.js`.
