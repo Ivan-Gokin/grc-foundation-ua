@@ -40,7 +40,8 @@ ENUMS = {
     "coverage": {"full", "partial", "none"},
     "review_status": {"ai_draft", "draft", "imported", "reviewed"},
     "yesno": {"yes", "no"},
-    "grounds": {"", "text", "assumption", "regulator", "practice"},
+    "decision_kind": {"assumption", "regulator", "practice"},
+    "decision_status": {"", "decided", "proposed"},
 }
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9.\-]*$")
 PROV_RE = re.compile(r"^[a-z0-9][a-z0-9.\-]*:[A-Za-z0-9.:\-]+$")
@@ -78,18 +79,19 @@ def check_enum(name, row, field, enum=None):
         err(name, row, f"{field}='{v}' not in {sorted(ENUMS[enum or field])}")
 
 
-def check_grounds(name, row, notes_field, notes_header):
-    """A row that rests on something other than the act text says so in its notes: a sentence that starts with the
-    label (e.g. «Припущення автора (2026-11-13): ...») and carries a date, so a reader sees what it rests on and since when."""
-    check_enum(name, row, "grounds")
-    g = row.get("grounds", "")
-    if g in ("", "text") or g not in mapdata.GROUNDS:
-        return
-    label = mapdata.GROUNDS[g]
-    notes = row.get(notes_field, "")
-    i = notes.lower().find(label.lower())
-    if i < 0 or not ANY_DATE_RE.search(notes[i:i + len(label) + 40]):
-        err(name, row, f"grounds «{label}» needs a dated sentence in «{notes_header}» that starts with «{label[0].upper() + label[1:]} (YYYY-MM-DD): ...»")
+DECISIONS = {}  # id -> row of data/decisions.csv
+USED_DECISIONS = set()
+LABEL_RE = re.compile(r"(Припущення автора|Позиція регулятора|Усталена практика)\s*\(\d{4}")
+
+
+def check_decisions(name, row, notes_field):
+    """A row that rests on an interpretation cites it by id; the text lives once in data/decisions.csv."""
+    for d in mapdata.split_ids(row.get("decisions", "")):
+        if d not in DECISIONS:
+            err(name, row, f"unknown decision '{d}' (add it to data/decisions.csv)")
+        USED_DECISIONS.add(d)
+    if notes_field and LABEL_RE.search(row.get(notes_field, "")):
+        err(name, row, f"«{LABEL_RE.search(row[notes_field]).group(1)} (дата): ...» belongs in data/decisions.csv; cite its id in «Рішення»")
 
 
 def unique(name, rows, key="id", pattern=ID_RE):
@@ -171,6 +173,18 @@ def main():
         if r["text_access"] == "public" and not r["url"]:
             warnings.append(f"sources.csv:{r['_line']}: public text but no url ({r['id']})")
 
+    for r in load("decisions.csv"):
+        if r["id"] in DECISIONS or not re.match(r"^[A-Z][A-Za-z0-9\-]*$", r["id"]):
+            err("decisions.csv", r, f"id '{r['id']}' is a duplicate or not like AUTH-30")
+        DECISIONS[r["id"]] = r
+        check_enum("decisions.csv", r, "kind", "decision_kind")
+        check_enum("decisions.csv", r, "status", "decision_status")
+        if not DATE_RE.match(r["date"]):
+            err("decisions.csv", r, "date must be YYYY-MM-DD")
+        if not r["statement_uk"]:
+            err("decisions.csv", r, "statement_uk is required")
+        if r["kind"] == "assumption" and not r["status"]:
+            err("decisions.csv", r, "an assumption needs status decided (by the owner) or proposed")
     appl = load("applicability.csv")
     covered = set()
     for r in appl:
@@ -183,6 +197,7 @@ def main():
             for x in filter(None, (r.get(col) or "").split(";")):
                 if x not in sectors:
                     err("applicability.csv", r, f"unknown sector '{x}' in {col}")
+        check_decisions("applicability.csv", r, None)
         if r.get("unless") and not r.get("except"):
             err("applicability.csv", r, "unless needs except (it only lifts an exception)")
         covered.add(r["source_id"])
@@ -286,7 +301,7 @@ def main():
         elif not r["id"].startswith(r["source_id"] + ":"):
             err("provisions.csv", r, f"id must start with '{r['source_id']}:'")
         check_enum("provisions.csv", r, "provision_type")
-        check_grounds("provisions.csv", r, "notes", "Застереження")
+        check_decisions("provisions.csv", r, "notes")
         # ';' = any of the terms; '+' = all parts of a term; '!' = the part must NOT apply (public-sector+!banks)
         for term in filter(None, r["applies_to"].split(";")):
             parts = term.split("+")
@@ -315,7 +330,7 @@ def main():
                 err("mappings.csv", r, f"map to a subcategory/requirement/control, not a {c['level']} ('{r['control_id']}')")
         for f in ("relationship", "rationale", "coverage", "review_status"):
             check_enum("mappings.csv", r, f)
-        check_grounds("mappings.csv", r, "notes_uk", "Примітка")
+        check_decisions("mappings.csv", r, "notes_uk")
         if r["relationship"] == "no_relationship" and r["coverage"] != "none":
             err("mappings.csv", r, "no_relationship requires coverage=none")
         if r["date"] and not DATE_RE.match(r["date"]):
@@ -358,6 +373,11 @@ def main():
         warnings.append(f"{drafts['draft']} mappings are drafts")
     if drafts.get("ai_draft"):
         warnings.append(f"{drafts['ai_draft']} mappings are AI-generated and not yet reviewed by a person")
+    for d in sorted(set(DECISIONS) - USED_DECISIONS):
+        warnings.append(f"decisions.csv: '{d}' is not cited by any row")
+    proposed = sorted(d for d, r in DECISIONS.items() if r["status"] == "proposed")
+    if proposed:
+        warnings.append(f"{len(proposed)} decisions await the owner's confirmation: {', '.join(proposed)}")
     grounds = Counter(r["grounds"] for r in prov_rows + map_rows if r.get("grounds") not in ("", "text"))
     if grounds:
         warnings.append("rows that rest on an interpretation, not the act text: "

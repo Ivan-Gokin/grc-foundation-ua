@@ -973,6 +973,8 @@ a.card:hover { --ne: var(--accent); }
 .act-also { font-size: .85rem; color: var(--muted); }
 .prov { padding: 6px 0 4px; }
 .prov + .prov { border-top: 1px dashed var(--rule); }
+.prov .decisions { margin: 2px 0 8px; padding-left: 1.2em; font-size: .9rem; }
+.prov .decisions li { margin: 2px 0; }
 .prov-line { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto; gap: 4px 14px; align-items: baseline; }
 .prov-fit { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; }
 .prov-links { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: .88rem; white-space: nowrap; }

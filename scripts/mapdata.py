@@ -11,6 +11,7 @@ read_all() returns the provisions and mappings in the flat shape the site and th
 (the columns of the former provisions.csv and mappings.csv), plus a list of errors.
 """
 import datetime as dt
+import csv
 import re
 from pathlib import Path
 
@@ -27,8 +28,8 @@ NONE_CONTROL = {"—", "–", "-", "немає", "none"}
 TYPE = {"substantive": "обов'язок", "delegating": "делегує", "definitional": "визначення"}
 COVERAGE = {"full": "повне", "partial": "часткове", "none": "немає"}
 STATUS = {"ai_draft": "ШІ (не вичитано)", "draft": "чернетка", "imported": "імпорт", "reviewed": "перевірено"}
-# What a row rests on. Empty means "text": the act itself says so. Anything else needs a dated sentence in the notes
-# that starts with the label, e.g. «Припущення автора (2026-11-13): ...».
+# What a row rests on. Empty means "text": the act itself says so. Otherwise it is derived from the kinds of the
+# decisions the row cites (data/decisions.csv): the weakest one wins, so assumption > practice > regulator.
 GROUNDS = {"text": "текст акта", "assumption": "припущення автора", "regulator": "позиція регулятора",
            "practice": "усталена практика"}
 RELATIONSHIP = {"equal": "equal", "subset_of": "subset of", "superset_of": "superset of",
@@ -44,9 +45,9 @@ PROV_COLS = [
     ("ref_uk", "Пункт", 32, "Посилання на пункт так, як його цитують: п. 40 розділу IV; ст. 8 ч. 2. Унікальне в межах акта."),
     ("summary_uk", "Вимога", 70, "Що вимагає положення, своїми словами."),
     ("provision_type", "Тип", 13, "обов'язок - зіставляється; делегує - лише доручає іншому акту; визначення - сфера чи терміни."),
-    ("applies_to", "Стосується лише", 22, "Необов'язково, якщо положення вужче за акт: типи суб'єктів з data/sectors.csv. «;» - будь-який з, «+» - усі разом, «!» - крім: «banks;public-sector+!banks»."),
+    ("applies_to", "Стосується лише", 22, "Необов'язково, якщо положення вужче за акт: типи суб'єктів з data/sectors.csv. «;» - будь-який з, «+» - усі разом, «!» - крім: «banks;public-sector+state-secrets», «ki+!finance». Виняток для всього акта - у data/applicability.csv (except, unless)."),
     ("notes", "Застереження", 40, "Редакція, з якою працювали, що треба звірити."),
-    ("grounds", "Підстава", 16, "Необов'язково. Порожньо = текст акта. «припущення автора», «позиція регулятора» (з джерелом) або «усталена практика», якщо Вимога чи «Стосується лише» спирається на тлумачення; тоді в Застереженні речення з датою, що починається з цієї назви."),
+    ("decisions", "Рішення", 16, "Необов'язково: ідентифікатори з data/decisions.csv через «;» (AUTH-30), якщо Вимога чи «Стосується лише» спирається на тлумачення, а не на текст акта. Текст рішення пишуть один раз у decisions.csv."),
     ("ref_en", "Пункт (EN)", 24, "Необов'язково."),
     ("summary_en", "Вимога (EN)", 50, "Необов'язково."),
 ]
@@ -59,7 +60,7 @@ LINK_COLS = [
     ("parameter_uk", "Параметр за законом", 24, "Значення, яке закон встановлює для параметра заходу: «не рідше 1 разу на рік»."),
     ("policy_uk", "Куди внести", 34, "Внутрішній документ, куди варто внести вимогу."),
     ("notes_uk", "Примітка", 50, "Пояснення зв'язку."),
-    ("grounds", "Підстава", 16, "Необов'язково. Порожньо = текст акта. «припущення автора», «позиція регулятора» (з джерелом) або «усталена практика», якщо зв'язок чи параметр спирається на тлумачення; тоді в Примітці речення з датою, що починається з цієї назви."),
+    ("decisions", "Рішення", 16, "Необов'язково: ідентифікатори з data/decisions.csv через «;» (REG-01), якщо зв'язок чи параметр спирається на тлумачення або позицію регулятора, а не на текст акта. Текст рішення пишуть один раз у decisions.csv."),
     ("review_status", "Статус", 17, "ШІ (не вичитано) / чернетка / імпорт / перевірено. «перевірено» ставить друга людина і вписує себе в «Хто перевірив»."),
     ("mapped_by", "Хто зіставив", 22, "Ім'я або «AI (...)» для згенерованих рядків."),
     ("reviewed_by", "Хто перевірив", 18, ""),
@@ -67,12 +68,12 @@ LINK_COLS = [
 ]
 # column order of the generated data/provisions.csv and data/mappings.csv
 PROVISION_FIELDS = ["id", "source_id", "ref_uk", "ref_en", "summary_uk", "summary_en", "provision_type", "applies_to", "notes",
-                    "grounds", "act_condition_uk", "act_condition_en", "checked_edition"]  # last three: from sources.csv
+                    "decisions", "grounds", "act_condition_uk", "act_condition_en", "checked_edition"]  # grounds: derived; last three: from sources.csv
 MAPPING_FIELDS = ["provision_id", "framework_id", "control_id", "relationship", "rationale", "coverage",
                   "parameter_uk", "notes_uk", "policy_uk", "mapped_by",
-                  "reviewed_by", "review_status", "date", "grounds"]
+                  "reviewed_by", "review_status", "date", "decisions", "grounds"]  # grounds: derived from decisions
 LISTS = {"provision_type": TYPE, "review_status": STATUS, "relationship": RELATIONSHIP,
-         "rationale": {r: r for r in RATIONALE}, "grounds": GROUNDS}
+         "rationale": {r: r for r in RATIONALE}}
 
 TRANSLIT = dict(zip("абвгґдеєжзиіїйклмнопрстуфхцчшщьюя", ["a", "b", "v", "h", "g", "d", "e", "ie", "zh", "z", "y", "i", "i", "i", "k", "l",
                     "m", "n", "o", "p", "r", "s", "t", "u", "f", "kh", "ts", "ch", "sh", "shch", "", "iu", "ia"]))
@@ -161,7 +162,7 @@ def read_all(frameworks, directory=MAPPINGS):
             p = {"id": pid, "source_id": key[0], "ref_uk": key[1], "ref_en": r.get("ref_en", ""),
                  "summary_uk": r.get("summary_uk", ""), "summary_en": r.get("summary_en", ""),
                  "provision_type": r.get("provision_type") or "substantive", "applies_to": r.get("applies_to", ""),
-                 "notes": r.get("notes", ""), "grounds": r.get("grounds", ""), "_where": r["_where"]}
+                 "notes": r.get("notes", ""), "decisions": r.get("decisions", ""), "_where": r["_where"]}
             provisions.append(p)
             local[key] = pid
         for fw in [s for s in wb.sheetnames if s in frameworks]:
@@ -180,7 +181,29 @@ def read_all(frameworks, directory=MAPPINGS):
                          rationale=r.get("rationale") or "semantic",
                          review_status=r.get("review_status") or "draft", _where=r["_where"])
                 mappings.append(m)
+    kinds = decision_kinds(Path(directory).resolve().parent / "data" / "decisions.csv")
+    for r in provisions + mappings:
+        r["grounds"] = grounds_of(r.get("decisions", ""), kinds)
     return provisions, mappings, errors
+
+
+def split_ids(s):
+    return [x.strip() for x in (s or "").split(";") if x.strip()]
+
+
+def decision_kinds(path):
+    """{decision id: kind} from data/decisions.csv; empty if the file is missing."""
+    path = Path(path)
+    if not path.exists():
+        return {}
+    with path.open(encoding="utf-8", newline="") as f:
+        return {r["id"]: r["kind"] for r in csv.DictReader(f)}
+
+
+def grounds_of(ids, kinds):
+    """What a row rests on, from the decisions it cites: the weakest kind wins; '' = the act text."""
+    have = {kinds.get(i) for i in split_ids(ids)}
+    return next((g for g in ("assumption", "practice", "regulator") if g in have), "")
 
 
 # ---------------------------------------------------------------- writing (used to create workbooks)

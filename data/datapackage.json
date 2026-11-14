@@ -14,7 +14,7 @@
       "format": "xlsx",
       "mediatype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "title": "Everything in one readable workbook",
-      "description": "For people: the register, the chains and the mappings for each framework with act names, requirement texts and control names joined in. Generated at publication by scripts/build.py.",
+      "description": "For people: the register, the chains, the decision register and the mappings for each framework with act names, requirement texts and control names joined in. Generated at publication by scripts/build.py.",
       "x-source": "scripts/build.py"
     },
     {
@@ -319,6 +319,11 @@
             "description": "Optional, with except: sector ids (separated by ;) that restore the row despite except. For a provision, it counts only if its applies_to term names that sector."
           },
           {
+            "name": "decisions",
+            "type": "string",
+            "description": "Optional: ids from decisions.csv (separated by ;) behind this row, e.g. why an exception applies."
+          },
+          {
             "name": "basis",
             "type": "string",
             "description": "Why it applies / where the assignment came from."
@@ -327,6 +332,45 @@
             "name": "verified",
             "type": "string",
             "description": "yes once checked by a maintainer."
+          }
+        ]
+      }
+    },
+    {
+      "name": "decisions",
+      "path": "decisions.csv",
+      "format": "csv",
+      "encoding": "utf-8",
+      "description": "The register of interpretations: each one a row rests on instead of the act text, written once and cited by id from provisions, mappings and applicability rows.",
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "AUTH-… for the author's decisions (the ids of the review record), REV-… for reviewers' proposals, REG-… for regulators' positions."
+          },
+          {
+            "name": "kind",
+            "type": "string",
+            "description": "assumption (the author's working assumption) | regulator (a published regulator position, source cited) | practice (established practice)."
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "description": "For an assumption: decided (by the author) | proposed (by a reviewer, awaiting the author). Empty for the other kinds."
+          },
+          {
+            "name": "date",
+            "type": "date",
+            "description": "When the interpretation was recorded."
+          },
+          {
+            "name": "statement_uk",
+            "type": "string"
+          },
+          {
+            "name": "statement_en",
+            "type": "string"
           }
         ]
       }
@@ -664,9 +708,14 @@
             "type": "string"
           },
           {
+            "name": "decisions",
+            "type": "string",
+            "description": "Optional: ids from decisions.csv (separated by ;), the interpretations this row rests on instead of the act text."
+          },
+          {
             "name": "grounds",
             "type": "string",
-            "description": "What the row rests on: text (the act itself; the default) | assumption (the author's working assumption) | regulator (a published position of the regulator) | practice (established practice). Anything but text has a dated sentence starting with its label in the notes. On a provision it concerns the requirement text or its applies_to."
+            "description": "Derived from decisions: the weakest kind among the row's decisions (assumption, then practice, then regulator), else text (the act itself)."
           },
           {
             "name": "act_condition_uk",
@@ -756,9 +805,14 @@
             "type": "string"
           },
           {
+            "name": "decisions",
+            "type": "string",
+            "description": "Optional: ids from decisions.csv (separated by ;), the interpretations this row rests on instead of the act text."
+          },
+          {
             "name": "grounds",
             "type": "string",
-            "description": "What the row rests on: text (the act itself; the default) | assumption (the author's working assumption) | regulator (a published position of the regulator) | practice (established practice). Anything but text has a dated sentence starting with its label in the notes. On a mapping it concerns the link or its parameter; if text, the provision's grounds apply."
+            "description": "Derived from decisions: the weakest kind among the row's decisions (assumption, then practice, then regulator), else text (the act itself)."
           }
         ]
       },

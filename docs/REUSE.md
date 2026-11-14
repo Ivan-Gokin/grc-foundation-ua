@@ -54,7 +54,7 @@ The core idea is simple. A legal provision becomes a **locked "required by law" 
 
 - **No server, no database, no accounts.** The site is static HTML and JS. It fetches CSV, filters in the browser, and builds Excel with SheetJS client-side. Nothing the reader enters leaves the browser. Hosting costs nothing, and the whole site can be mirrored.
 - **Two editing surfaces.** Lawyers and compliance staff edit provisions and mappings in **Excel workbooks**, with drop-downs and header notes. Everything else is **CSV**, which GitHub renders as a table. Generated files are never committed, so every fact lives in exactly one place.
-- **Validation is the gate.** `scripts/validate.py` fails CI on unknown values, broken references, duplicate or reused IDs, malformed ELIs, a `reviewed` row without a reviewer, and non-text grounds without a dated note (BLUEPRINT §7). Nothing reaches the site without passing it.
+- **Validation is the gate.** `scripts/validate.py` fails CI on unknown values, broken references, duplicate or reused IDs, malformed ELIs, a `reviewed` row without a reviewer, and a decision id missing from the decision register (BLUEPRINT §7). Nothing reaches the site without passing it.
 - **Permanent identifiers.** Provision and act IDs are never renamed or reused. Deleted provision codes go to `data/retired_provisions.csv`, which validation enforces. People link to rows, and GRC tools will import them.
 
 **Stack:**
@@ -101,7 +101,7 @@ A private repository works as well: the built site is attached to every Actions 
 | **Frictionless Data Package** | column descriptions of every published file | `data/datapackage.json` |
 | **CSV** (RFC 4180, UTF-8, no BOM in git; a BOM added on download for Excel) | all non-mapping data | `data/` |
 | **`applies_to` expressions** (project notation) | narrowing a provision to entity types. `;` = OR, `+` = AND, `!` = NOT. Example: `public-sector;public-sector+state-secrets` = public sector, or public sector with state secrets. An exception for the whole act (Order 75 is not for banks unless they hold state secrets) goes once in `applicability.csv` (`except`, `unless`), not as `!banks` on every provision | provisions; evaluated in `app.js`; checked in `validate.py` |
-| **`grounds`** (project notation) | what a row rests on: `text` (default), `assumption`, `regulator` or `practice`. Anything but `text` needs a dated sentence in the notes that starts with its label | provisions and mappings; checked in `validate.py` |
+| **Decision register** (project notation) | every interpretation a row rests on, written once in `data/decisions.csv` with an id, a kind (`assumption`, `regulator`, `practice`), a date and a status (`decided` / `proposed`); rows cite ids in `decisions`. `grounds` is derived from the kinds | provisions, mappings and applicability rows; checked in `validate.py` |
 | **`review_status`** | `ai_draft`, `draft`, `imported` or `reviewed` (reviewed requires `reviewed_by`). The site badges AI rows and every export marks them | mappings |
 | **Edit operations** (project notation, JSON Lines) | machine-applicable changes to the workbooks, each with a ruling id and a reason | `tools/review/apply_ops.py` docstring |
 | **OSCAL 1.2** (catalog, profile, Control Mapping model) | planned export; §9 | — |
@@ -116,7 +116,7 @@ Each of these rules came from a review defect that kept recurring. Keep them.
 4. **The parameter is the legal minimum, in the act's own words, with the paragraph cited.** Watch for three errors: dropping an alternative trigger or an addressee (narrowing), stating as general what the text limits (widening), and citing the wrong paragraph.
 5. **Delegating and definitional provisions are not mapped.** The child act carries the requirement, and the chain records the legal basis (BLUEPRINT §3.4).
 6. **Scope lives at two levels.** The act condition (`act_condition_uk` in `sources.csv`) states who the act binds and who it excludes. `applies_to` narrows individual provisions. The site shows both.
-7. **Interpretations are labelled and dated.** «Припущення автора (2026-11-14): …» ("author's assumption"), «Позиція регулятора (…)» ("regulator's position"). A reader can tell what the act says from what someone concluded.
+7. **Interpretations are labelled, dated and written once.** Each lives in the decision register (`data/decisions.csv`) under an id, with its kind (author's assumption, regulator's position, practice) and whether the author has confirmed it; rows cite the id. A reader can tell what the act says from what someone concluded, and a lawyer can check every interpretation in one file.
 8. **Owner decisions are numbered** (AUTH-01, AUTH-02, …) and listed in one file. Rows cite them. Reviewers treat them as settled unless they bring a new primary text.
 9. **Primary sources only.** Use the official legal portal or the issuing body's own site. Mirror sites are never the basis of a check. If the text cannot be seen, write `[ПЕРЕВІРИТИ: …]` ("to check"), not a guess.
 10. **Copyright.** National official texts are usually free to quote. NIST works are public domain. ISO text is copyrighted, so publish identifiers and your own labels only. Check each source's notice; national standards often forbid reproduction.

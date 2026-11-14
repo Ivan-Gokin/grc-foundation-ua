@@ -1,5 +1,5 @@
 """Lossless-enough load/save of mappings/*.xlsx via the project's mapdata module.
-load(repo) -> {workbook_name: {"provisions":[prov dicts (PROV_COLS fields, codes)], "links":{fw:[link dicts (LINK_COLS fields, codes)]}}}
+load(repo) -> {workbook_name: {"provisions":[prov dicts (PROV_COLS fields, codes, derived grounds)], "links":{fw:[link dicts (LINK_COLS fields, codes, derived grounds)]}}}
 save(repo, data) rewrites every workbook with mapdata.write_workbook."""
 import sys, csv
 from pathlib import Path
@@ -32,6 +32,11 @@ def load(repo):
         row['source_id'], row['ref_uk'] = p['source_id'], p['ref_uk']
         row['provision_id'] = p['id']
         out[wb]['links'].setdefault(fw, []).append(row)
+    # what each row rests on, derived from the decisions it cites (data/decisions.csv), as read_all does
+    kinds = md.decision_kinds(Path(repo) / 'data' / 'decisions.csv')
+    for d in out.values():
+        for r in d['provisions'] + [x for rs in d['links'].values() for x in rs]:
+            r['grounds'] = md.grounds_of(r.get('decisions', ''), kinds)
     # keep framework sheet order as in file
     import openpyxl
     for wb in out:

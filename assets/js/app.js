@@ -10,7 +10,7 @@
     "sources.csv", "source_types.csv", "sectors.csv", "sector_groups.csv", "applicability.csv", "source_relations.csv",
     "provisions.csv", "mappings.csv", "frameworks.csv", "controls_iso27001-2022.csv", "controls_csf-2.0.csv",
     "sp800-53/baselines_ua.csv", "sp800-53/map_csf-2.0_sp800-53r5.csv", "sp800-53/profiles.csv",
-    "chains.csv", "chain_steps.csv", "actors.csv", "actor_relations.csv", "actor_acts.csv",
+    "chains.csv", "chain_steps.csv", "actors.csv", "actor_relations.csv", "actor_acts.csv", "decisions.csv",
   ];
   // The emblem: three 60-degree rhombuses (governance, risk, compliance) turning around a triangle, inside a hexagon.
   // Decorative next to the site name, so it is hidden from screen readers.
@@ -82,7 +82,7 @@
   async function loadAll() {
     const tables = await Promise.all(FILES.map(loadCsv));
     const by = (rows, key = "id") => Object.fromEntries(rows.map((r) => [r[key], r]));
-    const [sources, types, sectors, groups, appl, rels, provs, maps, fws, iso, csf, b53, m53, profiles, chains, steps, actors, actorRels, actorActs] = tables;
+    const [sources, types, sectors, groups, appl, rels, provs, maps, fws, iso, csf, b53, m53, profiles, chains, steps, actors, actorRels, actorActs, decs] = tables;
     D.sources = sources;
     D.sourceById = by(sources);
     D.sourceByEli = by(sources, "eli");
@@ -96,6 +96,7 @@
       D.parents[x.id] = (x.parent || "").split(";").filter(Boolean);
       D.parents[x.id].forEach((pid) => (D.children[pid] = D.children[pid] || []).push(x.id));
     });
+    D.decById = by(decs);
     D.applBySource = {};
     D.unverifiedAppl = 0;
     appl.forEach((r) => {
@@ -338,7 +339,16 @@
     return own && own !== "text" ? own : "";
   };
   const groundsLabel = (g) => t("gr_" + g) || g;
-  const groundsBadge = (g) => (g ? ` <span class="badge gr-${esc(g)}" title="${esc(t("groundsHint"))}">${esc(groundsLabel(g))}</span>` : "");
+  // The decisions (data/decisions.csv) a mapping rests on: its own and its provision's, each written once in the register
+  const idsOf = (r) => (r && r.decisions ? r.decisions.split(";").filter(Boolean) : []);
+  const decisionsOf = (m) => uniq([...idsOf(m), ...idsOf(D.provById[m.provision_id])]).filter((id) => D.decById[id]);
+  const decisionText = (id) => {
+    const d = D.decById[id];
+    return `${id} (${d.date}${d.status === "proposed" ? ", " + t("decProposed") : ""}): ${L(d, "statement")}`;
+  };
+  const decisionsHtml = (ids) => (ids.length ? `<ul class="decisions">${ids.map((id) =>
+    `<li${isFallback(D.decById[id], "statement") ? ' lang="uk"' : ""}>${esc(decisionText(id))}</li>`).join("")}</ul>` : "");
+  const groundsBadge = (g) => (g ? ` <span class="badge gr-${esc(g)}" title="${esc(t("groundsHint").replace(/:$/, "."))}">${esc(groundsLabel(g))}</span>` : "");
   const covLabel = (c) => (c === "full" ? t("fullNote") : c === "partial" ? t("partialNote") : c);
   const relWords = (r) => (t("rel") || {})[r] || r;
   const fwRow = (id) => D.frameworks.find((f) => f.id === id);
@@ -994,6 +1004,11 @@
     sheets.push({ name: t("xSheetRegulators"), header: [t("xBody"), t("xActsCount"), t("xActsList"), t("xRoleYou"), t("xContact"), t("xChannel"), t("xDeadline"), t("xOwner")],
       rows: [...byIssuer].sort((a, b) => b[1].length - a[1].length).map(([who, xs]) => [who, xs.length, xs.map((x) => sourceRef(x)).join("\n"), "", "", "", "", ""]),
       widths: [36, 10, 50, 30, 30, 24, 24, 20], freeze: [1, 1] });
+    // the interpretations the drivers rest on, each once, so a lawyer can check them in one place
+    const decIds = uniq(rows.flatMap((r) => r.ds).flatMap(decisionsOf)).sort();
+    if (decIds.length) sheets.push({ name: t("xSheetDecisions"), header: [t("xDecId"), t("colGrounds"), t("xDecStatus"), t("xDecDate"), t("xDecText")],
+      rows: decIds.map((id) => { const d = D.decById[id]; return [id, groundsLabel(d.kind), d.status === "proposed" ? t("decProposed") : d.status ? t("decDecided") : "", d.date, L(d, "statement")]; }),
+      widths: [14, 20, 22, 12, 100], freeze: [1, 1] });
     let sysNote = "";
     if (needsSystems()) {
       guessBaseline();
@@ -1018,7 +1033,7 @@
       [t("colGrounds"), rows.flatMap((r) => r.ds).some((m) => groundsOf(m)) ? t("groundsFileNote") : ""],
       ["", ""],
       [t("xRmSheets"), ""],
-      ...sheets.map((sh) => [sh.name, t(sh.name === soaName ? (S.fw === "csf-2.0" ? "xRmSheetProfile" : "xRmSheetSoa") : sh.name === "NIST SP 800-53" ? "xRmSheet53" : ({ [t("xSheetClauses")]: "xRmSheetClauses", [t("xSheetGaps")]: "xRmSheetGaps", [t("xSheetActs")]: "xRmSheetActs", [t("xSheetRegulators")]: "xRmSheetRegulators" }[sh.name])) + (sh.name === "NIST SP 800-53" && sysNote ? ` (${sysNote})` : "")]),
+      ...sheets.map((sh) => [sh.name, t(sh.name === soaName ? (S.fw === "csf-2.0" ? "xRmSheetProfile" : "xRmSheetSoa") : sh.name === "NIST SP 800-53" ? "xRmSheet53" : ({ [t("xSheetClauses")]: "xRmSheetClauses", [t("xSheetGaps")]: "xRmSheetGaps", [t("xSheetActs")]: "xRmSheetActs", [t("xSheetRegulators")]: "xRmSheetRegulators", [t("xSheetDecisions")]: "xRmSheetDecisions" }[sh.name])) + (sh.name === "NIST SP 800-53" && sysNote ? ` (${sysNote})` : "")]),
       ["", ""],
       [t("xRmColumns"), ""],
       [t("xReqBy"), t("xRmReqBy")],
@@ -1552,7 +1567,7 @@
       L(m, "parameter") ? `<p><b>${esc(t("colParam"))}:</b> <span${isFallback(m, "parameter") ? ' lang="uk"' : ""}>${esc(L(m, "parameter"))}</span></p>` : "",
       p.applies_to ? `<p><b>${esc(t("appliesOnly"))}:</b> ${esc(appliesText(p.applies_to))}</p>` : "",
       L(src, "act_condition") ? `<p><b>${esc(t("actCondition"))}:</b> ${esc(L(src, "act_condition"))}</p>` : "",
-      groundsOf(m) ? `<p><b>${esc(t("colGrounds"))}:</b> ${esc(groundsLabel(groundsOf(m)))}. ${esc(t("groundsHint"))}</p>` : "",
+      groundsOf(m) ? `<p><b>${esc(t("colGrounds"))}:</b> ${esc(groundsLabel(groundsOf(m)))}. ${esc(t("groundsHint"))}</p>${decisionsHtml(decisionsOf(m))}` : "",
       L(m, "policy") ? `<p><b>${esc(t("driverPolicy"))}:</b> <span${isFallback(m, "policy") ? ' lang="uk"' : ""}>${esc(L(m, "policy"))}</span></p>` : "",
       p.notes ? `<p><b>${esc(t("driverCaveat"))}:</b> <span${S.lang === "en" ? ' lang="uk"' : ""}>${esc(p.notes)}</span></p>` : "",
       `<p class="muted">${esc(t("driverMeta"))}: ${esc(relWords(m.relationship))}, ${esc(m.rationale)}; ${esc(reviewLabel(m.review_status))}; ${esc(m.mapped_by)}${m.reviewed_by ? `, ${esc(m.reviewed_by)}` : ""}; ${esc(m.date)}</p>`,
@@ -1953,7 +1968,10 @@
     if (!rows.length) return `<p class="empty">${esc(t("srcNone"))}</p>`;
     const body = rows.map((s) => {
       const n = (D.provsBySource[s.id] || []).length;
-      const sectors = (D.applBySource[s.id] || []).map((a) => `<span class="tag">${esc(applLabel(a))}</span>`).join("");
+      const sectors = (D.applBySource[s.id] || []).map((a) => {
+        const ds = idsOf(a).filter((id) => D.decById[id]);
+        return `<span class="tag"${ds.length ? ` title="${esc(ds.map(decisionText).join("\n"))}"` : ""}>${esc(applLabel(a))}${ds.length ? ` <span class="muted">${esc(ds.join(", "))}</span>` : ""}</span>`;
+      }).join("");
       const title = sourceTitle(s);
       const concerns = L(s, "concerns");
       const comment = s.comment_uk && s.comment_uk !== L(s, "description")
