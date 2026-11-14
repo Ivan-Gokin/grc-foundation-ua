@@ -154,6 +154,21 @@
             "name": "notes",
             "type": "string",
             "description": "Maintainer notes."
+          },
+          {
+            "name": "checked_edition",
+            "type": "string",
+            "description": "The edition the provisions were last checked against: date and amending act (e.g. 'ред. 19.06.2026, постанова НБУ № 66/2026')."
+          },
+          {
+            "name": "act_condition_uk",
+            "type": "string",
+            "description": "A condition that applies to every provision of the act (e.g. who it binds and in what part). The build copies it to every provision row."
+          },
+          {
+            "name": "act_condition_en",
+            "type": "string",
+            "description": "Same in English."
           }
         ]
       }
@@ -486,6 +501,26 @@
           {
             "name": "notes",
             "type": "string"
+          },
+          {
+            "name": "grounds",
+            "type": "string",
+            "description": "What the row rests on: text (the act itself; the default) | assumption (the author's working assumption) | regulator (a published position of the regulator) | practice (established practice). Anything but text has a dated sentence starting with its label in the notes. On a provision it concerns the requirement text or its applies_to."
+          },
+          {
+            "name": "act_condition_uk",
+            "type": "string",
+            "description": "Copied from sources.csv at build time."
+          },
+          {
+            "name": "act_condition_en",
+            "type": "string",
+            "description": "Copied from sources.csv at build time."
+          },
+          {
+            "name": "checked_edition",
+            "type": "string",
+            "description": "Copied from sources.csv at build time."
           }
         ]
       },
@@ -577,6 +612,11 @@
           {
             "name": "date",
             "type": "string"
+          },
+          {
+            "name": "grounds",
+            "type": "string",
+            "description": "What the row rests on: text (the act itself; the default) | assumption (the author's working assumption) | regulator (a published position of the regulator) | practice (established practice). Anything but text has a dated sentence starting with its label in the notes. On a mapping it concerns the link or its parameter; if text, the provision's grounds apply."
           }
         ]
       },
@@ -859,6 +899,41 @@
       "title": "ELI metadata (JSON-LD)",
       "description": "Generated at publication by scripts/build.py from sources.csv and source_relations.csv: every act as eli:LegalResource (drafts as eli:Work) with its ELI, type, dates, force and the regulatory chains as ELI ontology 1.5 / ELI-DL properties.",
       "x-source": "data/source_relations.csv"
+    },
+    {
+      "name": "retired-provisions",
+      "path": "retired_provisions.csv",
+      "format": "csv",
+      "encoding": "utf-8",
+      "description": "Provision codes that were deleted (duplicates merged into another row, or rows that were not obligations). A retired code is never reused; validate.py checks it.",
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string",
+            "description": "The retired provision id (<source_id>:<code>)."
+          },
+          {
+            "name": "retired",
+            "type": "string",
+            "description": "Date retired (YYYY-MM-DD)."
+          },
+          {
+            "name": "replaced_by",
+            "type": "string",
+            "description": "';'-separated provision ids that now carry its content, if any."
+          },
+          {
+            "name": "decision",
+            "type": "string",
+            "description": "Ruling or decision id in the review log."
+          },
+          {
+            "name": "note_uk",
+            "type": "string"
+          }
+        ]
+      }
     }
   ],
   "homepage": "https://ivan-gokin.github.io/grc-foundation-ua/"

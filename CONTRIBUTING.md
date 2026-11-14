@@ -13,6 +13,8 @@ Full procedure: [docs/BLUEPRINT.md](docs/BLUEPRINT.md), section 4.
    Edit **everything else** in the CSV files in `data/` (UTF-8, no BOM). IDs and `eli` are permanent. A new act takes the next free `register_no`; EU acts get `scope=reference`; links in `source_relations.csv` are ELI properties.
 4. Нове зіставлення має статус «чернетка», згенероване ШІ - «ШІ (не вичитано)». «Перевірено» ставить друга людина і вписує себе в «Хто перевірив».
    New mappings are drafts, AI-generated ones «ШІ (не вичитано)». A second person sets «перевірено» and fills in «Хто перевірив».
+   Якщо рядок спирається на тлумачення, а не прямо на текст акта, заповніть «Підстава» (припущення автора / позиція регулятора / усталена практика) і почніть примітку з цієї назви та дати: «Припущення автора (2026-11-13): ...».
+   If a row rests on an interpretation rather than the act text, fill in «Підстава» and start the note with that label and a date.
 5. Не вставляйте текст ISO: лише ідентифікатори та власні формулювання.
    Do not paste ISO text: identifiers and your own wording only.
 
