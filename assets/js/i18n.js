@@ -386,7 +386,6 @@ window.GRC_I18N = {
     kpiAiNone: "Усі показані зіставлення вичитано.",
     kpiSys: "Заходи NIST SP 800-53",
     kpiSysSub: "З профілю безпеки: {0}; з плану кіберзахисту: {1}; з NIST CSF і законодавства: {2}.",
-    exportsTitle: "Завантажити",
     summaryControls: "Заходів із правовими підставами: {0} з {1}. Положень: {2}, актів: {3}.",
     summaryPartial: "З частковим покриттям: {0}. Для них самого заходу недостатньо.",
     noControls: "Для цього вибору немає зіставлених заходів. Увімкніть \"чернетки зіставлень\" або оберіть інший тип організації. Якщо зіставлень для цього стандарту ще немає, їх можна додати в mappings/*.xlsx.",
@@ -409,6 +408,9 @@ window.GRC_I18N = {
     decProposed: "пропозиція, чекає підтвердження автора",
     decDecided: "рішення автора",
     xSheetDecisions: "Рішення",
+    ctlBuildSoa: "Сформувати SoA",
+    ctlBuildProfile: "Сформувати цільовий профіль",
+    ctlBuildHint: "Майстер додасть до таблиці ваші акти, органи, прогалини й рішення, на які спираються підстави.",
     xRmSheetDecisions: "Тлумачення, на які спираються правові підстави: кожне один раз, з ідентифікатором з реєстру рішень (data/decisions.csv)",
     xDecId: "Ідентифікатор",
     xDecStatus: "Статус",
@@ -436,8 +438,6 @@ window.GRC_I18N = {
     strictest: "діє найсуворіше значення",
 
     exportTitle: "Завантажити",
-    exportSoaCsv: "{0} (CSV)",
-    exportSoaXlsx: "{0} (Excel)",
 
     xApplicable: "Застосовний (так/ні)",
     xJustification: "Обґрунтування виключення",
@@ -1016,7 +1016,6 @@ window.GRC_I18N = {
     kpiAiNone: "Every mapping shown has been read.",
     kpiSys: "NIST SP 800-53 controls",
     kpiSysSub: "From a security profile: {0}; from the cyber protection plan: {1}; from NIST CSF and legislation: {2}.",
-    exportsTitle: "Download",
     summaryControls: "Controls with legal drivers: {0} of {1}. Provisions: {2}, acts: {3}.",
     summaryPartial: "With partial coverage only: {0}. For these, the control alone is not enough.",
     noControls: "No mapped controls for this selection. Turn on \"draft mappings\" or pick another organisation type. If this framework has no mappings yet, they can be added to mappings/*.xlsx.",
@@ -1039,6 +1038,9 @@ window.GRC_I18N = {
     decProposed: "proposed, awaits the author's confirmation",
     decDecided: "author's decision",
     xSheetDecisions: "Decisions",
+    ctlBuildSoa: "Build your SoA",
+    ctlBuildProfile: "Build your target profile",
+    ctlBuildHint: "The wizard adds your acts, regulators, gaps and the decisions behind the drivers to the table.",
     xRmSheetDecisions: "The interpretations the legal drivers rest on: each once, with its id from the decision register (data/decisions.csv)",
     xDecId: "Id",
     xDecStatus: "Status",
@@ -1066,8 +1068,6 @@ window.GRC_I18N = {
     strictest: "the strictest value applies",
 
     exportTitle: "Download",
-    exportSoaCsv: "{0} (CSV)",
-    exportSoaXlsx: "{0} (Excel)",
 
     xApplicable: "Applicable (Y/N)",
     xJustification: "Justification for exclusion",

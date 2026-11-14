@@ -851,14 +851,6 @@
             "type": "string"
           },
           {
-            "name": "output_uk",
-            "type": "string"
-          },
-          {
-            "name": "output_en",
-            "type": "string"
-          },
-          {
             "name": "text_note_uk",
             "type": "string"
           },

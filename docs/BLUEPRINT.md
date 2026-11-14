@@ -216,7 +216,7 @@ Map each provision to both frameworks directly. Do not derive ISO mappings from 
 
 ### 3.6 Export columns
 
-The site exports what the reader sees and adds blank columns for the organisation's work. What to fill in is explained to readers in the last step of "Craft your baseline" (`content/craft/soa.*.md`); the columns are set by `exportSoa` and `exportCraft` in `assets/js/app.js`. For ISO 27001 it is a draft Statement of Applicability, for CSF 2.0 a draft target profile.
+The site exports what the reader sees and adds blank columns for the organisation's work. What to fill in is explained to readers in the last step of "Craft your baseline" (`content/craft/soa.*.md`); the columns are set by `exportCraft` in `assets/js/app.js`. For ISO 27001 it is a draft Statement of Applicability, for CSF 2.0 a draft target profile. The SoA is built in one place only, the wizard: the Controls page links to its last step with the reader's profile and framework.
 
 ## 4. Maintaining the list of laws
 

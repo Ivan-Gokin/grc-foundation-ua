@@ -1365,11 +1365,8 @@
     head.innerHTML = `<div class="ctl-title"><div>
         ${S.view === "guide" ? "" : `<h1>${esc(t("navControls"))}</h1>`}
         <p class="ctl-summary">${esc(fmt(t("ctlSummary"), withDrivers, leafCount, provSet.size, srcSet.size))}${unreviewed ? ` <span class="warn-text">${esc(fmt(t("ctlUnreviewed"), unreviewed, shown.length))}</span>` : ""}</p>${groundsNote(shown)}</div>
-      <details class="dl-menu"><summary class="btn btn-primary">${esc(t("exportsTitle"))}</summary>
-        <div class="dl-list"><p class="dl-file">${esc(L(fw, "output"))}</p>
-          <button type="button" class="btn" id="x-xlsx">Excel</button><button type="button" class="btn" id="x-csv">CSV</button></div></details></div>`;
-    head.querySelector("#x-csv").onclick = () => exportSoa(rows, "csv");
-    head.querySelector("#x-xlsx").onclick = () => exportSoa(rows, "xlsx");
+      <p class="ctl-build"><a class="btn btn-primary" href="#/craft?step=${S.sectors.length ? 6 : 1}${S.sectors.length ? `&s=${sParam()}` : ""}&fw=${encodeURIComponent(S.fw)}">${esc(t(S.fw === "csf-2.0" ? "ctlBuildProfile" : "ctlBuildSoa"))} →</a>
+        <span class="hint">${esc(t("ctlBuildHint"))}</span></p></div>`;
 
     Object.keys(rowRender).forEach((k) => delete rowRender[k]);
     let body = "", jump = [];
@@ -1690,22 +1687,6 @@
     download(name, new Blob([out instanceof ArrayBuffer || ArrayBuffer.isView(out) ? out : new Uint8Array(out)], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
   }
   const stamp = () => `${S.fw}${S.sectors.length ? "_" + S.sectors.join("-") : ""}_${new Date().toISOString().slice(0, 10)}`;
-
-  function exportSoa(rows, kind) {
-    const header = [t("xControlId"), t("xControl"), t("xDrivers"), t("xCoverage"), t("xParam"),
-      t("xApplicable"), t("xJustification"), t("xOrgValue"), t("xPolicy"), t("xPolicySuggested"), t("xOwner"), t("xStatus"), t("xEvidence")];
-    const data = rows.map(({ c, ds }) => {
-      const drv = ds.map((m) => { const p = D.provById[m.provision_id]; return `${sourceRef(D.sourceById[p.source_id])}, ${L(p, "ref")} [${GLYPH[m.relationship]} ${covLabel(m.coverage)}${reviewMark(m)}]`; }).join("\n");
-      const pol = [...new Set(ds.map((m) => L(m, "policy")).filter(Boolean))].join("\n");
-      const cov = ds.length ? (ds.some((m) => m.coverage === "full") ? t("fullNote") : t("partialNote")) : "";
-      const par = ds.filter((m) => L(m, "parameter")).map((m) => `${L(m, "parameter")} (${sourceRef(D.sourceById[D.provById[m.provision_id].source_id])}, ${L(D.provById[m.provision_id], "ref")})`).join("\n");
-      return [c.id, controlName(S.fw, c), drv, cov, par, ds.length ? (S.lang === "uk" ? "так" : "Y") : "", "", "", "", pol, "", "", ""];
-    });
-    const base = `${S.fw === "csf-2.0" ? "target-profile" : "soa"}_${stamp()}`;
-    if (kind === "xlsx") downloadXlsx(`${base}.xlsx`, S.fw === "csf-2.0" ? "Profile" : "SoA", header, data, [10, 50, 55, 12, 35, 14, 30, 30, 30, 40, 20, 20, 30]);
-    else downloadCsv(`${base}.csv`, header, data);
-  }
-
 
   // ------------------------------------------------------------------ sources
   function renderSources() {

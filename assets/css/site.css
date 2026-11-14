@@ -913,6 +913,9 @@ a.card:hover { --ne: var(--accent); }
 /* title, summary line and the download menu */
 .ctl-title { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; margin-bottom: 16px; }
 .ctl-title h1 { margin-bottom: .2em; }
+.ctl-build { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; max-width: 340px; margin: 0; }
+.ctl-build .hint { font-size: .85rem; text-align: right; margin: 0; }
+@media (max-width: 640px) { .ctl-build { align-items: flex-start; max-width: none; } .ctl-build .hint { text-align: left; } }
 .ctl-summary { margin: 0; color: var(--muted); max-width: 90ch; }
 .warn-text { color: var(--warn); font-weight: 500; }
 .dl-menu { position: relative; }
