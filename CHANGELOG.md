@@ -1,5 +1,12 @@
 # Changelog
 
+## Export: CISO Assistant libraries (2026-11-14)
+
+- The build now writes CISO Assistant libraries (YAML, library format v2): for each of the 12 mapped acts, a framework with one requirement per provision and a mapping library to the ISO/IEC 27001:2022 and NIST CSF 2.0 frameworks that CISO Assistant ships, in both directions. All of them are published as `data/ciso-assistant-libraries.zip`; the files are not kept in git.
+- Owner's choices: a link whose row has a legal value is at most `intersect` when mapping into the act, so an ISO 27001 audit pre-fills it as partially compliant; `applies_to` becomes implementation groups (any-of only; the exact condition is in the requirement's annotation; provisions for everyone are in every group); AI-drafted mappings keep the «ШІ, не вичитано» mark in their annotations.
+- Checked against CISO Assistant (14 Nov 2026): every target requirement exists and is assessable (the clauses 7.5, 9.2 and 9.3 are split into their sub-clauses); the frameworks and mapping libraries load into a test backend.
+- CI installs PyYAML; the Methodology and the plans describe the export.
+
 ## Map of the national cybersecurity system (2026-10-19, draft; merged 2026-11-14)
 
 - Legal sources has a third view, "Map": the bodies of the national cybersecurity system in bands (coordination and policy; the main bodies under Art. 8 of Law No. 2163-VIII; other participants), then your organisation, then information systems and data with the NIST SP 800-53 baseline profiles. Each body shows how many acts in force it issues, how many of them apply to the selected type of organisation and how many acts are addressed to the body itself; clicking a body opens its role, legal basis, links to other bodies and the acts that set it up. The organisation band works as a type picker.
