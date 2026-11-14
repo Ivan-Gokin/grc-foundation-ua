@@ -1,0 +1,7 @@
+v0  provisions 429 substantive 416 mapping rows 495 with parameter 0 «—» rows 54
+now provisions 476 substantive 421 mapping rows 1588 with parameter 1456 «—» rows 175
+workbook,prov_added,prov_deleted,prov_changed,type_changed,scope_changed,link_added,ctl_added,nocp_added,link_deleted,link_changed,rel_changed,param_set
+cmu-373-736.xlsx,43,0,10,1,9,212,181,31,5,17,2,229
+law-80-94-vr.xlsx,5,2,32,15,18,79,61,18,45,25,14,104
+nbu.xlsx,38,37,261,18,194,821,716,105,102,233,72,1026
+ssscip-75-2026.xlsx,0,0,68,0,68,133,132,1,0,30,8,97
