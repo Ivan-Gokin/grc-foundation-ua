@@ -1,5 +1,11 @@
 # Changelog
 
+## Map of the national cybersecurity system (2026-10-19, draft; merged 2026-11-14)
+
+- Legal sources has a third view, "Map": the bodies of the national cybersecurity system in bands (coordination and policy; the main bodies under Art. 8 of Law No. 2163-VIII; other participants), then your organisation, then information systems and data with the NIST SP 800-53 baseline profiles. Each body shows how many acts in force it issues, how many of them apply to the selected type of organisation and how many acts are addressed to the body itself; clicking a body opens its role, legal basis, links to other bodies and the acts that set it up. The organisation band works as a type picker.
+- New data files: actors.csv, actor_relations.csv and actor_acts.csv, plus an "actor" column in source_types.csv (who issues each type of act); all described in datapackage.json and checked by validate.py. Every row is a draft (verified = no) until checked against the acts.
+- Step 3 of "Craft your baseline" (Who sets your rules) points to the map.
+
 ## Register: NATO security and information-management directives (2026-11-10)
 
 - Three newer revisions of NATO security directives, with the older ones updated: AC/35-D/2000-REV9 on personnel security (in force from 01.07.2025; REV8 now `repealed`), AC/35-D/2003-REV5 on classified project and industrial security (REV4 now `repealed`), and AC/35-D/2004-REV4, the primary directive on CIS security (11.11.2024). REV4 replaces AC/35-D/2004-REV3 except its Appendix 2, and Section 4 of AC/35-D/2005-REV3, so both stay in force with `amends` links and a comment.
