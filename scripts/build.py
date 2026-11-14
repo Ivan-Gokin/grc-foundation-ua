@@ -20,11 +20,13 @@ import csv
 import datetime as dt
 import json
 import shutil
+import zipfile
 from pathlib import Path
 
 import openpyxl
 from openpyxl.styles import Alignment, Font, PatternFill
 
+import export_ciso_assistant
 import mapdata
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -316,6 +318,12 @@ def main():
 
     readable_workbook(OUT / "data" / "grc-foundation-ua.xlsx", meta, sources, types, sectors, read_csv("applicability.csv"),
                       relations, provisions, mappings, frameworks, controls)
+
+    # CISO Assistant libraries (YAML), one framework and one mapping library per act, plus a zip of all of them
+    files = export_ciso_assistant.export(OUT / "data", meta, sources, types, sectors, provisions, mappings)
+    with zipfile.ZipFile(OUT / "data" / "ciso-assistant-libraries.zip", "w", zipfile.ZIP_DEFLATED) as z:
+        for f in files:
+            z.write(OUT / "data" / "ciso-assistant" / f, f)
     print(f"built {OUT.relative_to(ROOT)}/: {len(provisions)} provisions, {len(mappings)} mappings, {len(sources)} sources")
 
 

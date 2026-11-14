@@ -21,7 +21,7 @@ Full procedure: [docs/BLUEPRINT.md](docs/BLUEPRINT.md), section 4.
 Перевірка запускається автоматично; локально / The check runs automatically; locally:
 
 ```
-pip install openpyxl
+pip install openpyxl pyyaml
 python3 scripts/validate.py --stats
 python3 scripts/build.py && python3 -m http.server 8000 -d _site   # http://localhost:8000
 ```
