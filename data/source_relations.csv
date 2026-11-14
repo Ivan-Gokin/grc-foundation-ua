@@ -165,3 +165,16 @@ nato-ac-35-d-2002-rev5,repeals,nato-ac-35-d-2002-rev4,Нова редакція 
 ua-pres-242-2016,based_on,ua-law-183-98-vr,НКЦК утворено як робочий орган РНБО відповідно до закону про РНБО,https://zakon.rada.gov.ua/laws/show/242/2016#Text,medium,no
 ua-cmu-631r-2026,ensures_implementation_of,ua-pres-447-2021,План заходів на 2026 рік з реалізації Стратегії кібербезпеки,https://zakon.rada.gov.ua/laws/show/631-2026-%D1%80#Text,medium,no
 ua-ssscip-771-2023,ensures_implementation_of,ua-cmu-1426-2021,Система захищеного доступу державних органів до інтернету — складова технологічної інфраструктури за п. 11 Положення про ОТМ.,https://cip.gov.ua/ua/news/organizaciino-tekhnichna-model-kiberzakhistu,medium,no
+nato-ac-35-d-2000-rev9,repeals,nato-ac-35-d-2000-rev8,Нова редакція замінює AC/35-D/2000-REV8 з 01.07.2025 (п. 2 супровідної записки),https://bip.abw.gov.pl/download/1/1208/AC35D2000REV7.pdf,high,no
+nato-ac-35-d-2003-rev5,repeals,nato-ac-35-d-2003-rev4,Нова редакція замінює AC/35-D/2003-REV4,https://www.jftc.nato.int/wp-content/uploads/2025/01/AC-35-D-2003-REV5_-_DIRECTIVE_ON_CLASSIFIED_PROJECT_AND_INDUSTRIAL_SECURITY.pdf,high,no
+nato-ac-35-d-2004-rev4,amends,nato-ac-35-d-2004-rev3,"Замінює AC/35-D/2004-REV3, крім додатка 2, який залишається чинним (п. 3 супровідної записки)",https://nbu.gov.cz/download/pravni-predpisy---nato/AC_35-D_2004-REV4_ENG_NHQD339286.pdf,high,no
+nato-ac-35-d-2004-rev4,amends,nato-ac-35-d-2005-rev3,Замінює розділ 4 AC/35-D/2005-REV3 (п. 4 супровідної записки),https://nbu.gov.cz/download/pravni-predpisy---nato/AC_35-D_2004-REV4_ENG_NHQD339286.pdf,high,no
+nato-ac-35-d-2004-rev4,cites,nato-ac-35-d-1035,Посилання на NSRMP (розділ 4.7),https://nbu.gov.cz/download/pravni-predpisy---nato/AC_35-D_2004-REV4_ENG_NHQD339286.pdf,high,no
+nato-ac-35-d-2004-rev4,cites,nato-ac-35-d-2020,Посилання в п. 1.1(f),https://nbu.gov.cz/download/pravni-predpisy---nato/AC_35-D_2004-REV4_ENG_NHQD339286.pdf,high,no
+nato-ac-35-d-2000-rev9,cites,nato-ac-35-d-1043,"Посилання в пп. 10, 26, 40",https://bip.abw.gov.pl/download/1/1208/AC35D2000REV7.pdf,high,no
+nato-ac-35-d-2000-rev9,cites,nato-ac-35-d-1029-rev1,Посилання у виносці 7,https://bip.abw.gov.pl/download/1/1208/AC35D2000REV7.pdf,high,no
+nato-personal-data-protection-framework-policy,cites,nato-ac-35-d-2020,Довідковий документ D,https://www.nato.int/content/dam/nato/webready/documents/publications-and-reports/20240901_NATO-personal-data-protection-f.pdf,high,no
+nato-personal-data-protection-framework-policy,cites,nato-c-m-2011-0043,Довідковий документ G,https://www.nato.int/content/dam/nato/webready/documents/publications-and-reports/20240901_NATO-personal-data-protection-f.pdf,high,no
+nato-personal-data-protection-framework-policy,cites,nato-c-m-2009-0021,Довідковий документ I,https://www.nato.int/content/dam/nato/webready/documents/publications-and-reports/20240901_NATO-personal-data-protection-f.pdf,high,no
+nato-personal-data-protection-framework-policy,cites,nato-c-m-2008-0116-rev1,Довідковий документ H,https://www.nato.int/content/dam/nato/webready/documents/publications-and-reports/20240901_NATO-personal-data-protection-f.pdf,high,no
+ua-vst-01.008.005-2021,applies,nato-ac-35-d-1038-rev3,ВСТ є ідентичним впровадженням (IDT) AC/35-D/1038-REV3 - зазначено в назві стандарту,,high,no

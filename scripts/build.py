@@ -145,6 +145,21 @@ STATUS_UK = {"in_force": "чинний", "repealed": "втратив чинні�
              "unknown": "невідомо"}
 REVIEW_UK = {"ai_draft": "ШІ, не вичитано", "draft": "чернетка", "imported": "імпорт", "reviewed": "перевірено"}
 COV_UK = {"full": "повне", "partial": "часткове", "none": "немає"}
+
+
+def applies_uk(a, sectors):
+    """applies_to in words: ';' = any of, '+' = and, '!' = not."""
+    def part(x):
+        neg = x.startswith("!")
+        sid = x[1:] if neg else x
+        return ("не " if neg else "") + sectors.get(sid, {}).get("label_uk", sid)
+    return "; ".join(" і ".join(part(x) for x in term.split("+")) for term in a.split(";") if term)
+
+
+def grounds_uk(m, p):
+    """What the row rests on: the mapping's own grounds, else its provision's; empty for the act text."""
+    g = m.get("grounds") if m.get("grounds") not in ("", "text") else p.get("grounds", "")
+    return "" if g in ("", "text") else mapdata.GROUNDS.get(g, g)
 HEAD = PatternFill("solid", fgColor="E8E9F6")
 
 
@@ -183,6 +198,7 @@ def readable_workbook(path, meta, sources, types, sectors, appl, relations, prov
         [f"Версія даних {meta.get('version', '')} від {meta.get('date', '')}. Згенеровано {dt.date.today().isoformat()}. Сайт: {meta.get('site_url', '')}"],
         [],
         [f"Увага: {ai} зіставлень згенеровано ШІ і ще не вичитано людиною (статус «ШІ, не вичитано»). Звіряйте з текстом акта."],
+        ["Стовпець «Підстава»: порожньо - так каже текст акта; «припущення автора», «позиція регулятора» чи «усталена практика» - рядок спирається на тлумачення, пояснення з датою в Примітці або Застереженні."],
         ["Це довідковий матеріал, а не юридична консультація. / A reference, not legal advice."],
         [],
         ["Аркуші:"],
@@ -201,12 +217,13 @@ def readable_workbook(path, meta, sources, types, sectors, appl, relations, prov
 
     _sheet(wb, "Реєстр",
            ["№", "Перелік", "Вид", "Акт", "Назва", "Дата ухвалення", "Статус", "Обов'язковість", "Опис", "Кого стосується",
-            "Типи суб'єктів", "ELI", "Офіційний текст", "Перевірено", "id"],
+            "Типи суб'єктів", "ELI", "Офіційний текст", "Перевірено", "Звірена редакція", "Умова для всього акта", "id"],
            [[int(s["register_no"]), "Законодавство України" if s["scope"] == "core" else "Довідково: право ЄС", types[s["type"]]["label_uk"],
              ref(s), s["title_uk"], s["adopted"], STATUS_UK.get(s["status"], s["status"]),
              "обов'язковий" if s["binding"] == "mandatory" else "рекомендаційний", s["description_uk"], s["concerns_uk"],
-             "; ".join(tags.get(s["id"], [])), eli(s), s["url"], s["last_verified"], s["id"]] for s in sorted(sources, key=lambda s: int(s["register_no"]))],
-           [6, 14, 18, 28, 50, 12, 12, 14, 60, 40, 30, 34, 30, 11, 22])
+             "; ".join(tags.get(s["id"], [])), eli(s), s["url"], s["last_verified"], s.get("checked_edition", ""),
+             s.get("act_condition_uk", ""), s["id"]] for s in sorted(sources, key=lambda s: int(s["register_no"]))],
+           [6, 14, 18, 28, 50, 12, 12, 14, 60, 40, 30, 34, 30, 11, 30, 40, 22])
     _sheet(wb, "Ланцюги",
            ["Акт", "Зв'язок", "Властивість ELI", "Пов'язаний акт", "Правова підстава", "Де знайдено", "Достовірність", "ELI акта", "ELI пов'язаного"],
            [[ref(src[r["source_id"]]) + (" (проєкт)" if src[r["source_id"]]["status"] == "draft" else ""),
@@ -227,13 +244,14 @@ def readable_workbook(path, meta, sources, types, sectors, appl, relations, prov
             c = ctl.get(m["control_id"], {})
             rows.append([m["control_id"] or "—", name(c) if c else "немає відповідника", ref(s), p["ref_uk"], p["summary_uk"],
                          REL_UK.get(m["relationship"], m["relationship"]), COV_UK.get(m["coverage"], m["coverage"]), m["parameter_uk"],
-                         m["policy_uk"], m["notes_uk"], p["notes"],
-                         "; ".join(sectors[x]["label_uk"] for x in p["applies_to"].split(";") if x in sectors),
+                         grounds_uk(m, p), m["policy_uk"], m["notes_uk"], p["notes"],
+                         applies_uk(p["applies_to"], sectors), p.get("act_condition_uk", ""),
                          REVIEW_UK.get(m["review_status"], m["review_status"]), m["mapped_by"], m["reviewed_by"], m["date"], eli(s)])
         _sheet(wb, {"iso27001-2022": "ISO 27001", "csf-2.0": "NIST CSF 2.0"}.get(fw["id"], fw["id"])[:31],
-               ["Захід", "Назва заходу", "Акт", "Пункт", "Вимога", "Відношення", "Покриття", "Параметр за законом", "Куди внести",
-                "Примітка", "Застереження", "Стосується лише", "Статус", "Хто зіставив", "Хто перевірив", "Дата", "ELI акта"],
-               rows, [9, 40, 28, 24, 60, 22, 10, 24, 34, 50, 34, 24, 15, 22, 16, 11, 34])
+               ["Захід", "Назва заходу", "Акт", "Пункт", "Вимога", "Відношення", "Покриття", "Параметр за законом", "Підстава",
+                "Куди внести", "Примітка", "Застереження", "Стосується лише", "Умова акта", "Статус", "Хто зіставив", "Хто перевірив",
+                "Дата", "ELI акта"],
+               rows, [9, 40, 28, 24, 60, 22, 10, 24, 16, 34, 50, 34, 24, 34, 15, 22, 16, 11, 34])
     wb.save(path)
 
 
@@ -283,6 +301,13 @@ def main():
     provisions, mappings, errors = mapdata.read_all({f["id"] for f in frameworks})
     if errors:
         raise SystemExit("mappings/*.xlsx have errors, run scripts/validate.py:\n" + "\n".join(errors[:20]))
+    for r in provisions + mappings:  # machine files spell the default out
+        r["grounds"] = r.get("grounds") or "text"
+    by_src = {s["id"]: s for s in sources}
+    for p in provisions:  # conditions and the checked edition are kept once per act, copied to every row here
+        s = by_src.get(p["source_id"], {})
+        for f in ("act_condition_uk", "act_condition_en", "checked_edition"):
+            p[f] = s.get(f, "")
     write_csv(OUT / "data" / "provisions.csv", mapdata.PROVISION_FIELDS, provisions)
     write_csv(OUT / "data" / "mappings.csv", mapdata.MAPPING_FIELDS, mappings)
 

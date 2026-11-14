@@ -260,6 +260,10 @@ tr.flash > * { background: var(--seal-tint); transition: background .3s; }
 .cov-partial { color: var(--partial); background: var(--partial-tint); border-color: transparent; }
 .rv-draft { border: 1px dashed var(--seal); color: var(--seal); background: transparent; }
 .rv-ai_draft { border: 1px dashed var(--partial); color: var(--partial); background: transparent; }
+.gr-assumption, .gr-regulator, .gr-practice { border: 1px solid var(--seal); color: var(--seal); background: transparent; }
+.gr-regulator { border-style: solid; }
+.gr-assumption, .gr-practice { border-style: dotted; }
+.grounds-note { margin-top: 2px; }
 .ai-warning { border-left: 3px solid var(--partial); background: var(--partial-tint); padding: 8px 12px; border-radius: 0 var(--radius) var(--radius) 0; max-width: 72ch; }
 .gaps { margin-top: 28px; border-top: 1px solid var(--rule); padding-top: 12px; }
 .gaps > summary { cursor: pointer; list-style: revert; }
