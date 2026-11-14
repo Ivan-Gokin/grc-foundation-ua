@@ -706,17 +706,12 @@
           {
             "name": "rationale",
             "type": "string",
-            "description": "semantic | syntactic | functional (NIST IR 8477)."
-          },
-          {
-            "name": "strength",
-            "type": "string",
-            "description": "Optional 1-10."
+            "description": "semantic (the default) | syntactic | functional (NIST IR 8477)."
           },
           {
             "name": "coverage",
             "type": "string",
-            "description": "Does implementing the control fully satisfy the provision? full | partial | none."
+            "description": "Does implementing the control fully satisfy the provision? Derived from the relationship: equal / subset_of = full, superset_of / intersects_with = partial, no_relationship = none."
           },
           {
             "name": "parameter_uk",

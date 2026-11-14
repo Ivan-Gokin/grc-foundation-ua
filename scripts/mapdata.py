@@ -55,9 +55,7 @@ LINK_COLS = [
     ("ref_uk", "Пункт", 32, "Пункт точно так, як в аркуші Вимоги (скопіюйте)."),
     ("control_id", "Захід", 11, "Ідентифікатор заходу стандарту (A.8.5, GV.OC-03). «—» - у стандарті немає відповідника."),
     ("relationship", "Відношення", 15, "NIST IR 8477, читається «положення [відношення] захід»: subset of - положення вужче за захід; superset of - ширше; intersects with - перетинаються; equal - збігаються."),
-    ("rationale", "Обґрунтування", 13, "semantic - зміст; syntactic - формулювання; functional - результат."),
-    ("strength", "Сила", 7, "Необов'язково, 1-10."),
-    ("coverage", "Покриття", 11, "Необов'язково: якщо порожньо, subset of / equal = повне, інакше часткове."),
+    ("rationale", "Обґрунтування", 13, "Необов\'язково: порожньо = semantic (зміст). syntactic - формулювання; functional - результат."),
     ("parameter_uk", "Параметр за законом", 24, "Значення, яке закон встановлює для параметра заходу: «не рідше 1 разу на рік»."),
     ("policy_uk", "Куди внести", 34, "Внутрішній документ, куди варто внести вимогу."),
     ("notes_uk", "Примітка", 50, "Пояснення зв'язку."),
@@ -73,10 +71,10 @@ LINK_COLS = [
 # column order of the generated data/provisions.csv and data/mappings.csv
 PROVISION_FIELDS = ["id", "source_id", "ref_uk", "ref_en", "summary_uk", "summary_en", "provision_type", "applies_to", "notes",
                     "grounds", "act_condition_uk", "act_condition_en", "checked_edition"]  # last three: from sources.csv
-MAPPING_FIELDS = ["provision_id", "framework_id", "control_id", "relationship", "rationale", "strength", "coverage",
+MAPPING_FIELDS = ["provision_id", "framework_id", "control_id", "relationship", "rationale", "coverage",
                   "parameter_uk", "parameter_en", "notes_uk", "notes_en", "policy_uk", "policy_en", "mapped_by",
                   "reviewed_by", "review_status", "date", "grounds"]
-LISTS = {"provision_type": TYPE, "coverage": COVERAGE, "review_status": STATUS, "relationship": RELATIONSHIP,
+LISTS = {"provision_type": TYPE, "review_status": STATUS, "relationship": RELATIONSHIP,
          "rationale": {r: r for r in RATIONALE}, "grounds": GROUNDS}
 
 TRANSLIT = dict(zip("абвгґдеєжзиіїйклмнопрстуфхцчшщьюя", ["a", "b", "v", "h", "g", "d", "e", "ie", "zh", "z", "y", "i", "i", "i", "k", "l",
@@ -181,7 +179,8 @@ def read_all(frameworks, directory=MAPPINGS):
                 rel = r.get("relationship", "")
                 m = {f: r.get(f, "") for f, _, _, _ in LINK_COLS if f not in ("source_id", "ref_uk")}
                 m.update(provision_id=local[key], framework_id=fw, control_id=control,
-                         coverage=r.get("coverage") or DEFAULT_COVERAGE.get(rel, ""),
+                         coverage=DEFAULT_COVERAGE.get(rel, ""),  # always follows the relationship
+                         rationale=r.get("rationale") or "semantic",
                          review_status=r.get("review_status") or "draft", _where=r["_where"])
                 mappings.append(m)
     return provisions, mappings, errors

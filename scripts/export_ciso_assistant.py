@@ -218,8 +218,6 @@ def export(out_dir, meta, sources, types, sectors, provisions, mappings):
                     for t, r in tgts:
                         row = {"source_requirement_urn": node_urn[p["id"]], "target_requirement_urn": t,
                                "relationship": r, "rationale": m.get("rationale") or "semantic"}
-                        if str(m.get("strength") or "").isdigit():
-                            row["strength_of_relationship"] = int(m["strength"])
                         if ann:
                             row["annotation"] = ann
                         fwd.append(row)

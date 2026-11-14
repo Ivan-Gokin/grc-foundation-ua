@@ -313,8 +313,6 @@ def main():
         for f in ("relationship", "rationale", "coverage", "review_status"):
             check_enum("mappings.csv", r, f)
         check_grounds("mappings.csv", r, "notes_uk", "Примітка")
-        if r["strength"] and not (r["strength"].isdigit() and 1 <= int(r["strength"]) <= 10):
-            err("mappings.csv", r, "strength must be an integer 1-10 or empty")
         if r["relationship"] == "no_relationship" and r["coverage"] != "none":
             err("mappings.csv", r, "no_relationship requires coverage=none")
         if r["date"] and not DATE_RE.match(r["date"]):
