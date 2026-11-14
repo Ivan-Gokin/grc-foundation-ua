@@ -28,6 +28,7 @@ assets/                    styles, scripts, fonts and vendored libraries
 assets/js/config.js        repository URL and other settings  <- edit before publishing
 content/                   page texts in Markdown, uk and en: home, method, about, guide/ chapters, articles/
 mappings/*.xlsx            provisions and their mappings to the frameworks: edited by hand
+mappings/*.csv             readable copies of the workbooks, written by build.py (and by CI): do not edit
 data/*.csv                 everything else: sources, chains, entity types, framework controls
 data/sp800-53/             system-level data (phase 2)
 data/datapackage.json      column descriptions of the published files (Frictionless Data Package)
@@ -48,6 +49,7 @@ Nothing generated is kept in git, so every fact lives in one place. On every pus
 | `data/provisions.csv`, `data/mappings.csv` | `mappings/*.xlsx` | the site and software |
 | `data/eli.jsonld` | `sources.csv`, `source_relations.csv` | ELI metadata (3.4) |
 | `data/grc-foundation-ua.xlsx` | all of the above, joined | people: register, chains and mappings with names and texts |
+| `mappings/<workbook>.csv` (kept in the repository) | the workbook of the same name | reviewers: a row per provision, then a row per link, with act and control names, so a pull request shows which rows changed. `validate.py` warns when a copy is out of date; CI commits fresh copies on branches of this repository |
 
 How to check and build the site locally: [`CONTRIBUTING.md`](../CONTRIBUTING.md).
 
@@ -225,7 +227,7 @@ The site exports what the reader sees and adds blank columns for the organisatio
 2. Add a row to `sources.csv`:
    - `id` per the pattern in 3.1; check it is not taken. `register_no`: the next free number. `eli`: the official ELI for an EU act, otherwise the project path from 3.1.
    - `scope` (`core`, or `reference` for EU acts) and `domain` (`cybersecurity` or `records`).
-   - `type`, `number`, `adopted`, `registered` (Ministry of Justice registration, if any).
+   - `type`, `number`, `adopted`.
    - `short_ref_uk`, `short_ref_en`, `title_uk`, `title_en`.
    - `description_uk`, `description_en`: one or two sentences on what the act is about.
    - `concerns_uk`, `concerns_en`: who it concerns, in words.

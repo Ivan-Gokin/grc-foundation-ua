@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write  # to commit the readable copies of the workbooks (mappings/*.csv)
 
 concurrency:
   group: site-${{ github.ref }}
@@ -20,14 +20,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - run: pip install openpyxl==3.1.5 pyyaml==6.0.2
       - name: Check data (CSV and mapping workbooks)
         run: python3 scripts/validate.py --stats
-      - name: Build the site into _site/
+      - name: Build the site into _site/ (also writes mappings/*.csv)
         run: python3 scripts/build.py
+      # mappings/<workbook>.csv are readable copies of the workbooks, so a pull request shows which rows changed.
+      # CI commits them when they changed; a pull request from a fork cannot be updated and must include them.
+      - name: Commit the readable copies of the workbooks
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          if [ -n "$(git status --porcelain -- 'mappings/*.csv')" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -- 'mappings/*.csv'
+            git commit -m "Update the readable copies of the workbooks"
+            git push origin "HEAD:${{ github.head_ref || github.ref_name }}"
+          fi
+      - name: Check the readable copies are up to date
+        run: |
+          test -z "$(git status --porcelain -- 'mappings/*.csv')" || { echo "::error::run python3 scripts/build.py and commit mappings/*.csv"; exit 1; }
       # The built site is kept with every run (Actions -> the run -> Artifacts -> site), so it can be
       # downloaded and opened locally even while the repository is private and Pages is off.
       - uses: actions/upload-artifact@v7

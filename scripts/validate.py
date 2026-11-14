@@ -163,7 +163,7 @@ def main():
             warnings.append(f"sources.csv:{r['_line']}: '{r['id']}' is in the reference scope but is not an EU act")
         if not r["description_en"] or not r["concerns_en"]:
             warnings.append(f"sources.csv:{r['_line']}: '{r['id']}' has no English description or concerns")
-        for f in ("adopted", "registered", "last_verified"):
+        for f in ("adopted", "last_verified"):
             if r[f] and not DATE_RE.match(r[f]):
                 err("sources.csv", r, f"{f}='{r[f]}' must be YYYY-MM-DD")
         if r["url"] and not r["url"].startswith(("https://", "http://")):
@@ -382,6 +382,16 @@ def main():
     if grounds:
         warnings.append("rows that rest on an interpretation, not the act text: "
                         + ", ".join(f"{mapdata.GROUNDS.get(k, k)} {n}" for k, n in sorted(grounds.items())))
+
+    if not errors:
+        # mappings/<workbook>.csv: the readable copies that make pull requests reviewable; build.py writes them
+        import build
+        frs = [f for f in build.read_csv("frameworks.csv") if f["tier"] == "organisation"]
+        ctls = {f["id"]: {c["id"]: c for c in build.read_csv(f["controls_file"])} for f in frs}
+        for path, text in build.readable_copies(src_rows, {r["id"]: r for r in sector_rows}, prov_rows, map_rows, frs, ctls).items():
+            if not path.exists() or path.read_text(encoding="utf-8") != text:
+                warnings.append(f"mappings/{path.name} is out of date: run python3 scripts/build.py and commit it "
+                                "(CI does this itself on branches of this repository)")
 
     if stats:
         print("Sources by scope:", dict(Counter(r["scope"] for r in src_rows)))

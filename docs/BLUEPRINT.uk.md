@@ -28,6 +28,7 @@ assets/                    стилі, скрипти, шрифти та лок�
 assets/js/config.js        адреса репозиторію та інші налаштування  <- змінити перед публікацією
 content/                   тексти сторінок у Markdown, uk і en: головна, методика, про проєкт, розділи guide/, статті articles/
 mappings/*.xlsx            положення актів і їх зіставлення зі стандартами: редагуються вручну
+mappings/*.csv             читабельні копії книг, їх пише build.py (і CI): не редагуйте
 data/*.csv                 решта: джерела, ланцюги, типи суб'єктів, заходи стандартів
 data/sp800-53/             дані рівня систем (етап 2)
 data/datapackage.json      опис стовпців опублікованих файлів (Frictionless Data Package)
@@ -48,6 +49,7 @@ data/retired_provisions.csv  коди положень, вилучені під 
 | `data/provisions.csv`, `data/mappings.csv` | `mappings/*.xlsx` | сайт і програми |
 | `data/eli.jsonld` | `sources.csv`, `source_relations.csv` | метадані ELI (3.4) |
 | `data/grc-foundation-ua.xlsx` | усе перелічене, разом | люди: реєстр, ланцюги і зіставлення з назвами й текстами |
+| `mappings/<книга>.csv` (зберігається в репозиторії) | книга з тією самою назвою | рецензенти: рядок на положення, під ним рядки зв'язків, з назвами актів і заходів, тож pull request показує, які рядки змінилися. `validate.py` попереджає, коли копія застаріла; CI сам робить commit свіжих копій у гілках цього репозиторію |
 
 Як перевірити і зібрати сайт локально: [`CONTRIBUTING.md`](../CONTRIBUTING.md).
 
@@ -225,7 +227,7 @@ sectors ──< applicability >── sources ──< provisions ──< mapping
 2. Додайте рядок у `sources.csv`:
    - `id` за шаблоном із 3.1; перевірте, що він вільний. `register_no`: наступний вільний номер. `eli`: офіційний ELI для акта ЄС, інакше шлях проєкту з 3.1.
    - `scope` (`core` або `reference` для актів ЄС) і `domain` (`cybersecurity` або `records`).
-   - `type`, `number`, `adopted`, `registered` (дата реєстрації в Мін'юсті, якщо є).
+   - `type`, `number`, `adopted`.
    - `short_ref_uk`, `short_ref_en`, `title_uk`, `title_en`.
    - `description_uk`, `description_en`: одне-два речення про те, про що акт.
    - `concerns_uk`, `concerns_en`: кого він стосується, словами.

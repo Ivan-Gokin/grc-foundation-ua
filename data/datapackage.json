@@ -66,11 +66,6 @@
             "description": "Adoption date YYYY-MM-DD."
           },
           {
-            "name": "registered",
-            "type": "string",
-            "description": "Ministry of Justice registration date, if any."
-          },
-          {
             "name": "short_ref_uk",
             "type": "string",
             "description": "Short citation in Ukrainian."
@@ -141,19 +136,9 @@
             "description": "Link to the official text (zakon.rada.gov.ua preferred)."
           },
           {
-            "name": "tags",
-            "type": "string",
-            "description": "Topic tags separated by ';'."
-          },
-          {
             "name": "last_verified",
             "type": "string",
             "description": "Date the row was last checked against the official text."
-          },
-          {
-            "name": "notes",
-            "type": "string",
-            "description": "Maintainer notes."
           },
           {
             "name": "checked_edition",

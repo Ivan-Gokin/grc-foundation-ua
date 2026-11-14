@@ -17,6 +17,7 @@ the official language; this project's translations go to rdfs:label only.
 Usage:  python3 scripts/build.py            # then: python3 -m http.server 8000 -d _site
 """
 import csv
+import io
 import datetime as dt
 import json
 import shutil
@@ -302,6 +303,57 @@ def bust_cache(page):
     page.write_text(re.sub(r'(src|href)="(assets/[^"?]+\.(?:js|css))"', stamp, html), encoding="utf-8")
 
 
+TYPE_UK = {"substantive": "обов'язок", "delegating": "делегує", "definitional": "визначення"}
+READABLE_HEADER = ["Акт", "Пункт", "Вимога", "Стандарт", "Захід", "Назва заходу", "Відношення", "Параметр за законом",
+                   "Куди внести", "Примітка", "Рішення", "Статус", "Тип", "Стосується лише", "Застереження", "Обґрунтування",
+                   "Хто зіставив", "Хто перевірив", "Дата", "Пункт (EN)", "Вимога (EN)", "id"]
+
+
+def readable_text(provs, sources, sectors, mappings, frameworks, controls):
+    """A readable copy of one workbook: a row per provision, then a row per link under it, act and control names joined in.
+    Committed next to the workbook, so a pull request shows which rows changed."""
+    src = {s["id"]: s for s in sources}
+    fw_name = {f["id"]: f"{f['name']} {f['version']}" for f in frameworks}
+    fw_order = {f["id"]: i for i, f in enumerate(frameworks)}
+    links = {}
+    for i, m in enumerate(mappings):
+        links.setdefault(m["provision_id"], []).append((fw_order.get(m["framework_id"], 99), i, m))
+    buf = io.StringIO()
+    w = csv.writer(buf, lineterminator="\n")
+    w.writerow(READABLE_HEADER)
+    for p in provs:
+        act = src.get(p["source_id"], {}).get("short_ref_uk", p["source_id"])
+        w.writerow([act, p["ref_uk"], p["summary_uk"]] + [""] * 7 + [p.get("decisions", ""), "",
+                   TYPE_UK.get(p["provision_type"], p["provision_type"]), applies_uk(p["applies_to"], sectors), p["notes"],
+                   "", "", "", "", p.get("ref_en", ""), p.get("summary_en", ""), p["id"]])
+        for _, _, m in sorted(links.get(p["id"], []), key=lambda x: x[:2]):
+            c = controls.get(m["framework_id"], {}).get(m["control_id"], {})
+            w.writerow([act, p["ref_uk"], "", fw_name.get(m["framework_id"], m["framework_id"]), m["control_id"] or "—",
+                        (c.get("name_uk") or c.get("name_en", "")) if c else "", REL_UK.get(m["relationship"], m["relationship"]),
+                        m["parameter_uk"], m["policy_uk"], m["notes_uk"], m.get("decisions", ""),
+                        REVIEW_UK.get(m["review_status"], m["review_status"]), "", "", "", m["rationale"], m["mapped_by"],
+                        m["reviewed_by"], m["date"], "", "", p["id"]])
+    return "\ufeff" + buf.getvalue()  # BOM: Excel then opens the Cyrillic correctly
+
+
+def readable_copies(sources, sectors, provisions, mappings, frameworks, controls):
+    """{mappings/<workbook>.csv: text} for every workbook."""
+    out = {}
+    for wb in dict.fromkeys(p["_where"].split(" / ")[0] for p in provisions):
+        provs = [p for p in provisions if p["_where"].split(" / ")[0] == wb]
+        ids = {p["id"] for p in provs}
+        path = ROOT / "mappings" / (Path(wb).stem + ".csv")
+        out[path] = readable_text(provs, sources, sectors, [m for m in mappings if m["provision_id"] in ids], frameworks, controls)
+    return out
+
+
+def write_readable(*args):
+    for path, text in readable_copies(*args).items():
+        if not path.exists() or path.read_text(encoding="utf-8") != text:
+            path.write_text(text, encoding="utf-8")
+            print(f"updated {path.relative_to(ROOT)}")
+
+
 def main():
     if OUT.exists():
         shutil.rmtree(OUT)
@@ -328,6 +380,7 @@ def main():
         s = by_src.get(p["source_id"], {})
         for f in ("act_condition_uk", "act_condition_en", "checked_edition"):
             p[f] = s.get(f, "")
+    write_readable(sources, sectors, provisions, mappings, frameworks, controls)
     write_csv(OUT / "data" / "provisions.csv", mapdata.PROVISION_FIELDS, provisions)
     write_csv(OUT / "data" / "mappings.csv", mapdata.MAPPING_FIELDS, mappings)
 
