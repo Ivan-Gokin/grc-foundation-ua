@@ -37,6 +37,9 @@ def load(repo):
     for d in out.values():
         for r in d['provisions'] + [x for rs in d['links'].values() for x in rs]:
             r['grounds'] = md.grounds_of(r.get('decisions', ''), kinds)
+        for rs in d['links'].values():
+            for r in rs:
+                r['coverage'] = md.DEFAULT_COVERAGE.get(r.get('relationship') or 'no_relationship', '')  # derived, as in read_all
     # keep framework sheet order as in file
     import openpyxl
     for wb in out:
