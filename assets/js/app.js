@@ -233,11 +233,32 @@
     return out;
   }
   // "and" rules: an applicability row may require other sectors too (e.g. a bank that also uses cloud services)
+  const listOf = (s) => (s || "").split(";").filter(Boolean);
   const rowRequires = (a) => (a.requires || "").split(";").filter(Boolean);
-  const applLabel = (a) => [a.sector_id, ...rowRequires(a)].map((id) => L(D.sectorById[id], "label") || id).join(" + ");
+  const secLabel = (id) => L(D.sectorById[id], "label") || id;
+  const applLabel = (a) => {
+    let s = [a.sector_id, ...rowRequires(a)].map(secLabel).join(" + ");
+    const exc = listOf(a.except), unl = listOf(a.unless);
+    if (exc.length) s += ` (${t("applExcept")} ${exc.map(secLabel).join(", ")}${unl.length ? `, ${t("applUnless")} ${unl.map(secLabel).join(", ")}` : ""})`;
+    return s;
+  };
+  // "except" rules: a row does not apply to a reader in an excepted sector (e.g. Order 75 for banks, which the NBU regulates),
+  // unless the reader is also in an "unless" sector (a bank with state secrets). For a provision term, "unless" counts only
+  // when the term names that sector, so a bank sees only the state-secret provisions.
+  function rowApplies(a, exp, termPos) {
+    if (!exp.has(a.sector_id) || !rowRequires(a).every((id) => exp.has(id))) return false;
+    if (!listOf(a.except).some((id) => exp.has(id))) return true;
+    return listOf(a.unless).some((id) => exp.has(id) && (!termPos || termPos.includes(id)));
+  }
   function sourceApplies(src, exp) {
     if (!exp) return true;
-    return (D.applBySource[src.id] || []).some((a) => exp.has(a.sector_id) && rowRequires(a).every((id) => exp.has(id)));
+    return (D.applBySource[src.id] || []).some((a) => rowApplies(a, exp));
+  }
+  function ancestorsOf(id) {
+    const out = new Set();
+    const up = (x) => { if (out.has(x)) return; out.add(x); (D.parents[x] || []).forEach(up); };
+    up(id);
+    return out;
   }
   // forSources=false: the controls table (only Ukrainian acts in force drive controls)
   function sourceVisible(src, exp, forSources) {
@@ -258,8 +279,16 @@
     if (!p || !sourceVisible(D.sourceById[p.source_id], exp, false)) return false;
     if (!exp || !p.applies_to) return true;
     // ';' = any of the terms; '+' = every part of a term; '!' = the reader must not be in that sector
+    // a term counts only if an applicability row that covers it (its sector or a broader one) applies to the reader
     const down = selectedDown();
-    return p.applies_to.split(";").some((term) => term.split("+").every((x) => (x.startsWith("!") ? !exp.has(x.slice(1)) : down.has(x))));
+    const rows = D.applBySource[p.source_id] || [];
+    return p.applies_to.split(";").some((term) => {
+      const parts = term.split("+").filter(Boolean);
+      if (!parts.every((x) => (x.startsWith("!") ? !exp.has(x.slice(1)) : down.has(x)))) return false;
+      const pos = parts.filter((x) => !x.startsWith("!"));
+      const cover = rows.filter((a) => !pos.length || pos.some((x) => ancestorsOf(x).has(a.sector_id)));
+      return !cover.length || cover.some((a) => rowApplies(a, exp, pos));
+    });
   }
   function driversFor(fw, exp, includeDrafts) {
     const out = {};

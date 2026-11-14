@@ -1,5 +1,11 @@
 # Changelog
 
+## Simpler data model (2026-11-14)
+
+- Mapping rows lose two columns that never carried information: `strength` (dropped) and `coverage`, which always equalled the relationship's default and is now derived from it. A blank `rationale` means `semantic` (98.5 % of rows).
+- The English copies of parameter, policy and notes are dropped; the site shows the Ukrainian text, marked as such.
+- Act-wide exclusions move from the provisions to `applicability.csv`, in two new columns: `except` (the row does not count for these types) and `unless` (it does after all, if the reader also has this type). SSSCIP Order No. 75 and CMU Resolution No. 373 lose `+!finance` / `+!banks` on 95 provisions; Law No. 80/94 keeps its per-provision `!banks`. Every provision shows for exactly the same readers as before (checked for 439 reader profiles, in the oracle and in the site code). One visible difference: banks and finance-sector CI operators without state secrets no longer see these two acts in their list, where they used to see the acts with none of their provisions.
+
 ## Export: CISO Assistant libraries (2026-11-14)
 
 - The build now writes CISO Assistant libraries (YAML, library format v2): for each of the 12 mapped acts, a framework with one requirement per provision and a mapping library to the ISO/IEC 27001:2022 and NIST CSF 2.0 frameworks that CISO Assistant ships, in both directions. All of them are published as `data/ciso-assistant-libraries.zip`; the files are not kept in git.

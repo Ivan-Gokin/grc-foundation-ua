@@ -67,7 +67,7 @@ sectors ──< applicability >── sources ──< provisions ──< mapping
 | `source_types.csv` | a type of source (law, CMU resolution, ND TZI, EU act...) | `id`, labels, issuer |
 | `sectors.csv` | an entity type the reader can pick ("who it concerns") | `id`, `parent`, `group`, `selectable` |
 | `sector_groups.csv` | a group of entity types in the filter | `id`, labels |
-| `applicability.csv` | "source X concerns entity type Y" (optionally "and also Z") | `source_id`, `sector_id`, `requires`, `basis`, `verified` |
+| `applicability.csv` | "source X concerns entity type Y" (optionally "and also Z") | `source_id`, `sector_id`, `requires`, `except`, `unless`, `basis`, `verified` |
 | `source_relations.csv` | a link in a regulatory chain | `source_id`, `relation`, `related_id`, `basis_uk`, `source_url`, `confidence` |
 | `provisions.csv` (from «Вимоги» in `mappings/*.xlsx`) | one requirement inside a source (article, paragraph) | `id`, `source_id`, `ref_uk`, `provision_type`, `applies_to` |
 | `mappings.csv` (from the framework sheets in `mappings/*.xlsx`) | provision-to-control relationship | `provision_id`, `framework_id`, `control_id`, `relationship`, `coverage`, `parameter_uk` |
@@ -148,7 +148,9 @@ A type can have several parents (`parent` separated by `;`). The criticality cat
 
 "And" rules: `requires` lists further types (separated by `;`) that must also be in the profile for the row to count. NBU Resolution No. 99 has `finance` with `requires=cloud-users`, so it shows for a bank that uses cloud services, not for every bank; the Law on Cloud Services has `public-sector` with `requires=cloud-users` next to a plain `cloud` row for providers.
 
-Provision scope (`applies_to`) is an expression over sector codes: `;` separates alternatives (OR), `+` joins conditions (AND), and `!` negates a code (NOT). For example, `public-sector+!banks;public-sector+state-secrets` means "public sector, but not banks; or public sector with state secrets". Every term needs at least one code without `!`. Who the whole act binds or excludes goes in `act_condition_uk` / `act_condition_en` in `sources.csv`; the site shows it on every row of the act.
+Exceptions: `except` lists types (separated by `;`) for which the row does not count, and `unless` lists types that restore it. SSSCIP Order No. 75 has `ki` with `except=finance`, because the NBU sets the rules for the financial sector, and `public-sector` with `except=banks` and `unless=state-secrets`. A bank sees the order only if it also holds state secrets, and then only the provisions whose `applies_to` names `state-secrets`. Write an exception here once, not as `!banks` on every provision of the act. `!` in `applies_to` stays for the rare provision that excludes a type the rest of the act covers (for example in Law No. 80/94).
+
+Provision scope (`applies_to`) is an expression over sector codes: `;` separates alternatives (OR), `+` joins conditions (AND), and `!` negates a code (NOT). For example, `public-sector;public-sector+state-secrets` means "public sector; or public sector with state secrets", and a term like `ki+!finance` excludes a type for that provision only. Every term needs at least one code without `!`. Who the whole act binds or excludes goes in `act_condition_uk` / `act_condition_en` in `sources.csv`; the site shows it on every row of the act.
 
 Selection logic: choosing a type includes its parents and `general` when matching acts (choosing `cii-3-4` shows acts tagged `ki`, `kii`, `cii-3-4` or `general`). For provisions with `applies_to`, choosing a broad type also includes the narrower ones (choosing `ki` shows the baseline measures for both criticality groups).
 
@@ -294,7 +296,7 @@ Selection logic for the controls table:
 
 1. Selected sectors are expanded with their parents and `general`.
 2. Sources are kept if they are in the `core` scope, `in_force`, have an applicability row for any expanded type, and (if "recommendations" is off) `binding=mandatory`.
-3. Provisions of those sources are kept if `applies_to` is empty or intersects the selected types and their narrower sub-types.
+3. Provisions of those sources are kept if `applies_to` is empty or one of its terms matches the selected types and their narrower sub-types, and an applicability row that covers that term (its type or a broader one) passes `except` / `unless`. For a provision, `unless` counts only if the term names that type.
 4. Mappings of those provisions to the chosen framework give the "legal drivers" of each control.
 5. By default only controls with at least one driver are shown. The toggle shows the full control set, for a complete SoA.
 

@@ -190,7 +190,12 @@ def readable_workbook(path, meta, sources, types, sectors, appl, relations, prov
     for a in appl:
         label = sectors[a["sector_id"]]["label_uk"]
         reqs = [sectors[x]["label_uk"] for x in (a.get("requires") or "").split(";") if x in sectors]
-        tags.setdefault(a["source_id"], []).append(" + ".join([label] + reqs))
+        tag = " + ".join([label] + reqs)
+        exc = [sectors[x]["label_uk"] for x in (a.get("except") or "").split(";") if x in sectors]
+        unl = [sectors[x]["label_uk"] for x in (a.get("unless") or "").split(";") if x in sectors]
+        if exc:
+            tag += f" (крім: {', '.join(exc)}" + (f"; але стосується, якщо є: {', '.join(unl)}" if unl else "") + ")"
+        tags.setdefault(a["source_id"], []).append(tag)
     wb = openpyxl.Workbook()
     about = wb.active
     about.title = "Про файл"
@@ -320,7 +325,8 @@ def main():
                       relations, provisions, mappings, frameworks, controls)
 
     # CISO Assistant libraries (YAML), one framework and one mapping library per act, plus a zip of all of them
-    files = export_ciso_assistant.export(OUT / "data", meta, sources, types, sectors, provisions, mappings)
+    files = export_ciso_assistant.export(OUT / "data", meta, sources, types, sectors, provisions, mappings,
+                                         read_csv("applicability.csv"))
     with zipfile.ZipFile(OUT / "data" / "ciso-assistant-libraries.zip", "w", zipfile.ZIP_DEFLATED) as z:
         for f in files:
             z.write(OUT / "data" / "ciso-assistant" / f, f)

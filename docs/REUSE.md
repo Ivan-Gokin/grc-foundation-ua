@@ -100,7 +100,7 @@ A private repository works as well: the built site is attached to every Actions 
 | **JSON-LD** | machine-readable register and chains | `data/eli.jsonld` (built) |
 | **Frictionless Data Package** | column descriptions of every published file | `data/datapackage.json` |
 | **CSV** (RFC 4180, UTF-8, no BOM in git; a BOM added on download for Excel) | all non-mapping data | `data/` |
-| **`applies_to` expressions** (project notation) | narrowing a provision to entity types. `;` = OR, `+` = AND, `!` = NOT. Example: `public-sector+!banks;public-sector+state-secrets` = public sector except banks, or public sector with state secrets | provisions; evaluated in `app.js`; checked in `validate.py` |
+| **`applies_to` expressions** (project notation) | narrowing a provision to entity types. `;` = OR, `+` = AND, `!` = NOT. Example: `public-sector;public-sector+state-secrets` = public sector, or public sector with state secrets. An exception for the whole act (Order 75 is not for banks unless they hold state secrets) goes once in `applicability.csv` (`except`, `unless`), not as `!banks` on every provision | provisions; evaluated in `app.js`; checked in `validate.py` |
 | **`grounds`** (project notation) | what a row rests on: `text` (default), `assumption`, `regulator` or `practice`. Anything but `text` needs a dated sentence in the notes that starts with its label | provisions and mappings; checked in `validate.py` |
 | **`review_status`** | `ai_draft`, `draft`, `imported` or `reviewed` (reviewed requires `reviewed_by`). The site badges AI rows and every export marks them | mappings |
 | **Edit operations** (project notation, JSON Lines) | machine-applicable changes to the workbooks, each with a ruling id and a reason | `tools/review/apply_ops.py` docstring |

@@ -309,6 +309,16 @@
             "description": "Optional: sector ids (separated by ;) that must also be in the profile for this row to apply, e.g. finance + cloud-users."
           },
           {
+            "name": "except",
+            "type": "string",
+            "description": "Optional: sector ids (separated by ;) for which this row does not apply, e.g. banks for SSSCIP Order 75."
+          },
+          {
+            "name": "unless",
+            "type": "string",
+            "description": "Optional, with except: sector ids (separated by ;) that restore the row despite except. For a provision, it counts only if its applies_to term names that sector."
+          },
+          {
             "name": "basis",
             "type": "string",
             "description": "Why it applies / where the assignment came from."

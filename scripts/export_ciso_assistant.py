@@ -87,11 +87,27 @@ def applies_words(a, sectors, lang):
     return "; ".join(joiner.join(part(x) for x in t.split("+")) for t in a.split(";") if t)
 
 
+def exclusions(sid, appl, sectors):
+    """Act-level exceptions from applicability.csv, in words: 'Public sector — except Banks (but applies if also State secrets)'."""
+    lab = lambda x, lang: sectors.get(x, {}).get(f"label_{lang}") or x
+    out = {"uk": [], "en": []}
+    for a in appl:
+        if a["source_id"] != sid or not a.get("except"):
+            continue
+        exc, unl = [x for x in a["except"].split(";") if x], [x for x in (a.get("unless") or "").split(";") if x]
+        for lang, no, but in (("uk", "крім:", "але стосується, якщо є:"), ("en", "except", "but applies if also")):
+            s = f"{lab(a['sector_id'], lang)} — {no} {', '.join(lab(x, lang) for x in exc)}"
+            if unl:
+                s += f" ({but} {', '.join(lab(x, lang) for x in unl)})"
+            out[lang].append(s)
+    return "; ".join(out["uk"]) + ("." if out["uk"] else ""), "; ".join(out["en"]) + ("." if out["en"] else "")
+
+
 def dump(path, data):
     path.write_text(yaml.safe_dump(data, allow_unicode=True, sort_keys=False, width=110), encoding="utf-8")
 
 
-def export(out_dir, meta, sources, types, sectors, provisions, mappings):
+def export(out_dir, meta, sources, types, sectors, provisions, mappings, appl=()):
     """Write the libraries; return the list of written file names."""
     out = Path(out_dir) / "ciso-assistant"
     out.mkdir(parents=True, exist_ok=True)
@@ -157,13 +173,18 @@ def export(out_dir, meta, sources, types, sectors, provisions, mappings):
                 node["translations"] = {"en": en}
             nodes.append(node)
 
+        exc_uk, exc_en = exclusions(sid, appl, sectors)
         desc_uk = s.get("description_uk", "")
         if s.get("act_condition_uk"):
             desc_uk += "\n\nУмова для всього акта: " + s["act_condition_uk"]
+        if exc_uk:
+            desc_uk += "\n\nВинятки: " + exc_uk
         desc_uk += f"\n\nДжерело: GRC-фундамент для України ({meta['site_url']}), дані {meta['version']}. Офіційний текст: {s.get('url', '')}"
         desc_en = s.get("description_en", "")
         if s.get("act_condition_en"):
             desc_en += "\n\nCondition for the whole act: " + s["act_condition_en"]
+        if exc_en:
+            desc_en += "\n\nExceptions: " + exc_en
         desc_en += f"\n\nSource: GRC foundation for Ukraine ({meta['site_url']}), data {meta['version']}. Official text: {s.get('url', '')}"
         # CISO Assistant keeps names to 200 characters; the full title stays in the description
         name_uk = short(f"{s['short_ref_uk']}: {s['title_uk']}", 195)
@@ -300,7 +321,7 @@ def main():
         for f in ("act_condition_uk", "act_condition_en"):
             p[f] = by_src.get(p["source_id"], {}).get(f, "")
     files = export(out, meta, sources, {r["id"]: r for r in read("source_types.csv")},
-                   {r["id"]: r for r in read("sectors.csv")}, provisions, mappings)
+                   {r["id"]: r for r in read("sectors.csv")}, provisions, mappings, read("applicability.csv"))
     print(f"{len(files)} CISO Assistant libraries -> {out / 'ciso-assistant'}")
     if "--ca-libraries" in sys.argv:
         problems = check(out, sys.argv[sys.argv.index("--ca-libraries") + 1])
