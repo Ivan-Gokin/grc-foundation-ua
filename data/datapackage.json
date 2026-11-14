@@ -719,27 +719,13 @@
             "description": "Value the law sets for an organisation-defined parameter (e.g. 'не рідше 1 разу на рік')."
           },
           {
-            "name": "parameter_en",
-            "type": "string",
-            "description": "Same in English."
-          },
-          {
             "name": "notes_uk",
-            "type": "string"
-          },
-          {
-            "name": "notes_en",
             "type": "string"
           },
           {
             "name": "policy_uk",
             "type": "string",
             "description": "Suggested internal document (policy, procedure) where the requirement belongs."
-          },
-          {
-            "name": "policy_en",
-            "type": "string",
-            "description": "Same in English."
           },
           {
             "name": "mapped_by",

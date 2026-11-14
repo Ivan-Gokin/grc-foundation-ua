@@ -64,15 +64,12 @@ LINK_COLS = [
     ("mapped_by", "Хто зіставив", 22, "Ім'я або «AI (...)» для згенерованих рядків."),
     ("reviewed_by", "Хто перевірив", 18, ""),
     ("date", "Дата", 11, "Дата останньої зміни рядка."),
-    ("parameter_en", "Параметр (EN)", 20, "Необов'язково."),
-    ("policy_en", "Куди внести (EN)", 20, "Необов'язково."),
-    ("notes_en", "Примітка (EN)", 30, "Необов'язково."),
 ]
 # column order of the generated data/provisions.csv and data/mappings.csv
 PROVISION_FIELDS = ["id", "source_id", "ref_uk", "ref_en", "summary_uk", "summary_en", "provision_type", "applies_to", "notes",
                     "grounds", "act_condition_uk", "act_condition_en", "checked_edition"]  # last three: from sources.csv
 MAPPING_FIELDS = ["provision_id", "framework_id", "control_id", "relationship", "rationale", "coverage",
-                  "parameter_uk", "parameter_en", "notes_uk", "notes_en", "policy_uk", "policy_en", "mapped_by",
+                  "parameter_uk", "notes_uk", "policy_uk", "mapped_by",
                   "reviewed_by", "review_status", "date", "grounds"]
 LISTS = {"provision_type": TYPE, "review_status": STATUS, "relationship": RELATIONSHIP,
          "rationale": {r: r for r in RATIONALE}, "grounds": GROUNDS}

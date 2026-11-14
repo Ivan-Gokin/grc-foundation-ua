@@ -1520,11 +1520,11 @@
     const src = D.sourceById[p.source_id];
     const orig = isFallback(p, "summary");
     const more = [
-      L(m, "parameter") ? `<p><b>${esc(t("colParam"))}:</b> ${esc(L(m, "parameter"))}</p>` : "",
+      L(m, "parameter") ? `<p><b>${esc(t("colParam"))}:</b> <span${isFallback(m, "parameter") ? ' lang="uk"' : ""}>${esc(L(m, "parameter"))}</span></p>` : "",
       p.applies_to ? `<p><b>${esc(t("appliesOnly"))}:</b> ${esc(appliesText(p.applies_to))}</p>` : "",
       L(src, "act_condition") ? `<p><b>${esc(t("actCondition"))}:</b> ${esc(L(src, "act_condition"))}</p>` : "",
       groundsOf(m) ? `<p><b>${esc(t("colGrounds"))}:</b> ${esc(groundsLabel(groundsOf(m)))}. ${esc(t("groundsHint"))}</p>` : "",
-      L(m, "policy") ? `<p><b>${esc(t("driverPolicy"))}:</b> ${esc(L(m, "policy"))}</p>` : "",
+      L(m, "policy") ? `<p><b>${esc(t("driverPolicy"))}:</b> <span${isFallback(m, "policy") ? ' lang="uk"' : ""}>${esc(L(m, "policy"))}</span></p>` : "",
       p.notes ? `<p><b>${esc(t("driverCaveat"))}:</b> <span${S.lang === "en" ? ' lang="uk"' : ""}>${esc(p.notes)}</span></p>` : "",
       `<p class="muted">${esc(t("driverMeta"))}: ${esc(relWords(m.relationship))}, ${esc(m.rationale)}; ${esc(reviewLabel(m.review_status))}; ${esc(m.mapped_by)}${m.reviewed_by ? `, ${esc(m.reviewed_by)}` : ""}; ${esc(m.date)}</p>`,
     ].join("");
