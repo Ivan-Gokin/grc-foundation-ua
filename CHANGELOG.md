@@ -1,10 +1,158 @@
 # Changelog
 
-## Map of the national cybersecurity system (2026-10-19, draft)
+## Map of the national cybersecurity system (2026-10-19, draft; merged 2026-11-14)
 
 - Legal sources has a third view, "Map": the bodies of the national cybersecurity system in bands (coordination and policy; the main bodies under Art. 8 of Law No. 2163-VIII; other participants), then your organisation, then information systems and data with the NIST SP 800-53 baseline profiles. Each body shows how many acts in force it issues, how many of them apply to the selected type of organisation and how many acts are addressed to the body itself; clicking a body opens its role, legal basis, links to other bodies and the acts that set it up. The organisation band works as a type picker.
 - New data files: actors.csv, actor_relations.csv and actor_acts.csv, plus an "actor" column in source_types.csv (who issues each type of act); all described in datapackage.json and checked by validate.py. Every row is a draft (verified = no) until checked against the acts.
-- Guide step 2 points to the map.
+- Step 3 of "Craft your baseline" (Who sets your rules) points to the map.
+
+## Register: NATO security and information-management directives (2026-11-10)
+
+- Three newer revisions of NATO security directives, with the older ones updated: AC/35-D/2000-REV9 on personnel security (in force from 01.07.2025; REV8 now `repealed`), AC/35-D/2003-REV5 on classified project and industrial security (REV4 now `repealed`), and AC/35-D/2004-REV4, the primary directive on CIS security (11.11.2024). REV4 replaces AC/35-D/2004-REV3 except its Appendix 2, and Section 4 of AC/35-D/2005-REV3, so both stay in force with `amends` links and a comment.
+- Six publicly disclosed NATO information-management documents: the Records Policy C-M(2011)0043, the Policy on the Retention and Disposition of NATO Information C-M(2009)0021, the Policy on the Public Disclosure of NATO Information C-M(2008)0116-REV1, the Directive on the Public Disclosure of NATO Information AC/324-D(2014)0010-REV2 and the Directive on the Management of Records Generated on Operational Deployment C-M(2012)0014 (all `domain=records`), plus the NATO Personal Data Protection Framework Policy.
+- Seven restricted documents listed by reference only, each cited in a public NATO text: AC/35-D/2020 (protection of CIS handling non-classified NATO information), AC/35-D/1035 (security risk management process), AC/35-D/1029-REV1 (security education and awareness), AC/35-D/1043 (national personnel security clearance procedures), AC/35-D/1038-REV3 (non-NATO entities; VST 01.008.005-2021 adopts it identically), AC/322-D(2015)0031 (cryptographic security for NATO information in the CIS of non-NATO nations) and AC/322-D(2004)0024-REV2 (NATO PKI certificate policy). The last two are confirmed by the NISP Baseline 16 catalogue.
+- Register numbers 301–316; 35 applicability rows copied from the closest existing NATO document (`verified=no`); 13 chain links (`repeals`, `amends`, `cites`, `applies`), all `verified=no`.
+- Fixes: AC/322-D/0052-REV2 lost its URL, which pointed to a different document (AC/35-D/2004-REV2 of 06.12.2010). No public copy was found, so it is now `restricted`. AC/35-D/2002-REV5 now links to the NATO Archives copy.
+- `last_verified` is set only for the documents whose public text was opened. Restricted documents keep it empty, because their titles and dates come from citations in other documents.
+
+## Register: SSSCIP Order No. 771 on secure internet access (2026-10-29)
+
+- SSSCIP Order No. 771 of 30.08.2023, the regulation on the system of secure internet access for public bodies, added with `role=context` and the `national-cyber-system` tag (register number 300). The map of the national cybersecurity system cites it as the basis of the cyber-protection services the state provides to public bodies.
+- One chain link: the order ensures implementation of the organisational and technical model of cyber protection (Resolution No. 1426), `verified=no`.
+- Details come from the SSSCIP page that publishes the order; the text has not yet been checked, so `last_verified` is empty.
+
+## Register: institutional acts of the national cybersecurity system (2026-10-29)
+
+- Eleven acts that set who holds which powers in the national cybersecurity system, added with `role=context` and the `national-cyber-system` tag (so the questionnaire does not offer them as requirements): the laws on the NSDC (No. 183/98-VR), the SBU (No. 2229-XII), the National Police (No. 580-VIII), intelligence (No. 912-IX), counter-intelligence activity (No. 374-IV), defence (No. 1932-XII), the prosecutor's office (No. 1697-VII), the Parliamentary Commissioner for Human Rights (No. 776/97-VR) and diplomatic service (No. 1764-VIII); Presidential Decree No. 242/2016 on the NCCC; CMU Order No. 631-r of 24.06.2026, the 2026 action plan for the Cybersecurity Strategy. Register numbers 289–299.
+- A new act type, CMU Order (`cmu_order`, ELI path `eli/ua/cmu/order/<year>/<number>`), for Cabinet orders (розпорядження); the sort order of the types after it moves down by one.
+- Two chain links: Decree No. 242/2016 is based on the NSDC law; Order No. 631-r ensures implementation of the Cybersecurity Strategy (Decree No. 447/2021). Both `verified=no`.
+- Details were taken from open sources; the texts have not yet been checked on zakon.rada.gov.ua, so `last_verified` is empty. The acts are added so that the map of the national cybersecurity system can reference the same register instead of keeping its own list.
+
+## Cloud and AI: providers and users apart, with "and" rules (2026-10-24)
+
+- A fourth question in "Craft your baseline": "Do you provide or use cloud services or artificial intelligence systems?" (provide cloud or data centre services; use cloud or a third-party data centre; develop or supply AI systems; use AI systems). Cloud and AI left question 1. The filters have a matching group, "Technologies you provide or use", with two new types: cloud service users (`cloud-users`) and AI system users (`ai-users`); `cloud` and `ai` now mean providers.
+- Applicability rows can require further types (`requires` in `applicability.csv`): NBU Resolution No. 99 now applies to a bank that uses cloud services; the Law on Cloud Services, CMU Resolution No. 154, SSSCIP Order No. 505 and bill No. 16123 apply to public bodies and CII owners that use cloud services (and to providers as before); SSSCIP Order No. 154 (AI) applies to AI users instead of every organisation; the AI Act, the Digital Omnibus on AI and the CoE AI convention also cover AI users. The Acts register and the data workbook show such rows as "Financial sector + Cloud service users". Validation checks the new column.
+- Texts say "four questions" where they said three.
+
+## How to contribute: acknowledgements (2026-10-23)
+
+- New "Acknowledgements" section: a Name and Contribution table read from `content/contributors.csv` (name, contribution in Ukrainian and English, an optional link). While it is empty, it invites the reader to be the first and points to the ways to help.
+- The page lead no longer names the author: the project's quality depends on other GRC practitioners taking part.
+
+## Home: a description and one button into the questionnaire (2026-10-23)
+
+- The top block of the home page no longer asks the first question. It says what the questionnaire does ("Let's define your context and find the requirements that fit"), lists the three questions, and has one button, "Start the questionnaire", which opens step 1. "Not sure, or just looking?" stays under it.
+- The hero text no longer repeats the description.
+
+## Questionnaire: question 2 without "None of these" (2026-10-23)
+
+- Question 2 now asks "Do you process any categories of information protected by law?" ("Чи обробляєте ви категорії інформації, захищені законом?"); leaving every option unticked means none, so the "None of these" option is gone. The Ukrainian options read in the nominative case to match.
+
+## The wizard keeps its answers; thin data said plainly; a self-explaining workbook (2026-10-23)
+
+- "Craft your baseline" keeps its own profile and framework apart from the filters in Explore: opening an act, the Acts register or the NIST SP 800-53 page no longer wipes or changes the answers, and the header link resumes where the reader left. Links from the wizard no longer switch off recommended acts in Explore.
+- Until the reader picks a framework, the wizard follows the recommendation for the current profile, also when a link opens a later step directly; a framework picked on purpose stays in the link (`fwc=1`).
+- Once the reader has made a choice (an act accepted, a control ticked, a framework picked), leaving or reloading the page asks first; the question stops after the download. "Start over" in the step list clears everything (a second click confirms).
+- Step 4 recommends the framework the acts are actually mapped to when the sector's usual one has nothing yet, and says so; when neither has anything, it says that too. Step 6 says plainly when no control is required by law and offers to switch to the framework that has some.
+- Step 6: ISO/IEC 27001 clauses 4–10 are a separate block, not counted as SoA rows; the pinned bar's count follows the open tab; a "Skip to the download" link for keyboard users; "Your answer" is the h2 of each step.
+- The workbook (`soa_…xlsx` or `target-profile_…xlsx`): README first (profile, framework, data version, link, what each sheet and column means, the relation symbols), then SoA or Target profile, Clauses 4–10, No counterpart (provisions no control covers), Acts (with Owner, Reviewed on, Notes and rows for your own requirements), Regulators (role, contact, channel, reporting deadline to fill in) and, when needed, NIST SP 800-53 (clear column names; Applicable pre-filled for the baseline profile). Headers and the first columns are frozen in every sheet.
+- Links write plain commas (`s=finance,personal-data`); "1 act" instead of "1 acts".
+
+## A way out at the top of the questionnaire (2026-10-23)
+
+- At the top of the questions, on the home page and in step 1: "Not sure, or just looking?" with two links, "Requirements for any organisation" (the baseline for every organisation, step 2) and "All acts" (the full register). It replaces the "Skip" link that sat at the bottom of step 1.
+
+## Home: the questionnaire starts on the home page (2026-10-23)
+
+- The top block of the home page is now the questionnaire's first question, "What does your organisation do?". "Next question" carries the answer into "Craft your baseline" and opens it at question 2. It replaces the list of organisation types and the separate "Answer three questions" button.
+- On phones the "How it works" cards stack in one column again.
+- Ukrainian step counters read "Крок 1 із 6" and "Запитання 1 із 3", so the З in capitals is not mistaken for a 3.
+
+## How to contribute: mappings checked by industry (2026-10-23)
+
+- Under the overall review meter, "Checked by industry" shows how many mappings a person has checked for laws, banks and the financial sector, critical infrastructure, government, defence and NATO, and everything else, grouped as in the mapping roadmap.
+
+## Guides and How to contribute (2026-10-23)
+
+- The "Help me" menu is now "Guides": it holds the guidance chapters for the reader.
+- New "How to contribute" page in the header (`#/contribute`): where help is needed most (the review meter and a link to the mapping roadmap), the ways to help, and how to work with the author. It gathers what was split between the home page's "How you can help" and About's "Cooperation and feedback"; both now point to it.
+
+## The brand cut on two corners only; the header ribbon (2026-10-23)
+
+- Every cut corner is now top right and bottom left, as in the design system: primary buttons, the current item in the header, the theme switch thumb.
+- The header navigation group and the theme switch are cut the same way, with the cut edge drawn; so are the dropdown menus.
+
+## Meters and cut corners from the design system (2026-10-23)
+
+- Progress is shown with the design system's Meter: a row of equal segments (one segment is 4%), filled in a series colour, empty ones outlined, the exact figure to the right. Used for the mapping roadmap on About (acts mapped, mappings reviewed) and for the review meter on the home page.
+- Cut corners (top right and bottom left, with the cut edge drawn) on the remaining cards: the home page's step and help cards, its "Help check the mappings" and "What changed" panels, the "Know your sector" block, the roadmap milestones and the framework options.
+
+## Answer first, a pinned download, a clearer home page, the mapping roadmap (2026-10-23)
+
+- Each step of "Craft your baseline" shows its title and one paragraph, then the answer; the rest of the guidance is behind "Why this, and what to do". The browser tab names the step, and focus moves to its heading after each step change (the same for every page).
+- Step 6: the selected count and the download stay pinned to the bottom of the screen while the list scrolls; after step 6, "What next" leads to "Where the real work begins".
+- Step 5: with no chains of acts, the summary and headings no longer mention chains.
+- Step 1: "facilities" instead of "objects" in the critical infrastructure question.
+- Home: "Answer three questions" is the main button in the top block; the organisation types come second, with "Any other organisation" for shops, offices, schools and services.
+- About: a mapping roadmap. Laws first, then regulations for banks, critical infrastructure, government, defence and NATO, and everything else, each with its progress counted from the data.
+- Data: the Law Enforcement Directive and the ePrivacy Directive are no longer suggested for "personal data" (they concern law-enforcement authorities and electronic communications providers); NATO AC/35-D/2000-REV7, 2001-REV2 and 2002-REV4 are marked as superseded by the next revision; the two ND TZI 25 documents are named apart (TR EOT-95, TR TZI-PEMVN-95).
+
+## Act names with the date in words; the SoA picked on the left; two levels in the last step (2026-10-23)
+
+- Every act is named by its issuer, number and date in words, e.g. "CMU No. 373 dated 20 August 2022" / "КМУ № 373 від 20 серпня 2022 р.", across the site, the exports and the texts.
+- Last step: each control has a selector on the left. A lock marks the ones required by law or by ISO/IEC 27001 clauses 4-10 (they cannot be unticked); controls from accepted recommended acts start ticked; the rest start unticked; "Select all" and "Clear the optional ones". The download lists every control with Applicable yes or no.
+- Last step: the organisation level (ISO/IEC 27001 SoA or NIST CSF 2.0 target profile) and the information system level (NIST SP 800-53 Rev. 5) are two labelled tabs with their own colour and count; the SP 800-53 list is grouped under its 20 control families.
+- The boxes for your own requirements and controls are gone: add them as rows in the downloaded file.
+- ДСК is "Information for internal use (DSK)" in English and "Інформація для службового використання (ДСК)" in Ukrainian.
+
+## Craft your baseline, Explore and Help me (2026-10-22)
+
+- New primary section "Craft your baseline" (`#/craft`): six steps, each with short plain-language guidance and then the answer for the reader. 1. About your organisation (three questions). 2. Your profile (the categories the law names, adjustable). 3. Who sets your rules (the bodies that issued the acts binding you). 4. Your framework (recommended by profile, with the reason: CSF 2.0 for CI, public sector and defence; ISO/IEC 27001 for banks because of NBU No. 95, and otherwise). 5. Your laws and regulations (mandatory acts as chains and locked; recommended acts to accept; EU law to follow; your own requirements). 6. Your Statement of Applicability (controls required by law or by ISO/IEC 27001 clauses 4-10, locked; controls from accepted acts; optional controls to include; your own controls; provisions no control covers; the NIST SP 800-53 target profile when the information processed calls for it).
+- The download is one Excel workbook: SoA or target profile with a status and a reason for each control, the acts (required, accepted, followed, own), the NIST SP 800-53 profile when needed, and "about". Choices are kept only for the visit; nothing is stored.
+- Header: Intro, Craft your baseline, Explore (Acts, Controls: the full register with filters, as before) and Help me (Roles and authorities; Information systems, Where the real work begins, GRC engineering; glossary, articles, methodology, about).
+- The chapters Organisational context, External actors, Choosing the framework, Applicable acts and Controls and the SoA became steps 2-6 and are removed from the guide; their old links and `#/start` open the matching step. Chapter numbers (I.1-III.2) are gone; references are updated. The end-of-chapter tool boxes are removed.
+- Buttons follow the brand's cut corners: the primary button has four, every other button, pill, segmented control and chip has two (top right, bottom left), with the cut edge drawn in the border colour.
+
+## Guide: the matching tool at the end of the chapter, collapsed (2026-10-22)
+
+- The side panel became a box at the end of the chapter, collapsed by default. Its summary carries the key figure (e.g. "Your controls · 111 of 118"); a link near the top of the chapter opens it and scrolls to it. Once opened, it stays open from chapter to chapter until closed.
+- II.3 "Information systems" got the same box: NIST SP 800-53 controls for the reader's systems, with the baseline profile (preset from the information types in the answers), search, and where each control comes from (baseline profile, cyber protection plan, the acts behind it).
+
+## Guide: acts and controls in a panel beside the text (2026-10-22)
+
+- II.1 "Applicable acts" shows the reader's acts as chains in a panel beside the chapter, and II.2 "Controls and the SoA" shows the reader's controls there (framework, search, rows that open in place, chains, jump to clause, SoA download, a link to the full Controls page). Both are filtered by the answers.
+- On wide screens the panel is a third column that follows the scroll and can be hidden; on narrower screens a button opens it as a drawer.
+- With no answers yet, the panel offers the four questions or one click on an organisation type that keeps the reader on the same chapter.
+
+## Guide II.1: your applicable acts as chains (2026-10-22)
+
+- II.1 "Applicable acts" shows the acts for the reader's profile: first the regulatory chains, then the acts that stand on their own.
+- Chains keep only acts with direct requirements (provisions mapped to controls, or a baseline security profile). Each sits under the nearest act above it that has them too, so a law that only empowers a regulator is skipped while the link through it is kept. Acts that only amend another act are shown on it ("amended by").
+- Other applicable acts (empowering laws, acts not yet broken down into provisions) and the EU law worth following are listed in collapsed sections; "Show full chains" puts every act back into the trees.
+
+## Guide in three stages, new home page (2026-10-22)
+
+- The guide follows three stages. I. Governance: roles and authorities, organisational context (the questionnaire), external actors (new), choosing the framework (now with what the sector suggests). II. Compliance: applicable acts (with the EU law worth following), controls and the SoA, information systems. III. Risk management: "Where the real work begins" and GRC engineering (new).
+- The integrated management system chapter is folded into GRC engineering, together with the GRC paragraph from step 1 and the tools section from stage 2; old links to it open GRC engineering.
+- External actors is a first draft from the register (Laws No. 2163-VIII, 4336-IX, 1882-IX, CMU Resolution No. 1426, the NBU and the SSSCIP as sector regulators); the map of the national system's actors is still to come.
+- Chapter numbers follow the stages (I.1-III.2); references between chapters, the Methodology and the blueprint are updated.
+- Home: the organisation types and the questionnaire sit in the top block; the three stages link to their chapters; a GRC engineering strip; "Help check the mappings" with a review meter counted from the data and four ways to help; "What changed" with the current data version, the changelog and the repository.
+
+## Controls page and header: less clutter (2026-10-22)
+
+- Header: four sections (Guide, Controls, Acts, About); the site name leads home. Methodology moved to the guide menu's reference group and the footer; the "Report" link moved to the footer.
+- Controls: the filter panel is replaced by a profile bar (the chosen organisation types as removable chips, "Edit" opens the filters, "Copy link") and one toolbar: framework, "My profile / All acts" (the unfiltered list for the framework), "By control / By act", search.
+- The three figure tiles became one summary line; the two download buttons became one "Download" menu.
+- Each control is one row: id, name, the acts behind it in short form and the relation symbols. A row opens in place and shows the provisions grouped by act, with the acts that amend them; the provision text is marked as the Ukrainian original when there is no translation; the parameter, where it belongs, caveat and mapping details are behind "Details".
+- "Show full chains" groups the acts of an open row under the law they were issued under (from source_relations.csv); laws outside the reader's profile are marked. Off by default: such laws empower the regulator and set no requirements of their own.
+- Jump to a clause, "Expand all / Collapse all", and a one-line legend under the table. "By act" lists each act with its provisions and the controls they map to.
+- Every provision has "Report an error": the mapping-error issue form opens with the provision, framework and control filled in.
+- Questionnaire: the figures are links (applicable acts, controls, gaps); when no control is mapped for the answers, the result says why and what to do instead of showing zeros.
+
+## Header (2026-10-22)
+
+- The sections in the header are a segmented control: each section is a clear button and the current one is filled with the accent colour. "Intro" (the home page) is a section of its own, first in the row.
+- A "Report" button in the top right corner opens a new GitHub issue form ("Something is wrong on the site") with the address of the current page filled in; on narrow screens it shows only the flag icon. The privacy section on About says what the button sends and when.
 
 ## Preview banner (2026-10-19)
 

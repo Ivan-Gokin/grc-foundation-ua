@@ -1,22 +1,12 @@
-# Step 1. Roles and authorities
+# Roles and authorities
 
-<p class="chapter-lead">Stage 1, "Governance", has six steps. If you have taken the <a href="#/start">questionnaire</a> and have an ISMS skeleton, these steps explain how to turn it into a system that works every day. Start with people: who decides, who does the work, who checks.</p>
+<p class="chapter-lead">Settle this before you <a href="#/craft?step=1">craft your baseline</a>: every requirement and control on it needs someone who owns it. Start with people: who decides, who does the work, who checks.</p>
 
-## Three stages
-
-GRC engineering turns requirements, controls and evidence into data and code: secure configurations, automated checks, continuous monitoring. But you can only automate what has already been defined. The path has three stages:
-
-<ol class="stages">
-<li><b>Governance</b><span>We decide who is responsible for security, what is required of us and how we manage it. The result is an integrated management system with a complete set of requirements. It is the prerequisite for everything else, and this is where this site helps.</span></li>
-<li><b>Compliance</b><span>What is required regardless of our wishes is applied to systems and automated: configurations, checks, evidence collection. Less time on routine.</span><a href="#/guide?c=compliance">Guide: stage 2 →</a></li>
-<li><b>Risk management</b><span>The freed-up resources go into resilience to a changing environment: new threats, new suppliers, new requirements.</span><a href="#/guide?c=risk">Guide: stage 3 →</a></li>
-</ol>
-
-## About this step
+## Why it matters
 
 *Covers: ISO/IEC 27001:2022, clauses 5.1, 5.3 and controls A.5.2-A.5.4 · NIST CSF 2.0, GV.RR*
 
-**Goal.** Decide who makes information security decisions, who is responsible for carrying them out and who checks independently. Without this the remaining steps have no owners: nobody updates the requirements register, nobody accepts risks, and policies are signed by people without the authority to enforce them.
+**Goal.** Decide who makes information security decisions, who is responsible for carrying them out and who checks independently. Without this your baseline has no owners: nobody updates the requirements register, nobody accepts risks, and policies are signed by people without the authority to enforce them.
 
 ## Who is responsible for what
 
@@ -52,7 +42,7 @@ Conflicting duties are split between different people (A.5.3). For example:
 
 ## What regulators require
 
-Some regulators prescribe the structure directly. For example, [NBU Board Resolution No. 95 of 28.09.2017](#/sources?act=ua-nbu-95-2017) requires a bank to appoint a CISO with authority no lower than a deputy chair of the management board, and forbids the information security unit from administering the bank's information systems. To see which acts require this of you, open Controls: [GV.RR for NIST CSF 2.0](#/controls?fw=csf-2.0&q=GV.RR) or [A.5.2 for ISO/IEC 27001](#/controls?fw=iso27001-2022&q=A.5.2).
+Some regulators prescribe the structure directly. For example, [NBU Board Resolution No. 95 dated 28 September 2017](#/sources?act=ua-nbu-95-2017) requires a bank to appoint a CISO with authority no lower than a deputy chair of the management board, and forbids the information security unit from administering the bank's information systems. To see which acts require this of you, open Controls: [GV.RR for NIST CSF 2.0](#/controls?fw=csf-2.0&q=GV.RR) or [A.5.2 for ISO/IEC 27001](#/controls?fw=iso27001-2022&q=A.5.2).
 
 **Result.** A section of the policy or a separate regulation on roles; a responsibility (RACI) matrix for key processes; orders appointing the CISO and setting up the collective body; security duties in job descriptions.
 
