@@ -1,4 +1,4 @@
-# Review contract: GRC-фундамент mappings (mappings/*.xlsx)
+# Review contract: Кресленик відповідності СУІБ mappings (mappings/*.xlsx)
 
 Object under review: the provisions («Вимоги») and provision-to-control mappings in `mappings/*.xlsx` of
 https://github.com/ivan-gokin/grc-foundation-ua (data version at commit 5adf0ca, 2026-11-10).

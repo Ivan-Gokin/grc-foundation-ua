@@ -1,4 +1,6 @@
-# GRC-фундамент для України / GRC foundation for Ukraine
+# Кресленик відповідності СУІБ / Compliant ISMS Kreslenyk
+
+«Кресленик» — українською «креслення, blueprint». До листопада 2026 року проєкт називався «GRC-фундамент для України». / *Kreslenyk* is Ukrainian for "blueprint". Until November 2026 the project was called "GRC foundation for Ukraine".
 
 [Українською](#українською) | [English](#english)
 
@@ -21,7 +23,7 @@
 
 ### Ліцензія
 
-Увесь проєкт — дані, тексти і код — під ліцензією [CC BY 4.0](LICENSE): його можна використовувати, змінювати і поширювати, зокрема комерційно, якщо вказати джерело: «GRC-фундамент для України, версія даних <версія>, https://ivan-gokin.github.io/grc-foundation-ua/».
+Увесь проєкт — дані, тексти і код — під ліцензією [CC BY 4.0](LICENSE): його можна використовувати, змінювати і поширювати, зокрема комерційно, якщо вказати джерело: «Кресленик відповідності СУІБ, версія даних <версія>, https://ivan-gokin.github.io/grc-foundation-ua/».
 
 Сторонні матеріали зберігають власний статус:
 
@@ -29,6 +31,7 @@
 - тексти NIST CSF 2.0, SP 800-53 і відповідність CSF 2.0 до SP 800-53 — роботи уряду США;
 - український текст CSF 2.0 взято з наказу Держспецзв'язку № 75 від 30.01.2026;
 - ISO/IEC 27001 не відтворюється: лише ідентифікатори заходів і власні короткі назви;
+- назви політик і стандартів у `data/policies.csv` і їх зіставлення з CSF 2.0 у `data/csf_policies.csv` взято з CIS/MS-ISAC NIST Cybersecurity Framework Policy Template Guide (2024); самі шаблони не відтворюються, і за умовами CIS їх не можна використовувати з метою отримання прибутку;
 - бібліотеки в `assets/vendor/` і шрифти в `assets/fonts/` мають власні ліцензії (MIT, Apache 2.0, SIL OFL): див. заголовки файлів бібліотек і файли `OFL-*.txt`.
 
 Це довідковий інструмент, а не юридична консультація.
@@ -56,7 +59,7 @@ This file is for those who maintain the repository.
 
 ### Licence
 
-The whole project — data, texts and code — is under [CC BY 4.0](LICENSE): you may use, change and share it, including commercially, as long as you credit the source: "GRC foundation for Ukraine, data version <version>, https://ivan-gokin.github.io/grc-foundation-ua/".
+The whole project — data, texts and code — is under [CC BY 4.0](LICENSE): you may use, change and share it, including commercially, as long as you credit the source: "Compliant ISMS Kreslenyk, data version <version>, https://ivan-gokin.github.io/grc-foundation-ua/".
 
 Third-party material keeps its own status:
 
@@ -64,6 +67,7 @@ Third-party material keeps its own status:
 - NIST CSF 2.0, SP 800-53 and the CSF 2.0 to SP 800-53 mapping are works of the US government;
 - the Ukrainian CSF 2.0 text comes from SSSCIP Order No. 75 of 30.01.2026;
 - ISO/IEC 27001 is not reproduced: only control identifiers and the project's own short labels;
+- the policy and standard names in `data/policies.csv` and their correlation with CSF 2.0 in `data/csf_policies.csv` come from the CIS/MS-ISAC NIST Cybersecurity Framework Policy Template Guide (2024); the templates themselves are not reproduced, and CIS's terms say they are not to be used for profit;
 - the libraries in `assets/vendor/` and the fonts in `assets/fonts/` have their own licences (MIT, Apache 2.0, SIL OFL): see the library file headers and the `OFL-*.txt` files.
 
 This is a reference tool, not legal advice.

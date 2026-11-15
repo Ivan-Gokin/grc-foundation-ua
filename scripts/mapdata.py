@@ -58,7 +58,7 @@ LINK_COLS = [
     ("relationship", "Відношення", 15, "NIST IR 8477, читається «положення [відношення] захід»: subset of - положення вужче за захід; superset of - ширше; intersects with - перетинаються; equal - збігаються."),
     ("rationale", "Обґрунтування", 13, "Необов\'язково: порожньо = semantic (зміст). syntactic - формулювання; functional - результат."),
     ("parameter_uk", "Параметр за законом", 24, "Значення, яке закон встановлює для параметра заходу: «не рідше 1 разу на рік»."),
-    ("policy_uk", "Куди внести", 34, "Внутрішній документ, куди варто внести вимогу."),
+    ("policies", "Куди внести", 30, "Необов'язково: ідентифікатори документів з data/policies.csv через «;» (access-control). Це базовий перелік (назви з CIS/MS-ISAC NIST CSF Policy Template Guide 2024 і документи, яких вимагає законодавство України), а не шаблони: власні документи організації відрізнятимуться. Уточнення пишіть у Примітці."),
     ("notes_uk", "Примітка", 50, "Пояснення зв'язку."),
     ("decisions", "Рішення", 16, "Необов'язково: ідентифікатори з data/decisions.csv через «;» (REG-01), якщо зв'язок чи параметр спирається на тлумачення або позицію регулятора, а не на текст акта. Текст рішення пишуть один раз у decisions.csv."),
     ("review_status", "Статус", 17, "ШІ (не вичитано) / чернетка / імпорт / перевірено. «перевірено» ставить друга людина і вписує себе в «Хто перевірив»."),
@@ -70,7 +70,7 @@ LINK_COLS = [
 PROVISION_FIELDS = ["id", "source_id", "ref_uk", "ref_en", "summary_uk", "summary_en", "provision_type", "applies_to", "notes",
                     "decisions", "grounds", "act_condition_uk", "act_condition_en", "checked_edition"]  # grounds: derived; last three: from sources.csv
 MAPPING_FIELDS = ["provision_id", "framework_id", "control_id", "relationship", "rationale", "coverage",
-                  "parameter_uk", "notes_uk", "policy_uk", "mapped_by",
+                  "parameter_uk", "notes_uk", "policies", "mapped_by",
                   "reviewed_by", "review_status", "date", "decisions", "grounds"]  # grounds: derived from decisions
 LISTS = {"provision_type": TYPE, "review_status": STATUS, "relationship": RELATIONSHIP,
          "rationale": {r: r for r in RATIONALE}}

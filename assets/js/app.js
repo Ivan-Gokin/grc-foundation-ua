@@ -1,4 +1,4 @@
-/* GRC foundation for Ukraine: static site logic. No build step, no tracking.
+/* Compliant ISMS Kreslenyk: static site logic. No build step, no tracking.
  * Loads CSV files from data/, filters them in the browser, and exports results. */
 (function () {
   "use strict";
@@ -10,7 +10,7 @@
     "sources.csv", "source_types.csv", "sectors.csv", "sector_groups.csv", "applicability.csv", "source_relations.csv",
     "provisions.csv", "mappings.csv", "frameworks.csv", "controls_iso27001-2022.csv", "controls_csf-2.0.csv",
     "sp800-53/baselines_ua.csv", "sp800-53/map_csf-2.0_sp800-53r5.csv", "sp800-53/profiles.csv",
-    "chains.csv", "chain_steps.csv", "actors.csv", "actor_relations.csv", "actor_acts.csv", "decisions.csv",
+    "chains.csv", "chain_steps.csv", "actors.csv", "actor_relations.csv", "actor_acts.csv", "decisions.csv", "policies.csv", "csf_policies.csv",
   ];
   // The emblem: three 60-degree rhombuses (governance, risk, compliance) turning around a triangle, inside a hexagon.
   // Decorative next to the site name, so it is hidden from screen readers.
@@ -82,7 +82,7 @@
   async function loadAll() {
     const tables = await Promise.all(FILES.map(loadCsv));
     const by = (rows, key = "id") => Object.fromEntries(rows.map((r) => [r[key], r]));
-    const [sources, types, sectors, groups, appl, rels, provs, maps, fws, iso, csf, b53, m53, profiles, chains, steps, actors, actorRels, actorActs, decs] = tables;
+    const [sources, types, sectors, groups, appl, rels, provs, maps, fws, iso, csf, b53, m53, profiles, chains, steps, actors, actorRels, actorActs, decs, pols, csfPols] = tables;
     D.sources = sources;
     D.sourceById = by(sources);
     D.sourceByEli = by(sources, "eli");
@@ -97,6 +97,9 @@
       D.parents[x.id].forEach((pid) => (D.children[pid] = D.children[pid] || []).push(x.id));
     });
     D.decById = by(decs);
+    D.polById = by(pols);
+    D.cisBySub = {};
+    csfPols.forEach((r) => (D.cisBySub[r.csf_id] = D.cisBySub[r.csf_id] || []).push(r.policy_id));
     D.applBySource = {};
     D.unverifiedAppl = 0;
     appl.forEach((r) => {
@@ -339,6 +342,10 @@
     return own && own !== "text" ? own : "";
   };
   const groundsLabel = (g) => t("gr_" + g) || g;
+  // «Куди внести»: ids from data/policies.csv, shown by name; a base list to start from, not templates
+  const policyNames = (ids) => (ids || []).map((id) => (D.polById[id] ? L(D.polById[id], "name") : id));
+  const policyText = (m) => policyNames(idsOfList(m && m.policies)).join("; ");
+  const idsOfList = (s) => (s ? s.split(";").filter(Boolean) : []);
   // The decisions (data/decisions.csv) a mapping rests on: its own and its provision's, each written once in the register
   const idsOf = (r) => (r && r.decisions ? r.decisions.split(";").filter(Boolean) : []);
   const decisionsOf = (m) => uniq([...idsOf(m), ...idsOf(D.provById[m.provision_id])]).filter((id) => D.decById[id]);
@@ -976,7 +983,7 @@
     const ctlRow = (r) => {
       const on = isPicked(r);
       const cov = r.ds.length ? (r.ds.some((m) => m.coverage === "full") ? t("fullNote") : t("partialNote")) : "";
-      const pol = [...new Set(r.ds.map((m) => L(m, "policy")).filter(Boolean))].join("\n");
+      const pol = [...new Set(r.ds.flatMap((m) => policyNames(idsOfList(m.policies))))].join("\n");
       return [r.c.id, controlName(S.fw, r.c), reqBy[r.kind], drivers(r.ds), cov, params(r.ds), on ? yes : no, on ? why[r.kind] : "", "", "", pol, "", "", ""];
     };
     const ctlHeader = [t("xControlId"), t("xControl"), t("xReqBy"), t("xDrivers"), t("xCoverage"), t("xParam"),
@@ -992,7 +999,7 @@
     // provisions of the acts that bind you that no control of the framework covers
     const gaps = withS(MANDATORY, () => gapRows());
     sheets.push({ name: t("xSheetGaps"), header: [t("srcColRef"), t("xProvision"), t("xRequires"), t("xPolicySuggested"), t("xPolicy"), t("xOwner"), t("xStatus"), t("xEvidence")],
-      rows: gaps.map((m) => { const p = D.provById[m.provision_id]; return [sourceRef(D.sourceById[p.source_id]), L(p, "ref"), L(p, "summary"), L(m, "policy"), "", "", "", ""]; }),
+      rows: gaps.map((m) => { const p = D.provById[m.provision_id]; return [sourceRef(D.sourceById[p.source_id]), L(p, "ref"), L(p, "summary"), policyText(m), "", "", "", ""]; }),
       widths: [36, 20, 60, 40, 30, 20, 20, 30], freeze: [2, 1] });
     // the acts, with room for an owner and the reader's own requirements
     const actRow = (x, st) => [st, sourceRef(x), sourceTitle(x), typeLabel(x.type), L(x, "description"), D.mappedProvs[x.id] ? D.mappedProvs[x.id].size : "", x.url || "", "", "", ""];
@@ -1461,7 +1468,7 @@
       const p = D.provById[m.provision_id];
       if (!p || p.provision_type === "definitional" || !provisionVisible(p, exp)) return false;
       if (!S.rec && D.sourceById[p.source_id].binding !== "mandatory") return false;
-      if (q && ![sourceRef(D.sourceById[p.source_id]), L(p, "ref"), L(p, "summary"), L(m, "policy")].join(" ").toLowerCase().includes(q)) return false;
+      if (q && ![sourceRef(D.sourceById[p.source_id]), L(p, "ref"), L(p, "summary"), policyText(m)].join(" ").toLowerCase().includes(q)) return false;
       return true;
     }).sort((a, b) => a.provision_id.localeCompare(b.provision_id, undefined, { numeric: true }));
   }
@@ -1471,7 +1478,7 @@
       const p = D.provById[m.provision_id]; const src = D.sourceById[p.source_id];
       const badge = m.review_status === "reviewed" ? `<span class="badge cov-full">${esc(t("reviewed"))}</span>` : "";
       return `<li><span class="driver-ref">${esc(sourceRef(src))}, ${esc(L(p, "ref"))}</span> ${badge}
-        <p${isFallback(p, "summary") ? ' lang="uk"' : ""}>${esc(L(p, "summary"))}</p>${L(m, "policy") ? `<p class="muted"><b>${esc(t("driverPolicy"))}:</b> ${esc(L(m, "policy"))}</p>` : ""}
+        <p${isFallback(p, "summary") ? ' lang="uk"' : ""}>${esc(L(p, "summary"))}</p>${policyText(m) ? `<p class="muted"><b>${esc(t("driverPolicy"))}:</b> ${esc(policyText(m))}</p>` : ""}
         <p class="prov-links">${src.url ? `<a href="${esc(src.url)}" target="_blank" rel="noopener">${esc(t("openText"))} ↗</a>` : ""}${reportLink(m, "")}</p></li>`;
     }).join("");
     return `<details class="gaps" id="gaps"><summary><h2>${esc(fmt(t("gapsTitle"), fwLabel(fw), gaps.length))}</h2></summary>
@@ -1520,6 +1527,11 @@
   const HIER_REL = new Set(["based_on", "transposes", "applies", "ensures_implementation_of"]);
   const basisOf = (id) => uniq((D.relsOut[id] || []).filter((r) => HIER_REL.has(r.relation) && D.sourceById[r.related_id]).map((r) => r.related_id));
   function driversBody(ctlId, ds) {
+    const cis = S.fw === "csf-2.0" && D.cisBySub[ctlId]
+      ? `<p class="muted cis-base"><b>${esc(t("cisBase"))}:</b> ${esc(policyNames(D.cisBySub[ctlId]).join("; "))}</p>` : "";
+    return cis + driversActs(ctlId, ds);
+  }
+  function driversActs(ctlId, ds) {
     const bySrc = new Map();
     ds.forEach((m) => { const sid = D.provById[m.provision_id].source_id; if (!bySrc.has(sid)) bySrc.set(sid, []); bySrc.get(sid).push(m); });
     const block = (sid, ms, extra) => `<div class="act-block">${actHead(D.sourceById[sid], extra)}${ms.map((m) => provLine(m, ctlId)).join("")}</div>`;
@@ -1570,7 +1582,7 @@
       p.applies_to ? `<p><b>${esc(t("appliesOnly"))}:</b> ${esc(appliesText(p.applies_to))}</p>` : "",
       L(src, "act_condition") ? `<p><b>${esc(t("actCondition"))}:</b> ${esc(L(src, "act_condition"))}</p>` : "",
       groundsOf(m) ? `<p><b>${esc(t("colGrounds"))}:</b> ${esc(groundsLabel(groundsOf(m)))}. ${esc(t("groundsHint"))}</p>${decisionsHtml(decisionsOf(m))}` : "",
-      L(m, "policy") ? `<p><b>${esc(t("driverPolicy"))}:</b> <span${isFallback(m, "policy") ? ' lang="uk"' : ""}>${esc(L(m, "policy"))}</span></p>` : "",
+      policyText(m) ? `<p><b>${esc(t("driverPolicy"))}:</b> ${esc(policyText(m))} <span class="muted">(${esc(t("policyBase"))})</span></p>` : "",
       p.notes ? `<p><b>${esc(t("driverCaveat"))}:</b> <span${S.lang === "en" ? ' lang="uk"' : ""}>${esc(p.notes)}</span></p>` : "",
       `<p class="muted">${esc(t("driverMeta"))}: ${esc(relWords(m.relationship))}, ${esc(m.rationale)}; ${esc(reviewLabel(m.review_status))}; ${esc(m.mapped_by)}${m.reviewed_by ? `, ${esc(m.reviewed_by)}` : ""}; ${esc(m.date)}</p>`,
     ].join("");

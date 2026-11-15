@@ -1,5 +1,16 @@
 # Changelog
 
+## New name (2026-11-16)
+
+- The project is now «Кресленик відповідності СУІБ» / "Compliant ISMS Kreslenyk" (*kreslenyk*: Ukrainian for "blueprint"), formerly «GRC-фундамент для України» / "GRC foundation for Ukraine". Only the displayed name changed: the repository, the site address, file names (`grc-foundation-ua.xlsx`) and the CISO Assistant library identifiers stay as they were, so existing links and imported libraries keep working.
+
+## Base list of documents (2026-11-16)
+
+- «Куди внести» cites documents from a base list, `data/policies.csv`, instead of free text. The list holds the 36 policy and standard names of the CIS/MS-ISAC NIST CSF Policy Template Guide (2024) and 8 documents Ukrainian law asks for that the guide does not have. It is a starting point, not templates, and the site says so.
+- 111 free-text values on 1,519 rows were mapped to the list. Names that bundled several documents («Політика безпеки операцій» and similar) were split row by row: on ISO rows by the control, on CSF rows by the guide's list for the subcategory. Specifics that were mixed into the value (a report column the NBU expects, recommendations, named registers) moved to the note on 160 rows, starting «Куди внести, уточнення:». Nothing else in the workbooks changed. The mapping was done by AI and is part of the AI-draft review.
+- The guide's own correlation of CSF subcategories with documents is kept in `data/csf_policies.csv` and shown on CSF controls for reference. It is not enforced: for some subcategories it is off (it gives only «Identification and Authentication Policy» for PR.PS-04, log records).
+- Document names now have English, so the English site shows them in English.
+
 ## Simpler data model (2026-11-14)
 
 - Mapping rows lose two columns that never carried information: `strength` (dropped) and `coverage`, which always equalled the relationship's default and is now derived from it. A blank `rationale` means `semantic` (98.5 % of rows).

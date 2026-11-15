@@ -8,7 +8,7 @@ Each line is one op with "op", a ledger "id" and "why", plus:
   del_prov   pid                                     also deletes its links
   set_link   pid, fw, control ("" or "—" for a no-counterpart row), set{field: value}
   del_link   pid, fw, control
-  add_link   pid, fw, row{control_id, relationship, rationale, parameter_uk, policy_uk, notes_uk, decisions, ...}
+  add_link   pid, fw, row{control_id, relationship, rationale, parameter_uk, policies, notes_uk, decisions, ...}
 Codes, not labels: relationship equal|subset_of|superset_of|intersects_with|no_relationship (coverage follows it);
 provision_type substantive|delegating|definitional; review_status ai_draft|draft|imported|reviewed.
 Field "append_notes_uk" in set_link appends to notes_uk instead of replacing.
