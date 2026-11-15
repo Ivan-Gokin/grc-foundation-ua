@@ -62,7 +62,8 @@ for i, (fw, r) in enumerate(sorted(sample, key=lambda x: (prov[x[1]["provision_i
                "ISO/IEC 27001:2022" if fw == "iso27001-2022" else "NIST CSF 2.0", r["control_id"] or "—",
                names.get((fw, r["control_id"]), "") if r["control_id"] else "немає відповідника",
                REL.get(r["relationship"] or "no_relationship", r["relationship"]), r.get("coverage", ""), r.get("parameter_uk", ""),
-               GR.get(g, ""), r.get("notes_uk", ""), s.get("url", ""), "", "", "", "", "", "", f"{r['provision_id']} | {fw} | {r['control_id'] or '—'}"])
+               GR.get(g, "") + (f" ({ids})" if (ids := "; ".join(dict.fromkeys(x for x in (r.get("decisions", "") + ";" + p.get("decisions", "")).split(";") if x))) else ""),
+               r.get("notes_uk", ""), s.get("url", ""), "", "", "", "", "", "", f"{r['provision_id']} | {fw} | {r['control_id'] or '—'}"])
 widths = [5, 26, 20, 60, 18, 16, 9, 34, 22, 10, 34, 14, 50, 30, 18, 18, 18, 40, 40, 24, 30]
 for i, w in enumerate(widths, 1):
     ws.column_dimensions[openpyxl.utils.get_column_letter(i)].width = w

@@ -19,9 +19,9 @@ Step 2. Rule every MAJOR comment (and every MINOR that is trivial and unambiguou
 Legal-text claims (wrong paragraph, superseded edition, wrong value): rule VALID only if you or the reviewer verified it against an accessible primary text ([SOURCES_RULE]). If it is plausible but unverifiable, rule AUTHOR.
 
 Step 3. For every VALID and CLARIFY item, write the smallest set of edit operations that resolves it, following [OPSPEC] and the revision constraints in [CONTRACT]. Rules:
-- Codes, not labels (subset_of, intersects_with, full, partial, substantive, definitional...). When you change a relationship, set coverage to match (equal/subset_of -> full; superset_of/intersects_with -> partial).
+- Codes, not labels (subset_of, intersects_with, full, partial, substantive, definitional...). Coverage follows the relationship (equal/subset_of -> full; superset_of/intersects_with -> partial); do not set it. An interpretation goes once in data/decisions.csv (add_decision is not an op: list new decisions in your report for the coordinator); rows cite its id in `decisions`.
 - Never change a provision id or code. A renumbered paragraph changes ref_uk only.
-- Parameters (`parameter_uk`, and `parameter_en` if you can translate faithfully) must come from the provision's own `Вимога` text or a text you fetched; put the source in `append_notes_uk` when it is not the summary. Never invent values.
+- Parameters (`parameter_uk`) must come from the provision's own `Вимога` text or a text you fetched; put the source in `append_notes_uk` when it is not the summary. Never invent values.
 - When the fix depends on the text and you could not see it, write the op with notes_uk containing «[ПЕРЕВІРИТИ: ...]» instead of guessing.
 - [DATA_LANGUAGE] is the primary language of the data: write notes and parameters in [DATA_LANGUAGE], short and practical.
 - Two systemic items are handled by separate fill passes after you, so do not write ops for them: (a) a provision that has no row at all for one of the two frameworks (record ruling VALID with action "FILL-C4"); (b) `Параметр за законом` empty across the segment (record "FILL-C3"); but DO write parameter ops for specific rows a reviewer gave a concrete legal value for.

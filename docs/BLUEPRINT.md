@@ -28,6 +28,7 @@ assets/                    styles, scripts, fonts and vendored libraries
 assets/js/config.js        repository URL and other settings  <- edit before publishing
 content/                   page texts in Markdown, uk and en: home, method, about, guide/ chapters, articles/
 mappings/*.xlsx            provisions and their mappings to the frameworks: edited by hand
+mappings/*.csv             readable copies of the workbooks, written by build.py (and by CI): do not edit
 data/*.csv                 everything else: sources, chains, entity types, framework controls
 data/sp800-53/             system-level data (phase 2)
 data/datapackage.json      column descriptions of the published files (Frictionless Data Package)
@@ -48,6 +49,7 @@ Nothing generated is kept in git, so every fact lives in one place. On every pus
 | `data/provisions.csv`, `data/mappings.csv` | `mappings/*.xlsx` | the site and software |
 | `data/eli.jsonld` | `sources.csv`, `source_relations.csv` | ELI metadata (3.4) |
 | `data/grc-foundation-ua.xlsx` | all of the above, joined | people: register, chains and mappings with names and texts |
+| `mappings/<workbook>.csv` (kept in the repository) | the workbook of the same name | reviewers: a row per provision, then a row per link, with act and control names, so a pull request shows which rows changed. `validate.py` warns when a copy is out of date; CI commits fresh copies on branches of this repository |
 
 How to check and build the site locally: [`CONTRIBUTING.md`](../CONTRIBUTING.md).
 
@@ -67,7 +69,8 @@ sectors ──< applicability >── sources ──< provisions ──< mapping
 | `source_types.csv` | a type of source (law, CMU resolution, ND TZI, EU act...) | `id`, labels, issuer |
 | `sectors.csv` | an entity type the reader can pick ("who it concerns") | `id`, `parent`, `group`, `selectable` |
 | `sector_groups.csv` | a group of entity types in the filter | `id`, labels |
-| `applicability.csv` | "source X concerns entity type Y" (optionally "and also Z") | `source_id`, `sector_id`, `requires`, `basis`, `verified` |
+| `applicability.csv` | "source X concerns entity type Y" (optionally "and also Z") | `source_id`, `sector_id`, `requires`, `except`, `unless`, `decisions`, `basis`, `verified` |
+| `decisions.csv` | one interpretation a row rests on, written once: the author's assumption, a regulator's position or established practice | `id` (AUTH-30, REG-01), `kind`, `status` (`decided` / `proposed`), `date`, `statement_uk`, `statement_en` |
 | `source_relations.csv` | a link in a regulatory chain | `source_id`, `relation`, `related_id`, `basis_uk`, `source_url`, `confidence` |
 | `provisions.csv` (from «Вимоги» in `mappings/*.xlsx`) | one requirement inside a source (article, paragraph) | `id`, `source_id`, `ref_uk`, `provision_type`, `applies_to` |
 | `mappings.csv` (from the framework sheets in `mappings/*.xlsx`) | provision-to-control relationship | `provision_id`, `framework_id`, `control_id`, `relationship`, `coverage`, `parameter_uk` |
@@ -148,7 +151,9 @@ A type can have several parents (`parent` separated by `;`). The criticality cat
 
 "And" rules: `requires` lists further types (separated by `;`) that must also be in the profile for the row to count. NBU Resolution No. 99 has `finance` with `requires=cloud-users`, so it shows for a bank that uses cloud services, not for every bank; the Law on Cloud Services has `public-sector` with `requires=cloud-users` next to a plain `cloud` row for providers.
 
-Provision scope (`applies_to`) is an expression over sector codes: `;` separates alternatives (OR), `+` joins conditions (AND), and `!` negates a code (NOT). For example, `public-sector+!banks;public-sector+state-secrets` means "public sector, but not banks; or public sector with state secrets". Every term needs at least one code without `!`. Who the whole act binds or excludes goes in `act_condition_uk` / `act_condition_en` in `sources.csv`; the site shows it on every row of the act.
+Exceptions: `except` lists types (separated by `;`) for which the row does not count, and `unless` lists types that restore it. SSSCIP Order No. 75 has `ki` with `except=finance`, because the NBU sets the rules for the financial sector, and `public-sector` with `except=banks` and `unless=state-secrets`. A bank sees the order only if it also holds state secrets, and then only the provisions whose `applies_to` names `state-secrets`. Write an exception here once, not as `!banks` on every provision of the act. `!` in `applies_to` stays for the rare provision that excludes a type the rest of the act covers (for example in Law No. 80/94).
+
+Provision scope (`applies_to`) is an expression over sector codes: `;` separates alternatives (OR), `+` joins conditions (AND), and `!` negates a code (NOT). For example, `public-sector;public-sector+state-secrets` means "public sector; or public sector with state secrets", and a term like `ki+!finance` excludes a type for that provision only. Every term needs at least one code without `!`. Who the whole act binds or excludes goes in `act_condition_uk` / `act_condition_en` in `sources.csv`; the site shows it on every row of the act.
 
 Selection logic: choosing a type includes its parents and `general` when matching acts (choosing `cii-3-4` shows acts tagged `ki`, `kii`, `cii-3-4` or `general`). For provisions with `applies_to`, choosing a broad type also includes the narrower ones (choosing `ki` shows the baseline measures for both criticality groups).
 
@@ -199,13 +204,12 @@ Mappings follow the set-theory relationship model from NIST IR 8477 (the method 
 
 Other columns:
 
-- **`rationale`**: `semantic` (meaning), `syntactic` (wording), `functional` (outcome).
-- **`strength`**: optional 1-10.
-- **`coverage`**: does implementing the control fully satisfy the provision? This is what the reader acts on: `partial` means the ISMS alone is not enough.
-- **`parameter_uk` / `parameter_en`**: a value the law sets for something the organisation would otherwise define, such as a retention period, a review frequency or a reporting deadline. On export these become the "legal minimum" next to the blank "organisation value" column. When several provisions set different values for one control, the site lists all of them, and the strictest one wins.
-- **`policy_uk` / `policy_en`**: the internal document (policy, procedure) where the requirement belongs. It is a suggestion; the organisation's own reference goes in the export's blank column.
+- **`rationale`**: `semantic` (meaning; the default, empty in the workbooks), `syntactic` (wording), `functional` (outcome).
+- **`coverage`** (derived, not in the workbooks): does implementing the control fully satisfy the provision? It follows the relationship as in the table above. This is what the reader acts on: `partial` means the ISMS alone is not enough.
+- **`parameter_uk`**: a value the law sets for something the organisation would otherwise define, such as a retention period, a review frequency or a reporting deadline. On export these become the "legal minimum" next to the blank "organisation value" column. When several provisions set different values for one control, the site lists all of them, and the strictest one wins.
+- **`policy_uk`**: the internal document (policy, procedure) where the requirement belongs. It is a suggestion; the organisation's own reference goes in the export's blank column. Parameters, policies and notes are kept in Ukrainian only; the English site shows them marked as Ukrainian.
 - **`review_status`**: `ai_draft` (generated by AI, not yet read by a person), `draft` (proposed by a person, not reviewed), `imported` (from an earlier dataset), `reviewed` (checked by a second person, `reviewed_by` filled). AI-generated rows also start `mapped_by` with "AI".
-- **`grounds`** (provisions and mappings): `text` (the act itself; the default, empty in the workbooks), `assumption` (the author's working assumption), `regulator` (a published regulator position, source cited), `practice` (established practice). Anything but `text` needs a dated sentence in the notes that starts with its label; `validate.py` checks it. A mapping with `text` inherits its provision's grounds.
+- **`decisions`** («Рішення», on provisions, mappings and applicability rows): ids from `data/decisions.csv`, separated by `;`, when a row rests on an interpretation rather than the act text. Each interpretation is written once in the register, with its kind (`assumption`: the author's working assumption; `regulator`: a published regulator position, source cited; `practice`: established practice), its date and, for an assumption, its status: `decided` by the author, or `proposed` by a reviewer and awaiting the author. The id of an owner's decision is the one used in the review record (AUTH-30), so the reasoning can be traced. **`grounds`** in `provisions.csv` and `mappings.csv` is derived: the weakest kind among the row's decisions (assumption, then practice, then regulator), else `text`. A mapping with `text` inherits its provision's grounds. When the regulator publishes a position, add it as a `regulator` decision and replace the reference; the rows follow.
 
 **AI-generated mappings.** They are welcome as a first pass, but they never go straight to `reviewed`. A person reads each row against the text of the act (paragraph number, edition, relationship, coverage), corrects it, fills in `reviewed_by` and only then sets `reviewed`. The site shows `ai_draft` rows with an "AI, not reviewed" badge and a warning above the table, and marks them in every export.
 
@@ -213,7 +217,7 @@ Map each provision to both frameworks directly. Do not derive ISO mappings from 
 
 ### 3.6 Export columns
 
-The site exports what the reader sees and adds blank columns for the organisation's work. What to fill in is explained to readers in the last step of "Craft your baseline" (`content/craft/soa.*.md`); the columns are set by `exportSoa` and `exportCraft` in `assets/js/app.js`. For ISO 27001 it is a draft Statement of Applicability, for CSF 2.0 a draft target profile.
+The site exports what the reader sees and adds blank columns for the organisation's work. What to fill in is explained to readers in the last step of "Craft your baseline" (`content/craft/soa.*.md`); the columns are set by `exportCraft` in `assets/js/app.js`. For ISO 27001 it is a draft Statement of Applicability, for CSF 2.0 a draft target profile. The SoA is built in one place only, the wizard: the Controls page links to its last step with the reader's profile and framework.
 
 ## 4. Maintaining the list of laws
 
@@ -223,7 +227,7 @@ The site exports what the reader sees and adds blank columns for the organisatio
 2. Add a row to `sources.csv`:
    - `id` per the pattern in 3.1; check it is not taken. `register_no`: the next free number. `eli`: the official ELI for an EU act, otherwise the project path from 3.1.
    - `scope` (`core`, or `reference` for EU acts) and `domain` (`cybersecurity` or `records`).
-   - `type`, `number`, `adopted`, `registered` (Ministry of Justice registration, if any).
+   - `type`, `number`, `adopted`.
    - `short_ref_uk`, `short_ref_en`, `title_uk`, `title_en`.
    - `description_uk`, `description_en`: one or two sentences on what the act is about.
    - `concerns_uk`, `concerns_en`: who it concerns, in words.
@@ -294,7 +298,7 @@ Selection logic for the controls table:
 
 1. Selected sectors are expanded with their parents and `general`.
 2. Sources are kept if they are in the `core` scope, `in_force`, have an applicability row for any expanded type, and (if "recommendations" is off) `binding=mandatory`.
-3. Provisions of those sources are kept if `applies_to` is empty or intersects the selected types and their narrower sub-types.
+3. Provisions of those sources are kept if `applies_to` is empty or one of its terms matches the selected types and their narrower sub-types, and an applicability row that covers that term (its type or a broader one) passes `except` / `unless`. For a provision, `unless` counts only if the term names that type.
 4. Mappings of those provisions to the chosen framework give the "legal drivers" of each control.
 5. By default only controls with at least one driver are shown. The toggle shows the full control set, for a complete SoA.
 
@@ -315,4 +319,4 @@ The mapping over-selects, so treat the expansion as candidates to tailor, not a 
 
 ## 7. Quality gates
 
-`scripts/validate.py` fails CI on: unknown columns or values in the workbooks, a link whose `Акт` + `Пункт` is not in «Вимоги», a paragraph or code used twice, duplicate or malformed IDs, references to unknown sources/sectors/provisions/controls, invalid enumerations, bad dates or URLs, a BOM in a CSV, a mapping to a function or category instead of a subcategory/control, and a `reviewed` mapping without a reviewer. It also fails on a malformed or duplicate `eli` and on an unknown ELI property in `relation`. It warns about unverified rows and draft mappings.
+`scripts/validate.py` fails CI on: unknown columns or values in the workbooks, a link whose `Акт` + `Пункт` is not in «Вимоги», a paragraph or code used twice, duplicate or malformed IDs, references to unknown sources/sectors/provisions/controls, invalid enumerations, bad dates or URLs, a BOM in a CSV, a mapping to a function or category instead of a subcategory/control, and a `reviewed` mapping without a reviewer. It fails on a decision id that is not in `decisions.csv`, and on a note that still carries a dated «Припущення автора (…)» sentence instead of an id. It warns about decisions no row cites and lists the `proposed` ones. It also fails on a malformed or duplicate `eli` and on an unknown ELI property in `relation`. It warns about unverified rows and draft mappings.

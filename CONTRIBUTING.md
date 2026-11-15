@@ -7,14 +7,14 @@ Full procedure: [docs/BLUEPRINT.md](docs/BLUEPRINT.md), section 4.
 
 1. Одна зміна - один pull request: новий акт, зміна статусу, нові положення або зіставлення.
    One change per pull request: a new act, a status change, new provisions or mappings.
-2. **Зіставлення** редагуйте в Excel у `mappings/*.xlsx`: аркуш «Вимоги» і аркуш стандарту (`iso27001-2022`, `csf-2.0`). Підказки - у примітках до заголовків, значення - у випадних списках. Без терміналу: на GitHub відкрийте файл → «Download raw file», змініть, завантажте з тією самою назвою («Add file → Upload files») і зробіть commit; помилки покаже вкладка Actions.
-   Edit **mappings** in Excel in `mappings/*.xlsx`: the «Вимоги» sheet and the framework sheet. The header notes explain each column; fixed values come from drop-down lists. Without a terminal: on GitHub open the file → "Download raw file", edit it, upload it under the same name ("Add file → Upload files") and commit; the Actions tab shows any errors.
+2. **Зіставлення** редагуйте в Excel у `mappings/*.xlsx`: аркуш «Вимоги» і аркуш стандарту (`iso27001-2022`, `csf-2.0`). Підказки - у примітках до заголовків, значення - у випадних списках. Без терміналу: на GitHub відкрийте файл → «Download raw file», змініть, завантажте з тією самою назвою («Add file → Upload files») і зробіть commit; помилки покаже вкладка Actions. Поруч із кожною книгою лежить її читабельна копія `mappings/<книга>.csv`: її оновлює CI, вручну не редагуйте; у pull request саме в ній видно, які рядки змінилися.
+   Edit **mappings** in Excel in `mappings/*.xlsx`: the «Вимоги» sheet and the framework sheet. The header notes explain each column; fixed values come from drop-down lists. Without a terminal: on GitHub open the file → "Download raw file", edit it, upload it under the same name ("Add file → Upload files") and commit; the Actions tab shows any errors. Next to each workbook is its readable copy, `mappings/<workbook>.csv`: CI updates it, do not edit it; in a pull request it shows which rows changed.
 3. **Решту даних** редагуйте в CSV у `data/` (UTF-8 без BOM; в Excel - лише через імпорт з UTF-8). Ідентифікатори і `eli` постійні. Новий акт отримує наступний вільний `register_no`; акти ЄС - `scope=reference`; зв'язки в `source_relations.csv` - властивості ELI (`based_on`, `amends`, `repeals`, `transposes`...).
    Edit **everything else** in the CSV files in `data/` (UTF-8, no BOM). IDs and `eli` are permanent. A new act takes the next free `register_no`; EU acts get `scope=reference`; links in `source_relations.csv` are ELI properties.
 4. Нове зіставлення має статус «чернетка», згенероване ШІ - «ШІ (не вичитано)». «Перевірено» ставить друга людина і вписує себе в «Хто перевірив».
    New mappings are drafts, AI-generated ones «ШІ (не вичитано)». A second person sets «перевірено» and fills in «Хто перевірив».
-   Якщо рядок спирається на тлумачення, а не прямо на текст акта, заповніть «Підстава» (припущення автора / позиція регулятора / усталена практика) і почніть примітку з цієї назви та дати: «Припущення автора (2026-11-13): ...».
-   If a row rests on an interpretation rather than the act text, fill in «Підстава» and start the note with that label and a date.
+   Якщо рядок спирається на тлумачення, а не прямо на текст акта, запишіть тлумачення один раз у `data/decisions.csv` (ідентифікатор, вид, статус, дата, текст) і впишіть його ідентифікатор у стовпець «Рішення» кожного такого рядка.
+   If a row rests on an interpretation rather than the act text, write it once in `data/decisions.csv` (id, kind, status, date, text) and put its id in the «Рішення» column of every such row.
 5. Не вставляйте текст ISO: лише ідентифікатори та власні формулювання.
    Do not paste ISO text: identifiers and your own wording only.
 

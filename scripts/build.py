@@ -17,6 +17,7 @@ the official language; this project's translations go to rdfs:label only.
 Usage:  python3 scripts/build.py            # then: python3 -m http.server 8000 -d _site
 """
 import csv
+import io
 import datetime as dt
 import json
 import shutil
@@ -181,7 +182,7 @@ def _sheet(wb, title, header, rows, widths):
     ws.auto_filter.ref = ws.dimensions
 
 
-def readable_workbook(path, meta, sources, types, sectors, appl, relations, provisions, mappings, frameworks, controls):
+def readable_workbook(path, meta, sources, types, sectors, appl, relations, provisions, mappings, frameworks, controls, decisions=()):
     src = {s["id"]: s for s in sources}
     ref = lambda s: s["short_ref_uk"] or s["title_uk"] or s["id"]
     site = meta.get("site_url", "")
@@ -190,7 +191,14 @@ def readable_workbook(path, meta, sources, types, sectors, appl, relations, prov
     for a in appl:
         label = sectors[a["sector_id"]]["label_uk"]
         reqs = [sectors[x]["label_uk"] for x in (a.get("requires") or "").split(";") if x in sectors]
-        tags.setdefault(a["source_id"], []).append(" + ".join([label] + reqs))
+        tag = " + ".join([label] + reqs)
+        exc = [sectors[x]["label_uk"] for x in (a.get("except") or "").split(";") if x in sectors]
+        unl = [sectors[x]["label_uk"] for x in (a.get("unless") or "").split(";") if x in sectors]
+        if exc:
+            tag += f" (крім: {', '.join(exc)}" + (f"; але стосується, якщо є: {', '.join(unl)}" if unl else "") + ")"
+        if a.get("decisions"):
+            tag += f" [{a['decisions']}]"
+        tags.setdefault(a["source_id"], []).append(tag)
     wb = openpyxl.Workbook()
     about = wb.active
     about.title = "Про файл"
@@ -234,6 +242,17 @@ def readable_workbook(path, meta, sources, types, sectors, appl, relations, prov
              {"high": "висока", "medium": "середня"}.get(r["confidence"], r["confidence"]), eli(src[r["source_id"]]), eli(src[r["related_id"]])]
             for r in relations],
            [32, 22, 26, 32, 60, 30, 12, 34, 34])
+    dec = {d["id"]: d for d in decisions}
+    DEC_STATUS_UK = {"decided": "рішення власника", "proposed": "пропозиція, чекає підтвердження"}
+    _sheet(wb, "Рішення",
+           ["Ідентифікатор", "Вид", "Статус", "Дата", "Рішення", "Decision (EN)", "Рядків"],
+           [[d["id"], mapdata.GROUNDS.get(d["kind"], d["kind"]), DEC_STATUS_UK.get(d["status"], d["status"]), d["date"],
+             d["statement_uk"], d["statement_en"],
+             sum(d["id"] in mapdata.split_ids(r.get("decisions", "")) for r in provisions + mappings + list(appl))]
+            for d in decisions],
+           [14, 18, 22, 11, 80, 80, 8])
+    cited = lambda *rows: "\n".join(f"{i}: {dec[i]['statement_uk']}" for i in dict.fromkeys(
+        x for r in rows for x in mapdata.split_ids(r.get("decisions", ""))) if i in dec)
     prov = {p["id"]: p for p in provisions}
     for fw in frameworks:
         ctl = controls[fw["id"]]
@@ -246,14 +265,14 @@ def readable_workbook(path, meta, sources, types, sectors, appl, relations, prov
             c = ctl.get(m["control_id"], {})
             rows.append([m["control_id"] or "—", name(c) if c else "немає відповідника", ref(s), p["ref_uk"], p["summary_uk"],
                          REL_UK.get(m["relationship"], m["relationship"]), COV_UK.get(m["coverage"], m["coverage"]), m["parameter_uk"],
-                         grounds_uk(m, p), m["policy_uk"], m["notes_uk"], p["notes"],
+                         grounds_uk(m, p), cited(m, p), m["policy_uk"], m["notes_uk"], p["notes"],
                          applies_uk(p["applies_to"], sectors), p.get("act_condition_uk", ""),
                          REVIEW_UK.get(m["review_status"], m["review_status"]), m["mapped_by"], m["reviewed_by"], m["date"], eli(s)])
         _sheet(wb, {"iso27001-2022": "ISO 27001", "csf-2.0": "NIST CSF 2.0"}.get(fw["id"], fw["id"])[:31],
                ["Захід", "Назва заходу", "Акт", "Пункт", "Вимога", "Відношення", "Покриття", "Параметр за законом", "Підстава",
-                "Куди внести", "Примітка", "Застереження", "Стосується лише", "Умова акта", "Статус", "Хто зіставив", "Хто перевірив",
+                "Рішення", "Куди внести", "Примітка", "Застереження", "Стосується лише", "Умова акта", "Статус", "Хто зіставив", "Хто перевірив",
                 "Дата", "ELI акта"],
-               rows, [9, 40, 28, 24, 60, 22, 10, 24, 16, 34, 50, 34, 24, 34, 15, 22, 16, 11, 34])
+               rows, [9, 40, 28, 24, 60, 22, 10, 24, 16, 50, 34, 50, 34, 24, 34, 15, 22, 16, 11, 34])
     wb.save(path)
 
 
@@ -284,6 +303,57 @@ def bust_cache(page):
     page.write_text(re.sub(r'(src|href)="(assets/[^"?]+\.(?:js|css))"', stamp, html), encoding="utf-8")
 
 
+TYPE_UK = {"substantive": "обов'язок", "delegating": "делегує", "definitional": "визначення"}
+READABLE_HEADER = ["Акт", "Пункт", "Вимога", "Стандарт", "Захід", "Назва заходу", "Відношення", "Параметр за законом",
+                   "Куди внести", "Примітка", "Рішення", "Статус", "Тип", "Стосується лише", "Застереження", "Обґрунтування",
+                   "Хто зіставив", "Хто перевірив", "Дата", "Пункт (EN)", "Вимога (EN)", "id"]
+
+
+def readable_text(provs, sources, sectors, mappings, frameworks, controls):
+    """A readable copy of one workbook: a row per provision, then a row per link under it, act and control names joined in.
+    Committed next to the workbook, so a pull request shows which rows changed."""
+    src = {s["id"]: s for s in sources}
+    fw_name = {f["id"]: f"{f['name']} {f['version']}" for f in frameworks}
+    fw_order = {f["id"]: i for i, f in enumerate(frameworks)}
+    links = {}
+    for i, m in enumerate(mappings):
+        links.setdefault(m["provision_id"], []).append((fw_order.get(m["framework_id"], 99), i, m))
+    buf = io.StringIO()
+    w = csv.writer(buf, lineterminator="\n")
+    w.writerow(READABLE_HEADER)
+    for p in provs:
+        act = src.get(p["source_id"], {}).get("short_ref_uk", p["source_id"])
+        w.writerow([act, p["ref_uk"], p["summary_uk"]] + [""] * 7 + [p.get("decisions", ""), "",
+                   TYPE_UK.get(p["provision_type"], p["provision_type"]), applies_uk(p["applies_to"], sectors), p["notes"],
+                   "", "", "", "", p.get("ref_en", ""), p.get("summary_en", ""), p["id"]])
+        for _, _, m in sorted(links.get(p["id"], []), key=lambda x: x[:2]):
+            c = controls.get(m["framework_id"], {}).get(m["control_id"], {})
+            w.writerow([act, p["ref_uk"], "", fw_name.get(m["framework_id"], m["framework_id"]), m["control_id"] or "—",
+                        (c.get("name_uk") or c.get("name_en", "")) if c else "", REL_UK.get(m["relationship"], m["relationship"]),
+                        m["parameter_uk"], m["policy_uk"], m["notes_uk"], m.get("decisions", ""),
+                        REVIEW_UK.get(m["review_status"], m["review_status"]), "", "", "", m["rationale"], m["mapped_by"],
+                        m["reviewed_by"], m["date"], "", "", p["id"]])
+    return "\ufeff" + buf.getvalue()  # BOM: Excel then opens the Cyrillic correctly
+
+
+def readable_copies(sources, sectors, provisions, mappings, frameworks, controls):
+    """{mappings/<workbook>.csv: text} for every workbook."""
+    out = {}
+    for wb in dict.fromkeys(p["_where"].split(" / ")[0] for p in provisions):
+        provs = [p for p in provisions if p["_where"].split(" / ")[0] == wb]
+        ids = {p["id"] for p in provs}
+        path = ROOT / "mappings" / (Path(wb).stem + ".csv")
+        out[path] = readable_text(provs, sources, sectors, [m for m in mappings if m["provision_id"] in ids], frameworks, controls)
+    return out
+
+
+def write_readable(*args):
+    for path, text in readable_copies(*args).items():
+        if not path.exists() or path.read_text(encoding="utf-8") != text:
+            path.write_text(text, encoding="utf-8")
+            print(f"updated {path.relative_to(ROOT)}")
+
+
 def main():
     if OUT.exists():
         shutil.rmtree(OUT)
@@ -310,6 +380,7 @@ def main():
         s = by_src.get(p["source_id"], {})
         for f in ("act_condition_uk", "act_condition_en", "checked_edition"):
             p[f] = s.get(f, "")
+    write_readable(sources, sectors, provisions, mappings, frameworks, controls)
     write_csv(OUT / "data" / "provisions.csv", mapdata.PROVISION_FIELDS, provisions)
     write_csv(OUT / "data" / "mappings.csv", mapdata.MAPPING_FIELDS, mappings)
 
@@ -317,10 +388,11 @@ def main():
     (OUT / "data" / "eli.jsonld").write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 
     readable_workbook(OUT / "data" / "grc-foundation-ua.xlsx", meta, sources, types, sectors, read_csv("applicability.csv"),
-                      relations, provisions, mappings, frameworks, controls)
+                      relations, provisions, mappings, frameworks, controls, read_csv("decisions.csv"))
 
     # CISO Assistant libraries (YAML), one framework and one mapping library per act, plus a zip of all of them
-    files = export_ciso_assistant.export(OUT / "data", meta, sources, types, sectors, provisions, mappings)
+    files = export_ciso_assistant.export(OUT / "data", meta, sources, types, sectors, provisions, mappings,
+                                         read_csv("applicability.csv"), read_csv("decisions.csv"))
     with zipfile.ZipFile(OUT / "data" / "ciso-assistant-libraries.zip", "w", zipfile.ZIP_DEFLATED) as z:
         for f in files:
             z.write(OUT / "data" / "ciso-assistant" / f, f)

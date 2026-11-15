@@ -913,6 +913,9 @@ a.card:hover { --ne: var(--accent); }
 /* title, summary line and the download menu */
 .ctl-title { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; margin-bottom: 16px; }
 .ctl-title h1 { margin-bottom: .2em; }
+.ctl-build { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; max-width: 340px; margin: 0; }
+.ctl-build .hint { font-size: .85rem; text-align: right; margin: 0; }
+@media (max-width: 640px) { .ctl-build { align-items: flex-start; max-width: none; } .ctl-build .hint { text-align: left; } }
 .ctl-summary { margin: 0; color: var(--muted); max-width: 90ch; }
 .warn-text { color: var(--warn); font-weight: 500; }
 .dl-menu { position: relative; }
@@ -973,6 +976,8 @@ a.card:hover { --ne: var(--accent); }
 .act-also { font-size: .85rem; color: var(--muted); }
 .prov { padding: 6px 0 4px; }
 .prov + .prov { border-top: 1px dashed var(--rule); }
+.prov .decisions { margin: 2px 0 8px; padding-left: 1.2em; font-size: .9rem; }
+.prov .decisions li { margin: 2px 0; }
 .prov-line { display: grid; grid-template-columns: 120px minmax(0, 1fr) auto; gap: 4px 14px; align-items: baseline; }
 .prov-fit { display: inline-flex; align-items: center; gap: 6px; font-size: .88rem; }
 .prov-links { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: .88rem; white-space: nowrap; }
@@ -1157,7 +1162,17 @@ a.stage-hint { color: var(--accent); }
 .craft-answer-label, .craft-sub { margin: 0 0 10px; font: 600 .85rem var(--display); font-stretch: 85%; text-transform: uppercase; letter-spacing: .12em; color: var(--accent); }
 .craft-sub { font-size: .95rem; }
 .craft-figure { font-size: 1.15rem; font-weight: 600; margin: 0 0 8px; }
-.craft-pager { margin-top: 32px; }
+.craft-pager { margin-top: 32px; gap: 12px; }
+.craft-pager-top { margin: 4px 0 20px; padding-top: 0; border-top: 0; }
+.craft-pager a { flex: 0 1 auto; min-width: 180px; padding: 10px 16px; border: 1.5px solid var(--seal); border-radius: 0;
+  background: var(--surface); color: var(--accent-strong); font-size: 1.05rem; font-weight: 600; line-height: 1.3; }
+.craft-pager a span { color: var(--accent); font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2px; }
+.craft-pager a:hover, .craft-pager a:focus-visible { background: var(--accent-tint); }
+.craft-pager .pager-next { background: var(--seal); border-color: var(--seal); color: var(--on-seal); clip-path: var(--notch-all); }
+.craft-pager .pager-next span { color: var(--on-seal); }
+.craft-pager .pager-next:hover, .craft-pager .pager-next:focus-visible { background: var(--accent-strong); }
+.craft-pager-top a { padding: 7px 14px; font-size: .95rem; min-width: 0; }
+@media (max-width: 640px) { .craft-pager a { min-width: 0; max-width: 50%; } }
 .craft-adjust { margin-top: 12px; border-top: 1px solid var(--rule); padding-top: 10px; }
 .craft-adjust > summary { cursor: pointer; color: var(--accent); font-weight: 500; }
 .craft-adjust .chips { margin-top: 10px; border: 0; padding: 0; }
