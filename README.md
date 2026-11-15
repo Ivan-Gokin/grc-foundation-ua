@@ -1,4 +1,6 @@
-# GRC-фундамент для України / GRC foundation for Ukraine
+# Кресленик відповідності СУІБ / Compliant ISMS Kreslenyk
+
+«Кресленик» — українською «креслення, blueprint». До листопада 2026 року проєкт називався «GRC-фундамент для України». / *Kreslenyk* is Ukrainian for "blueprint". Until November 2026 the project was called "GRC foundation for Ukraine".
 
 [Українською](#українською) | [English](#english)
 
@@ -21,7 +23,7 @@
 
 ### Ліцензія
 
-Увесь проєкт — дані, тексти і код — під ліцензією [CC BY 4.0](LICENSE): його можна використовувати, змінювати і поширювати, зокрема комерційно, якщо вказати джерело: «GRC-фундамент для України, версія даних <версія>, https://ivan-gokin.github.io/grc-foundation-ua/».
+Увесь проєкт — дані, тексти і код — під ліцензією [CC BY 4.0](LICENSE): його можна використовувати, змінювати і поширювати, зокрема комерційно, якщо вказати джерело: «Кресленик відповідності СУІБ, версія даних <версія>, https://ivan-gokin.github.io/grc-foundation-ua/».
 
 Сторонні матеріали зберігають власний статус:
 
@@ -57,7 +59,7 @@ This file is for those who maintain the repository.
 
 ### Licence
 
-The whole project — data, texts and code — is under [CC BY 4.0](LICENSE): you may use, change and share it, including commercially, as long as you credit the source: "GRC foundation for Ukraine, data version <version>, https://ivan-gokin.github.io/grc-foundation-ua/".
+The whole project — data, texts and code — is under [CC BY 4.0](LICENSE): you may use, change and share it, including commercially, as long as you credit the source: "Compliant ISMS Kreslenyk, data version <version>, https://ivan-gokin.github.io/grc-foundation-ua/".
 
 Third-party material keeps its own status:
 

@@ -1,6 +1,6 @@
 # How to contribute
 
-<p class="chapter-lead">GRC foundation is a non-commercial open project. Its quality depends on other GRC practitioners taking part: people who know the acts, apply the controls in practice and notice what is wrong or missing.</p>
+<p class="chapter-lead">Compliant ISMS Kreslenyk is a non-commercial open project. Its quality depends on other GRC practitioners taking part: people who know the acts, apply the controls in practice and notice what is wrong or missing.</p>
 
 ## Where help is needed most
 
@@ -23,7 +23,7 @@ Changes to data, texts or code are welcome as pull requests on [GitHub](https://
 
 ## Acknowledgements
 
-The people who made GRC foundation better.
+The people who made Kreslenyk better.
 
 <div id="contrib-thanks"></div>
 

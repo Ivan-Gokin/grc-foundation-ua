@@ -1,6 +1,6 @@
 # About
 
-<p class="chapter-lead">GRC foundation is an open reference of cybersecurity requirements for organisations operating in Ukraine. It answers three questions: which acts apply to me, what exactly they require, and which controls of a standard meet those requirements. It is used by security leads, compliance specialists, auditors and consultants, and by anyone building an information security management system.</p>
+<p class="chapter-lead">Compliant ISMS Kreslenyk is an open reference of cybersecurity requirements for organisations operating in Ukraine. It answers three questions: which acts apply to me, what exactly they require, and which controls of a standard meet those requirements. It is used by security leads, compliance specialists, auditors and consultants, and by anyone building an information security management system.</p>
 
 ## Disclaimer
 

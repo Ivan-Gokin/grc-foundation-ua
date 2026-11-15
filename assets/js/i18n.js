@@ -1,7 +1,7 @@
 // Interface strings. Page texts live in content/*.md (home, method, about, guide chapters, articles).
 window.GRC_I18N = {
   uk: {
-    siteName: "GRC-фундамент",
+    siteName: "Кресленик",
     siteSub: "вимоги законодавства України та заходи СУІБ",
     langSwitch: "EN",
     langSwitchLabel: "Switch to English",
@@ -68,7 +68,7 @@ window.GRC_I18N = {
     xDeadline: "Строк звіту про інцидент",
     x53Name: "Назва (англ.)",
     x53NameUk: "Назва (укр., машинний переклад)",
-    xRmTitle: "Базовий рівень з GRC-фундаменту: довідковий інструмент, не юридична консультація",
+    xRmTitle: "Базовий рівень з Кресленика відповідності СУІБ: довідковий інструмент, не юридична консультація",
     xRmProfile: "Профіль",
     xRmFramework: "Стандарт",
     xRmData: "Дані",
@@ -640,7 +640,7 @@ window.GRC_I18N = {
   },
 
   en: {
-    siteName: "GRC foundation",
+    siteName: "Kreslenyk",
     siteSub: "Ukrainian legal requirements and ISMS controls",
     langSwitch: "УКР",
     langSwitchLabel: "Перейти на українську",
@@ -707,7 +707,7 @@ window.GRC_I18N = {
     xDeadline: "Incident reporting deadline",
     x53Name: "Name",
     x53NameUk: "Name (Ukrainian, machine translation)",
-    xRmTitle: "Baseline from GRC foundation: a reference tool, not legal advice",
+    xRmTitle: "Baseline from Compliant ISMS Kreslenyk: a reference tool, not legal advice",
     xRmProfile: "Profile",
     xRmFramework: "Framework",
     xRmData: "Data",

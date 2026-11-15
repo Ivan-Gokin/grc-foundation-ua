@@ -90,8 +90,8 @@ def eli_document(meta, sources, types, relations):
     graph = [{
         "@id": "",
         "@type": "dct:Dataset",
-        "dct:title": [{"@value": "Реєстр нормативних джерел GRC-фундаменту", "@language": "uk"},
-                      {"@value": "GRC foundation register of legal sources", "@language": "en"}],
+        "dct:title": [{"@value": "Реєстр нормативних джерел Кресленика відповідності СУІБ", "@language": "uk"},
+                      {"@value": "Compliant ISMS Kreslenyk: register of legal sources", "@language": "en"}],
         "dct:conformsTo": [{"@id": "http://data.europa.eu/eli/ontology"}, {"@id": "http://data.europa.eu/eli/eli-draft-legislation-ontology"}],
         "owl:versionInfo": meta.get("version", ""),
         "dct:modified": {"@value": meta.get("date", ""), "@type": "xsd:date"},
@@ -204,7 +204,7 @@ def readable_workbook(path, meta, sources, types, sectors, appl, relations, prov
     about.title = "Про файл"
     ai = sum(m["review_status"] == "ai_draft" for m in mappings)
     lines = [
-        ["GRC-фундамент для України: реєстр, ланцюги та зіставлення / GRC foundation for Ukraine"],
+        ["Кресленик відповідності СУІБ: реєстр, ланцюги та зіставлення / Compliant ISMS Kreslenyk"],
         [f"Версія даних {meta.get('version', '')} від {meta.get('date', '')}. Згенеровано {dt.date.today().isoformat()}. Сайт: {meta.get('site_url', '')}"],
         [],
         [f"Увага: {ai} зіставлень згенеровано ШІ і ще не вичитано людиною (статус «ШІ, не вичитано»). Звіряйте з текстом акта."],

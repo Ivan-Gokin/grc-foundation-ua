@@ -198,13 +198,13 @@ def export(out_dir, meta, sources, types, sectors, provisions, mappings, appl=()
             desc_uk += "\n\nУмова для всього акта: " + s["act_condition_uk"]
         if exc_uk:
             desc_uk += "\n\nВинятки: " + exc_uk
-        desc_uk += f"\n\nДжерело: GRC-фундамент для України ({meta['site_url']}), дані {meta['version']}. Офіційний текст: {s.get('url', '')}"
+        desc_uk += f"\n\nДжерело: Кресленик відповідності СУІБ ({meta['site_url']}), дані {meta['version']}. Офіційний текст: {s.get('url', '')}"
         desc_en = s.get("description_en", "")
         if s.get("act_condition_en"):
             desc_en += "\n\nCondition for the whole act: " + s["act_condition_en"]
         if exc_en:
             desc_en += "\n\nExceptions: " + exc_en
-        desc_en += f"\n\nSource: GRC foundation for Ukraine ({meta['site_url']}), data {meta['version']}. Official text: {s.get('url', '')}"
+        desc_en += f"\n\nSource: Compliant ISMS Kreslenyk ({meta['site_url']}), data {meta['version']}. Official text: {s.get('url', '')}"
         # CISO Assistant keeps names to 200 characters; the full title stays in the description
         name_uk = short(f"{s['short_ref_uk']}: {s['title_uk']}", 195)
         name_en = short(f"{s.get('short_ref_en') or s['short_ref_uk']}: {s.get('title_en') or s['title_uk']}", 195)
@@ -222,11 +222,11 @@ def export(out_dir, meta, sources, types, sectors, provisions, mappings, appl=()
                   "provider": issuer.get("issuer_uk") or "", "packager": PACKAGER}
         lib = {"urn": lib_urn, "locale": "uk", "ref_id": sid, "name": name_uk, "description": desc_uk,
                "copyright": "Тексти офіційних документів України не є об'єктами авторського права. Структура, "
-                            "короткі формулювання і зіставлення: GRC-фундамент для України, CC BY 4.0.",
+                            "короткі формулювання і зіставлення: Кресленик відповідності СУІБ, CC BY 4.0.",
                **{k: v for k, v in common.items() if k != "locale"},
                "translations": {"en": {"name": name_en, "description": desc_en,
                                        "copyright": "Ukrainian official texts are not subject to copyright. Structure, "
-                                                    "short wording and mappings: GRC foundation for Ukraine, CC BY 4.0."}},
+                                                    "short wording and mappings: Compliant ISMS Kreslenyk, CC BY 4.0."}},
                "objects": {"framework": framework}}
         dump(out / f"{sid}.yaml", lib)
         written.append(f"{sid}.yaml")
@@ -284,7 +284,7 @@ def export(out_dir, meta, sources, types, sectors, provisions, mappings, appl=()
                     "name": short(f"Зіставлення: {s['short_ref_uk']} ↔ ISO/IEC 27001:2022, NIST CSF 2.0", 195),
                     "description": "Зіставлення положень акта із заходами ISO/IEC 27001:2022 і підкатегоріями NIST CSF 2.0 "
                                    "(NIST IR 8477), в обидва боки. " + f"Джерело: {meta['site_url']}, дані {meta['version']}.",
-                    "copyright": "GRC-фундамент для України, CC BY 4.0.",
+                    "copyright": "Кресленик відповідності СУІБ, CC BY 4.0.",
                     **{k: v for k, v in common.items() if k != "locale"},
                     "dependencies": [lib_urn, "urn:intuitem:risk:library:iso27001-2022",
                                      "urn:intuitem:risk:library:nist-csf-2.0"],

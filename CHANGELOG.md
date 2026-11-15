@@ -1,5 +1,9 @@
 # Changelog
 
+## New name (2026-11-16)
+
+- The project is now «Кресленик відповідності СУІБ» / "Compliant ISMS Kreslenyk" (*kreslenyk*: Ukrainian for "blueprint"), formerly «GRC-фундамент для України» / "GRC foundation for Ukraine". Only the displayed name changed: the repository, the site address, file names (`grc-foundation-ua.xlsx`) and the CISO Assistant library identifiers stay as they were, so existing links and imported libraries keep working.
+
 ## Base list of documents (2026-11-16)
 
 - «Куди внести» cites documents from a base list, `data/policies.csv`, instead of free text. The list holds the 36 policy and standard names of the CIS/MS-ISAC NIST CSF Policy Template Guide (2024) and 8 documents Ukrainian law asks for that the guide does not have. It is a starting point, not templates, and the site says so.

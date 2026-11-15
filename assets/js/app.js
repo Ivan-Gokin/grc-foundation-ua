@@ -1,4 +1,4 @@
-/* GRC foundation for Ukraine: static site logic. No build step, no tracking.
+/* Compliant ISMS Kreslenyk: static site logic. No build step, no tracking.
  * Loads CSV files from data/, filters them in the browser, and exports results. */
 (function () {
   "use strict";
