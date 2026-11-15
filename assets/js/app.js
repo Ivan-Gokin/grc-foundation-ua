@@ -10,7 +10,7 @@
     "sources.csv", "source_types.csv", "sectors.csv", "sector_groups.csv", "applicability.csv", "source_relations.csv",
     "provisions.csv", "mappings.csv", "frameworks.csv", "controls_iso27001-2022.csv", "controls_csf-2.0.csv",
     "sp800-53/baselines_ua.csv", "sp800-53/map_csf-2.0_sp800-53r5.csv", "sp800-53/profiles.csv",
-    "chains.csv", "chain_steps.csv", "actors.csv", "actor_relations.csv", "actor_acts.csv",
+    "chains.csv", "chain_steps.csv", "actors.csv", "actor_relations.csv", "actor_acts.csv", "decisions.csv",
   ];
   // The emblem: three 60-degree rhombuses (governance, risk, compliance) turning around a triangle, inside a hexagon.
   // Decorative next to the site name, so it is hidden from screen readers.
@@ -82,7 +82,7 @@
   async function loadAll() {
     const tables = await Promise.all(FILES.map(loadCsv));
     const by = (rows, key = "id") => Object.fromEntries(rows.map((r) => [r[key], r]));
-    const [sources, types, sectors, groups, appl, rels, provs, maps, fws, iso, csf, b53, m53, profiles, chains, steps, actors, actorRels, actorActs] = tables;
+    const [sources, types, sectors, groups, appl, rels, provs, maps, fws, iso, csf, b53, m53, profiles, chains, steps, actors, actorRels, actorActs, decs] = tables;
     D.sources = sources;
     D.sourceById = by(sources);
     D.sourceByEli = by(sources, "eli");
@@ -96,6 +96,7 @@
       D.parents[x.id] = (x.parent || "").split(";").filter(Boolean);
       D.parents[x.id].forEach((pid) => (D.children[pid] = D.children[pid] || []).push(x.id));
     });
+    D.decById = by(decs);
     D.applBySource = {};
     D.unverifiedAppl = 0;
     appl.forEach((r) => {
@@ -233,11 +234,32 @@
     return out;
   }
   // "and" rules: an applicability row may require other sectors too (e.g. a bank that also uses cloud services)
+  const listOf = (s) => (s || "").split(";").filter(Boolean);
   const rowRequires = (a) => (a.requires || "").split(";").filter(Boolean);
-  const applLabel = (a) => [a.sector_id, ...rowRequires(a)].map((id) => L(D.sectorById[id], "label") || id).join(" + ");
+  const secLabel = (id) => L(D.sectorById[id], "label") || id;
+  const applLabel = (a) => {
+    let s = [a.sector_id, ...rowRequires(a)].map(secLabel).join(" + ");
+    const exc = listOf(a.except), unl = listOf(a.unless);
+    if (exc.length) s += ` (${t("applExcept")} ${exc.map(secLabel).join(", ")}${unl.length ? `, ${t("applUnless")} ${unl.map(secLabel).join(", ")}` : ""})`;
+    return s;
+  };
+  // "except" rules: a row does not apply to a reader in an excepted sector (e.g. Order 75 for banks, which the NBU regulates),
+  // unless the reader is also in an "unless" sector (a bank with state secrets). For a provision term, "unless" counts only
+  // when the term names that sector, so a bank sees only the state-secret provisions.
+  function rowApplies(a, exp, termPos) {
+    if (!exp.has(a.sector_id) || !rowRequires(a).every((id) => exp.has(id))) return false;
+    if (!listOf(a.except).some((id) => exp.has(id))) return true;
+    return listOf(a.unless).some((id) => exp.has(id) && (!termPos || termPos.includes(id)));
+  }
   function sourceApplies(src, exp) {
     if (!exp) return true;
-    return (D.applBySource[src.id] || []).some((a) => exp.has(a.sector_id) && rowRequires(a).every((id) => exp.has(id)));
+    return (D.applBySource[src.id] || []).some((a) => rowApplies(a, exp));
+  }
+  function ancestorsOf(id) {
+    const out = new Set();
+    const up = (x) => { if (out.has(x)) return; out.add(x); (D.parents[x] || []).forEach(up); };
+    up(id);
+    return out;
   }
   // forSources=false: the controls table (only Ukrainian acts in force drive controls)
   function sourceVisible(src, exp, forSources) {
@@ -258,8 +280,16 @@
     if (!p || !sourceVisible(D.sourceById[p.source_id], exp, false)) return false;
     if (!exp || !p.applies_to) return true;
     // ';' = any of the terms; '+' = every part of a term; '!' = the reader must not be in that sector
+    // a term counts only if an applicability row that covers it (its sector or a broader one) applies to the reader
     const down = selectedDown();
-    return p.applies_to.split(";").some((term) => term.split("+").every((x) => (x.startsWith("!") ? !exp.has(x.slice(1)) : down.has(x))));
+    const rows = D.applBySource[p.source_id] || [];
+    return p.applies_to.split(";").some((term) => {
+      const parts = term.split("+").filter(Boolean);
+      if (!parts.every((x) => (x.startsWith("!") ? !exp.has(x.slice(1)) : down.has(x)))) return false;
+      const pos = parts.filter((x) => !x.startsWith("!"));
+      const cover = rows.filter((a) => !pos.length || pos.some((x) => ancestorsOf(x).has(a.sector_id)));
+      return !cover.length || cover.some((a) => rowApplies(a, exp, pos));
+    });
   }
   function driversFor(fw, exp, includeDrafts) {
     const out = {};
@@ -309,7 +339,16 @@
     return own && own !== "text" ? own : "";
   };
   const groundsLabel = (g) => t("gr_" + g) || g;
-  const groundsBadge = (g) => (g ? ` <span class="badge gr-${esc(g)}" title="${esc(t("groundsHint"))}">${esc(groundsLabel(g))}</span>` : "");
+  // The decisions (data/decisions.csv) a mapping rests on: its own and its provision's, each written once in the register
+  const idsOf = (r) => (r && r.decisions ? r.decisions.split(";").filter(Boolean) : []);
+  const decisionsOf = (m) => uniq([...idsOf(m), ...idsOf(D.provById[m.provision_id])]).filter((id) => D.decById[id]);
+  const decisionText = (id) => {
+    const d = D.decById[id];
+    return `${id} (${d.date}${d.status === "proposed" ? ", " + t("decProposed") : ""}): ${L(d, "statement")}`;
+  };
+  const decisionsHtml = (ids) => (ids.length ? `<ul class="decisions">${ids.map((id) =>
+    `<li${isFallback(D.decById[id], "statement") ? ' lang="uk"' : ""}>${esc(decisionText(id))}</li>`).join("")}</ul>` : "");
+  const groundsBadge = (g) => (g ? ` <span class="badge gr-${esc(g)}" title="${esc(t("groundsHint").replace(/:$/, "."))}">${esc(groundsLabel(g))}</span>` : "");
   const covLabel = (c) => (c === "full" ? t("fullNote") : c === "partial" ? t("partialNote") : c);
   const relWords = (r) => (t("rel") || {})[r] || r;
   const fwRow = (id) => D.frameworks.find((f) => f.id === id);
@@ -965,6 +1004,11 @@
     sheets.push({ name: t("xSheetRegulators"), header: [t("xBody"), t("xActsCount"), t("xActsList"), t("xRoleYou"), t("xContact"), t("xChannel"), t("xDeadline"), t("xOwner")],
       rows: [...byIssuer].sort((a, b) => b[1].length - a[1].length).map(([who, xs]) => [who, xs.length, xs.map((x) => sourceRef(x)).join("\n"), "", "", "", "", ""]),
       widths: [36, 10, 50, 30, 30, 24, 24, 20], freeze: [1, 1] });
+    // the interpretations the drivers rest on, each once, so a lawyer can check them in one place
+    const decIds = uniq(rows.flatMap((r) => r.ds).flatMap(decisionsOf)).sort();
+    if (decIds.length) sheets.push({ name: t("xSheetDecisions"), header: [t("xDecId"), t("colGrounds"), t("xDecStatus"), t("xDecDate"), t("xDecText")],
+      rows: decIds.map((id) => { const d = D.decById[id]; return [id, groundsLabel(d.kind), d.status === "proposed" ? t("decProposed") : d.status ? t("decDecided") : "", d.date, L(d, "statement")]; }),
+      widths: [14, 20, 22, 12, 100], freeze: [1, 1] });
     let sysNote = "";
     if (needsSystems()) {
       guessBaseline();
@@ -989,7 +1033,7 @@
       [t("colGrounds"), rows.flatMap((r) => r.ds).some((m) => groundsOf(m)) ? t("groundsFileNote") : ""],
       ["", ""],
       [t("xRmSheets"), ""],
-      ...sheets.map((sh) => [sh.name, t(sh.name === soaName ? (S.fw === "csf-2.0" ? "xRmSheetProfile" : "xRmSheetSoa") : sh.name === "NIST SP 800-53" ? "xRmSheet53" : ({ [t("xSheetClauses")]: "xRmSheetClauses", [t("xSheetGaps")]: "xRmSheetGaps", [t("xSheetActs")]: "xRmSheetActs", [t("xSheetRegulators")]: "xRmSheetRegulators" }[sh.name])) + (sh.name === "NIST SP 800-53" && sysNote ? ` (${sysNote})` : "")]),
+      ...sheets.map((sh) => [sh.name, t(sh.name === soaName ? (S.fw === "csf-2.0" ? "xRmSheetProfile" : "xRmSheetSoa") : sh.name === "NIST SP 800-53" ? "xRmSheet53" : ({ [t("xSheetClauses")]: "xRmSheetClauses", [t("xSheetGaps")]: "xRmSheetGaps", [t("xSheetActs")]: "xRmSheetActs", [t("xSheetRegulators")]: "xRmSheetRegulators", [t("xSheetDecisions")]: "xRmSheetDecisions" }[sh.name])) + (sh.name === "NIST SP 800-53" && sysNote ? ` (${sysNote})` : "")]),
       ["", ""],
       [t("xRmColumns"), ""],
       [t("xReqBy"), t("xRmReqBy")],
@@ -1321,11 +1365,8 @@
     head.innerHTML = `<div class="ctl-title"><div>
         ${S.view === "guide" ? "" : `<h1>${esc(t("navControls"))}</h1>`}
         <p class="ctl-summary">${esc(fmt(t("ctlSummary"), withDrivers, leafCount, provSet.size, srcSet.size))}${unreviewed ? ` <span class="warn-text">${esc(fmt(t("ctlUnreviewed"), unreviewed, shown.length))}</span>` : ""}</p>${groundsNote(shown)}</div>
-      <details class="dl-menu"><summary class="btn btn-primary">${esc(t("exportsTitle"))}</summary>
-        <div class="dl-list"><p class="dl-file">${esc(L(fw, "output"))}</p>
-          <button type="button" class="btn" id="x-xlsx">Excel</button><button type="button" class="btn" id="x-csv">CSV</button></div></details></div>`;
-    head.querySelector("#x-csv").onclick = () => exportSoa(rows, "csv");
-    head.querySelector("#x-xlsx").onclick = () => exportSoa(rows, "xlsx");
+      <p class="ctl-build"><a class="btn btn-primary" href="#/craft?step=${S.sectors.length ? 6 : 1}${S.sectors.length ? `&s=${sParam()}` : ""}&fw=${encodeURIComponent(S.fw)}">${esc(t(S.fw === "csf-2.0" ? "ctlBuildProfile" : "ctlBuildSoa"))} →</a>
+        <span class="hint">${esc(t("ctlBuildHint"))}</span></p></div>`;
 
     Object.keys(rowRender).forEach((k) => delete rowRender[k]);
     let body = "", jump = [];
@@ -1520,13 +1561,13 @@
     const src = D.sourceById[p.source_id];
     const orig = isFallback(p, "summary");
     const more = [
-      L(m, "parameter") ? `<p><b>${esc(t("colParam"))}:</b> ${esc(L(m, "parameter"))}</p>` : "",
+      L(m, "parameter") ? `<p><b>${esc(t("colParam"))}:</b> <span${isFallback(m, "parameter") ? ' lang="uk"' : ""}>${esc(L(m, "parameter"))}</span></p>` : "",
       p.applies_to ? `<p><b>${esc(t("appliesOnly"))}:</b> ${esc(appliesText(p.applies_to))}</p>` : "",
       L(src, "act_condition") ? `<p><b>${esc(t("actCondition"))}:</b> ${esc(L(src, "act_condition"))}</p>` : "",
-      groundsOf(m) ? `<p><b>${esc(t("colGrounds"))}:</b> ${esc(groundsLabel(groundsOf(m)))}. ${esc(t("groundsHint"))}</p>` : "",
-      L(m, "policy") ? `<p><b>${esc(t("driverPolicy"))}:</b> ${esc(L(m, "policy"))}</p>` : "",
+      groundsOf(m) ? `<p><b>${esc(t("colGrounds"))}:</b> ${esc(groundsLabel(groundsOf(m)))}. ${esc(t("groundsHint"))}</p>${decisionsHtml(decisionsOf(m))}` : "",
+      L(m, "policy") ? `<p><b>${esc(t("driverPolicy"))}:</b> <span${isFallback(m, "policy") ? ' lang="uk"' : ""}>${esc(L(m, "policy"))}</span></p>` : "",
       p.notes ? `<p><b>${esc(t("driverCaveat"))}:</b> <span${S.lang === "en" ? ' lang="uk"' : ""}>${esc(p.notes)}</span></p>` : "",
-      `<p class="muted">${esc(t("driverMeta"))}: ${esc(relWords(m.relationship))}, ${esc(m.rationale)}${m.strength ? `, ${esc(m.strength)}/10` : ""}; ${esc(reviewLabel(m.review_status))}; ${esc(m.mapped_by)}${m.reviewed_by ? `, ${esc(m.reviewed_by)}` : ""}; ${esc(m.date)}</p>`,
+      `<p class="muted">${esc(t("driverMeta"))}: ${esc(relWords(m.relationship))}, ${esc(m.rationale)}; ${esc(reviewLabel(m.review_status))}; ${esc(m.mapped_by)}${m.reviewed_by ? `, ${esc(m.reviewed_by)}` : ""}; ${esc(m.date)}</p>`,
     ].join("");
     return `<div class="prov">
       <div class="prov-line"><span class="prov-fit">${glyph(m.relationship)} ${esc(covLabel(m.coverage))}</span>
@@ -1646,22 +1687,6 @@
     download(name, new Blob([out instanceof ArrayBuffer || ArrayBuffer.isView(out) ? out : new Uint8Array(out)], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
   }
   const stamp = () => `${S.fw}${S.sectors.length ? "_" + S.sectors.join("-") : ""}_${new Date().toISOString().slice(0, 10)}`;
-
-  function exportSoa(rows, kind) {
-    const header = [t("xControlId"), t("xControl"), t("xDrivers"), t("xCoverage"), t("xParam"),
-      t("xApplicable"), t("xJustification"), t("xOrgValue"), t("xPolicy"), t("xPolicySuggested"), t("xOwner"), t("xStatus"), t("xEvidence")];
-    const data = rows.map(({ c, ds }) => {
-      const drv = ds.map((m) => { const p = D.provById[m.provision_id]; return `${sourceRef(D.sourceById[p.source_id])}, ${L(p, "ref")} [${GLYPH[m.relationship]} ${covLabel(m.coverage)}${reviewMark(m)}]`; }).join("\n");
-      const pol = [...new Set(ds.map((m) => L(m, "policy")).filter(Boolean))].join("\n");
-      const cov = ds.length ? (ds.some((m) => m.coverage === "full") ? t("fullNote") : t("partialNote")) : "";
-      const par = ds.filter((m) => L(m, "parameter")).map((m) => `${L(m, "parameter")} (${sourceRef(D.sourceById[D.provById[m.provision_id].source_id])}, ${L(D.provById[m.provision_id], "ref")})`).join("\n");
-      return [c.id, controlName(S.fw, c), drv, cov, par, ds.length ? (S.lang === "uk" ? "так" : "Y") : "", "", "", "", pol, "", "", ""];
-    });
-    const base = `${S.fw === "csf-2.0" ? "target-profile" : "soa"}_${stamp()}`;
-    if (kind === "xlsx") downloadXlsx(`${base}.xlsx`, S.fw === "csf-2.0" ? "Profile" : "SoA", header, data, [10, 50, 55, 12, 35, 14, 30, 30, 30, 40, 20, 20, 30]);
-    else downloadCsv(`${base}.csv`, header, data);
-  }
-
 
   // ------------------------------------------------------------------ sources
   function renderSources() {
@@ -1924,7 +1949,10 @@
     if (!rows.length) return `<p class="empty">${esc(t("srcNone"))}</p>`;
     const body = rows.map((s) => {
       const n = (D.provsBySource[s.id] || []).length;
-      const sectors = (D.applBySource[s.id] || []).map((a) => `<span class="tag">${esc(applLabel(a))}</span>`).join("");
+      const sectors = (D.applBySource[s.id] || []).map((a) => {
+        const ds = idsOf(a).filter((id) => D.decById[id]);
+        return `<span class="tag"${ds.length ? ` title="${esc(ds.map(decisionText).join("\n"))}"` : ""}>${esc(applLabel(a))}${ds.length ? ` <span class="muted">${esc(ds.join(", "))}</span>` : ""}</span>`;
+      }).join("");
       const title = sourceTitle(s);
       const concerns = L(s, "concerns");
       const comment = s.comment_uk && s.comment_uk !== L(s, "description")

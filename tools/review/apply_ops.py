@@ -8,8 +8,8 @@ Each line is one op with "op", a ledger "id" and "why", plus:
   del_prov   pid                                     also deletes its links
   set_link   pid, fw, control ("" or "—" for a no-counterpart row), set{field: value}
   del_link   pid, fw, control
-  add_link   pid, fw, row{control_id, relationship, rationale, coverage, parameter_uk, parameter_en, policy_uk, notes_uk, ...}
-Codes, not labels: relationship equal|subset_of|superset_of|intersects_with|no_relationship; coverage full|partial|none;
+  add_link   pid, fw, row{control_id, relationship, rationale, parameter_uk, policy_uk, notes_uk, decisions, ...}
+Codes, not labels: relationship equal|subset_of|superset_of|intersects_with|no_relationship (coverage follows it);
 provision_type substantive|delegating|definitional; review_status ai_draft|draft|imported|reviewed.
 Field "append_notes_uk" in set_link appends to notes_uk instead of replacing.
 Defaults for add_link: review_status ai_draft, mapped_by AI (Claude, hostile review 2026-11), date 2026-11-11, rationale semantic.
@@ -133,13 +133,12 @@ def main():
                             for k, v in op["set"].items():
                                 if k == "append_notes_uk":
                                     h["notes_uk"] = (h.get("notes_uk", "") + " " + v).strip()
-                                elif k == "append_notes_en":
-                                    h["notes_en"] = (h.get("notes_en", "") + " " + v).strip()
                                 else:
                                     if k == "relationship" and v not in REL:
                                         raise ValueError("bad relationship")
-                                    if k == "coverage" and v not in COV:
-                                        raise ValueError("bad coverage")
+                                    if k == "coverage":
+                                        warnings.append(f"{oid}: coverage is derived from the relationship; ignored")
+                                        continue
                                     if k == "control_id":
                                         v = norm_ctl(v)
                                         if v and v not in controls[fw]:

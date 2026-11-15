@@ -81,8 +81,8 @@ Round cap: 15.
 
 ## Data model and owner decisions (added 2026-11-13, binding from round 6)
 
-- `grounds` («Підстава») on provisions and mappings: text (default) | assumption | regulator | practice. A row marked assumption/regulator/practice rests on that interpretation by the owner's decision; its dated sentence in the notes explains it. Do not raise such a row as M1/M2 merely because the act text alone does not say it; raise it only with a verified text or published regulator position that contradicts the assumption.
-- `applies_to`: ';' = any of, '+' = all of, '!' = not (e.g. public-sector+!banks). New codes: banks, state-bodies.
+- `decisions` («Рішення») on provisions, mappings and applicability rows: ids from data/decisions.csv, the register of interpretations (kind assumption | regulator | practice; status decided | proposed). A row that cites a decided assumption rests on it by the owner's decision. Do not raise such a row as M1/M2 merely because the act text alone does not say it; raise it only with a verified text or published regulator position that contradicts the assumption.
+- `applies_to`: ';' = any of, '+' = all of, '!' = not (e.g. ki+!finance). An exception for the whole act goes once in applicability.csv (except, unless), not on every provision. New codes: banks, state-bodies.
 - Act-level fields in data/sources.csv: checked_edition and act_condition_uk/en (shown in the segment header). Rows no longer repeat them; do not raise their absence on rows.
 - Retired provision codes are listed in data/retired_provisions.csv and are never reused.
 - The owner's decisions are in author_decisions.md (AUTH-*). They are SETTLED for reviewers and chairs: do not re-raise them without a new verified text.
