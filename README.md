@@ -6,7 +6,7 @@
 
 ## Українською
 
-Відкритий довідник вимог кібербезпеки для організацій, що працюють в Україні: які акти до вас застосовні, що саме вони вимагають і якими заходами ISO/IEC 27001, NIST CSF 2.0 чи NIST SP 800-53 це виконати.
+Відкритий довідник вимог кібербезпеки для організацій, що працюють в Україні: які акти до вас застосовні, що саме вони вимагають і якими заходами ISO/IEC 27001, NIST CSF 2.0 чи NIST SP 800-53 це виконати. Мета — основа для інтегрованої СУІБ, GRC у [розумінні OCEG](https://www.oceg.org/about/what-is-grc/): одна система заходів, у якій зведено й вимоги законодавства, замість окремого проєкту відповідності під кожен акт.
 
 **Сайт:** https://ivan-gokin.github.io/grc-foundation-ua/. Що він дає і для кого — на головній сторінці; як побудовано дані — у розділі «Методика»; завантаження даних (Excel, CSV, JSON-LD) і плани — у розділі «Про проєкт».
 
@@ -42,7 +42,7 @@
 
 ## English
 
-An open reference of cybersecurity requirements for organisations operating in Ukraine: which acts apply to you, what exactly they require, and which ISO/IEC 27001, NIST CSF 2.0 or NIST SP 800-53 controls meet them.
+An open reference of cybersecurity requirements for organisations operating in Ukraine: which acts apply to you, what exactly they require, and which ISO/IEC 27001, NIST CSF 2.0 or NIST SP 800-53 controls meet them. The aim is a foundation for an integrated ISMS, GRC as [OCEG defines it](https://www.oceg.org/about/what-is-grc/): one set of controls that also carries the legal requirements, instead of a separate compliance project for each act.
 
 **Site:** https://ivan-gokin.github.io/grc-foundation-ua/. What it offers and for whom is on the home page; how the data is built is in "Methodology"; data downloads (Excel, CSV, JSON-LD) and plans are in "About".
 

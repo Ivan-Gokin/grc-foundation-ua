@@ -2,6 +2,12 @@
 
 <p class="chapter-lead">Compliant ISMS Kreslenyk is an open reference of cybersecurity requirements for organisations operating in Ukraine. It answers three questions: which acts apply to me, what exactly they require, and which controls of a standard meet those requirements. It is used by security leads, compliance specialists, auditors and consultants, and by anyone building an information security management system.</p>
 
+## Aim: a foundation for an integrated ISMS
+
+The project provides a foundation for an integrated information security management system: one set of controls that carries the legal requirements, the risks and the governance of security together, instead of a separate compliance project for each act. Every requirement of an act is tied to a control of the standard, so one control can meet several acts, and the SoA shows where each requirement comes from.
+
+This is GRC as [OCEG defines it](https://www.oceg.org/about/what-is-grc/): "the integrated collection of capabilities that enable an organization to achieve Principled Performance", that is, "the ability to reliably achieve objectives, address uncertainty, and act with integrity". Integrating does not mean a "mega-department of GRC": the requirements go where the ISMS controls already work.
+
 ## Disclaimer
 
 This is a reference tool, not legal advice. Applicability and mappings are the authors' opinion. Check conclusions against the official texts.
