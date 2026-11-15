@@ -1074,6 +1074,13 @@
       "x-source": "data/source_relations.csv"
     },
     {
+      "name": "ciso-assistant",
+      "path": "ciso-assistant-libraries.zip",
+      "format": "zip",
+      "mediatype": "application/zip",
+      "description": "CISO Assistant libraries (YAML, library format v2): each act as a requirements framework, plus its mapping to ISO/IEC 27001:2022 and NIST CSF 2.0. Built from the workbooks; import one file at a time, the act before its mapping."
+    },
+    {
       "name": "retired-provisions",
       "path": "retired_provisions.csv",
       "format": "csv",

@@ -368,7 +368,8 @@
     const sub = ([v, k]) => `<li><a href="#/${v}"${cur(S.view === v)}>${esc(t(k))}</a></li>`;
     // Intro, the baseline wizard, the register to explore freely, and the help chapters; Methodology is also in the footer
     const nav = link(["home", "navIntro"]) + link(["craft", "navCraft"])
-      + menu("explore-menu", t("navExplore"), S.view === "sources" || S.view === "controls", `<ul>${[["sources", "navSources"], ["controls", "navControls"]].map(sub).join("")}</ul>`)
+      + menu("explore-menu", t("navExplore"), S.view === "sources" || S.view === "controls", `<ul>${[["sources", "navSources"], ["controls", "navControls"]].map(sub).join("")}
+          <li><a href="#/sources?mode=map"${cur(S.view === "sources" && S.mode === "map")}>${esc(t("navMap"))}</a></li></ul>`)
       + menu("help-menu", t("navHelp"), ["guide", "articles", "method", "about"].includes(S.view), guideLinks(false))
       + link(["contribute", "navContribute"]);
     const repo = (CFG.repoUrl || "").replace(/\/$/, "");
@@ -640,6 +641,11 @@
     if (ORG_FWS.includes(S.fw)) W.fw = S.fw;
     const n = S.step;
     const step = CRAFT_STEPS[n - 1];
+    // back and forward, above the step and again below it, styled as buttons: they move the reader on
+    const pager = (where) => `<nav class="pager craft-pager craft-pager-${where}" aria-label="${esc(t("navCraft"))}${where === "top" ? "" : " " + t("craftPagerEnd")}">
+          ${n > 1 ? `<a class="pager-prev" href="${craftHref(n - 1)}"><span>${esc(t("chPrev"))}</span>${esc(t("cs_" + CRAFT_STEPS[n - 2]))}</a>` : "<span></span>"}
+          ${n < CRAFT_STEPS.length && n > 1 ? `<a class="pager-next" href="${craftHref(n + 1)}"><span>${esc(t("chNext"))}</span>${esc(t("cs_" + CRAFT_STEPS[n]))}</a>` : ""}
+          ${n === CRAFT_STEPS.length ? `<a class="pager-next" href="#/guide?c=risk"><span>${esc(t("craftAfter"))}</span>${esc(chapterTitle("risk"))}</a>` : ""}</nav>`;
     app.innerHTML = `<article class="craft"><div class="craft-body">
       <nav class="craft-steps" aria-label="${esc(t("navCraft"))}"><p class="craft-label">${esc(t("navCraft"))}</p>
         <ol>${CRAFT_STEPS.map((k, i) => `<li${i + 1 === n ? ' class="current"' : ""}><a href="${craftHref(i + 1)}"${i + 1 === n ? ' aria-current="step"' : ""}><span class="craft-num">${i + 1}</span><span>${esc(t("cs_" + k))}</span></a></li>`).join("")}</ol>
@@ -647,13 +653,11 @@
         <p class="craft-reset"><button type="button" class="link-btn" id="craft-reset">${esc(t("craftReset"))}</button></p></nav>
       <div class="craft-main">
         <p class="kicker">${esc(fmt(t("craftStepOf"), n, CRAFT_STEPS.length))}</p>
+        ${n > 1 ? pager("top") : ""}
         <div class="prose craft-guide" id="craft-guide"><h1>${esc(t("cs_" + step))}</h1></div>
         <details class="craft-why" id="craft-why" hidden${craftWhyOpen ? " open" : ""}><summary>${esc(t("craftWhy"))}</summary><div class="prose" id="craft-why-body"></div></details>
         <section class="craft-answer" id="craft-answer" aria-live="polite"></section>
-        <nav class="pager craft-pager" aria-label="${esc(t("navCraft"))}">
-          ${n > 1 ? `<a class="pager-prev" href="${craftHref(n - 1)}"><span>${esc(t("chPrev"))}</span>${esc(t("cs_" + CRAFT_STEPS[n - 2]))}</a>` : "<span></span>"}
-          ${n < CRAFT_STEPS.length && n > 1 ? `<a class="pager-next" href="${craftHref(n + 1)}"><span>${esc(t("chNext"))}</span>${esc(t("cs_" + CRAFT_STEPS[n]))}</a>` : ""}
-          ${n === CRAFT_STEPS.length ? `<a class="pager-next" href="#/guide?c=risk"><span>${esc(t("craftAfter"))}</span>${esc(chapterTitle("risk"))}</a>` : ""}</nav>
+        ${pager("bottom")}
       </div></div></article>`;
     setTitle(`${t("cs_" + step)} · ${t("navCraft")}`);
     const reset = document.getElementById("craft-reset");
@@ -876,7 +880,8 @@
         <p class="hint">${esc(t("craftSysHint"))}</p><div id="craft-sys"></div></section>` : ""}
       <div class="soa-bar" role="region" aria-label="${esc(t("craftDownload"))}">
         <span class="soa-bar-count"><span class="level-count" id="bar-count">${esc(craftTab === "sys" ? fmt(t("toolSysSum"), sysCount) : fmt(t("levelPicked"), picked, soaRows.length))}</span></span>
-        <button type="button" class="btn btn-primary" id="soa-xlsx">${esc(t("craftDownload"))}</button><button type="button" class="btn" id="soa-csv">CSV</button></div>`;
+        <button type="button" class="btn btn-primary" id="soa-xlsx">${esc(t("craftDownload"))}</button><button type="button" class="btn" id="soa-csv">CSV</button>
+        <a class="btn" href="data/ciso-assistant-libraries.zip" download title="${esc(t("caHint"))}">${esc(t("caBtnShort"))}</a></div>`;
     const list = box.querySelector("#pane-org");
     const listHtml = (xs) => {
       let body = "", last = null;
@@ -2330,6 +2335,8 @@
     fill("method-data", `<p>${esc(t("dataIntro"))}</p>
       <section class="readable"><h3>${esc(t("dataReadableTitle"))}</h3><p>${esc(t("dataReadable"))}</p>
         <p><a class="btn btn-primary" href="data/grc-foundation-ua.xlsx" download>${esc(t("dataReadableBtn"))}</a></p></section>
+      <section class="readable"><h3>${esc(t("caTitle"))}</h3><p>${esc(t("caHint"))} ${esc(t("caHow"))}</p>
+        <p><a class="btn btn-primary" href="data/ciso-assistant-libraries.zip" download>${esc(t("caBtn"))}</a></p></section>
       <h3>${esc(t("dataMachineTitle"))}</h3><p>${esc(t("dataMachine"))}</p>${files}`);
   }
 

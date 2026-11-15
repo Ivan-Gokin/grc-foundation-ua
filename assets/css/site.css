@@ -1162,7 +1162,17 @@ a.stage-hint { color: var(--accent); }
 .craft-answer-label, .craft-sub { margin: 0 0 10px; font: 600 .85rem var(--display); font-stretch: 85%; text-transform: uppercase; letter-spacing: .12em; color: var(--accent); }
 .craft-sub { font-size: .95rem; }
 .craft-figure { font-size: 1.15rem; font-weight: 600; margin: 0 0 8px; }
-.craft-pager { margin-top: 32px; }
+.craft-pager { margin-top: 32px; gap: 12px; }
+.craft-pager-top { margin: 4px 0 20px; padding-top: 0; border-top: 0; }
+.craft-pager a { flex: 0 1 auto; min-width: 180px; padding: 10px 16px; border: 1.5px solid var(--seal); border-radius: 0;
+  background: var(--surface); color: var(--accent-strong); font-size: 1.05rem; font-weight: 600; line-height: 1.3; }
+.craft-pager a span { color: var(--accent); font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2px; }
+.craft-pager a:hover, .craft-pager a:focus-visible { background: var(--accent-tint); }
+.craft-pager .pager-next { background: var(--seal); border-color: var(--seal); color: var(--on-seal); clip-path: var(--notch-all); }
+.craft-pager .pager-next span { color: var(--on-seal); }
+.craft-pager .pager-next:hover, .craft-pager .pager-next:focus-visible { background: var(--accent-strong); }
+.craft-pager-top a { padding: 7px 14px; font-size: .95rem; min-width: 0; }
+@media (max-width: 640px) { .craft-pager a { min-width: 0; max-width: 50%; } }
 .craft-adjust { margin-top: 12px; border-top: 1px solid var(--rule); padding-top: 10px; }
 .craft-adjust > summary { cursor: pointer; color: var(--accent); font-weight: 500; }
 .craft-adjust .chips { margin-top: 10px; border: 0; padding: 0; }
