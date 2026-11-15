@@ -3,6 +3,7 @@
 ## New name (2026-11-16)
 
 - The project is now «Кресленик відповідності СУІБ» / "Compliant ISMS Kreslenyk" (*kreslenyk*: Ukrainian for "blueprint"), formerly «GRC-фундамент для України» / "GRC foundation for Ukraine". Only the displayed name changed: the repository, the site address, file names (`grc-foundation-ua.xlsx`) and the CISO Assistant library identifiers stay as they were, so existing links and imported libraries keep working.
+- The header shows the name in capitals over a small descriptor line («ВІДПОВІДНІСТЬ СУІБ» / "COMPLIANT ISMS") that carries the flag.
 
 ## Base list of documents (2026-11-16)
 

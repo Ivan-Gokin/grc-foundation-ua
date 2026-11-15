@@ -381,7 +381,8 @@
       + link(["contribute", "navContribute"]);
     const repo = (CFG.repoUrl || "").replace(/\/$/, "");
     document.getElementById("header").innerHTML = `
-      <div class="brand">${BRAND_MARK}<div class="brand-text"><a href="#/home" class="brand-name"${S.view === "home" ? ' aria-current="page"' : ""}>${esc(t("siteName"))}<span class="flag-ua" role="img" aria-label="${esc(t("flagUa"))}"></span></a></div></div>
+      <div class="brand">${BRAND_MARK}<div class="brand-text"><a href="#/home" class="brand-name"${S.view === "home" ? ' aria-current="page"' : ""}>${esc(t("siteName"))}</a>
+        <span class="brand-tag">${esc(t("siteTag"))}<span class="flag-ua" role="img" aria-label="${esc(t("flagUa"))}"></span></span></div></div>
       <nav class="nav" aria-label="${esc(t("siteName"))}">${nav}</nav>
       <div class="header-tools"><div class="theme-switch" id="theme" role="group" aria-label="${esc(t("themeGroup"))}"><button type="button" data-set="light" aria-label="${esc(t("themeLight"))}" title="${esc(t("themeLight"))}">${ICON_SUN}</button><button type="button" data-set="dark" aria-label="${esc(t("themeDark"))}" title="${esc(t("themeDark"))}">${ICON_MOON}</button></div><button class="lang" type="button" id="lang" aria-label="${esc(t("langSwitchLabel"))}">${esc(t("langSwitch"))}</button></div>`;
     document.getElementById("lang").onclick = () => { S.lang = S.lang === "uk" ? "en" : "uk"; store.set("grc-lang", S.lang); render(); };

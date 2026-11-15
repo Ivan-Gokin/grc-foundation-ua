@@ -651,8 +651,12 @@ a.card h3 { color: var(--seal); }
 .chain-ctx { opacity: .6; }
 .weight-req { color: var(--teal); border-color: var(--teal); background: transparent; }
 
-/* the flag of Ukraine next to the site name (official colours, kept as they are in both themes) */
-.brand-name { display: inline-flex; align-items: center; gap: 10px; }
+/* the name in caps over a small descriptor line; the flag of Ukraine sits in that line (official colours, kept in both themes) */
+.brand-name { text-transform: uppercase; letter-spacing: .1em; font-size: 1.3rem; line-height: 1; }
+.brand-tag { display: flex; align-items: center; gap: 7px; margin-top: 4px; font: 600 .7rem/1 var(--display); font-stretch: 85%;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+.brand-tag .flag-ua { width: 15px; height: 10px; }
+@media (max-width: 640px) { .brand-name { font-size: 1.15rem; } .brand-tag { font-size: .62rem; } }
 .flag-ua { display: inline-block; flex: none; width: 21px; height: 14px; background: linear-gradient(var(--flag-blue) 0 50%, var(--flag-yellow) 50% 100%); box-shadow: 0 0 0 1px var(--rule); }
 
 /* ============================================================ design system v2 */
@@ -758,9 +762,6 @@ a.card:hover { --ne: var(--accent); }
 .hero-gate { display: flex; flex-direction: column; align-items: center; gap: 16px; }
 .hero-gate .e-frame, .hero-gate .e-arms { fill: var(--frame-mark); }
 .hero-gate .e-core { fill: var(--frame-core); }
-.hero-lockup-name { display: inline-flex; align-items: center; gap: 10px; margin: 0; font-family: var(--display); font-stretch: 85%; font-weight: 600; font-size: 1.6rem; line-height: 1.1; }
-.home-hero .hero-lockup-name { color: var(--frame-ink); }
-.hero-lockup-name .flag-ua { box-shadow: 0 0 0 1px var(--frame-label); }
 @media (max-width: 900px) {
   .home-hero { padding: 40px 24px 32px; }
 }
