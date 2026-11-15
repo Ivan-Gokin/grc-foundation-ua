@@ -1,0 +1,45 @@
+id,origin,name_en,name_uk
+wireless,cis-2024,802.11 Wireless Network Security Standard,Стандарт безпеки бездротових мереж 802.11
+acceptable-use,cis-2024,Acceptable Use of Information Technology Resource Policy,Політика прийнятного використання ІТ-ресурсів
+access-control,cis-2024,Access Control Policy,Політика управління доступом
+account-management,cis-2024,Account Management/Access Control Standard,Стандарт управління обліковими записами та доступом
+audit-accountability,cis-2024,Auditing and Accountability Standard,Стандарт аудиту та підзвітності
+auth-tokens,cis-2024,Authentication Tokens Standard,Стандарт засобів автентифікації (токенів)
+threat-response,cis-2024,Computer Security Threat Response Policy,Політика реагування на загрози комп'ютерній безпеці
+configuration-management,cis-2024,Configuration Management Policy,Політика управління конфігураціями
+contingency-planning,cis-2024,Contingency Planning Policy,Політика забезпечення безперервності та відновлення
+incident-response-standard,cis-2024,Cyber Incident Response Standard,Стандарт реагування на кіберінциденти
+encryption,cis-2024,Encryption Standard,Стандарт шифрування
+identification-authentication,cis-2024,Identification and Authentication Policy,Політика ідентифікації та автентифікації
+incident-response,cis-2024,Incident Response Policy,Політика реагування на інциденти
+information-classification,cis-2024,Information Classification Standard,Стандарт класифікації інформації
+information-security,cis-2024,Information Security Policy,Політика інформаційної безпеки
+risk-management,cis-2024,Information Security Risk Management,Управління ризиками інформаційної безпеки
+maintenance,cis-2024,Maintenance Policy,Політика технічного обслуговування
+media-protection,cis-2024,Media Protection Policy,Політика захисту носіїв інформації
+mobile-devices,cis-2024,Mobile Device Security,Безпека мобільних пристроїв
+patch-management,cis-2024,Patch Management Standard,Стандарт управління оновленнями
+personnel-security,cis-2024,Personnel Security Policy,Політика безпеки персоналу
+physical-environmental,cis-2024,Physical and Environmental Protection Policy,Політика фізичного захисту та захисту середовища
+planning,cis-2024,Planning Policy,Політика планування безпеки
+remote-access,cis-2024,Remote Access Standard,Стандарт віддаленого доступу
+sanitization-disposal,cis-2024,Sanitization Secure Disposal Standard,Стандарт очищення та безпечного знищення носіїв
+secure-coding,cis-2024,Secure Coding Standard,Стандарт безпечного програмування
+secure-configuration,cis-2024,Secure Configuration Standard,Стандарт безпечної конфігурації
+secure-sdlc,cis-2024,Secure System Development Life Cycle Standard,Стандарт безпечного життєвого циклу розробки систем
+assessment-authorization,cis-2024,Security Assessment and Authorization Policy,Політика оцінювання безпеки та авторизації
+awareness-training,cis-2024,Security Awareness and Training Policy,Політика обізнаності та навчання з безпеки
+security-logging,cis-2024,Security Logging Standard,Стандарт журналювання подій безпеки
+risk-assessment,cis-2024,Standard Risk Assessment Policy,Політика оцінювання ризиків
+system-communications,cis-2024,System and Communications Protection Policy,Політика захисту систем і комунікацій
+system-integrity,cis-2024,System and Information Integrity Policy,Політика цілісності систем та інформації
+acquisition,cis-2024,Systems and Services Acquisition Policy,Політика придбання систем і послуг
+vulnerability-scanning,cis-2024,Vulnerability Scanning Standard,Стандарт сканування вразливостей
+ua-nbu-interaction,ua,Procedure for interaction with the NBU,Регламент взаємодії з НБУ
+ua-official-records,ua,Instruction on records containing official information,Інструкція з діловодства зі службовою інформацією
+ua-state-secrets,ua,State secrets protection procedure (security unit),Регламент захисту державної таємниці (режимно-секретний орган)
+ua-cyber-unit,ua,Regulation on the cyber protection unit,Положення про підрозділ з кіберзахисту
+ua-target-profile,ua,System target security profile,Цільовий профіль безпеки системи
+ua-security-authorization,ua,Security authorisation procedure,Регламент авторизації з безпеки
+ua-payment-products,ua,Requirements for payment products and e-payment instruments (outside the ISMS),Вимоги до платіжних продуктів та ЕПЗ (поза СУІБ)
+ua-bank-governance,ua,Bank risk management and internal control documents (outside the ISMS),Документи системи управління ризиками та внутрішнього контролю банку (поза СУІБ)

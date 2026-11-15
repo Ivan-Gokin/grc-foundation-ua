@@ -361,6 +361,56 @@
       }
     },
     {
+      "name": "policies",
+      "path": "policies.csv",
+      "format": "csv",
+      "encoding": "utf-8",
+      "description": "The base list of documents for «Куди внести»: the 36 policy and standard names of the CIS / MS-ISAC, NIST Cybersecurity Framework Policy Template Guide (2024), plus documents Ukrainian law requires that the guide does not have (origin ua). Names only; the guide's templates are not reproduced, and they are not to be used for profit.",
+      "schema": {
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "origin",
+            "type": "string",
+            "description": "cis-2024 (a name from the CIS guide) or ua (required by Ukrainian law)."
+          },
+          {
+            "name": "name_en",
+            "type": "string",
+            "description": "For cis-2024: the guide's name, verbatim."
+          },
+          {
+            "name": "name_uk",
+            "type": "string",
+            "description": "The project's Ukrainian name."
+          }
+        ]
+      }
+    },
+    {
+      "name": "csf_policies",
+      "path": "csf_policies.csv",
+      "format": "csv",
+      "encoding": "utf-8",
+      "description": "The CIS / MS-ISAC, NIST Cybersecurity Framework Policy Template Guide (2024)'s correlation of NIST CSF 2.0 subcategories with its policy and standard templates, as published (ID.AM ids normalised to two digits). Reference only: the mappings choose documents row by row.",
+      "schema": {
+        "fields": [
+          {
+            "name": "csf_id",
+            "type": "string"
+          },
+          {
+            "name": "policy_id",
+            "type": "string",
+            "description": "Id in policies.csv."
+          }
+        ]
+      }
+    },
+    {
       "name": "source-relations",
       "path": "source_relations.csv",
       "format": "csv",
@@ -767,9 +817,9 @@
             "type": "string"
           },
           {
-            "name": "policy_uk",
+            "name": "policies",
             "type": "string",
-            "description": "Suggested internal document (policy, procedure) where the requirement belongs."
+            "description": "Optional: ids from policies.csv (separated by ;), the documents where the requirement belongs. A base list to start from, not templates."
           },
           {
             "name": "mapped_by",

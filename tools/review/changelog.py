@@ -19,7 +19,7 @@ def flat(d):
     return P, L
 
 P0, L0 = flat(old); P1, L1 = flat(new)
-KEYF = ['relationship', 'coverage', 'parameter_uk', 'notes_uk', 'policy_uk', 'rationale']
+KEYF = ['relationship', 'coverage', 'parameter_uk', 'notes_uk', 'policies', 'rationale']
 rows = []
 stats = {}
 def bump(wb, k): stats.setdefault(wb, {}).setdefault(k, 0); stats[wb][k] += 1

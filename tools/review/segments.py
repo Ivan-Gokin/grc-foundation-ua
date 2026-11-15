@@ -28,7 +28,7 @@ for wb, d in data.items():
     for p in d['provisions']: p['_wb'] = wb; provs.append(p)
     for fw, rows in d['links'].items():
         for r in rows: links.setdefault(r['provision_id'], []).append((fw, r))
-KEYS = [('parameter_uk', 'ПАРАМЕТР'), ('policy_uk', 'КУДИ'), ('notes_uk', 'ПРИМІТКА')]
+KEYS = [('parameter_uk', 'ПАРАМЕТР'), ('policies', 'КУДИ'), ('notes_uk', 'ПРИМІТКА')]
 for seg, acts in SEG.items():
     out = open(f'{outdir}/seg_{seg}.txt', 'w')
     cited = []

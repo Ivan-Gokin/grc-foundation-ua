@@ -265,7 +265,7 @@ def readable_workbook(path, meta, sources, types, sectors, appl, relations, prov
             c = ctl.get(m["control_id"], {})
             rows.append([m["control_id"] or "—", name(c) if c else "немає відповідника", ref(s), p["ref_uk"], p["summary_uk"],
                          REL_UK.get(m["relationship"], m["relationship"]), COV_UK.get(m["coverage"], m["coverage"]), m["parameter_uk"],
-                         grounds_uk(m, p), cited(m, p), m["policy_uk"], m["notes_uk"], p["notes"],
+                         grounds_uk(m, p), cited(m, p), policy_names(m.get("policies", "")), m["notes_uk"], p["notes"],
                          applies_uk(p["applies_to"], sectors), p.get("act_condition_uk", ""),
                          REVIEW_UK.get(m["review_status"], m["review_status"]), m["mapped_by"], m["reviewed_by"], m["date"], eli(s)])
         _sheet(wb, {"iso27001-2022": "ISO 27001", "csf-2.0": "NIST CSF 2.0"}.get(fw["id"], fw["id"])[:31],
@@ -303,6 +303,16 @@ def bust_cache(page):
     page.write_text(re.sub(r'(src|href)="(assets/[^"?]+\.(?:js|css))"', stamp, html), encoding="utf-8")
 
 
+_POLICIES = {}
+
+
+def policy_names(ids, lang="uk"):
+    """«Куди внести» in words: ids from data/policies.csv -> names, '; '-separated."""
+    if not _POLICIES:
+        _POLICIES.update({r["id"]: r for r in read_csv("policies.csv")})
+    return "; ".join(_POLICIES[i][f"name_{lang}"] if i in _POLICIES else i for i in mapdata.split_ids(ids))
+
+
 TYPE_UK = {"substantive": "обов'язок", "delegating": "делегує", "definitional": "визначення"}
 READABLE_HEADER = ["Акт", "Пункт", "Вимога", "Стандарт", "Захід", "Назва заходу", "Відношення", "Параметр за законом",
                    "Куди внести", "Примітка", "Рішення", "Статус", "Тип", "Стосується лише", "Застереження", "Обґрунтування",
@@ -330,7 +340,7 @@ def readable_text(provs, sources, sectors, mappings, frameworks, controls):
             c = controls.get(m["framework_id"], {}).get(m["control_id"], {})
             w.writerow([act, p["ref_uk"], "", fw_name.get(m["framework_id"], m["framework_id"]), m["control_id"] or "—",
                         (c.get("name_uk") or c.get("name_en", "")) if c else "", REL_UK.get(m["relationship"], m["relationship"]),
-                        m["parameter_uk"], m["policy_uk"], m["notes_uk"], m.get("decisions", ""),
+                        m["parameter_uk"], policy_names(m.get("policies", "")), m["notes_uk"], m.get("decisions", ""),
                         REVIEW_UK.get(m["review_status"], m["review_status"]), "", "", "", m["rationale"], m["mapped_by"],
                         m["reviewed_by"], m["date"], "", "", p["id"]])
     return "\ufeff" + buf.getvalue()  # BOM: Excel then opens the Cyrillic correctly
@@ -392,7 +402,7 @@ def main():
 
     # CISO Assistant libraries (YAML), one framework and one mapping library per act, plus a zip of all of them
     files = export_ciso_assistant.export(OUT / "data", meta, sources, types, sectors, provisions, mappings,
-                                         read_csv("applicability.csv"), read_csv("decisions.csv"))
+                                         read_csv("applicability.csv"), read_csv("decisions.csv"), read_csv("policies.csv"))
     with zipfile.ZipFile(OUT / "data" / "ciso-assistant-libraries.zip", "w", zipfile.ZIP_DEFLATED) as z:
         for f in files:
             z.write(OUT / "data" / "ciso-assistant" / f, f)

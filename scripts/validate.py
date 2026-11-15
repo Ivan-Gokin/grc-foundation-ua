@@ -80,6 +80,7 @@ def check_enum(name, row, field, enum=None):
 
 
 DECISIONS = {}  # id -> row of data/decisions.csv
+POLICIES = {}  # id -> row of data/policies.csv
 USED_DECISIONS = set()
 LABEL_RE = re.compile(r"(Припущення автора|Позиція регулятора|Усталена практика)\s*\(\d{4}")
 
@@ -173,6 +174,18 @@ def main():
         if r["text_access"] == "public" and not r["url"]:
             warnings.append(f"sources.csv:{r['_line']}: public text but no url ({r['id']})")
 
+    for r in load("policies.csv"):
+        if r["id"] in POLICIES or not re.match(r"^[a-z0-9][a-z0-9\-]*$", r["id"]):
+            err("policies.csv", r, f"id '{r['id']}' is a duplicate or not like access-control")
+        POLICIES[r["id"]] = r
+        if r["origin"] not in ("cis-2024", "ua"):
+            err("policies.csv", r, "origin must be cis-2024 or ua")
+        if not r["name_uk"] or not r["name_en"]:
+            err("policies.csv", r, "name_uk and name_en are required")
+    csf_ids = {r["id"] for r in load("controls_csf-2.0.csv")}
+    for r in load("csf_policies.csv"):
+        if r["csf_id"] not in csf_ids or r["policy_id"] not in POLICIES:
+            err("csf_policies.csv", r, f"unknown CSF subcategory or document: {r['csf_id']} / {r['policy_id']}")
     for r in load("decisions.csv"):
         if r["id"] in DECISIONS or not re.match(r"^[A-Z][A-Za-z0-9\-]*$", r["id"]):
             err("decisions.csv", r, f"id '{r['id']}' is a duplicate or not like AUTH-30")
@@ -331,6 +344,9 @@ def main():
         for f in ("relationship", "rationale", "coverage", "review_status"):
             check_enum("mappings.csv", r, f)
         check_decisions("mappings.csv", r, "notes_uk")
+        for x in mapdata.split_ids(r.get("policies", "")):
+            if x not in POLICIES:
+                err("mappings.csv", r, f"unknown document '{x}' in «Куди внести» (see data/policies.csv)")
         if r["relationship"] == "no_relationship" and r["coverage"] != "none":
             err("mappings.csv", r, "no_relationship requires coverage=none")
         if r["date"] and not DATE_RE.match(r["date"]):
