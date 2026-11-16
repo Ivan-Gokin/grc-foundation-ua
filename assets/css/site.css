@@ -651,12 +651,9 @@ a.card h3 { color: var(--seal); }
 .chain-ctx { opacity: .6; }
 .weight-req { color: var(--teal); border-color: var(--teal); background: transparent; }
 
-/* the name in caps over a small descriptor line; the flag of Ukraine sits in that line (official colours, kept in both themes) */
-.brand-name { text-transform: uppercase; letter-spacing: .1em; font-size: 1.3rem; line-height: 1; }
-.brand-tag { display: flex; align-items: center; gap: 7px; margin-top: 4px; font: 600 .7rem/1 var(--display); font-stretch: 85%;
-  letter-spacing: .14em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
-.brand-tag .flag-ua { width: 15px; height: 10px; }
-@media (max-width: 640px) { .brand-name { font-size: 1.15rem; } .brand-tag { font-size: .62rem; } }
+/* the name in letter-spaced caps, like the menu, with the flag of Ukraine after it (official colours, kept in both themes) */
+.brand-name { display: inline-flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: .09em; font-size: 1.3rem; }
+@media (max-width: 640px) { .brand-name { font-size: 1.15rem; } }
 .flag-ua { display: inline-block; flex: none; width: 21px; height: 14px; background: linear-gradient(var(--flag-blue) 0 50%, var(--flag-yellow) 50% 100%); box-shadow: 0 0 0 1px var(--rule); }
 
 /* ============================================================ design system v2 */

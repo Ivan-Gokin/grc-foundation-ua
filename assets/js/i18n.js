@@ -2,7 +2,6 @@
 window.GRC_I18N = {
   uk: {
     siteName: "Кресленик",
-    siteTag: "відповідність СУІБ",
     siteSub: "вимоги законодавства України та заходи СУІБ",
     langSwitch: "EN",
     langSwitchLabel: "Switch to English",
@@ -642,7 +641,6 @@ window.GRC_I18N = {
 
   en: {
     siteName: "Kreslenyk",
-    siteTag: "compliant ISMS",
     siteSub: "Ukrainian legal requirements and ISMS controls",
     langSwitch: "УКР",
     langSwitchLabel: "Перейти на українську",
