@@ -1,0 +1,251 @@
+id,verdict,who,topic,parent,priority,reason
+ua-cmu-631r-2026,drop,,institutional,ua-pres-447-2021,3,Annual action plan for the cyber strategy; tasks for state executors only.
+ua-cmu-1062-2018,drop,,institutional,,3,Internal financial control of budget fund managers; not information security.
+ua-cmu-1082-2003,check,state-secrets,state-secrets,,3,Restricted (DSK) resolution with no published content; check title and scope before deciding.
+ua-cmu-1109-2020,basis,ki,ci-protection,ua-law-1882-ix,1,Defines how objects become critical infrastructure and their categories; sets who is subject to CI cyber requirements.
+ua-cmu-1126-1997,drop,,crypto-technical-protection,,3,Policy concept for technical protection of information; no duties on organisations.
+ua-cmu-1176-2020,map,kii;state-ir,cyber-assessment-audit,ua-law-2469-viii,2,Review procedure for the cyber protection state of CII and state information resources that owners undergo.
+ua-cmu-119-2024,drop,,institutional,ua-law-74-98-vr,3,National informatisation programme planning; no security measures.
+ua-cmu-1281-2025,map,public-sector;ki;kii,training-awareness,ua-law-2163-viii;ua-law-4336-ix,1,Mandatory cyber-hygiene briefings and systematic training.
+ua-cmu-1295-2020,map,kii;state-ir,incident-response,,2,State vulnerability detection and incident response system (sensors) to which CII and state IR systems connect.
+ua-cmu-1335-2025,map,public-sector;state-ir;ki;kii;vendors,supplier-security,ua-law-2163-viii;ua-law-4336-ix,2,Open list of software and network equipment banned for state IR / CI / CII owners.
+ua-cmu-1363-2020,check,state-ir;security-services,vulnerability-management,,3,2020 experimental vulnerability-detection project; check whether it still runs or was superseded by 497-2023 / 1580-2025.
+ua-cmu-1424-2025,drop,,institutional,ua-law-3475-iv;ua-law-4336-ix,3,Procedure for developing protection standards; addressed to standard developers.
+ua-cmu-1426-2021,basis,ncs-bodies,isms-baseline,ua-law-2163-viii,2,Organisational-technical model of cyber protection; role split that the measures catalogue 75-2026 is based on.
+ua-cmu-1470-2025,drop,,ci-protection,ua-law-4336-ix;ua-cmu-518-2019,3,New wording of 518-2019; content lives in the consolidated 518-2019.
+ua-cmu-1471-2025,basis,ncs-bodies,incident-response,ua-law-2163-viii;ua-law-4336-ix,2,Interaction between CERT-UA and law enforcement; legal basis of the CSIRT interaction order 425-2026.
+ua-cmu-1516-2025,map,public-sector,isms-baseline,ua-law-2163-viii;ua-law-4336-ix,2,Appointment of a head of cyber protection in state authorities (security role).
+ua-cmu-1531-2025,drop,,system-protection,ua-law-4336-ix;ua-cmu-373-2006,3,New wording of 373-2006; content lives in the consolidated 373-2006.
+ua-cmu-1533-2025,map,ncs-bodies;ki;kii;public-sector,incident-response,ua-law-2163-viii;ua-law-4336-ix,1,National cyber incident response plan with roles and procedures for state bodies and CI/CII.
+ua-cmu-154-2025,map,cloud;cloud-users;public-sector;kii,cloud-datacentre,ua-law-2075-ix,1,Rules for providing and using cloud and data-centre services for state bodies and CII.
+ua-cmu-1580-2025,check,state-ir;kii;security-services,vulnerability-management,ua-law-2163-viii;ua-law-4336-ix;ua-cmu-497-2023,2,LINKS show it amends 497-2023 but DESC describes its own procedure; check whether it approves a standalone procedure (map) or only amends (drop).
+ua-cmu-1668-2025,map,ki;kii;state-ir;public-sector,cyber-assessment-audit,ua-law-2163-viii;ua-law-4336-ix,2,State supervision of cyber protection with rights and duties of inspected entities.
+ua-cmu-1740-2025,drop,,ci-protection,ua-law-4336-ix;ua-cmu-943-2020,3,Amends 943-2020 only; changes live in the consolidated 943-2020.
+ua-cmu-1772-2002,map,public-sector;state-ir,incident-response,,2,Interaction of executive bodies on protecting state IR including incident notification.
+ua-cmu-1799-2025,map,ki;kii;state-ir;security-services,cyber-assessment-audit,ua-law-2163-viii;ua-law-4336-ix,1,Cyber protection assessment procedure with self-assessment and external assessment.
+ua-cmu-180-1998,map,state-secrets,state-secrets,,2,Secrecy regime for processing state secrets in information systems.
+ua-cmu-205-2025,map,public-sector;vendors,supplier-security,ua-law-74-98-vr,2,Creation and administration of state informatisation tools incl. requirements for software developed on state order.
+ua-cmu-281-2002,basis,state-secrets;state-ir,crypto-technical-protection,,2,Approves technical protection normative documents for state-protected information; context for ND TZI (no LINKS).
+ua-cmu-311-2023,map,public-sector;state-ir,backup-continuity,,2,National backup centre for state information resources used by state bodies.
+ua-cmu-337-2026,drop,,ci-protection,,3,"Amending act (new CI sectors, responsible persons); changes live in amended CI resolutions, which LINKS do not name."
+ua-cmu-373-2006,map,state-ir;public-sector,system-protection,ua-law-80-94-vr,1,Minimum protection requirements for systems with state IR or restricted information (already mapped).
+ua-cmu-411-2014,drop,,institutional,,3,Statute of the SSSCIP Administration; regulator's powers only.
+ua-cmu-415-2023,basis,ki,ci-protection,ua-law-1882-ix,2,CI register procedure; inclusion in the register determines who is subject to CI duties.
+ua-cmu-447-2025,drop,,system-protection,ua-law-4336-ix,3,Package of amendments to government resolutions; changes live in amended acts.
+ua-cmu-497-2023,map,state-ir;kii;security-services,vulnerability-management,,2,Vulnerability search (bug bounty) procedure for state IR and CII owners.
+ua-cmu-50-2025,drop,,institutional,,3,Process-based management in central executive bodies; not information security.
+ua-cmu-518-2019,map,ki;kii,ci-protection,ua-law-2163-viii,1,General cyber protection requirements for CI (consolidated with 1470-2025).
+ua-cmu-55-2018,drop,,records-management,,3,Documenting management activity; records management not security.
+ua-cmu-608-2017,drop,,records-management,,3,Electronic drafting of legislative acts; no security duties.
+ua-cmu-688-2005,map,public-sector,system-protection,,3,Register of executive bodies' ICS; reporting of systems akin to asset inventory.
+ua-cmu-712-2025,map,state-ir;kii,system-protection,ua-law-80-94-vr;ua-law-4336-ix,1,Security authorisation of systems and security profiles.
+ua-cmu-736-2016,map,public-sector;state-ir,official-information,,1,"Model instruction on recording, storing, using and destroying official-information media (already mapped)."
+ua-cmu-75-2025,map,telecom,telecom,ua-law-1089-ix,2,Operational management of e-communication networks in emergency and martial law.
+ua-cmu-764-2024,map,trust,e-identification-trust,ua-law-2155-viii,1,Trust service and e-ID rules incl. ISO/IEC 27001 conformity for providers.
+ua-cmu-835-2015,drop,,institutional,ua-law-2939-vi,3,Open data publication lists; no security duties.
+ua-cmu-939-2013,check,state-secrets,state-secrets,,2,Restricted (DSK) secrecy-regime procedure; sets regime duties but text is not public; decide if restricted acts can be mapped or keep as basis of sbu-383-2020.
+ua-cmu-943-2020,basis,kii;ki,ci-protection,ua-law-2163-viii,1,Designation of CII objects and CII register; defines who is a CII owner.
+ua-dstu-3396.0-96,drop,,crypto-technical-protection,,3,Recommended standard with basic TZI provisions; no binding act references it in the register.
+ua-dstu-3396.1-96,drop,,crypto-technical-protection,,3,Recommended standard on TZI work procedure; no binding reference in the register.
+ua-dstu-3396.2-97,drop,,crypto-technical-protection,,3,Terminology standard.
+ua-dstu-4163-2020,drop,,records-management,,3,Document formatting standard; not security.
+ua-ssscip-er-09-2025,drop,,system-protection,,3,Recommended methodology for target security profiles; no binding act links to it in the register.
+intl-coe-cets-224,drop,,institutional,,3,Not in force; cross-border data requests to providers are legal process rather than ISMS.
+intl-coe-cets-225,drop,,ai-security,,3,Not in force; AI convention binding states.
+intl-coe-ets-108,basis,personal-data;general,personal-data,,2,Convention 108 is the basis of the personal data law 2297-VI.
+intl-coe-ets-185,drop,,institutional,,3,Cybercrime convention binding states; no organisational measures.
+intl-eu-ua-association-agreement,basis,telecom;personal-data,telecom,,3,Framework basis that the e-communications law 1089-IX implements.
+intl-ua-nato-security-agreement,basis,nato-info;defence;defence-industry,nato-information,,2,Basis for protecting NATO information; implemented by SSSCIP 843-2025.
+ua-law-1089-ix,map,telecom,telecom,intl-eu-ua-association-agreement,1,E-communications law with network security and subscriber data protection duties.
+ua-law-1697-vii,drop,,institutional,,3,Prosecution service statute.
+ua-law-1764-viii,drop,,institutional,,3,Diplomatic service statute.
+ua-law-183-98-vr,drop,,institutional,,3,NSDC statute; institutional.
+ua-law-1882-ix,map,ki,ci-protection,,1,CI law with sectors categorisation and duties of CI operators.
+ua-law-1932-xii,drop,,institutional,,3,Defence law; institutional.
+ua-law-2075-ix,map,cloud;cloud-users;public-sector,cloud-datacentre,,1,Cloud services law with requirements on providers and state users.
+ua-law-2121-iii,basis,banks;finance,bank-cyber,,2,Banking law; basis for NBU risk management and internal control regulations.
+ua-law-2155-viii,map,trust,e-identification-trust,,1,Trust services law with requirements on trust service and e-ID providers.
+ua-law-2163-viii,map,ncs-bodies;ki;kii;state-ir,isms-baseline,,1,Framework cybersecurity law with duties of CI / CII / state IR owners; basis of most cyber acts.
+ua-law-2229-xii,drop,,institutional,,3,SBU statute.
+ua-law-2297-vi,map,personal-data;general,personal-data,intl-coe-ets-108,1,Personal data law with security duties of controllers and processors.
+ua-law-2469-viii,basis,ncs-bodies,cyber-assessment-audit,,3,National security law; legal basis of the cyber protection review 1176-2020.
+ua-law-2939-vi,drop,,institutional,,3,Access to public information; no security measures per the register entry.
+ua-law-3475-iv,basis,state-ir,system-protection,,2,SSSCIP law; basis of SSSCIP orders on scanning assessment and state expertise.
+ua-law-374-iv,drop,,institutional,,3,Counter-intelligence law.
+ua-law-3855-xii,map,state-secrets,state-secrets,,2,State secrets law with access and clearance regime duties.
+ua-law-4336-ix,basis,kii;state-ir;public-sector,isms-baseline,ua-law-2163-viii;ua-law-80-94-vr;ua-law-3475-iv,1,Amending law; its changes live in 2163-VIII / 80/94-ВР / 3475-IV but it is the stated basis of many implementing acts.
+ua-law-4670-ix,drop,,telecom,ua-law-1089-ix,3,Amends e-communications laws (speed metrics and roaming); not security.
+ua-law-580-viii,drop,,institutional,,3,National Police statute.
+ua-law-679-xiv,basis,finance,bank-cyber,,1,NBU law; legal basis of NBU security and cyber regulations.
+ua-law-74-98-vr,basis,public-sector,supplier-security,,3,Informatisation programme law; basis of 205-2025.
+ua-law-776-97-vr,drop,,personal-data,,3,Ombudsman statute; supervisory authority not organisational duties.
+ua-law-80-94-vr,map,state-ir;public-sector;general;kii,system-protection,,1,Law on protection of information in ICS incl. security authorisation (already mapped).
+ua-law-912-ix,drop,,institutional,,3,Intelligence law.
+ua-law-pravotvorcha-diialnist,drop,,institutional,,3,Not yet in force; law-making reference only.
+ua-moj-1000-2015,drop,,records-management,,3,Records management and archiving rules; not security duties.
+nato-ac-322-d-0048-rev3,drop,,nato-information,,3,NATO-internal CIS security directive (restricted); Ukrainian duties come via national acts.
+nato-ac-322-d-0052-rev2,drop,,nato-information,,3,NATO-internal INFOSEC directive (restricted).
+nato-ac-322-d-2004-0024-rev2,drop,,nato-information,,3,NATO PKI certificate policy for NATO bodies.
+nato-ac-322-d-2015-0031,check,nato-info;defence;public-sector,nato-information,,2,Crypto directive for NATO information in non-NATO nations' CIS (restricted); check whether it binds Ukrainian systems directly.
+nato-ac-322-d-2017-0027,drop,,nato-information,,3,NATO-internal information and knowledge management policy.
+nato-ac-322-d-2017-0028-rev1,drop,,nato-information,,3,NATO-internal data management policy.
+nato-ac-322-d-2019-0032-rev1,drop,,nato-information,,3,NATO-internal cloud directive; earlier revision of REV2.
+nato-ac-322-d-2019-0032-rev2,drop,,nato-information,,3,NATO-internal cloud computing directive.
+nato-ac-322-d-2019-0038,drop,,nato-information,,3,NATO-internal web application security directive.
+nato-ac-322-d-2019-0041,drop,,nato-information,,3,NATO-internal directive on COTS products in NATO systems.
+nato-ac-322-d-2021-0032,drop,,nato-information,,3,NATO-internal directive on NATO information in public cloud.
+nato-ac-322-n-2014-0072,drop,,nato-information,,3,Taxonomy and definitions only.
+nato-ac-322-n-2015-0050-rev4,drop,,nato-information,,3,NATO-internal cloud policy.
+nato-ac-324-d-2014-0010-rev2,drop,,nato-information,,3,NATO archives directive on public disclosure.
+nato-ac-35-d-1029-rev1,drop,,nato-information,nato-ac-35-d-2000-rev9,3,NATO supporting document on security awareness for NATO bodies.
+nato-ac-35-d-1035,drop,,nato-information,nato-ac-35-d-2004-rev4,3,NATO supporting document on security risk management for NATO CIS.
+nato-ac-35-d-1038-rev3,basis,nato-info;defence;public-sector,nato-information,,2,NATO document for non-NATO entities; applied by Ukrainian military standard VST 01.008.005-2021.
+nato-ac-35-d-1043,drop,,nato-information,nato-ac-35-d-2000-rev9,3,National PSC procedures supporting document for NATO personnel security.
+nato-ac-35-d-2000-rev9,drop,,nato-information,,3,NATO personnel security directive for NATO bodies and members; Ukrainian duties via security agreement.
+nato-ac-35-d-2001-rev3,drop,,nato-information,,3,NATO physical security directive for NATO bodies and members.
+nato-ac-35-d-2002-rev5,drop,,nato-information,,3,NATO classified information directive for NATO bodies and members.
+nato-ac-35-d-2003-rev5,drop,,nato-information,,3,NATO industrial security directive for NATO bodies and members.
+nato-ac-35-d-2004-rev3,drop,,nato-information,,3,Earlier CIS security primary directive amended by REV4; NATO-internal.
+nato-ac-35-d-2004-rev4,drop,,nato-information,,3,NATO CIS security primary directive for NATO bodies and members.
+nato-ac-35-d-2005-rev3,drop,,nato-information,,3,NATO CIS security management directive; NATO-internal.
+nato-ac-35-d-2006,drop,,nato-information,,3,Directive for NATO on dealing with non-NATO entities; Ukrainian side covered by 1038-REV3 and VST.
+nato-ac-35-d-2020,drop,,nato-information,,3,NATO directive on CIS with non-classified NATO information (restricted); NATO-internal.
+nato-ac-35-n-2015-0022,drop,,nato-information,,3,Rules of engagement for audits of NATO CIS.
+nato-act-dir-040-13,drop,,nato-information,,3,ACT internal privacy directive.
+nato-adatp-5636,drop,,nato-information,,3,Metadata specification; technical standard for NATO systems.
+nato-c-m-2002-49-rev1,drop,,nato-information,,3,NATO security policy for NATO bodies and members.
+nato-c-m-2002-60,drop,,nato-information,,3,NATO handling of non-classified information; NATO-internal.
+nato-c-m-2007-0118,drop,,nato-information,,3,NATO-internal information management policy.
+nato-c-m-2008-0113,drop,,nato-information,,3,NATO-internal information management directive.
+nato-c-m-2008-0116-rev1,drop,,nato-information,,3,NATO public disclosure policy.
+nato-c-m-2009-0021,drop,,nato-information,,3,NATO retention and disposition policy for NATO information.
+nato-c-m-2011-0043,drop,,nato-information,,3,NATO records policy for NATO bodies.
+nato-c-m-2012-0014,drop,,nato-information,,3,NATO operational records directive.
+nato-c-m-2015-0041-rev1,drop,,nato-information,,3,NATO-internal cloud policy.
+nato-c-m-2015-0041-rev2,drop,,nato-information,,3,Alliance C3 policy; not organisational security duties.
+nato-personal-data-protection-framework-policy,drop,,nato-information,,3,Personal data policy for NATO bodies only.
+nato-po-2021-0360,drop,,nato-information,,3,NATO data exploitation framework.
+nato-po-2022-0409,drop,,nato-information,,3,NATO data exploitation strategic plan.
+ua-nbu-143-2025,map,finance,nonbank-finance-cyber,ua-law-679-xiv,1,Information security and cyber requirements for non-bank financial service providers (from Dec 2026).
+ua-nbu-178-2022,map,banks;finance,bank-cyber,ua-law-2163-viii,1,Cyber protection regulation for banks (already mapped).
+ua-nbu-24-2025,drop,,bank-cyber,ua-nbu-4-2021;ua-nbu-178-2022,3,Amends NBU 4-2021 and 178-2022 only; changes live in consolidated texts.
+ua-nbu-4-2021,map,banks;finance,bank-cyber,ua-law-2163-viii;ua-law-2155-viii;ua-law-2121-iii,2,NBU supervision of bank compliance with IS / cyber / trust requirements (already mapped).
+ua-nbu-43-2021,map,finance,payment-market,ua-law-2163-viii;ua-law-679-xiv,1,Information protection and cyber protection for payment market participants (already mapped).
+ua-nbu-64-2018,map,banks;finance,bank-cyber,ua-law-679-xiv;ua-law-2121-iii,1,Bank risk management incl. operational and ICT risk (already mapped).
+ua-nbu-66-2026,map,finance;kii,ci-protection,ua-law-679-xiv,1,Financial-sector CII regulation with incident reporting to NBU.
+ua-nbu-67-2024,map,finance,backup-continuity,ua-law-679-xiv,1,Business continuity of banks and non-bank institutions in a special period (already mapped).
+ua-nbu-69-2025,basis,finance;ki,ci-protection,ua-law-1882-ix,2,Defines and categorises financial-sector CI; amends 178-2022 whose duties carry the measures.
+ua-nbu-70-2026,check,finance;ict-suppliers,supplier-security,ua-nbu-64-2018,1,Entry bundles NBU 70/72/73 and LINKS only show amendment of 64-2018; check whether 72/73 approve standalone third-party risk rules.
+ua-nbu-88-2019,map,banks;finance,bank-cyber,ua-law-2121-iii,2,Bank internal control system (already mapped).
+ua-nbu-95-2017,map,banks;finance,bank-cyber,ua-law-679-xiv,1,Information security in the banking system (already mapped).
+ua-nbu-99-2025,map,finance;cloud-users,cloud-datacentre,ua-law-2075-ix,1,Cloud computing use by NBU-supervised entities (already mapped).
+ua-ndtzi-1.1-002-99,drop,,system-protection,,3,General concepts for protection against unauthorised access; no organisational duties.
+ua-ndtzi-1.1-003-99,drop,,system-protection,,3,Terminology only.
+ua-ndtzi-1.4-001-2000,map,state-ir,system-protection,,2,Model regulation for the information protection service (roles and duties).
+ua-ndtzi-1.4-002-2008,drop,,crypto-technical-protection,,3,Classification and test methods for nonlinear radars; for labs and vendors.
+ua-ndtzi-1.5-001-2000,drop,,crypto-technical-protection,,3,Technical requirements for radio detectors; for labs and vendors.
+ua-ndtzi-1.5-002-2012,drop,,crypto-technical-protection,,3,Classifier of TZI tools.
+ua-ndtzi-1.6-002-2003,drop,,institutional,,3,Drafting rules for TZI normative documents.
+ua-ndtzi-1.6-003-2004,check,state-secrets;state-ir;security-services,crypto-technical-protection,,3,Restricted; threat-model rules for TZI complexes at premises; check whether text can be mapped.
+ua-ndtzi-1.6-005-2013,map,state-ir;security-services,crypto-technical-protection,,3,Categorisation of premises where restricted (non-secret) information circulates.
+ua-ndtzi-1.6-006-2015,check,state-secrets,state-secrets,,3,Restricted and untitled in the register; obtain title and scope.
+ua-ndtzi-2.2-008-2015,check,state-secrets,state-secrets,,3,Restricted and untitled in the register; obtain title and scope.
+ua-ndtzi-2.2-009-2015,check,state-secrets,state-secrets,,3,Restricted and untitled in the register; obtain title and scope.
+ua-ndtzi-2.2-011-2015,check,state-secrets,state-secrets,,3,Restricted and untitled in the register; obtain title and scope.
+ua-ndtzi-2.3-001-2001,drop,,crypto-technical-protection,,3,Test methods for radio detectors; for labs and vendors.
+ua-ndtzi-2.3-002-2001,drop,,crypto-technical-protection,,3,Test methods for telephone-line protection devices.
+ua-ndtzi-2.3-003-2001,drop,,crypto-technical-protection,,3,Test methods for signal generators.
+ua-ndtzi-2.3-004-2001,drop,,crypto-technical-protection,,3,Test methods for indicator radio detectors.
+ua-ndtzi-2.3-005-2001,drop,,crypto-technical-protection,,3,Test methods for panoramic radio detectors (restricted).
+ua-ndtzi-2.3-006-2001,drop,,crypto-technical-protection,,3,Test methods for analyser radio detectors.
+ua-ndtzi-2.3-019-2015,check,state-secrets,state-secrets,,3,Restricted and untitled in the register; obtain title and scope.
+ua-ndtzi-2.3-020-2015,check,state-secrets,state-secrets,,3,Restricted and untitled in the register; obtain title and scope.
+ua-ndtzi-2.3-023-2015,check,state-secrets,state-secrets,,3,Restricted and untitled in the register; obtain title and scope.
+ua-ndtzi-2.3-024-2015,check,state-secrets,state-secrets,,3,Restricted and untitled in the register; obtain title and scope.
+ua-ndtzi-2.3-025-24,map,state-ir;public-sector;security-services,system-protection,,2,Assessment methodology for protection measures in information systems (vol. 1).
+ua-ndtzi-2.3-025-24-2,map,state-ir;public-sector;security-services,system-protection,ua-ndtzi-2.3-025-24,2,Assessment methodology for protection measures (vol. 2).
+ua-ndtzi-2.3-025-24-3,map,state-ir;public-sector;security-services,system-protection,ua-ndtzi-2.3-025-24,2,Assessment methodology for protection measures (vol. 3).
+ua-ndtzi-2.4-010-2015,check,state-secrets,state-secrets,,3,Restricted and untitled in the register; obtain title and scope.
+ua-ndtzi-2.4-011-2015,check,state-secrets,state-secrets,,3,Restricted and untitled in the register; obtain title and scope.
+ua-ndtzi-2.4-014-2015,check,state-secrets,state-secrets,,3,Restricted and untitled in the register; obtain title and scope.
+ua-ndtzi-2.5-004-99,map,state-ir;vendors,system-protection,,2,Evaluation criteria (functional security services and assurance levels) used for KSZI.
+ua-ndtzi-2.5-005-99,map,state-ir,system-protection,,2,Classification of automated systems and standard functional protection profiles.
+ua-ndtzi-2.5-006-99,drop,,crypto-technical-protection,,3,Classifier of copying equipment.
+ua-ndtzi-2.5-008-2002,map,state-ir,system-protection,,2,Protection requirements for confidential information in class 2 automated systems.
+ua-ndtzi-2.5-010-2003,map,state-ir;public-sector,system-protection,,2,Protection requirements for web pages with state IR.
+ua-ndtzi-2.5-012-2015,check,state-secrets,state-secrets,,3,Restricted and untitled in the register; obtain title and scope.
+ua-ndtzi-2.6-001-2011,map,state-ir;security-services;vendors,system-protection,,3,State expertise procedure for TZI tools and KSZI that system owners undergo.
+ua-ndtzi-2.6-004-21,map,state-ir,system-protection,,1,Security authorisation procedure for information systems; check alignment with 712-2025.
+ua-ndtzi-2.7-002-99,drop,,crypto-technical-protection,,3,Recommended guidance on copying equipment; no binding reference.
+ua-ndtzi-2.7-009-2009,drop,,system-protection,,3,Recommended vendor-product evaluation guidance.
+ua-ndtzi-2.7-010-2009,drop,,system-protection,,3,Recommended vendor-product assurance evaluation guidance.
+ua-ndtzi-2.7-011-2012,drop,,crypto-technical-protection,,3,Recommended guidance on detecting bugging devices; for TZI licensees.
+ua-ndtzi-2.7-012-2015,check,state-secrets,state-secrets,,3,Restricted and untitled in the register; obtain title and scope.
+ua-ndtzi-3.6-001-2000,map,state-ir;vendors,system-protection,,3,Lifecycle procedure for creating and maintaining TZI tools.
+ua-ndtzi-3.6-003-2016,check,state-secrets;state-ir;security-services,crypto-technical-protection,,3,Restricted; creation and attestation of TZI complexes; check whether text can be mapped.
+ua-ndtzi-3.6-004-21,map,state-ir;public-sector,system-protection,,1,Implementing an information security system in bodies with legally protected information.
+ua-ndtzi-3.6-005-21,map,state-ir;public-sector,system-protection,,1,Security categorisation of information systems and information.
+ua-ndtzi-3.6-006-24,map,state-ir;public-sector,system-protection,,1,Selection of protection measures for information systems.
+ua-ndtzi-3.6-007-21,map,state-ir;public-sector,system-protection,,1,Implementation of protection measures for information systems.
+ua-ndtzi-3.6-008-21,map,state-ir;public-sector,system-protection,,1,Security monitoring of information systems.
+ua-ndtzi-3.7-001-99,drop,,system-protection,,3,Recommended guidance on KSZI technical specification; no binding reference.
+ua-ndtzi-3.7-003-2023,map,state-ir,system-protection,,2,Procedure for creating a KSZI in an ICS.
+ua-ndtzi-4.7-001-2001,drop,,crypto-technical-protection,,3,Recommended test methods for wiretap detection devices.
+ua-src-25-1995,drop,,crypto-technical-protection,,3,Recommended temporary TEMPEST guidance; no binding reference in the register.
+ua-src-25-1995-2,drop,,crypto-technical-protection,,3,Recommended temporary TEMPEST guidance; no binding reference in the register.
+ua-src-41-2000,drop,,crypto-technical-protection,,3,Recommended technical requirements for acoustic protection devices; for vendors.
+ua-egov-60-2018,drop,,records-management,,3,Data format requirements for e-document management; not security.
+ua-pres-1229-1999,basis,state-ir;state-secrets,crypto-technical-protection,,2,Regulation on technical protection of information; framework for TZI duties (no LINKS).
+ua-pres-242-2016,drop,,institutional,ua-law-183-98-vr,3,NCCC statute; institutional.
+ua-pres-37-2022,drop,,institutional,ua-pres-447-2021,3,Strategy implementation plan for state bodies; no organisational duties (although in the incident-response chain).
+ua-pres-447-2021,drop,,institutional,,3,Cybersecurity strategy; no duties on organisations.
+ua-pres-505-1998,map,state-ir;state-secrets;vendors,crypto-technical-protection,,2,Procedure for cryptographic protection of information.
+ua-sbu-383-2020,map,state-secrets,state-secrets,ua-cmu-939-2013;ua-law-3855-xii,3,Catalogue of state-secret information that holders apply when classifying.
+ua-ssscip-141-2026,map,state-ir;kii;security-services,vulnerability-management,ua-cmu-497-2023,3,Recommended model public offer for bug bounty issued under 497-2023.
+ua-ssscip-143-2026,map,ki;kii;public-sector;state-ir,incident-response,ua-cmu-1533-2025,1,Risk-based cyber incident response procedure.
+ua-ssscip-154-2026,drop,,ai-security,,3,Voluntary AI cyber recommendations; no binding act links to it in the register.
+ua-ssscip-17-2025,map,ki,ci-protection,,2,Methodology and criteria for assessing CI protection state.
+ua-ssscip-179-2026,map,ncs-bodies,incident-response,ua-law-4336-ix;ua-law-2163-viii,3,Incident repository procedure for submitting incident information.
+ua-ssscip-20-2016,map,state-ir;public-sector,vulnerability-management,ua-law-3475-iv,3,SSSCIP vulnerability scanning of state IR online that owners are subject to.
+ua-ssscip-23-2021,drop,,ci-protection,ua-law-2163-viii;ua-cmu-1109-2020,3,Recommended CI categorisation guidance; categorisation itself is in 1109-2020.
+ua-ssscip-284-2022,map,kii;state-ir,incident-response,ua-cmu-1295-2020;ua-law-2163-viii,3,Transfer and placement of state active sensors at CII and state IR systems.
+ua-ssscip-285-2026,map,ki;kii;state-ir;security-services,cyber-assessment-audit,ua-cmu-1799-2025,2,Self-assessment and external assessment guidance with mandatory report form.
+ua-ssscip-317-2024,map,state-ir;public-sector,system-protection,,2,2024 baseline information security profile; check relation to 409-2025 / 419-2025.
+ua-ssscip-329-2025,drop,,institutional,,3,Designation of a standardisation body.
+ua-ssscip-354-2024,check,,system-protection,,2,Title and content not given in the register yet it sits in the system-baseline chain; identify the act.
+ua-ssscip-402-2026,map,public-sector;state-ir;ki;kii,isms-baseline,ua-cmu-518-2019;ua-cmu-373-2006,1,Cybersecurity risk assessment methodology.
+ua-ssscip-409-2025,map,state-ir;public-sector,system-protection,ua-cmu-712-2025,1,Baseline security profile for systems with open or confidential information.
+ua-ssscip-410-2026,map,ncs-bodies;public-sector;ki;kii,incident-response,ua-cmu-1533-2025;ua-law-4336-ix;ua-law-2163-viii,2,Joining the cyber threat information-sharing platform.
+ua-ssscip-419-2025,map,state-ir;public-sector,system-protection,ua-cmu-712-2025,1,Baseline security profile for systems with official information.
+ua-ssscip-425-2026,map,ncs-bodies;security-services,incident-response,ua-cmu-1471-2025,2,Interaction of sectoral / regional / private CSIRTs with CERT-UA.
+ua-ssscip-434-2025,map,state-ir,system-protection,ua-cmu-712-2025;ua-law-4336-ix;ua-law-80-94-vr,3,List of security-authorised systems kept for owners.
+ua-ssscip-438-2025,map,security-services,cyber-assessment-audit,ua-cmu-712-2025,2,Requirements on entities assessing target security profiles.
+ua-ssscip-44-2026,drop,,ci-protection,ua-cmu-943-2020,3,Administrative notification form for the CII register; no measures.
+ua-ssscip-45-2007,map,state-ir,system-protection,ua-law-80-94-vr;ua-cmu-1772-2002,2,Antivirus update procedure for certified anti-malware tools.
+ua-ssscip-463-2023,drop,,ci-protection,,3,Recommended ICS cyber guidance; no binding act links to it in the register (high-value if a reference is found).
+ua-ssscip-482-2025,drop,,institutional,,3,Internal regulator guidance on incident statistics.
+ua-ssscip-505-2024,drop,,cloud-datacentre,,3,Recommended cloud security guidance; no binding act links to it in the register.
+ua-ssscip-534-2026,map,security-services,cyber-assessment-audit,ua-cmu-1799-2025,2,Requirements on cyber protection assessment providers.
+ua-ssscip-550-2021,drop,,institutional,ua-cmu-1176-2020,3,Creates an interagency working group; institutional.
+ua-ssscip-604-2026,check,public-sector;state-ir;ki;kii,cyber-assessment-audit,ua-cmu-1668-2025,2,Inspection methodology and act form; check whether it lists requirements inspected entities must evidence (map) or only inspector steps (drop).
+ua-ssscip-627-2024,check,kii;ki,ci-protection,,2,Joint SBU/SSSCIP order with no title; identify it and check the id against ua-cmu-627-2024 repealed by 712-2025.
+ua-ssscip-660-2014,map,state-ir;public-sector,cyber-assessment-audit,ua-law-3475-iv,2,SSSCIP assessment of protection of state IR in systems.
+ua-ssscip-661-2025,map,public-sector,training-awareness,ua-cmu-1281-2025,3,Recommended training methodology issued under 1281-2025.
+ua-ssscip-67-2026,check,trust;state-ir;state-secrets,e-identification-trust,,2,Restricted (DSK) order on e-ID and trust services in systems with official and secret information; check if mappable.
+ua-ssscip-702-2024,drop,,cyber-assessment-audit,,3,Recommended CI independent audit guidance; no binding act links to it in the register.
+ua-ssscip-72-2007,map,public-sector,system-protection,ua-cmu-688-2005,3,Information fund of the ICS register to which executive bodies submit data.
+ua-ssscip-75-2026,map,ki;kii;state-ir;public-sector,isms-baseline,ua-cmu-518-2019;ua-cmu-373-2006;ua-cmu-1426-2021,1,Catalogue of cyber measures and baseline measures and cyber protection plan form (already mapped).
+ua-ssscip-771-2023,map,public-sector,system-protection,ua-cmu-1426-2021,3,Secure internet access system and connection procedure for state bodies.
+ua-ssscip-798-2025,map,public-sector;kii;cii-1-2,isms-baseline,ua-law-4336-ix,2,Recommended requirements for cyber units and cyber protection heads in state bodies and CII I-II.
+ua-ssscip-810-2025,map,state-ir;security-services,system-protection,ua-cmu-712-2025,3,Recommended guidance on assessing target security profile compliance under 712-2025.
+ua-ssscip-811-2025,map,state-ir;public-sector,system-protection,ua-cmu-712-2025,3,Recommended guidance on drafting a target security profile under 712-2025.
+ua-ssscip-836-2025,map,ict-suppliers;state-ir;state-secrets;kii,supplier-security,ua-cmu-712-2025,1,Supplier confirmation of security measures by supply risk level.
+ua-ssscip-843-2025,map,nato-info;defence;public-sector,nato-information,ua-cmu-712-2025;intl-ua-nato-security-agreement,2,Baseline security profile for standalone NATO RESTRICTED systems.
+ua-ssscip-847-2025,map,state-ir,system-protection,ua-cmu-712-2025,2,Monitoring of security-authorised systems.
+ua-ssscip-93-2007,map,state-ir;security-services;vendors,system-protection,ua-law-3475-iv,3,State expertise in TZI for KSZI and tools.
+ua-ssscip-94-2008,map,state-ir;state-secrets,crypto-technical-protection,ua-cmu-1772-2002,3,Coordination on preventing leakage via technical channels for holders of restricted information.
+ua-vst-01.008.001-2021,check,nato-info;defence;defence-industry,nato-information,,2,Restricted mandatory military standard on security procedures for NATO-information CIS; check if mappable.
+ua-vst-01.008.002-2021,check,nato-info;defence;defence-industry,nato-information,,2,Restricted mandatory military standard on risk management for NATO-information CIS; check if mappable.
+ua-vst-01.008.003-2021,check,nato-info;defence;defence-industry,nato-information,,2,Restricted mandatory military standard on security evaluation and certification; check if mappable.
+ua-vst-01.008.004-2021,check,nato-info;defence;defence-industry,nato-information,,2,Restricted mandatory military standard on security accreditation; check if mappable.
+ua-vst-01.008.005-2021,check,nato-info;defence;defence-industry,nato-information,nato-ac-35-d-1038-rev3,2,Restricted mandatory military standard on NATO information exchange for non-NATO nations; check if mappable.
