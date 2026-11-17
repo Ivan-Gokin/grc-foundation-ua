@@ -63,7 +63,7 @@ ua-cmu-295-2012,telecom,,"entity tags, register 2026-10",no,,,
 ua-cmu-1772-2002,public-sector,,"entity tags, register 2026-10",no,,,
 ua-cmu-1772-2002,state-ir,,"entity tags, register 2026-10",no,,,
 ua-cmu-373-2006,state-ir,public-sector,"entity tags, register 2026-10",no,banks,state-secrets,AUTH-30;REV-C1
-ua-cmu-373-2006,public-sector,,"entity tags, register 2026-10",no,banks,state-secrets,AUTH-30
+ua-cmu-373-2006,public-sector,,"entity tags, register 2026-10",no,banks,state-secrets,AUTH-30;REV-C1;AUTH-41
 ua-cmu-869-2009,public-sector,,"entity tags, register 2026-10",no,,,
 ua-cmu-869-2009,vendors,,"entity tags, register 2026-10",no,,,
 ua-cmu-1082-2003,state-secrets,,"entity tags, register 2026-10",no,,,
@@ -326,13 +326,14 @@ ua-law-4336-ix,kii,,"entity tags, register 2026-10",no,,,
 ua-law-4336-ix,state-ir,,"entity tags, register 2026-10",no,,,
 ua-law-4336-ix,public-sector,,"entity tags, register 2026-10",no,,,
 ua-ssscip-409-2025,state-ir,public-sector,"entity tags, register 2026-10",no,banks,,AUTH-30;REV-C1
-ua-ssscip-409-2025,public-sector,,"entity tags, register 2026-10",no,,,
+ua-ssscip-409-2025,public-sector,,"entity tags, register 2026-10",no,banks,,AUTH-30;REV-C1;AUTH-41
 ua-ssscip-409-2025,kii,public-sector,"ПКМУ № 712, Порядок авторизації п. 1; ПКМУ № 373 п. 16",no,banks,,AUTH-30;REV-C1
 ua-ssscip-419-2025,state-ir,public-sector,"entity tags, register 2026-10",no,banks,,AUTH-30;REV-C1
-ua-ssscip-419-2025,public-sector,,"entity tags, register 2026-10",no,,,
+ua-ssscip-419-2025,public-sector,,"entity tags, register 2026-10",no,banks,,AUTH-30;REV-C1;AUTH-41
 ua-cmu-712-2025,state-ir,public-sector,"entity tags, register 2026-10",no,banks,state-secrets,AUTH-14;AUTH-37;REV-C1;REV-C2
 ua-cmu-712-2025,kii,public-sector,"entity tags, register 2026-10",no,banks,state-secrets,AUTH-14;AUTH-37;REV-C1;REV-C2
 ua-cmu-712-2025,state-secrets,public-sector,"ПКМУ № 712, Порядок авторизації пп. 1, 10–11: системи з ДТ органів державного сектору",no,,,AUTH-37
+ua-cmu-712-2025,public-sector,,"ПКМУ № 712, Порядок авторизації п. 1; презумпція AUTH-41",no,banks,state-secrets,AUTH-14;AUTH-37;REV-C1;REV-C2;AUTH-41
 ua-cmu-1281-2025,public-sector,,"entity tags, register 2026-10",no,,,
 ua-cmu-1281-2025,ki,,"entity tags, register 2026-10",no,,,
 ua-cmu-1281-2025,kii,,"entity tags, register 2026-10",no,,,
@@ -384,7 +385,7 @@ ua-ssscip-44-2026,kii,,"entity tags, register 2026-10",no,,,
 ua-ssscip-75-2026,ki,,"entity tags, register 2026-10",no,finance,,
 ua-ssscip-75-2026,kii,,"entity tags, register 2026-10",no,finance,,
 ua-ssscip-75-2026,state-ir,public-sector,"entity tags, register 2026-10",no,banks,state-secrets,REV-B1;REV-C1
-ua-ssscip-75-2026,public-sector,,"entity tags, register 2026-10",no,banks,state-secrets,REV-B1
+ua-ssscip-75-2026,public-sector,,"entity tags, register 2026-10",no,banks,state-secrets,REV-B1;REV-C1;AUTH-41
 ua-ssscip-141-2026,state-ir,,"entity tags, register 2026-10",no,,,
 ua-ssscip-141-2026,kii,,"entity tags, register 2026-10",no,,,
 ua-ssscip-141-2026,security-services,,"entity tags, register 2026-10",no,,,
