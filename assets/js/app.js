@@ -221,11 +221,15 @@
   }
 
   // ------------------------------------------------------------------ selection logic
+  // Owner's presumption AUTH-41: every public-sector body processes information for official use (restricted information),
+  // so it gets the rows for systems with restricted information without ticking it.
+  const PRESUMED = [["public-sector", "public-restricted"]];
   function expandedSectors() {
     if (!S.sectors.length) return null; // null = everything
     const out = new Set(["general"]);
     const up = (id) => { if (out.has(id) || !D.sectorById[id]) return; out.add(id); D.parents[id].forEach(up); };
     S.sectors.forEach(up);
+    PRESUMED.forEach(([ifId, thenId]) => { if (out.has(ifId)) up(thenId); });
     return out;
   }
   // selected sectors plus everything narrower (for provisions that apply to a sub-group only)
@@ -588,10 +592,14 @@
   };
   const QUIZ_EXCLUSIVE = { q1: "other" }; // question 2 has no "none": nothing ticked means none
   const QA = { q1: [], q2: ["pd"], q3: "no", q4: [], touched: false };
-  const quizSectors = () => [...new Set(["q1", "q2", "q3", "q4"].flatMap((q) => {
-    const sel = [].concat(QA[q]);
-    return QUIZ[q].opts.filter(([id]) => sel.includes(id)).flatMap(([, ids]) => ids);
-  }))].filter((id) => D.sectorById[id]);
+  const quizSectors = () => {
+    const ids = new Set(["q1", "q2", "q3", "q4"].flatMap((q) => {
+      const sel = [].concat(QA[q]);
+      return QUIZ[q].opts.filter(([id]) => sel.includes(id)).flatMap(([, ids]) => ids);
+    }));
+    PRESUMED.forEach(([ifId, thenId]) => { if (ids.has(ifId)) ids.add(thenId); });
+    return [...ids].filter((id) => D.sectorById[id]);
+  };
   // The questionnaire's answers read back from a profile (a link or the home page's one-click types)
   function quizFromSectors() {
     if (QA.touched || !S.sectors.length) return;
