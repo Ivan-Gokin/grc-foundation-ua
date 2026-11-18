@@ -318,7 +318,7 @@ ua-cmu-205-2025,public-sector,,"entity tags, register 2026-10",no,,,
 ua-cmu-205-2025,vendors,,"entity tags, register 2026-10",no,,,
 ua-cmu-154-2025,cloud,,"entity tags, register 2026-10",no,,,
 ua-cmu-154-2025,public-sector,cloud-users,review 2026-10-24: public bodies that use cloud services,no,,,
-ua-cmu-154-2025,kii,cloud-users,review 2026-10-24: CII owners that use cloud services,no,,,
+ua-cmu-154-2025,kii,cloud-users,review 2026-10-24: CII owners that use cloud services,no,,,REV-CL-PD-7
 ua-cmu-154-2025,state-ir,cloud-users,Порядок надання п. 3; Порядок каталогів п. 6 (review 2026-11-18),no,,,REV-CL-PD-3
 ua-ssscip-627-2024,kii,,"entity tags, register 2026-10",no,,,
 ua-ssscip-627-2024,ki,,"entity tags, register 2026-10",no,,,
@@ -426,7 +426,7 @@ ua-ssscip-285-2026,security-services,,"entity tags, register 2026-10; винят
 ua-ssscip-179-2026,ncs-bodies,,"entity tags, register 2026-10",no,,,
 ua-ssscip-179-2026,ki,,п. 8 Порядку; Закон № 2163-VIII ст. 9 ч. 3; AUTH-POS-3,no,,,AUTH-POS-3
 ua-ssscip-179-2026,security-services,,п. 8 Порядку; Закон № 2163-VIII ст. 9 ч. 3 п. 4 (приватні команди реагування),no,,,D179-PD1
-ua-nbu-67-2024,finance,,п. 2 постанови; п. 2(3) розділу I,yes,,,REV-NO1-PD-A
+ua-nbu-67-2024,finance,,п. 2 постанови; п. 2(3) розділу I,yes,nbu-oversight;nbu-ecbd,banks;nonbank-fi,REV-NO1-PD-A
 ua-ssscip-402-2026,public-sector,,"entity tags, register 2026-10",no,,,
 ua-ssscip-402-2026,state-ir,public-sector,"entity tags, register 2026-10",no,,,D402-PD2
 ua-ssscip-402-2026,ki,,"entity tags, register 2026-10",no,,,

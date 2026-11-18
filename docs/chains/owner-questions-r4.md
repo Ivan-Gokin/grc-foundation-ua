@@ -113,7 +113,10 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
   - Question: is ensuring interoperability (п. 9) the provider's duty?
   - This holds only as an assumption. The rest of PD-6 is text-based.
 
+- **REV-R5-CL-1 (added, cited on 154 pn-10; from the confirmation round).** Backups of national ЕІР (ПКМУ 154 п. 10 within Закон 2163 ст. 8 ч. 6) are mandatory for state bodies, military formations and state enterprises, voluntary for ОМС (ПКМУ 311 п. 2). With no ОМС code, ОМС still see the row locked; the parameter says it is voluntary for them. Accept, or drop the lock for the whole public sector?
+
 **1.13 НБУ 67/2024: the finance tag. REV-NO1-PD-A (added). Raised by NO1.**
+- **Update (r5):** the new child codes inherit finance, so `except=nbu-oversight;nbu-ecbd unless=banks;nonbank-fi` was added (REV-NO1-PD-A amended). nbu-is-participants still sees the act.
 - **Question:** Is the finance tag acceptable as an approximation for financial-services market participants supervised by the NBU? Payment-market participants without the right to provide financial services are excluded through the act condition.
 - **Chair:** accept.
 
@@ -277,7 +280,7 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **Skipped until you decide:** AS register change 5 (binding, act_condition_uk/en). checked_edition stays empty (285 requisites are already in owner-todo).
 - **D285-PD5:** a value between bands goes to the lower state; I and R ×100 give percent. This fills a gap in the text.
 
-**5.3 Typical contract under ПКМУ 154: binding force. REV-CL-PD-9 (not added). Raised by CL (R4-CL-005).**
+**5.3 Typical contract under ПКМУ 154: binding force. RESOLVED by REV-D1 (2026-11-18): td-* rows are «рекомендація». REV-CL-PD-9 (not added). Raised by CL (R4-CL-005).**
 - **Question:** Do the 20 td-* rows (53 links) stay locked as "required by the act"? The library texts only approve a template.
 - **Options:**
   - (a) Binding, as the drafters proposed.
