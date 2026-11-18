@@ -50,6 +50,10 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
   - Question: is Вимоги п. 6 a boundary rather than an exception? That is, does a КСЗІ attestat cover levels II–IV only within the КСЗІ functions, with full measures outside them?
   - Chair: accept, but note that the "outside them in full" part is an inference.
 
+- **REV-R5-ST-1 (not added; from the confirmation round).**
+  - Question: Order 836 — for a CII object with no ДІР, службова інформація or ДТ, the second criticality criterion (Критерії п. 4) is literally never met, yet п. 5 of the risk-level procedure puts CII objects at level II. Which level applies to their supplies?
+  - Options: (a) level II for supplies where the supplier's system takes part in processing the object's information, level I for the rest, until SSSCIP clarifies — **chair recommends (a)** and asking SSSCIP; (b) literal reading: always level I (declaration only); (c) no decision, keep the [ПЕРЕВІРИТИ] marker (current state).
+
 **1.4 ПКМУ 1335 / Закон 2163 ст. 4 ч. 4: the ban on listed software and equipment. Raised by ST and IS.**
 - **D-1335-ADDR (added):** applicability follows the addressees of the ban. Chair: text-based; the owner only needs to set the status.
 - **D-1335-USE (not added).**
