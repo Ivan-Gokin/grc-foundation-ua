@@ -1,6 +1,6 @@
 # What the project needs from the owner / Що потрібно від автора
 
-Kept up to date by the AI coordinator. Last update: 2026-11-18 (one new text needed: ПКМУ 1358/2020). Tick items off or delete them when done.
+Kept up to date by the AI coordinator. Last update: 2026-11-18 (new texts needed: ПКМУ 1358/2020, Наказ 604/2026, Закон 877-V, ПКМУ 939/2013, tables of Наказ 402). Tick items off or delete them when done.
 
 ## 1. Texts for the library
 
@@ -62,6 +62,10 @@ Base profile for NATO information (chain 31):
 
 - [x] ПКМУ № 154/2025: the body of the Типовий договір and its додатки 1–3 (published as separate files; the zakon.rada print has only the headings). (The Мінцифри sectoral security profile for cloud providers and the SSSCIP recommendations on data deletion are not published — owner, 2026-11-18.)
 - [ ] ПКМУ № 1358/2020 (Порядок функціонування Національної телекомунікаційної мережі) — not in the register; Наказ 771 sends the users' rights and duties there: https://zakon.rada.gov.ua/laws/show/1358-2020-%D0%BF/print
+- [ ] Наказ Держспецзв'язку № 604/2026 (методика і уніфікована форма акта перевірки, `ua-ssscip-604-2026`) — ПКМУ 1668 refers to it.
+- [ ] Закон України № 877-V «Про основні засади державного нагляду (контролю) у сфері господарської діяльності» — deadlines of the припис under ПКМУ 1668: https://zakon.rada.gov.ua/laws/show/877-16/print
+- [ ] ПКМУ № 939/2013 (порядок роботи з документами, що містять ДТ) — referred to by ПКМУ 1668; restricted parts may be unavailable, the public text is enough.
+- [ ] Наказ № 402/2026: the tables of додатки 3 (матриця ризиків) and 4 (форма реєстру ризиків) — missing from the zakon.rada print (images); a copy with the tables, if you have one.
 - [x] ПКМУ № 818/2023 (план захисту об'єкта КІ) — not in the register; needed for decision REV-C21 (ПКМУ 518 п. 4 абз. третій).
 
 ## 2. Facts only the owner can check
