@@ -123,10 +123,7 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
   - НБУ 143 applicability is now `nonbank-fi` (no exception); НБУ 66 розд. IV–V rows were retagged (see 2.6 and 2.7).
   - REV-NB-PD-1 and REV-NB-66-IV-V now state the final tagging and are decided.
   - Note: a reader who ticks only «Фінансовий сектор» (as the questionnaire does) no longer sees НБУ 95 or 143. This is the same as for the bank-only acts (НБУ 4, 178): the narrower code has to be ticked.
-- `csirt` (parent public-sector): bodies that have set up a sectoral or regional CSIRT (CSIRT-NBU, MIL.CERT-UA).
-  - Raised by IR.
-  - Then: retag 425 r1-p5, r1-p6, r3-p1…r3-p4 and r5-p1, and 1471 p6, p9 and p10 as `csirt;security-services`, and add csirt applicability rows for 425 and 1471.
-  - The decisions that go with it are PD-425-1 and D1471-PD1 (1471 is added and cited on its security-services row).
+- Sector code for response-team bodies: **not added** (owner, 2026-11-19: not the site's audience). Наказ 425 and ПКМУ 1471 keep their current tags.
 - Residents of Дія Сіті and ФОП (Закон 2297 a10-p5, a24-p4). Raised by PD.
 
 ---
