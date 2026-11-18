@@ -310,7 +310,8 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **Civil Code ст. 630 / Commercial Code ст. 179 ч. 4** (or other basis), for the binding force of the Typical contract. Raised by CL.
 - **The Мінцифри sectoral security profile, and the regulator's requirements for cloud providers.** Identify them, or confirm they do not exist yet. Raised by CL (R4-CL-023).
 - **Тables of annexes 3 and 4 of Методика 402.** Annex 4 is filed but its table is still a «[TABLE]» placeholder, so the iv-3 and v-1 markers stay. Raised by IS.
-- **Still missing, so the 1799 markers stay:** the target-profile recommendations (p12) and the SSSCIP state-IR assessment procedure (p20). Raised by AS.
+- **Still missing, so the 1799 p20 marker stays:** the SSSCIP state-IR assessment procedure — candidate Наказ Держспецзв'язку № 660/2014 (`ua-ssscip-660-2014`); please add its text. (p12 is now resolved: Наказ 810.) Raised by AS.
+- **Методика № 471 (ПКМУ 471/2024)** and the **КМУ list of objects/risks for compulsory insurance** (Закон 1882 ст. 32 ч. 2). Raised by CI (r5).
 
 ---
 
