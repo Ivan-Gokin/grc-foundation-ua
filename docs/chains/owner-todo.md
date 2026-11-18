@@ -1,6 +1,6 @@
 # What the project needs from the owner / Що потрібно від автора
 
-Kept up to date by the AI coordinator. Last update: 2026-11-18 (all texts received). Tick items off or delete them when done.
+Kept up to date by the AI coordinator. Last update: 2026-11-18 (one new text needed: ПКМУ 1358/2020). Tick items off or delete them when done.
 
 ## 1. Texts for the library
 
@@ -61,6 +61,7 @@ Base profile for NATO information (chain 31):
 - [x] Постанова КМУ № 1426 від 29.12.2021 — Про затвердження Положення про організаційно-технічну модель кіберзахисту (`ua-cmu-1426-2021`): https://zakon.rada.gov.ua/laws/show/1426-2021-%D0%BF/print
 
 - [x] ПКМУ № 154/2025: the body of the Типовий договір and its додатки 1–3 (published as separate files; the zakon.rada print has only the headings). (The Мінцифри sectoral security profile for cloud providers and the SSSCIP recommendations on data deletion are not published — owner, 2026-11-18.)
+- [ ] ПКМУ № 1358/2020 (Порядок функціонування Національної телекомунікаційної мережі) — not in the register; Наказ 771 sends the users' rights and duties there: https://zakon.rada.gov.ua/laws/show/1358-2020-%D0%BF/print
 - [x] ПКМУ № 818/2023 (план захисту об'єкта КІ) — not in the register; needed for decision REV-C21 (ПКМУ 518 п. 4 абз. третій).
 
 ## 2. Facts only the owner can check
