@@ -1,10 +1,10 @@
 # What the project needs from the owner / Що потрібно від автора
 
-Kept up to date by the AI coordinator. Last update: 2026-11-18 (texts received; still missing: НБУ № 66/2026). Tick items off or delete them when done.
+Kept up to date by the AI coordinator. Last update: 2026-11-18 (all texts received). Tick items off or delete them when done.
 
 ## 1. Texts for the library
 
-Received 2026-11-18 and filed in `library/` (ticked below). **Still missing: Постанова НБУ № 66/2026.** Drafts that lack requisites (date, number) are noted in `library/INDEX.md`.
+Received 2026-11-18 and filed in `library/` (ticked below). All texts received. Drafts that lack requisites (date, number) are noted in `library/INDEX.md`.
 
 Save each as `library/<type>/<id>/text.txt` with the URL and edition on the first line (or attach it in the chat). Links go to the print view where there is one.
 
@@ -27,7 +27,7 @@ Personal data (chain 20):
 - [x] Optional: the Ombudsman's Типовий порядок обробки персональних даних (наказ Уповноваженого № 1/02-14), if you want it in — not in the register yet.
 
 NBU batch (chains 7, 8, 13, 16, 17, 19) — new acts:
-- [ ] Постанова Правління НБУ № 66 від 12.06.2026 — Про затвердження Положення про критичну інформаційну інфраструктуру фінансового сектору та Змін до деяких норм (`ua-nbu-66-2026`): https://bank.gov.ua/ua/legislation/Resolution_12062026_66
+- [x] Постанова Правління НБУ № 66 від 12.06.2026 — Про затвердження Положення про критичну інформаційну інфраструктуру фінансового сектору та Змін до деяких норм (`ua-nbu-66-2026`): https://bank.gov.ua/ua/legislation/Resolution_12062026_66
 - [x] Постанова Правління НБУ № 143 від 09.12.2025 — Про затвердження Положення про організацію заходів із забезпечення інформаційної безпеки та кіберзахисту надав (`ua-nbu-143-2025`): https://zakon.rada.gov.ua/laws/show/v0143500-25/print
 
 NBU batch — already mapped, text needed for the re-review:
