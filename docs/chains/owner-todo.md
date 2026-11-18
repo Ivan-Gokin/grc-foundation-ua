@@ -37,6 +37,7 @@ Save each as `library/<type>/<id>/text.txt` with the URL and edition on the firs
 - [ ] Закон України № 2163-VIII від 05.10.2017 — Про основні засади забезпечення кібербезпеки України (`ua-law-2163-viii`): https://zakon.rada.gov.ua/laws/show/2163-19/print
 - [ ] Постанова КМУ № 1426 від 29.12.2021 — Про затвердження Положення про організаційно-технічну модель кіберзахисту (`ua-cmu-1426-2021`): https://zakon.rada.gov.ua/laws/show/1426-2021-%D0%BF/print
 
+- [ ] ПКМУ № 154/2025: the body of the Типовий договір and its додатки 1–3 (published as separate files; the zakon.rada print has only the headings). Also the Мінцифри sectoral security profile for cloud providers and the SSSCIP recommendations on data deletion, if published.
 - [ ] ПКМУ № 818/2023 (план захисту об'єкта КІ) — not in the register; needed for decision REV-C21 (ПКМУ 518 п. 4 абз. третій).
 
 ## 2. Facts only the owner can check
