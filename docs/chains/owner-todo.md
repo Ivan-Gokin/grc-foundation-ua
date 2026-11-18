@@ -41,7 +41,7 @@ Save each as `library/<type>/<id>/text.txt` with the URL and edition on the firs
 
 ## 2. Facts only the owner can check
 
-- [ ] Накази Держспецзв'язку № 75/2026, № 409/2025, № 419/2025: date, number and Ministry of Justice registration (the supplied texts have them blank). Goes into `checked_edition` in `data/sources.csv`.
+- [ ] Накази Держспецзв'язку № 75/2026, № 409/2025, № 419/2025, № 285/2026 (and the edition of its report form, headed «у редакції наказу … від ___ 2026»): date, number and Ministry of Justice registration (the supplied texts have them blank). Goes into `checked_edition` in `data/sources.csv`.
 
 ## 3. Decisions to confirm or reject
 
