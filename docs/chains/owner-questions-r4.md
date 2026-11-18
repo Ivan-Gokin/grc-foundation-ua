@@ -27,6 +27,8 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **PD-843-4:** for such a system, profile 843 replaces profile 419 (ПКМУ 373 пп. 16–17). No value in 419 column 5 is stricter than 843 column 3. Chair: accept.
 - **PD-843-6:** the profile's network measures (AC-17, AC-18, IA-3, MA-4, CA-3, SC-7, SC-8, SC-10, SC-23, SI-4) stay mandatory, but only for the interfaces the system actually has. Chair: accept.
 
+- **REV-R5-NA-1 (added; from the confirmation round, a valid major).** Who owns the system: does 843 bind only public-sector owners (plus the Defence Forces), with private owners such as defence-industry enterprises getting it only as a processing condition set by the state owner of the information (ПКМУ 373 п. 20), as for 409/419 under REV-C1? **Rows written that way** (nato-info requires public-sector; a defence+nato-info row). Options: accept; or show it to every nato-info owner (if the NATO arrangements, Закон 2068-VIII, bind private owners directly — text not in the library).
+
 **1.2 Order 45 (anti-virus updates): addressees. D45-PD2 (added). Raised by SP.**
 - **Question:** Does Order 45 bind public authorities, local governments, military formations and state enterprises by their status, whether or not they hold state information resources or restricted information? Should state banks be excluded?
 - **Rows written:** public-sector and defence, with no bank exception.
