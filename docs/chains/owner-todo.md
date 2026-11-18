@@ -1,6 +1,6 @@
 # What the project needs from the owner / Що потрібно від автора
 
-Kept up to date by the AI coordinator. Last update: 2026-11-18 (new texts needed: ПКМУ 1358/2020, Наказ 604/2026, Закон 877-V, ПКМУ 939/2013, tables of Наказ 402). Tick items off or delete them when done.
+Kept up to date by the AI coordinator. Last update: 2026-11-18 (review round r4 done; its full owner list is in [owner-questions-r4.md](owner-questions-r4.md)). Tick items off or delete them when done.
 
 ## 1. Texts for the library
 
@@ -66,14 +66,26 @@ Base profile for NATO information (chain 31):
 - [ ] Закон України № 877-V «Про основні засади державного нагляду (контролю) у сфері господарської діяльності» — deadlines of the припис under ПКМУ 1668: https://zakon.rada.gov.ua/laws/show/877-16/print
 - [ ] ПКМУ № 939/2013 (порядок роботи з документами, що містять ДТ) — referred to by ПКМУ 1668; restricted parts may be unavailable, the public text is enough.
 - [ ] Наказ № 402/2026: the tables of додатки 3 (матриця ризиків) and 4 (форма реєстру ризиків) — missing from the zakon.rada print (images); a copy with the tables, if you have one.
+- [ ] Found in review round r4 (details in [owner-questions-r4.md](owner-questions-r4.md) §6):
+  - Закон № 2155-VIII (електронна ідентифікація та довірчі послуги) and the NBU definition of САБ — НБУ 95.
+  - Закон «Про банки і банківську діяльність» — НБУ 4 for foreign-bank branches; whether a state bank is a «публічний користувач» under Закон 2075.
+  - Закон «Про Національний банк України» ст. 56 — entry into force of НБУ 143/2025.
+  - Держспецзв'язку: CSIRT capability requirements; procedure for delegating CERT-UA tasks; criteria of a significant cyber incident (Накази 425, ПКМУ 1471).
+  - The target-profile recommendations (ПКМУ 1799 п. 12) and the SSSCIP state-IR assessment procedure (п. 20).
+  - ЦК ст. 630 / ГК ст. 179 ч. 4 (or another basis) for the binding force of the ПКМУ 154 Типовий договір.
+  - Also named earlier by drafters: ПКМУ 821/2022, ПКМУ 471/2024; the CMU annual-report form, CI designation procedure and methodology; НБУ 194/2023, 204/2023, 15/2024, 185/2024, 199/2023, 69/2025; the CMU vulnerability procedure (1580/2025 or 497/2023); Закон «Про інформацію» ст. 19-1; NATO AC/322-D/0048-REV3 (identifier only, PD-843-5).
 - [x] ПКМУ № 818/2023 (план захисту об'єкта КІ) — not in the register; needed for decision REV-C21 (ПКМУ 518 п. 4 абз. третій).
 
 ## 2. Facts only the owner can check
+
+- [ ] From review round r4: Order 534 URL (z1134-26?), Order 17/2025 second registration number and amendments, current edition of ПКМУ 818, Order 661 ДСК mark vs publication, Order 836 level IV profile, REV-C7 supplier measures, ПКМУ 154 Типовий договір source URL — [owner-questions-r4.md](owner-questions-r4.md) §7.
 
 - [ ] Also blank in the texts received 2026-11-18 (cip.gov.ua copies of the draft blanks): Накази № 143/2026, 434/2025 (the page says 424), 438/2025, 661/2025, 771/2023, 798/2025, 810/2025, 811/2025, 843/2025. The register already has their dates and numbers; what is unknown is whether the signed texts match and whether the orders were registered with the Ministry of Justice.
 - [ ] Накази Держспецзв'язку № 75/2026, № 409/2025, № 419/2025, № 285/2026 (and the edition of its report form, headed «у редакції наказу … від ___ 2026»): date, number and Ministry of Justice registration (the supplied texts have them blank). Goes into `checked_edition` in `data/sources.csv`.
 
 ## 3. Decisions to confirm or reject
+
+- [ ] Review round r4 (2026-11-18): about 40 questions on scope, banks, personal data, critical infrastructure and binding status — see [owner-questions-r4.md](owner-questions-r4.md).
 
 `data/decisions.csv`, status `proposed` (the site shows them as proposed until confirmed). Run `python3 scripts/validate.py` for the current list.
 
@@ -84,7 +96,8 @@ Base profile for NATO information (chain 31):
 
 ## 4. Policies
 
-- [ ] The owner will attach the policies. On arrival: compare with the base list in `data/policies.csv` (CIS NIST CSF Policy Template Guide 2024 + Ukrainian additions) and decide what changes.
+- [ ] The owner will attach the policies. Drafters also suggested two policies not in the CIS guide: «Положення (порядок) про обробку і захист ПД» and «Регламент взаємодії з Держспецзв'язку».
+  On arrival: compare with the base list in `data/policies.csv` (CIS NIST CSF Policy Template Guide 2024 + Ukrainian additions) and decide what changes.
 
 ## 5. Waiting on nothing (AI can do when asked)
 
