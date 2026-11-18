@@ -41,7 +41,7 @@ For the review round: proposed decisions, register fixes and rows to check. Dele
 - PROPOSED 4: DC-only provider: ISO/IEC 27001 certificate suffices (п. 7 Вимог) though п. 2 names 27001, 27017, 27018 (vn-8-9).
 - PROPOSED 5: п. 2 абз. 2 temporary exception to provider list until 31.12.2026 (p2-2).
 - PROPOSED 6: public users and KI operators (ОКІІ) contract per Типовий договір (Закон 2075 ст. 10 ч. 2); resolution itself sets no obligation (td).
-- [ПЕРЕВІРИТИ]: Типовий договір body + annexes 1–3 (published separately; not in library) — OWNER TEXT; Мінцифри sectoral security profile (vn-5); SSSCIP data deletion recommendations (pn-11); 2163 ст. 8 ч. 6.
+- [ПЕРЕВІРИТИ]: ~~Типовий договір body + annexes 1–3 (published separately; not in library) — OWNER TEXT~~ CLOSED (review r4, R4-CL-021): received 2026-11-18, in library/cmu/ua-cmu-154-2025; Мінцифри sectoral security profile (vn-5); SSSCIP data deletion recommendations (pn-11); 2163 ст. 8 ч. 6.
 - REGISTER checked_edition 154: «ред. 13.08.2026 (зміни № 1691/2025 і № 1009/2026)».
 
 # Drafts of 2026-11-18 (batch 2: 27 acts) — open points for the review
