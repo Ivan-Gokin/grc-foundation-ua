@@ -34,7 +34,7 @@ ENUMS = {
     "actor_act": {"establishes", "addressed"},
     "domain": {"cybersecurity", "records"},
     "confidence": {"high", "medium", "low", ""},
-    "provision_type": {"substantive", "delegating", "definitional"},
+    "provision_type": {"substantive", "recommendation", "delegating", "definitional"},
     "relationship": {"equal", "subset_of", "superset_of", "intersects_with", "no_relationship"},
     "rationale": {"semantic", "syntactic", "functional"},
     "coverage": {"full", "partial", "none"},

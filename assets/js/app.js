@@ -285,6 +285,8 @@
   }
   function provisionVisible(p, exp) {
     if (!p || !sourceVisible(D.sourceById[p.source_id], exp, false)) return false;
+    // a provision the act only recommends (methodological recommendations inside a binding act) goes with the recommended acts
+    if (!S.rec && p.provision_type === "recommendation") return false;
     if (!exp || !p.applies_to) return true;
     // ';' = any of the terms; '+' = every part of a term; '!' = the reader must not be in that sector
     // a term counts only if an applicability row that covers it (its sector or a broader one) applies to the reader
@@ -1596,7 +1598,7 @@
     ].join("");
     return `<div class="prov">
       <div class="prov-line"><span class="prov-fit">${glyph(m.relationship)} ${esc(covLabel(m.coverage))}</span>
-        <span class="prov-ref">${esc(L(p, "ref"))}${m.review_status === "reviewed" ? ` <span class="badge cov-full">${esc(t("reviewed"))}</span>` : ""}${groundsBadge(groundsOf(m))}</span>
+        <span class="prov-ref">${esc(L(p, "ref"))}${m.review_status === "reviewed" ? ` <span class="badge cov-full">${esc(t("reviewed"))}</span>` : ""}${p.provision_type === "recommendation" ? ` <span class="badge">${esc(t("bRecommended"))}</span>` : ""}${groundsBadge(groundsOf(m))}</span>
         <span class="prov-links">${src.url ? `<a href="${esc(src.url)}" target="_blank" rel="noopener">${esc(t("openText"))} ↗</a>` : ""}${reportLink(m, ctlId)}</span></div>
       ${L(p, "summary") ? `<p class="prov-text"${orig ? ' lang="uk"' : ""}>${esc(L(p, "summary"))}${orig ? ` <span class="prov-orig" lang="${esc(S.lang)}">${esc(t("originalUk"))}</span>` : ""}</p>` : ""}
       ${L(m, "notes") ? `<p class="prov-note"><b>${esc(t("driverNote"))}:</b> <span${isFallback(m, "notes") ? ' lang="uk"' : ""}>${esc(L(m, "notes"))}</span></p>` : ""}

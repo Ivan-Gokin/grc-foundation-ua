@@ -313,7 +313,7 @@ def policy_names(ids, lang="uk"):
     return "; ".join(_POLICIES[i][f"name_{lang}"] if i in _POLICIES else i for i in mapdata.split_ids(ids))
 
 
-TYPE_UK = {"substantive": "обов'язок", "delegating": "делегує", "definitional": "визначення"}
+TYPE_UK = {"substantive": "обов'язок", "recommendation": "рекомендація", "delegating": "делегує", "definitional": "визначення"}
 READABLE_HEADER = ["Акт", "Пункт", "Вимога", "Стандарт", "Захід", "Назва заходу", "Відношення", "Параметр за законом",
                    "Куди внести", "Примітка", "Рішення", "Статус", "Тип", "Стосується лише", "Застереження", "Обґрунтування",
                    "Хто зіставив", "Хто перевірив", "Дата", "Пункт (EN)", "Вимога (EN)", "id"]
