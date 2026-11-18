@@ -111,13 +111,18 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **Question:** Is the finance tag acceptable as an approximation for financial-services market participants supervised by the NBU? Payment-market participants without the right to provide financial services are excluded through the act condition.
 - **Chair:** accept.
 
-**1.14 Sector codes (sectors.csv). None were added; each needs your decision.**
-- `nbu-is-participants` (parent finance, sort 50.6): non-bank participants of NBU information systems.
+**1.14 Sector codes (sectors.csv). The finance codes were added on 2026-11-18 (owner's decision); the others still need your decision.**
+- **Done:** `nbu-is-participants` (parent finance, sort 50.9): non-bank participants of NBU information systems.
   - Raised by NO2.
-  - Then: tag НБУ 95 r3-p23 and r3-p24 as `banks;nbu-is-participants`; change the 95 applicability row from finance to banks; add an nbu-is-participants row (basis «п. 5 розділу I; розділ III», AUTH-POS-6). These changes were skipped.
-- Non-bank financial institutions, important oversight object, and optionally the institution that maintains ЄЦБД ОСЦПВ (children of finance).
+  - НБУ 95 r3-p23 and r3-p24 are now tagged `banks;nbu-is-participants` and cite REV-NO2-PD1 (provision and links).
+  - The 95 applicability row finance was replaced by `banks` (basis «п. 5 розділу I Положення») and `nbu-is-participants` (basis «п. 5 розділу I; розділ III», AUTH-POS-6;REV-NO2-PD1).
+  - The interim note ("the site shows the row to the whole financial sector") was removed from both rows.
+- **Done:** non-bank financial institutions `nonbank-fi` (50.6), important NBU oversight objects `nbu-oversight` (50.7) and the institution that maintains ЄЦБД ОСЦПВ `nbu-ecbd` (50.8), all children of finance.
   - Raised by NB.
-  - Then: retag the НБУ 143 applicability and НБУ 66 rows p25–p31. Until then the interim decisions REV-NB-PD-1 and REV-NB-66-IV-V apply.
+  - `nbu-ecbd` was added because розд. V and пп. 8(3), 13 of НБУ 66 name that institution as a separate addressee.
+  - НБУ 143 applicability is now `nonbank-fi` (no exception); НБУ 66 розд. IV–V rows were retagged (see 2.6 and 2.7).
+  - REV-NB-PD-1 and REV-NB-66-IV-V now state the final tagging and are decided.
+  - Note: a reader who ticks only «Фінансовий сектор» (as the questionnaire does) no longer sees НБУ 95 or 143. This is the same as for the bank-only acts (НБУ 4, 178): the narrower code has to be ticked.
 - `csirt` (parent public-sector): bodies that have set up a sectoral or regional CSIRT (CSIRT-NBU, MIL.CERT-UA).
   - Raised by IR.
   - Then: retag 425 r1-p5, r1-p6, r3-p1…r3-p4 and r5-p1, and 1471 p6, p9 and p10 as `csirt;security-services`, and add csirt applicability rows for 425 and 1471.
@@ -160,17 +165,17 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **Rows written:** `except=finance` on all rows of 1799, 1668 and 285, citing D1668-PD1.
 - **Chair:** this goes beyond the literal text, so it is your choice.
 
-**2.5 NBU Regulation 95. REV-NO2-PD1…5 (not added). Raised by NO2. Chair: all need the owner.**
-- **PD1:** show розд. III to banks and to non-bank participants of the NBU information systems (needs the sector code in 1.14).
+**2.5 NBU Regulation 95. REV-NO2-PD1…5 (PD1 added and decided 2026-11-18; PD2–PD5 not added). Raised by NO2. Chair: all need the owner.**
+- **PD1 (done):** розд. III is shown to banks and to non-bank participants of the NBU information systems (code `nbu-is-participants`, 1.14).
 - **PD2:** САБ in пп. 40 and 147 means every bank IS that directly automates banking activity (пп. 29, 38), until the NBU definition is checked.
 - **PD3:** a registered ЦСК (пп. 110, 150) means a provider of electronic trust services that is not qualified. Needs Закон 2155-VIII.
 - **PD4:** п. 54 sets the TLS version and implementation only for TCP connections that the bank protects with TLS. Otherwise п. 57 (IPsec ESP) applies.
 - **PD5:** an ISMS under ДСТУ ISO/IEC 27001:2023 meets п. 8, which cites the 2015 edition, until the NBU amends it. Check the NBU's position.
 
 **2.6 NBU Regulation 143/2025 (non-bank providers). Raised by NB.**
-- **REV-NB-PD-1 (added).**
-  - Question: is `finance except=banks`, with the п. 1 and п. 4 limits in the act condition, acceptable until there is a non-bank FI code?
-  - Payment providers and postal operators still see the act.
+- **REV-NB-PD-1 (decided 2026-11-18).**
+  - The applicability row is now `nonbank-fi` (insurers, credit unions, finance companies, pawnshops) with no exception; p1 and p4 cite REV-NB-PD-1.
+  - Payment providers and postal operators no longer see the act.
 - **REV-NB-PD-2 (not added).**
   - Question: did the resolution enter into force on 13.12.2025, the day after it was published on the NBU website, which would make the requirements mandatory from 13.12.2026?
   - The answer depends on ст. 56 of the Law on the NBU, which is not in the library.
@@ -178,9 +183,11 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **REV-NB-143-P35 (not added).**
   - Question: does the two-year term of п. 35 run from 13.12.2026 for software whose support ended before that date, and from the end of support otherwise? Chair's wording.
 
-**2.7 NBU Regulation 66/2026 (financial-sector CII), розд. IV–V. REV-NB-66-IV-V (not added). Raised by NB.**
-- **Question:** Should розд. IV–V be tagged `finance+ki(i)+!banks`, with the addressee stated in the parameter, until the oversight-object and ЄЦБД codes exist? Banks would not see these rows, because НБУ 178 розд. II п. 18 sets the same measures for them.
-- **Status:** the mapping tags were already applied in commit dd9a0c1.
+**2.7 NBU Regulation 66/2026 (financial-sector CII), розд. IV–V. REV-NB-66-IV-V (added and decided 2026-11-18). Raised by NB.**
+- **Done:** розд. IV: p25 → `nbu-oversight+ki+!banks`; p27-1…p27-7 and p28 → `nbu-oversight+kii+!banks`. Розд. V: p29 → `nbu-ecbd+ki`; p31 → `nbu-ecbd+kii`.
+- Banks still do not see розд. IV rows, because НБУ 178 розд. II п. 18 sets the same measures for them.
+- The addressee prefix («лише для …:») was removed from the 29 link parameters, and the "no separate code" sentence from the notes. Rows and links cite REV-NB-66-IV-V.
+- The 66 act condition now says who sees розд. IV and V.
 
 **2.8 Submissions to supervisors: how to map them, and REV-C13. REV-C13 (existing, proposed); REV-NB-PD-4 and REV-NO1-PD-B (not added). Raised by NB, NO1 and IS.**
 - **Question:** When an act requires information to be given to the supervisor (НБУ 143 пп. 44–46; НБУ 4 submissions; SSSCIP under REV-C13), is the main record «—» (AUTH-06), with A.5.5 and RS.CO-03 only as auxiliary links where internal provision is required?
@@ -343,8 +350,8 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 
 ## Register changes skipped (owner-dependent)
 
-- **NO2:** sectors.csv row `nbu-is-participants`; the 95 applicability change (finance → banks, plus a new row); and the provision tags on r3-p23 and r3-p24, which are workbook edits. See 1.14 and 2.5.
-- **NB:** new finance child codes (change 5). The comment_uk fix on НБУ 43 п. 47 for НБУ 66 was not checked by the chair, so it was not applied.
+- **NO2:** sectors.csv row `nbu-is-participants`; the 95 applicability change (finance → banks, plus a new row); and the provision tags on r3-p23 and r3-p24. Applied 2026-11-18 (1.14, 2.5).
+- **NB:** new finance child codes (change 5), applied 2026-11-18 with the 143 and 66 retags (1.14). The comment_uk fix on НБУ 43 п. 47 for НБУ 66 was not checked by the chair, so it was not applied.
 - **IR:**
   - `ua-ssscip-143-2026` binding → recommended (5.1);
   - the `csirt` sector code and retags (1.14).
@@ -359,6 +366,6 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 
 ## Decisions added in this commit that you may want to confirm first, because rows depend on them
 
-PD-843-1, D45-PD2, D811-PD2, D847-PD2, D771-PD1, REV-NO1-PD-A, REV-PD-D, REV-NB-PD-1, PD-410-2, PD-410-3, D1471-PD1, D1668-PD1, D-836-SUP, D-836-OWN and REV-CI7.
+PD-843-1, D45-PD2, D811-PD2, D847-PD2, D771-PD1, REV-NO1-PD-A, REV-PD-D, PD-410-2, PD-410-3, D1471-PD1, D1668-PD1, D-836-SUP, D-836-OWN and REV-CI7.
 
 All other added decisions are text-based and proposed by the chairs.

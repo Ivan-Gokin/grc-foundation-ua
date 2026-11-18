@@ -359,7 +359,8 @@ ua-ssscip-843-2025,nato-info,,"назва і п. 1 наказу № 843, наз�
 ua-cmu-1580-2025,state-ir,,"entity tags, register 2026-10",no,,,
 ua-cmu-1580-2025,kii,,"entity tags, register 2026-10",no,,,
 ua-cmu-1580-2025,security-services,,"entity tags, register 2026-10",no,,,
-ua-nbu-95-2017,finance,,"entity tags, register 2026-10",no,,,
+ua-nbu-95-2017,banks,,п. 5 розділу I Положення,yes,,,
+ua-nbu-95-2017,nbu-is-participants,,п. 5 розділу I; розділ III,yes,,,AUTH-POS-6;REV-NO2-PD1
 ua-nbu-64-2018,finance,,"entity tags, register 2026-10",no,,,
 ua-nbu-43-2021,finance,,"entity tags, register 2026-10",no,,,
 ua-nbu-4-2021,banks,,"п. 7 розділу I Положення (ред. 01.03.2025) [ПЕРЕВІРИТИ: чи поширюються вимоги на філії іноземних банків — Закон «Про банки і банківську діяльність», немає в бібліотеці]",yes,,,
@@ -510,7 +511,7 @@ ua-ssscip-604-2026,kii,,"entity tags, register 2026-10",no,,,
 ua-nbu-24-2025,finance,,"entity tags, register 2026-10",no,,,
 ua-nbu-69-2025,finance,,"entity tags, register 2026-10",no,,,
 ua-nbu-69-2025,ki,,"entity tags, register 2026-10",no,,,
-ua-nbu-143-2025,finance,,"п. 1, 4 розділу I Положення",no,banks,,REV-NB-PD-1
+ua-nbu-143-2025,nonbank-fi,,"п. 1, 4 розділу I Положення",no,,,REV-NB-PD-1
 ua-nbu-66-2026,ki,finance,"п. 9 розділу I Положення про КІІ",no,,,
 ua-nbu-66-2026,kii,finance,"п. 9 розділу I Положення про КІІ",no,,,
 ua-nbu-70-2026,finance,,"entity tags, register 2026-10",no,,,
