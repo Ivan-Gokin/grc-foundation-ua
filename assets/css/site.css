@@ -1546,3 +1546,5 @@ button.pill { font: inherit; font-size: .88rem; cursor: pointer; text-align: lef
   .home-start > .hs-steps { order: 2; margin-bottom: 0; }
   .home-start > .q-skip-top { order: 3; }
 }
+/* start page hero: the problem in muted text, the answer after it in ink */
+.hero-copy p + p { color: var(--ink); }

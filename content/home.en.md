@@ -2,9 +2,11 @@
 
 <div class="hero-copy">
 
-# Which cybersecurity requirements must your organisation meet?
+# Cybersecurity by law: what is mandatory for you, and how to prove it
 
-Laws, resolutions, orders, standards, NATO policies: hundreds of documents that refer to each other and keep changing. Kreslenyk narrows them down to the requirements that apply to your organisation and ties each to an ISO/IEC 27001 or NIST CSF 2.0 control.
+The requirements are spread across laws, resolutions, orders and standards that refer to each other and keep changing. A missed requirement means a finding from the regulator or auditor; an unneeded one means money and time spent for nothing.
+
+Kreslenyk works out which acts apply to you and gives you a Statement of Applicability in which every ISO/IEC 27001 or NIST CSF 2.0 control has its legal basis.
 
 
 </div>
