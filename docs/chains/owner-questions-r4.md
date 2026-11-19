@@ -220,6 +220,13 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 
 ---
 
+**2.11 Simulated readers (2026-11-19).**
+- **REV-P-INS-1 (added, proposed):** НБУ 43 is not shown to non-bank financial institutions or the ЄЦБД institution (not information-protection subjects, п. 3(16), 4). Accept?
+- **REV-P-INS-2 (not added):** show Закон 2121-III «Про банки…» only to banks (text not in the library). Or add the text.
+- **REV-P-MIN-1 (added, proposed):** the three NATO non-member directives apply only to nato-info (not to all public bodies). Accept?
+- **REV-P-CI-1 (not added):** the criticality-category answer should not make the reader a CII owner; add a separate «we own a CII object» answer. Meanwhile the site will show a notice.
+- Texts wanted: НБУ 194/2023, 204/2023, 15/2024, 185/2024 (cited in НБУ 143 п. 3, for nonbank-fi); НБУ 72, 73; ПКМУ 1772; Наказ 72; the joint order Держспецзв'язку/СБУ № 627/772 of 19.12.2024 (shown as mandatory for CI, text and title not verified).
+
 ## 3. Personal data
 
 **3.1 Закон 2297 ст. 7 ч. 2 пп. 6, 6². REV-PD-A (not added). Raised by PD.**
