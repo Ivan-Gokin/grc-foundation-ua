@@ -29,6 +29,7 @@ assets/js/config.js        адреса репозиторію та інші н�
 content/                   тексти сторінок у Markdown, uk і en: головна, методика, про проєкт, розділи guide/, статті articles/
 mappings/*.xlsx            положення актів і їх зіставлення зі стандартами: редагуються вручну
 mappings/*.csv             читабельні копії книг, їх пише build.py (і CI): не редагуйте
+mappings/ciso-assistant-versions.json  версії бібліотек CISO Assistant, їх пише build.py (і CI): не редагуйте
 data/*.csv                 решта: джерела, ланцюги, типи суб'єктів, заходи стандартів
 data/sp800-53/             дані рівня систем (етап 2)
 data/datapackage.json      опис стовпців опублікованих файлів (Frictionless Data Package)

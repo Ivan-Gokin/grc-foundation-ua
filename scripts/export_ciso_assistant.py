@@ -19,11 +19,20 @@ Choices (owner's decisions of 2026-11-14):
   annotation. CISO Assistant has no review-status field.
 - «—» rows (no counterpart) produce no link: the provision is assessed directly in the act's audit.
 
-usage: python3 scripts/export_ciso_assistant.py [outdir=_site/data] [--ca-libraries DIR]
+Versions (so CISO Assistant's "update library" works): CISO Assistant updates a loaded library when a file with
+the same URN and a higher `version` is uploaded; requirements are matched by URN, so node URNs are the permanent
+provision IDs. Each library has its own version, raised only when its content changes, as YYYYMMDD00 of the data
+date (or the previous version + 1 if that is not higher). The state is kept in mappings/ciso-assistant-versions.json
+(written by build.py, committed like mappings/*.csv): per library its version, a content fingerprint, the data
+version and date it last changed, and a short "what changed" note that goes into the library's description.
+An unchanged library is written byte for byte as before, so it never shows "update available".
+
+usage: python3 scripts/export_ciso_assistant.py [outdir=_site/data] [--state] [--ca-libraries DIR]
+       --state: read and update mappings/ciso-assistant-versions.json (build.py always does).
        --ca-libraries: a checkout of ciso-assistant-community/backend/library/libraries, to check that every
        target requirement exists and is assessable. build.py calls export() without the check.
 """
-import csv, json, re, sys
+import csv, hashlib, json, re, sys
 from pathlib import Path
 
 import yaml
@@ -44,6 +53,63 @@ REL = {"equal": "equal", "subset_of": "subset", "superset_of": "superset", "inte
 INVERSE = {"equal": "equal", "subset": "superset", "superset": "subset", "intersect": "intersect",
            "not_related": "not_related"}
 AI_UK = "ШІ, не вичитано"
+STATE = ROOT / "mappings" / "ciso-assistant-versions.json"
+LIST_MAX = 10  # refs listed in a change note
+
+
+def digest(obj, n=64):
+    return hashlib.sha256(json.dumps(obj, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()[:n]
+
+
+def ref_list(refs, lang):
+    refs = list(refs)
+    more = len(refs) - LIST_MAX
+    tail = (f" і ще {more}" if lang == "uk" else f" and {more} more") if more > 0 else ""
+    return "; ".join(refs[:LIST_MAX]) + tail
+
+
+def change_note(prev, items, refs, kind, version, data):
+    """The note for a library that changed: what changed against the previous state (items: code -> hash)."""
+    head_uk, head_en = f"Зміни у версії {version} (дані {data})", f"Changes in version {version} (data {data})"
+    if prev is None:
+        return (f"{head_uk}: перша версія з журналом змін.", f"{head_en}: first version with a change log.")
+    old = prev.get("items", {})
+    added = [refs[k] for k in items if k not in old]
+    changed = [refs[k] for k in items if k in old and old[k].split(" ", 1)[0] != items[k]]
+    removed = [old[k].split(" ", 1)[1] for k in old if k not in items]
+    if kind == "framework":
+        what_uk, what_en = "вимоги", "requirements"
+    else:
+        what_uk, what_en = "зіставлення положень", "mappings of provisions"
+    if not (added or changed or removed):
+        rest_uk = "вимоги без змін, змінено опис акта або групи впровадження" if kind == "framework" else \
+            "зіставлення без змін, змінено опис"
+        rest_en = "requirements unchanged; the act's description or implementation groups changed" \
+            if kind == "framework" else "mappings unchanged; the description changed"
+        return (f"{head_uk}: {rest_uk}.", f"{head_en}: {rest_en}.")
+    uk, en = [], []
+    for words_uk, words_en, lst in (("додано", "added", added), ("змінено", "changed", changed),
+                                    ("вилучено", "removed", removed)):
+        if lst:
+            uk.append(f"{words_uk} {len(lst)} ({ref_list(lst, 'uk')})")
+            en.append(f"{len(lst)} {words_en} ({ref_list(lst, 'en')})")
+    return (f"{head_uk}, {what_uk}: " + "; ".join(uk) + ".", f"{head_en}, {what_en}: " + "; ".join(en) + ".")
+
+
+def settle(state, lib_urn, body, items, refs, kind, meta):
+    """Give a library its version: keep the stored one if the content is the same, else raise it and note why."""
+    fp = digest(body)
+    prev = state.get(lib_urn)
+    if prev and prev["fingerprint"] == fp:
+        return prev
+    base = int(re.sub(r"\D", "", meta["date"])) * 100
+    version = max(base, prev["version"] + 1) if prev else base
+    note_uk, note_en = change_note(prev, items, refs, kind, version, meta["version"])
+    rec = {"version": version, "fingerprint": fp, "data": meta["version"], "date": meta["date"],
+           "note_uk": note_uk, "note_en": note_en,
+           "items": {k: f"{h} {short(refs[k], 60)}" for k, h in items.items()}}  # "hash ref"
+    state[lib_urn] = rec
+    return rec
 
 
 def clean(s):
@@ -117,13 +183,17 @@ def dump(path, data):
     path.write_text(yaml.safe_dump(data, allow_unicode=True, sort_keys=False, width=110), encoding="utf-8")
 
 
-def export(out_dir, meta, sources, types, sectors, provisions, mappings, appl=(), decisions=(), policies=()):
-    """Write the libraries; return the list of written file names."""
+def export(out_dir, meta, sources, types, sectors, provisions, mappings, appl=(), decisions=(), policies=(),
+           state_path=None):
+    """Write the libraries; return the list of written file names.
+    state_path: the versions file to read and update (see the module docstring); None keeps every version at
+    YYYYMMDD00 of the data date and writes no state."""
     out = Path(out_dir) / "ciso-assistant"
     out.mkdir(parents=True, exist_ok=True)
     dec = {d["id"]: d for d in decisions}
     pol = {r["id"]: r["name_uk"] for r in policies}
-    version = int(re.sub(r"\D", "", meta["date"]))
+    state = json.loads(Path(state_path).read_text(encoding="utf-8")) if state_path and Path(state_path).exists() else {}
+    bumped = []
     by_src = {s["id"]: s for s in sources}
     links = {}
     for m in mappings:
@@ -198,13 +268,13 @@ def export(out_dir, meta, sources, types, sectors, provisions, mappings, appl=()
             desc_uk += "\n\nУмова для всього акта: " + s["act_condition_uk"]
         if exc_uk:
             desc_uk += "\n\nВинятки: " + exc_uk
-        desc_uk += f"\n\nДжерело: Кресленик відповідності СУІБ ({meta['site_url']}), дані {meta['version']}. Офіційний текст: {s.get('url', '')}"
+        src_uk = f"\n\nДжерело: Кресленик відповідності СУІБ ({meta['site_url']}), дані {{data}}. Офіційний текст: {s.get('url', '')}"
         desc_en = s.get("description_en", "")
         if s.get("act_condition_en"):
             desc_en += "\n\nCondition for the whole act: " + s["act_condition_en"]
         if exc_en:
             desc_en += "\n\nExceptions: " + exc_en
-        desc_en += f"\n\nSource: Compliant ISMS Kreslenyk ({meta['site_url']}), data {meta['version']}. Official text: {s.get('url', '')}"
+        src_en = f"\n\nSource: Compliant ISMS Kreslenyk ({meta['site_url']}), data {{data}}. Official text: {s.get('url', '')}"
         # CISO Assistant keeps names to 200 characters; the full title stays in the description
         name_uk = short(f"{s['short_ref_uk']}: {s['title_uk']}", 195)
         name_en = short(f"{s.get('short_ref_en') or s['short_ref_uk']}: {s.get('title_en') or s['title_uk']}", 195)
@@ -218,19 +288,25 @@ def export(out_dir, meta, sources, types, sectors, provisions, mappings, appl=()
                                          "description": sectors.get(g, {}).get("description_en", "")}}}
                 for g in used]
         framework["requirement_nodes"] = nodes
-        common = {"locale": "uk", "version": version, "publication_date": meta["date"],
-                  "provider": issuer.get("issuer_uk") or "", "packager": PACKAGER}
+        provider = issuer.get("issuer_uk") or ""
         lib = {"urn": lib_urn, "locale": "uk", "ref_id": sid, "name": name_uk, "description": desc_uk,
                "copyright": "Тексти офіційних документів України не є об'єктами авторського права. Структура, "
                             "короткі формулювання і зіставлення: Кресленик відповідності СУІБ, CC BY 4.0.",
-               **{k: v for k, v in common.items() if k != "locale"},
+               "version": 0, "publication_date": "", "provider": provider, "packager": PACKAGER,
                "translations": {"en": {"name": name_en, "description": desc_en,
                                        "copyright": "Ukrainian official texts are not subject to copyright. Structure, "
                                                     "short wording and mappings: Compliant ISMS Kreslenyk, CC BY 4.0."}},
                "objects": {"framework": framework}}
+        code = {n["urn"]: n["urn"].rsplit(":", 1)[1] for n in nodes}
+        items = {code[n["urn"]]: digest(n, 10) for n in nodes}
+        refs = {code[n["urn"]]: n["ref_id"] for n in nodes}
+        rec = stamp(state, lib, items, refs, "framework", meta, src_uk, src_en, bumped, state_path)
+        framework["description"], framework["translations"]["en"]["description"] = \
+            lib["description"], lib["translations"]["en"]["description"]
         dump(out / f"{sid}.yaml", lib)
         written.append(f"{sid}.yaml")
 
+        refs_all = {n["urn"]: n["ref_id"] for n in nodes}
         # mapping sets: act -> target and target -> act, for each target framework
         sets = []
         node_urn = {p["id"]: urn("req_node", sid, p["id"].split(":", 1)[1]) for p in provs}
@@ -283,15 +359,48 @@ def export(out_dir, meta, sources, types, sectors, provisions, mappings, appl=()
             mlib = {"urn": urn("library", f"mapping-{sid}"), "locale": "uk", "ref_id": f"mapping-{sid}",
                     "name": short(f"Зіставлення: {s['short_ref_uk']} ↔ ISO/IEC 27001:2022, NIST CSF 2.0", 195),
                     "description": "Зіставлення положень акта із заходами ISO/IEC 27001:2022 і підкатегоріями NIST CSF 2.0 "
-                                   "(NIST IR 8477), в обидва боки. " + f"Джерело: {meta['site_url']}, дані {meta['version']}.",
+                                   "(NIST IR 8477), в обидва боки.",
                     "copyright": "Кресленик відповідності СУІБ, CC BY 4.0.",
-                    **{k: v for k, v in common.items() if k != "locale"},
+                    "version": 0, "publication_date": "", "provider": provider, "packager": PACKAGER,
                     "dependencies": [lib_urn, "urn:intuitem:risk:library:iso27001-2022",
                                      "urn:intuitem:risk:library:nist-csf-2.0"],
                     "objects": {"requirement_mapping_sets": sets}}
+            fwd_by = {}
+            for ms in sets:
+                for m in ms["requirement_mappings"]:
+                    if m["source_requirement_urn"].startswith(f"urn:{PACKAGER}:"):
+                        fwd_by.setdefault(m["source_requirement_urn"], []).append(m)
+            items = {code[u]: digest(ms, 10) for u, ms in fwd_by.items()}
+            refs = {code[u]: refs_all[u] for u in fwd_by}
+            stamp(state, mlib, items, refs, "mapping", meta, f" Джерело: {meta['site_url']}, дані {{data}}.",
+                  f" Source: {meta['site_url']}, data {{data}}.", bumped, state_path)
             dump(out / f"mapping-{sid}.yaml", mlib)
             written.append(f"mapping-{sid}.yaml")
+    if state_path:
+        Path(state_path).write_text(json.dumps(state, ensure_ascii=False, indent=1, sort_keys=True) + "\n",
+                                    encoding="utf-8")
+    if bumped:
+        print(f"CISO Assistant: {len(bumped)} libraries changed, new version: " + ", ".join(bumped[:8])
+              + (" …" if len(bumped) > 8 else ""))
     return written
+
+
+def stamp(state, lib, items, refs, kind, meta, src_uk, src_en, bumped, state_path):
+    """Settle the library's version and add the volatile parts: version, date, source line, change note."""
+    if state_path:
+        before = state.get(lib["urn"], {}).get("version")
+        rec = settle(state, lib["urn"], lib, items, refs, kind, meta)
+        if rec["version"] != before:
+            bumped.append(lib["ref_id"])
+    else:
+        rec = {"version": int(re.sub(r"\D", "", meta["date"])) * 100, "data": meta["version"], "date": meta["date"],
+               "note_uk": "", "note_en": ""}
+    lib["version"], lib["publication_date"] = rec["version"], rec["date"]
+    lib["description"] += src_uk.format(data=rec["data"]) + (("\n\n" + rec["note_uk"]) if rec["note_uk"] else "")
+    en = lib.get("translations", {}).get("en")
+    if en:
+        en["description"] += src_en.format(data=rec["data"]) + (("\n\n" + rec["note_en"]) if rec["note_en"] else "")
+    return rec
 
 
 def check(out_dir, ca_dir):
@@ -342,7 +451,7 @@ def main():
             p[f] = by_src.get(p["source_id"], {}).get(f, "")
     files = export(out, meta, sources, {r["id"]: r for r in read("source_types.csv")},
                    {r["id"]: r for r in read("sectors.csv")}, provisions, mappings, read("applicability.csv"),
-                   read("decisions.csv"), read("policies.csv"))
+                   read("decisions.csv"), read("policies.csv"), state_path=STATE if "--state" in sys.argv else None)
     print(f"{len(files)} CISO Assistant libraries -> {out / 'ciso-assistant'}")
     if "--ca-libraries" in sys.argv:
         problems = check(out, sys.argv[sys.argv.index("--ca-libraries") + 1])

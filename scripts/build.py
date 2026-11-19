@@ -402,7 +402,8 @@ def main():
 
     # CISO Assistant libraries (YAML), one framework and one mapping library per act, plus a zip of all of them
     files = export_ciso_assistant.export(OUT / "data", meta, sources, types, sectors, provisions, mappings,
-                                         read_csv("applicability.csv"), read_csv("decisions.csv"), read_csv("policies.csv"))
+                                         read_csv("applicability.csv"), read_csv("decisions.csv"), read_csv("policies.csv"),
+                                         state_path=export_ciso_assistant.STATE)
     with zipfile.ZipFile(OUT / "data" / "ciso-assistant-libraries.zip", "w", zipfile.ZIP_DEFLATED) as z:
         for f in files:
             z.write(OUT / "data" / "ciso-assistant" / f, f)

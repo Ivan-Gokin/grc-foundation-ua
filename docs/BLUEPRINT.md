@@ -29,6 +29,7 @@ assets/js/config.js        repository URL and other settings  <- edit before pub
 content/                   page texts in Markdown, uk and en: home, method, about, guide/ chapters, articles/
 mappings/*.xlsx            provisions and their mappings to the frameworks: edited by hand
 mappings/*.csv             readable copies of the workbooks, written by build.py (and by CI): do not edit
+mappings/ciso-assistant-versions.json  versions of the CISO Assistant libraries, written by build.py (and by CI): do not edit
 data/*.csv                 everything else: sources, chains, entity types, framework controls
 data/sp800-53/             system-level data (phase 2)
 data/datapackage.json      column descriptions of the published files (Frictionless Data Package)
