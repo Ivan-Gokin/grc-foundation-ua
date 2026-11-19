@@ -583,8 +583,10 @@
   // Mandatory acts and the controls they require cannot be removed; recommended ones can be accepted and the reader
   // can add their own. Choices live only for this visit (nothing is stored) and end up in the download.
   const QUIZ = {
-    q1: { multi: true, opts: [["public", ["public-sector"]], ["defence", ["defence"]], ["defind", ["defence-industry"]], ["finance", ["finance"]],
-      ["telecom", ["telecom"]], ["infra", ["ics"]], ["health", ["health"]], ["platforms", ["platforms"]], ["trust", ["trust"]],
+    // a public authority or local council is also «Органи влади та ОМС» (acts addressed to them only, e.g. ПКМУ № 1516);
+    // a bank and a non-bank financial institution get their own codes (НБУ № 95, 178, 4 and НБУ № 143 name them only)
+    q1: { multi: true, opts: [["public", ["public-sector", "state-bodies"]], ["publicEnt", ["public-sector"]], ["defence", ["defence"]], ["defind", ["defence-industry"]],
+      ["bank", ["banks"]], ["nonbank", ["nonbank-fi"]], ["finance", ["finance"]], ["telecom", ["telecom"]], ["infra", ["ics"]], ["health", ["health"]], ["platforms", ["platforms"]], ["trust", ["trust"]],
       ["vendors", ["vendors"]], ["suppliers", ["ict-suppliers", "security-services"]], ["other", []]] },
     q2: { multi: true, opts: [["pd", ["personal-data"]], ["sir", ["public-sir"]], ["restricted", ["public-restricted"]], ["secrets", ["state-secrets"]],
       ["nato", ["nato-info"]]] },
@@ -599,14 +601,25 @@
       const sel = [].concat(QA[q]);
       return QUIZ[q].opts.filter(([id]) => sel.includes(id)).flatMap(([, ids]) => ids);
     }));
-    PRESUMED.forEach(([ifId, thenId]) => { if (ids.has(ifId)) ids.add(thenId); });
+    const REFINED = ["public-sir", "public-restricted"];
+    const under = (anc) => [...ids].some((id) => !REFINED.includes(id) && ancestorsOf(id).has(anc));
+    // ДІР / ДСК: the SSSCIP refinements (public-sir, public-restricted) are for public-sector bodies (and the Defence
+    // Forces, which are state bodies); any other holder is «state-ir», which holds whatever the form of ownership (REV-C1)
+    if (!under("public-sector") && !ids.has("defence")) {
+      ["public-sir", "public-restricted"].forEach((id) => { if (ids.delete(id)) ids.add("state-ir"); });
+    }
+    PRESUMED.forEach(([ifId, thenId]) => { if (under(ifId)) ids.add(thenId); });
     return [...ids].filter((id) => D.sectorById[id]);
   };
   // The questionnaire's answers read back from a profile (a link or the home page's one-click types)
   function quizFromSectors() {
     if (QA.touched || !S.sectors.length) return;
     ["q1", "q2", "q4"].forEach((q) => { QA[q] = QUIZ[q].opts.filter(([, ids]) => ids.length && ids.some((id) => S.sectors.includes(id))).map(([id]) => id); });
-    const c = QUIZ.q3.opts.find(([, ids]) => ids.length && ids.some((id) => S.sectors.includes(id)));
+    // a public authority (state-bodies) reads back as the first answer only; bare public-sector as the enterprise answer
+    QA.q1 = QA.q1.filter((x) => x !== (S.sectors.includes("state-bodies") ? "publicEnt" : "public"));
+    // a private holder of ДСК or ДІР: state-ir without public-sector (quizSectors)
+    if (S.sectors.includes("state-ir") && !S.sectors.includes("public-sector") && !QA.q2.some((x) => x === "sir" || x === "restricted")) QA.q2.push("restricted");
+    const c =QUIZ.q3.opts.find(([, ids]) => ids.length && ids.some((id) => S.sectors.includes(id)));
     QA.q3 = c ? c[0] : "no";
   }
   const CRAFT_STEPS = ["about", "profile", "actors", "framework", "acts", "soa"];
@@ -627,14 +640,23 @@
     sysBaseGuessed = false;
     location.hash = "#/craft?step=1";
   }
-  const CSF_SECTORS = ["public-sector", "defence", "defence-industry", "cii-1-2", "cii-3-4", "ki"];
+  const CSF_SECTORS = ["public-sector", "state-bodies", "defence", "defence-industry", "cii-1-2", "cii-3-4", "ki"];
   // How many controls of a framework have legal drivers for this profile (mandatory acts only)
   const lawCount = (fw) => withS(MANDATORY, () => Object.keys(driversFor(fw, expandedSectors(), true)).length);
   // The framework the profile points to, and why: the sector rule, unless the acts mapped so far give that framework
   // nothing and the other one something. Returns [framework, reason key, reason arguments, note key].
+  // Each reason names only an act that reaches the profile: banks → НБУ № 95 (ISO/IEC 27001 ISMS); a CSF sector → Order 75
+  // (written in CSF) when it applies; a financial profile that Order 75 does not reach (its ki/kii rows except finance)
+  // is supervised by the NBU, so ISO; defence without Order 75 → CSF as a common language; non-bank FIs → НБУ № 143.
   function recFw() {
-    const rule = S.sectors.some((id) => CSF_SECTORS.includes(id)) ? ["csf-2.0", "fwWhyCsf"]
-      : S.sectors.includes("finance") ? ["iso27001-2022", "fwWhyBank"] : ["iso27001-2022", "fwWhyIso"];
+    const exp = expandedSectors();
+    const has = (id) => !!exp && exp.has(id);
+    const o75 = D.sourceById["ua-ssscip-75-2026"];
+    const has75 = !o75 || sourceApplies(o75, exp);
+    const csf = S.sectors.some((id) => CSF_SECTORS.includes(id)) && (has75 || !has("finance"));
+    const rule = has("banks") ? ["iso27001-2022", "fwWhyBank"]
+      : csf ? ["csf-2.0", has75 ? "fwWhyCsf" : "fwWhyCsfNo75"]
+      : has("nonbank-fi") ? ["iso27001-2022", "fwWhyNonbank"] : ["iso27001-2022", "fwWhyIso"];
     const other = rule[0] === "csf-2.0" ? "iso27001-2022" : "csf-2.0";
     const n = lawCount(rule[0]), m = lawCount(other);
     if (!n && m) return [other, "fwWhyCoverage", [fwLabel(fwRow(other)), m, fwLabel(fwRow(rule[0]))], ""];
@@ -762,11 +784,22 @@
       return `<div class="prof-group"><p class="prof-group-label">${esc(L(g, "label"))}</p><ul>${items.map((x) => `<li><b>${esc(L(x, "label"))}</b>${L(x, "description") ? `<span>${esc(L(x, "description"))}</span>` : ""}</li>`).join("")}</ul></div>`;
     }).join("");
     const acts = withS(MANDATORY, () => listedActs("core")).length;
+    const exp = expandedSectors() || new Set();
+    // codes the profile holds without the reader ticking them: broader groups of the ticked ones, and presumptions
+    const implied = [...exp].filter((id) => id !== "general" && !S.sectors.includes(id) && D.sectorById[id] && D.sectorById[id].selectable === "yes");
+    // CII owner is a status of its own (Law 2163-VIII Art. 1(1)(19)); a category code from question 3 brings it, «don't know» does not
+    const kiiNote = exp.has("ki") && !exp.has("kii")
+      ? `<p class="craft-notice">${esc(t("craftKiiMissing"))} <button type="button" class="link-btn" id="add-kii">${esc(t("craftKiiAdd"))}</button></p>`
+      : exp.has("kii") && !S.sectors.includes("kii") && S.sectors.some((id) => ["cii-1-2", "cii-3-4"].includes(id)) ? `<p class="craft-notice">${esc(t("craftKiiByCategory"))}</p>` : "";
     box.innerHTML = `<div class="craft-card">${answerHead("craftYourAnswer")}
       <div class="prof-groups">${groups || `<p>${esc(t("orgTypeGeneral"))}</p>`}</div>
+      ${implied.length ? `<p class="hint">${esc(fmt(t("craftImplied"), implied.map(secLabel).join(", ")))}</p>` : ""}
       <p class="craft-figure">${esc(fmt(t("craftProfileActs"), acts))}</p>
+      ${kiiNote}
       <details class="craft-adjust"><summary>${esc(t("craftAdjust"))}</summary>${sectorChips(false)}</details></div>`;
     bindPanel(box, () => { QA.touched = false; render(); });
+    const addKii = box.querySelector("#add-kii");
+    if (addKii) addKii.onclick = () => { S.sectors = [...S.sectors, "kii"]; QA.touched = false; render(); };
     const det = box.querySelector(".craft-adjust");
     if (craftAdjustOpen) det.open = true;
     det.addEventListener("toggle", () => { craftAdjustOpen = det.open; });
