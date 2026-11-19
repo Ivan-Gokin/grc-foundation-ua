@@ -324,7 +324,7 @@ The mapping over-selects, so treat the expansion as candidates to tailor, not a 
 
 ## 8. Roadmap: the user's journey
 
-The site serves one path, shown on the start page ("From requirements to implementation"). The proposed primary user is a vCISO or GRC analyst who sets up compliance for a regulated Ukrainian organisation or its supplier (positioning still to be decided by the owner). The site is needed for the first four steps; the rest happens in the user's GRC tool, such as CISO Assistant.
+The site serves one path, shown on the start page as a diagram ("How to build a compliant ISMS from scratch"). The proposed primary user is a vCISO or GRC analyst who sets up compliance for a regulated Ukrainian organisation or its supplier (positioning still to be decided by the owner). The site is needed for the first four steps; the rest happens in the user's GRC tool, such as CISO Assistant.
 
 | Step | Where | Status |
 |---|---|---|

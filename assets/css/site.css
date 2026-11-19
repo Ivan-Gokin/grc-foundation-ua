@@ -1501,22 +1501,39 @@ button.pill { font: inherit; font-size: .88rem; cursor: pointer; text-align: lef
 }
 @media (max-width: 340px) { .actors { grid-template-columns: minmax(0, 1fr); } }
 
-/* home: the journey from requirements to implementation */
-.journey-lead { color: var(--muted); max-width: 70ch; margin: 0 0 12px; }
-.journey { list-style: none; counter-reset: jr; margin: 0 0 28px; padding: 0; border-bottom: 1px solid var(--rule); }
-.journey li { counter-increment: jr; display: grid; grid-template-columns: 2.2rem minmax(0, 1fr);
-  grid-template-areas: "n t" "n w" "n x"; gap: 4px 14px; padding: 12px 0; border-top: 1px solid var(--rule); align-items: baseline; }
-.journey li::before { content: counter(jr); grid-area: n; font: 600 1.1rem var(--sans); color: var(--accent); }
-.journey li > b { grid-area: t; font-weight: 600; }
-.journey li > b a { color: var(--ink); text-decoration: none; }
-.journey li > b a:hover { color: var(--accent); }
-.journey-where { grid-area: w; justify-self: start; white-space: nowrap; font-size: .78rem; padding: 1px 8px; border: 1px solid var(--rule); color: var(--muted); }
-.journey-where.here { border-color: var(--accent); color: var(--accent); }
-.journey-text { grid-area: x; color: var(--muted); }
-.journey-text a { color: var(--accent); }
-@media (min-width: 900px) {
-  .journey li { grid-template-columns: 2.2rem 12rem minmax(0, 1fr) auto; grid-template-areas: "n t x w"; }
-  .journey-where { justify-self: end; }
+/* home: the journey diagram: two lanes (this site, then your GRC tool), a handoff arrow, and the update loop */
+.journey-lead { color: var(--muted); max-width: 70ch; margin: 0 0 14px; }
+.jd-wrap { display: grid; grid-template-columns: minmax(0, 1fr) 7.5rem minmax(0, 1fr); gap: 0 12px; margin: 0 0 32px; }
+.jd-lane-title { margin: 0 0 8px; font: 600 .78rem var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.jd-lane.site .jd-lane-title { color: var(--accent); }
+.jd { list-style: none; margin: 0; padding: 0; position: relative; }
+.jd::before { content: ""; position: absolute; top: 12px; bottom: 12px; left: .95rem; width: 2px; margin-left: -1px; background: var(--rule); }
+.jd-lane.site .jd::before { background: var(--accent); opacity: .45; }
+.jd-step { position: relative; display: grid; grid-template-columns: 1.9rem minmax(0, 1fr); column-gap: 10px; align-items: start; margin: 0 0 8px; }
+.jd-n { z-index: 1; margin-top: 9px; width: 1.9rem; height: 1.9rem; border-radius: 50%; display: grid; place-items: center;
+  font: 600 .9rem var(--sans); background: var(--surface); border: 2px solid var(--rule); color: var(--muted); }
+.jd-step.site .jd-n { border-color: var(--accent); color: var(--accent); }
+.jd-card { background: var(--surface); border: 1px solid var(--rule); padding: 9px 13px; }
+.jd-step.site .jd-card { border-left: 3px solid var(--accent); }
+.jd-card b { display: block; color: var(--ink); }
+.jd-card p { margin: 3px 0 0; color: var(--muted); font-size: .9rem; }
+.jd-card .jd-links a, .jd-loop a { color: var(--accent); }
+.jd-soon { font-size: .84rem; color: var(--muted); font-style: italic; }
+.jd-where { display: none; }
+.jd-hand { align-self: center; text-align: center; color: var(--muted); font-size: .84rem; }
+.jd-hand p { margin: 8px 0 0; }
+.jd-hand b { color: var(--ink); }
+.jd-arrow { display: block; height: 2px; margin: 0 4px; background: var(--accent); position: relative; }
+.jd-arrow::after { content: ""; position: absolute; right: -2px; top: -5px; border: 6px solid transparent; border-left: 9px solid var(--accent); border-right: 0; }
+.jd-loop { grid-column: 1 / -1; margin: 10px 0 0; padding: 10px 14px; background: var(--paper); border: 1px solid var(--accent);
+  color: var(--muted); font-size: .92rem; }
+.jd-loop b { color: var(--ink); }
+@media (max-width: 860px) {
+  .jd-wrap { grid-template-columns: minmax(0, 1fr); }
+  .jd-hand { padding: 4px 0 14px; display: flex; align-items: center; gap: 10px; text-align: left; }
+  .jd-hand p { margin: 0; }
+  .jd-arrow { flex: none; width: 2px; height: 28px; margin: 0 0 0 .95rem; }
+  .jd-arrow::after { right: auto; left: -5px; top: auto; bottom: -2px; border: 6px solid transparent; border-top: 9px solid var(--accent); border-bottom: 0; }
 }
 /* start page: the acts counter sits in a half-width panel, so its labels go above the bars */
 .home-panel .meter-box .dmeter { grid-template-columns: auto minmax(0, 1fr); margin-top: 10px; }

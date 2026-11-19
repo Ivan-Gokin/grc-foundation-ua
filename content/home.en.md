@@ -13,38 +13,27 @@ Laws, resolutions, orders, standards, NATO policies: hundreds of documents that 
 
 </section>
 
-## How it works
+## How to build a compliant ISMS from scratch
 
-<div class="home-stages">
-<div class="stage-card stage-wide"><p class="stage-head"><b>Craft your baseline in six steps</b></p><ol class="stage-steps stage-numbered">
-<li><a href="#/craft?step=1">About your organisation</a><span class="stage-hint">four questions</span></li>
-<li><a href="#/craft?step=2">Your profile</a><span class="stage-hint">how the law sees you</span></li>
-<li><a href="#/craft?step=3">Who sets your rules</a><span class="stage-hint">the state and your regulator</span></li>
-<li><a href="#/craft?step=4">Your framework</a><span class="stage-hint">ISO/IEC 27001 or NIST CSF 2.0</span></li>
-<li><a href="#/craft?step=5">Your laws and regulations</a><span class="stage-hint">required, recommended, your own</span></li>
-<li><a href="#/craft?step=6">Your Statement of Applicability</a><span class="stage-hint">download as Excel</span></li>
-</ol></div>
-<div class="stage-card"><p class="stage-head"><b>Guides</b></p><ol class="stage-steps">
-<li><a href="#/guide?c=roles">Roles and authorities</a><span class="stage-hint">before you start</span></li>
-<li><a href="#/guide?c=compliance">Information systems</a><span class="stage-hint">NIST SP 800-53</span></li>
-<li><a href="#/guide?c=risk">Where the real work begins</a><span class="stage-hint">risks beyond the minimum</span></li>
-<li><a href="#/guide?c=grc">GRC engineering</a><span class="stage-hint">automating controls</span></li>
-</ol></div>
+<p class="journey-lead">The path of a GRC analyst or vCISO: what to do on this site, and what to do next in your GRC tool, such as CISO Assistant.</p>
+
+<div class="jd-wrap">
+<section class="jd-lane site"><p class="jd-lane-title">On this site</p><ol class="jd">
+<li class="jd-step site"><span class="jd-n" aria-hidden="true">1</span><div class="jd-card"><span class="jd-where">here</span><b>Roles and responsibilities</b><p>Who in the organisation is responsible for security, and who makes decisions.</p><p class="jd-links"><a href="#/guide?c=roles">Guide</a></p></div></li>
+<li class="jd-step site"><span class="jd-n" aria-hidden="true">2</span><div class="jd-card"><span class="jd-where">here</span><b>Organisation profile</b><p>Four questions: how the law sees you, and who your regulator is.</p><p class="jd-links"><a href="#/craft?step=1">Organisation</a> · <a href="#/craft?step=2">Profile</a> · <a href="#/craft?step=3">Regulators</a></p></div></li>
+<li class="jd-step site"><span class="jd-n" aria-hidden="true">3</span><div class="jd-card"><span class="jd-where">here</span><b>Standard and acts</b><p>ISO/IEC 27001 or NIST CSF 2.0, and your acts: mandatory, recommended, your own.</p><p class="jd-links"><a href="#/craft?step=4">Standard</a> · <a href="#/craft?step=5">Acts</a></p></div></li>
+<li class="jd-step site"><span class="jd-n" aria-hidden="true">4</span><div class="jd-card"><span class="jd-where">here</span><b>Statement of Applicability</b><p>The standard's controls with the legal basis for each: an Excel table or libraries for CISO Assistant.</p><p class="jd-links"><a href="#/craft?step=6">Build it</a> · <a href="data/ciso-assistant-libraries.zip">CISO Assistant libraries</a></p></div></li>
+</ol></section>
+<div class="jd-hand"><span class="jd-arrow" aria-hidden="true"></span><p><b>From here the work moves to your GRC tool.</b> You come back to the site when the acts change.</p></div>
+<section class="jd-lane tool"><p class="jd-lane-title">In your GRC tool</p><ol class="jd" start="5">
+<li class="jd-step tool"><span class="jd-n" aria-hidden="true">5</span><div class="jd-card"><span class="jd-where">your tool</span><b>Import</b><p>Load the libraries, create an audit for each act and select your profile's groups.</p><p class="jd-soon">Coming: a how-to and a ready-made set for your profile.</p></div></li>
+<li class="jd-step tool"><span class="jd-n" aria-hidden="true">6</span><div class="jd-card"><span class="jd-where">your tool</span><b>Risk assessment</b><p>Risks beyond the legal minimum: likelihood, impact, risk appetite, treatment.</p><p class="jd-links"><a href="#/guide?c=risk">Guide</a></p><p class="jd-soon">Coming: typical scenarios built from the techniques used against Ukrainian organisations.</p></div></li>
+<li class="jd-step tool"><span class="jd-n" aria-hidden="true">7</span><div class="jd-card"><span class="jd-where">your tool</span><b>Policies</b><p>ISMS documents from the CIS templates or your own.</p><p class="jd-soon">Coming: links to the templates for each control, and a guide.</p></div></li>
+<li class="jd-step tool"><span class="jd-n" aria-hidden="true">8</span><div class="jd-card"><span class="jd-where">your tool</span><b>Implementation</b><p>Controls, how they are checked, and their automation; for information systems, NIST SP 800-53.</p><p class="jd-links"><a href="#/guide?c=compliance">Information systems</a> · <a href="#/guide?c=grc">GRC engineering</a></p></div></li>
+<li class="jd-step tool"><span class="jd-n" aria-hidden="true">9</span><div class="jd-card"><span class="jd-where">your tool</span><b>Monitoring and improvement</b><p>Monitoring, internal audit, management review, corrective action (ISO/IEC 27001 clauses 9–10).</p></div></li>
+</ol></section>
+<p class="jd-band jd-loop"><b>↻ When the acts change,</b> a new release comes out here and the library updates in your tool: answers to unchanged requirements stay, new requirements are added. Then continue from step 5. <span class="jd-soon">Coming: a release feed and a changes sheet for Excel.</span></p>
 </div>
-
-## From requirements to implementation
-
-<p class="journey-lead">The path of a GRC analyst or vCISO setting up compliance for an organisation. You need this site for the first four steps; after that, the work happens in your GRC tool.</p>
-
-<ol class="journey">
-<li><b><a href="#/craft?step=1">Profile</a></b><span class="journey-where here">here</span><span class="journey-text">Answer the questions about the organisation and get its requirements.</span></li>
-<li><b><a href="#/craft?step=6">Download</a></b><span class="journey-where here">here</span><span class="journey-text">The Statement of Applicability or CSF target profile in Excel, or the <a href="data/ciso-assistant-libraries.zip">CISO Assistant libraries</a>.</span></li>
-<li><b>Import</b><span class="journey-where tool">your tool</span><span class="journey-text">Load the requirements into CISO Assistant or a similar tool. Coming: a how-to and a ready-made set for your profile.</span></li>
-<li><b>Updates</b><span class="journey-where here">here and in your tool</span><span class="journey-text">When the acts change, a new release comes out. In CISO Assistant the library updates and your answers stay. Coming: a release feed and a changes sheet for Excel.</span></li>
-<li><b><a href="#/guide?c=risk">Risk assessment</a></b><span class="journey-where tool">your tool</span><span class="journey-text">Risks beyond the legal minimum. Coming: typical scenarios built from the techniques used against Ukrainian organisations, with no likelihood or impact filled in.</span></li>
-<li><b>Policies</b><span class="journey-where tool">your tool</span><span class="journey-text">CIS templates or your own documents. Coming: links to the templates for each control, and a guide.</span></li>
-<li><b><a href="#/guide?c=grc">Implementation</a></b><span class="journey-where tool">your tool</span><span class="journey-text">Controls, how they are checked, and their automation: GRC engineering.</span></li>
-</ol>
 
 <div class="home-panels">
 <section class="home-panel">
