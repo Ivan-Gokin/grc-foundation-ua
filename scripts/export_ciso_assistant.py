@@ -166,7 +166,7 @@ def export(out_dir, meta, sources, types, sectors, provisions, mappings, appl=()
             docs = list(dict.fromkeys(pol.get(i, i) for m in ls for i in mapdata.split_ids(m.get("policies"))))
             node = {
                 "urn": urn("req_node", sid, p["id"].split(":", 1)[1]),
-                "assessable": p["provision_type"] == "substantive",
+                "assessable": p["provision_type"] in ("substantive", "recommendation"),
                 "depth": 1,
                 "ref_id": short(p["ref_uk"], 95),  # CISO Assistant keeps ref_id to 100 characters
                 "name": short(p["summary_uk"]),
@@ -237,7 +237,7 @@ def export(out_dir, meta, sources, types, sectors, provisions, mappings, appl=()
         for fw, (ca_ref, ca_name) in TARGETS.items():
             fwd, back = [], []
             for p in provs:
-                if p["provision_type"] != "substantive":
+                if p["provision_type"] not in ("substantive", "recommendation"):
                     continue
                 for m in links.get(p["id"], []):
                     c = (m["control_id"] or "").strip()

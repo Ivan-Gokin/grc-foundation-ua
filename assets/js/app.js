@@ -285,6 +285,8 @@
   }
   function provisionVisible(p, exp) {
     if (!p || !sourceVisible(D.sourceById[p.source_id], exp, false)) return false;
+    // a provision the act only recommends (methodological recommendations inside a binding act) goes with the recommended acts
+    if (!S.rec && p.provision_type === "recommendation") return false;
     if (!exp || !p.applies_to) return true;
     // ';' = any of the terms; '+' = every part of a term; '!' = the reader must not be in that sector
     // a term counts only if an applicability row that covers it (its sector or a broader one) applies to the reader
@@ -1006,9 +1008,9 @@
     if (clauses.length) sheets.push({ name: t("xSheetClauses"), header: ctlHeader, rows: clauses.map(ctlRow), widths: ctlWidths, freeze: [1, 1] });
     // provisions of the acts that bind you that no control of the framework covers
     const gaps = withS(MANDATORY, () => gapRows());
-    sheets.push({ name: t("xSheetGaps"), header: [t("srcColRef"), t("xProvision"), t("xRequires"), t("xPolicySuggested"), t("xPolicy"), t("xOwner"), t("xStatus"), t("xEvidence")],
-      rows: gaps.map((m) => { const p = D.provById[m.provision_id]; return [sourceRef(D.sourceById[p.source_id]), L(p, "ref"), L(p, "summary"), policyText(m), "", "", "", ""]; }),
-      widths: [36, 20, 60, 40, 30, 20, 20, 30], freeze: [2, 1] });
+    sheets.push({ name: t("xSheetGaps"), header: [t("srcColRef"), t("xProvision"), t("xRequires"), t("colParam"), t("xPolicySuggested"), t("xPolicy"), t("xOwner"), t("xStatus"), t("xEvidence")],
+      rows: gaps.map((m) => { const p = D.provById[m.provision_id]; return [sourceRef(D.sourceById[p.source_id]), L(p, "ref"), L(p, "summary"), L(m, "parameter"), policyText(m), "", "", "", ""]; }),
+      widths: [36, 20, 60, 50, 40, 30, 20, 20, 30], freeze: [2, 1] });
     // the acts, with room for an owner and the reader's own requirements
     const actRow = (x, st) => [st, sourceRef(x), sourceTitle(x), typeLabel(x.type), L(x, "description"), D.mappedProvs[x.id] ? D.mappedProvs[x.id].size : "", x.url || "", "", "", ""];
     const mandatory = withS(MANDATORY, () => listedActs("core"));
@@ -1486,7 +1488,7 @@
       const p = D.provById[m.provision_id]; const src = D.sourceById[p.source_id];
       const badge = m.review_status === "reviewed" ? `<span class="badge cov-full">${esc(t("reviewed"))}</span>` : "";
       return `<li><span class="driver-ref">${esc(sourceRef(src))}, ${esc(L(p, "ref"))}</span> ${badge}
-        <p${isFallback(p, "summary") ? ' lang="uk"' : ""}>${esc(L(p, "summary"))}</p>${policyText(m) ? `<p class="muted"><b>${esc(t("driverPolicy"))}:</b> ${esc(policyText(m))}</p>` : ""}
+        <p${isFallback(p, "summary") ? ' lang="uk"' : ""}>${esc(L(p, "summary"))}</p>${L(m, "parameter") ? `<p><b>${esc(t("colParam"))}:</b> <span${isFallback(m, "parameter") ? ' lang="uk"' : ""}>${esc(L(m, "parameter"))}</span></p>` : ""}${policyText(m) ? `<p class="muted"><b>${esc(t("driverPolicy"))}:</b> ${esc(policyText(m))}</p>` : ""}
         <p class="prov-links">${src.url ? `<a href="${esc(src.url)}" target="_blank" rel="noopener">${esc(t("openText"))} ↗</a>` : ""}${reportLink(m, "")}</p></li>`;
     }).join("");
     return `<details class="gaps" id="gaps"><summary><h2>${esc(fmt(t("gapsTitle"), fwLabel(fw), gaps.length))}</h2></summary>
@@ -1596,7 +1598,7 @@
     ].join("");
     return `<div class="prov">
       <div class="prov-line"><span class="prov-fit">${glyph(m.relationship)} ${esc(covLabel(m.coverage))}</span>
-        <span class="prov-ref">${esc(L(p, "ref"))}${m.review_status === "reviewed" ? ` <span class="badge cov-full">${esc(t("reviewed"))}</span>` : ""}${groundsBadge(groundsOf(m))}</span>
+        <span class="prov-ref">${esc(L(p, "ref"))}${m.review_status === "reviewed" ? ` <span class="badge cov-full">${esc(t("reviewed"))}</span>` : ""}${p.provision_type === "recommendation" ? ` <span class="badge">${esc(t("bRecommended"))}</span>` : ""}${groundsBadge(groundsOf(m))}</span>
         <span class="prov-links">${src.url ? `<a href="${esc(src.url)}" target="_blank" rel="noopener">${esc(t("openText"))} ↗</a>` : ""}${reportLink(m, ctlId)}</span></div>
       ${L(p, "summary") ? `<p class="prov-text"${orig ? ' lang="uk"' : ""}>${esc(L(p, "summary"))}${orig ? ` <span class="prov-orig" lang="${esc(S.lang)}">${esc(t("originalUk"))}</span>` : ""}</p>` : ""}
       ${L(m, "notes") ? `<p class="prov-note"><b>${esc(t("driverNote"))}:</b> <span${isFallback(m, "notes") ? ' lang="uk"' : ""}>${esc(L(m, "notes"))}</span></p>` : ""}

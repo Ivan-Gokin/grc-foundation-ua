@@ -58,7 +58,7 @@ for seg, acts in SEG.items():
                     if r.get(k): out.write(f" | {lab}: {r[k]}")
                 out.write('\n')
             fws = {fw for fw, _ in links.get(p['id'], [])}
-            if p['provision_type'] == 'substantive':
+            if p['provision_type'] in ('substantive', 'recommendation'):
                 for fw in ['iso27001-2022', 'csf-2.0']:
                     if fw not in fws: out.write(f"  -> {fw}: (немає жодного рядка)\n")
     if cited:

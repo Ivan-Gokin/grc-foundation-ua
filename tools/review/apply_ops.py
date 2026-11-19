@@ -10,7 +10,7 @@ Each line is one op with "op", a ledger "id" and "why", plus:
   del_link   pid, fw, control
   add_link   pid, fw, row{control_id, relationship, rationale, parameter_uk, policies, notes_uk, decisions, ...}
 Codes, not labels: relationship equal|subset_of|superset_of|intersects_with|no_relationship (coverage follows it);
-provision_type substantive|delegating|definitional; review_status ai_draft|draft|imported|reviewed.
+provision_type substantive|recommendation|delegating|definitional; review_status ai_draft|draft|imported|reviewed.
 Field "append_notes_uk" in set_link appends to notes_uk instead of replacing.
 Defaults for add_link: review_status ai_draft, mapped_by AI (Claude, hostile review 2026-11), date 2026-11-11, rationale semantic.
 Edits to existing links set date 2026-11-11; an edited imported/reviewed row is reported.
@@ -23,7 +23,7 @@ DATE = "2026-11-14"
 BY = "AI (Claude, hostile review 2026-11)"
 REL = {"equal", "subset_of", "superset_of", "intersects_with", "no_relationship"}
 COV = {"full", "partial", "none", ""}
-TYPES = {"substantive", "delegating", "definitional"}
+TYPES = {"substantive", "recommendation", "delegating", "definitional"}
 
 
 def norm_ctl(c):

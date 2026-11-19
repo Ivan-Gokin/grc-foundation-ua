@@ -54,7 +54,7 @@ for k in sorted(set(L0) | set(L1)):
 with open(outf, 'w', newline='') as f:
     w = csv.writer(f); w.writerow(['workbook', 'provision', 'mapping', 'change', 'detail']); w.writerows(rows)
 def count(d):
-    np = sum(len(w['provisions']) for w in d.values()); ns = sum(1 for w in d.values() for p in w['provisions'] if p['provision_type'] == 'substantive')
+    np = sum(len(w['provisions']) for w in d.values()); ns = sum(1 for w in d.values() for p in w['provisions'] if p['provision_type'] in ('substantive', 'recommendation'))
     nl = sum(len(r) for w in d.values() for r in w['links'].values())
     npar = sum(1 for w in d.values() for rr in w['links'].values() for r in rr if r.get('parameter_uk'))
     nn = sum(1 for w in d.values() for rr in w['links'].values() for r in rr if not r.get('control_id'))
