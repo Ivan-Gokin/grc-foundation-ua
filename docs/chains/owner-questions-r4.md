@@ -298,6 +298,10 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 **5.4 Order 843 profile measures. PD-843-2 (now registered as REV-R6-NA-2, proposed, cited on 843 p1; together with REV-C3). Raised by NA.**
 - **Question:** Is every ND TZI 3.6-006-24 measure named in column 2 mandatory in full, with column 3 as the minimum parameters, as REV-C3 does for Orders 409 and 419?
 
+**5.6 Twin rows in the 409/419/843 profiles (cross-act review). REV-X1-XPB-1 (added, cited on 6 rows) and REV-X1-XPB-2 (not added).**
+- REV-X1-XPB-1: AC-2 h.3 («зміни, які потребують нових знань») read as a change in usage or need-to-know, deadline per column 5 (24 h). Accept?
+- REV-X1-XPB-2 (method): the same ND TZI measure with the same column 3 in 409, 419 and 843 is mapped to the same controls/relationships/parameters, differences only where columns 3–5 differ (explained in a note). Accept → a scripted alignment pass over the remaining twin rows (no locks are lost today; it is about consistency).
+
 **5.5 Order of correction (припис) under ПКМУ 1668. D1668-PD4 (not added). Raised by AS.**
 - **Question:** Are the requirements of a припис (п. 17 підп. 9) mandatory and mapped with p21?
 - **Status:** deferred until Закон 877-V is in the library.

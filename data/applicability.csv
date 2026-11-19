@@ -333,6 +333,7 @@ ua-ssscip-409-2025,public-sector,,"entity tags, register 2026-10",no,banks,,AUTH
 ua-ssscip-409-2025,kii,public-sector,"ПКМУ № 712, Порядок авторизації п. 1; ПКМУ № 373 п. 16",no,banks,,AUTH-30;REV-C1
 ua-ssscip-419-2025,state-ir,public-sector,"entity tags, register 2026-10",no,banks,,AUTH-30;REV-C1
 ua-ssscip-419-2025,public-sector,,"entity tags, register 2026-10",no,banks,,AUTH-30;REV-C1;AUTH-41
+ua-ssscip-419-2025,kii,public-sector,"ПКМУ № 712, Порядок авторизації п. 1; ПКМУ № 373 п. 16",no,banks,,AUTH-30;REV-C1
 ua-cmu-712-2025,state-ir,public-sector,"entity tags, register 2026-10",no,banks,state-secrets,AUTH-14;AUTH-37;REV-C1;REV-C2
 ua-cmu-712-2025,kii,public-sector,"entity tags, register 2026-10",no,banks,state-secrets,AUTH-14;AUTH-37;REV-C1;REV-C2
 ua-cmu-712-2025,state-secrets,public-sector,"ПКМУ № 712, Порядок авторизації пп. 1, 10–11: системи з ДТ органів державного сектору",no,,,AUTH-37
