@@ -227,6 +227,11 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **REV-P-CI-1 (not added):** the criticality-category answer should not make the reader a CII owner; add a separate «we own a CII object» answer. Meanwhile the site will show a notice.
 - Texts wanted: НБУ 194/2023, 204/2023, 15/2024, 185/2024 (cited in НБУ 143 п. 3, for nonbank-fi); НБУ 72, 73; ПКМУ 1772; Наказ 72; the joint order Держспецзв'язку/СБУ № 627/772 of 19.12.2024 (shown as mandatory for CI, text and title not verified).
 
+**2.12 Simulated readers — defence industry (2026-11-19). Not added; all need you.**
+- **REV-P-DEF-1:** owners of systems with ДІР/СІ/ДТ that report under ПКМУ 1533 п. 17 абз. 1 (REV-C10) are also bound by пп. 12 and 15 (taxonomy, criticality, TLP), so np-12 and np-15 should carry state-ir;state-secrets — otherwise the Наказ 143/410 rows for them lose their visible basis. Accept, or narrow the 143/410 rows?
+- **REV-P-DEF-2:** NATO documents the register itself describes as addressed to NATO bodies (Personal Data Protection Framework Policy, ACT DIR 040-13, C-M(2011)0043, PO(2021)0360, PO(2022)0409, C-M(2015)0041-REV2) shown as recommended for nato-info/defence until a basis binding national holders is recorded; also check revisions (C-M(2015)0041-REV1/REV2, AC/322-D(2019)0032-REV1/REV2) and show AC/35-D/2004-REV4 as current. Accept?
+- **REV-P-DEF-3:** ratified treaties that bind the State, not organisations (EU Association Agreement, Convention 108), get role=context and leave the mandatory list; the national implementing law carries the duties. Accept?
+
 ## 3. Personal data
 
 **3.1 Закон 2297 ст. 7 ч. 2 пп. 6, 6². REV-PD-A (not added). Raised by PD.**
