@@ -9,6 +9,8 @@ Below are the bodies whose acts bind you. For each one, record:
 - **its role towards you:** sets rules, inspects, receives your reports, coordinates the response to an attack;
 - **the channel:** whom to contact, how, and how fast an incident must be reported.
 
+The bodies you report incidents to (a sectoral or regional CSIRT, CERT-UA, the National Cybersecurity Coordination Centre, the SBU) mostly issue none of your acts, so they may be missing from this list. They and the reporting deadlines are in the “Legal parameter” of the incident response and communication controls (NIST CSF 2.0 RS.CO-02; ISO/IEC 27001 A.5.24–A.5.26) on step 6. Add them as separate rows on the “Regulators” sheet of the download.
+
 Keep these contacts in a shared place, not in one person's phone, and check them once a year.
 
 *This is ISO/IEC 27001 control A.5.5 and NIST CSF 2.0 GV.OC-02.*
