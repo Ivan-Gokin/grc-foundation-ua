@@ -1413,7 +1413,7 @@ h1[tabindex="-1"]:focus { outline: none; }
 
 /* the wizard: notices for thin data, the clauses block, Start over, the skip link to the download */
 .craft-notice { margin: 10px 0 0; padding: 10px 14px; border-left: 3px solid var(--warn, #b26a00); background: var(--surface-2); font-size: .95rem; }
-.craft-notice .link-btn { display: inline; padding: 0; }
+.craft-notice .link-btn { display: inline; padding: 0; text-align: left; }
 h2.craft-answer-label { font-size: .85rem; }
 .soa-clauses { margin: 0 0 16px; border: 1px solid var(--rule); background: var(--surface-2); }
 .soa-clauses > summary { cursor: pointer; padding: 10px 14px; font-weight: 500; list-style: none; }
