@@ -210,6 +210,11 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
   - Options: keep it as it is (citing ст. 9 ч. 3 п. 4 абз. четвертий); or limit it to requests about incidents and add «—» rows for the threat-only report on a9-p3-4-5.
 - **Decide all three together.**
 
+**2.10 Cross-act review (NBU family).**
+- **REV-X1-XNB-1 (added, proposed):** a bank that is also a payment service provider reports a significant cyber incident under НБУ 178 п. 19-2; other НБУ 43 п. 45 events (Criminal Code Section XVI signs, restricted-info leaks, payment incidents) go immediately under НБУ 43 пп. 45–47. Accept?
+- **REV-X1-XNB-2 (added, proposed; extends 2.6):** the entry-into-force date of NBU resolutions counts from the first publication on the NBU website (stricter), applied the same way to НБУ 143/2025, 4/2021 and 67/2024. Needs ст. 56 of the Law on the NBU.
+- **2.8 also covers** НБУ 66 p14-2, p15, p16, p17, p19, p21, p21-3 (submissions to the NBU).
+
 **2.9 NBU Regulation 4: the deadline. REV-NO1-PD-F (not added). Raised by NO1.**
 - **Question:** For п. 28-1 підп. 4–5 розд. III, does the five-working-day deadline run from the date of the decision (the stricter reading of «запровадження таких змін»)?
 
