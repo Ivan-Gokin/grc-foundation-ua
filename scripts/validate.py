@@ -95,6 +95,28 @@ def check_decisions(name, row, notes_field):
         err(name, row, f"«{LABEL_RE.search(row[notes_field]).group(1)} (дата): ...» belongs in data/decisions.csv; cite its id in «Рішення»")
 
 
+# SP 800-53 ids as a baseline profile prints them; the published texts sometimes use Cyrillic look-alikes (АС-3, СР-9)
+CTL53_RE = re.compile(r"(?<![\w-])([A-ZА-ЯІ]{2}-\d+(?:\(\d+\))?)(?![\w(])")
+HOMOGLYPHS = str.maketrans("АВСЕНІКМОРТХ", "ABCEHIKMOPTX")
+
+
+def check_profile_text(prof, b53_rows, b53):
+    """Every control id printed in a baseline profile's library text has 'yes' in its column, and no other row does."""
+    files = sorted((DATA.parent / "library").glob(f"*/{prof['source_id']}/*.txt"))
+    if not files:
+        return
+    text = "".join(f.read_text(encoding="utf-8") for f in files)
+    found = {x.translate(HOMOGLYPHS) for x in CTL53_RE.findall(text)}
+    name = f"sp800-53/baselines_ua.csv [{prof['id']}]"
+    for cid in sorted(found - b53):
+        warnings.append(f"{name}: '{cid}' is in the text of {prof['source_id']} but not in baselines_ua.csv")
+    yes = {r["id"] for r in b53_rows if r.get(prof["id"]) == "yes"}
+    for cid in sorted((found & b53) - yes):
+        warnings.append(f"{name}: '{cid}' is in the text of {prof['source_id']} but has no 'yes' in column '{prof['id']}'")
+    for cid in sorted(yes - found):
+        warnings.append(f"{name}: '{cid}' has 'yes' in column '{prof['id']}' but is not in the text of {prof['source_id']}")
+
+
 def unique(name, rows, key="id", pattern=ID_RE):
     seen = set()
     for r in rows:
@@ -369,6 +391,8 @@ def main():
             err("sp800-53/profiles.csv", r, f"unknown source '{r['source_id']}'")
         if r["kind"] in ("baseline", "sector") and not {r["id"], r["id"] + "_params_uk"} <= b53_cols:
             err("sp800-53/profiles.csv", r, f"baselines_ua.csv needs the columns '{r['id']}' and '{r['id']}_params_uk'")
+        elif r["kind"] == "baseline":
+            check_profile_text(r, b53_rows, b53)
     csf = controls.get("csf-2.0", {})
     for r in load("sp800-53/map_csf-2.0_sp800-53r5.csv"):
         if r["csf_id"] not in csf:
