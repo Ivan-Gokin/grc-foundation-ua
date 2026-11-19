@@ -10,12 +10,13 @@ nbu_resolution,8,Постанова НБУ,NBU Resolution,Національни
 sbu_order,9,Наказ СБУ,SBU Order,Служба безпеки України,Security Service of Ukraine,sbu
 nccc_decision,10,Рішення НКЦК,NCCC Decision,Національний координаційний центр кібербезпеки при РНБО,National Cybersecurity Coordination Center (NSDC),nccc
 moj_order,11,Наказ Мін'юсту,Ministry of Justice order,Міністерство юстиції України,Ministry of Justice of Ukraine,
-other_order,12,Наказ іншого органу,Order of another central body,,,
-guidance,13,Методичний документ,Guidance,,,
-nd_tzi,14,НД ТЗІ,ND TZI (TZI normative document),Адміністрація Держспецзв’язку,SSSCIP,ssscip
-dstu,15,ДСТУ,DSTU (national standard),Національний орган стандартизації,National standards body,
-vst,16,ВСТ,VST (military standard),Міністерство оборони України,Ministry of Defence of Ukraine,mod
-nato_policy,17,Політика / директива НАТО,NATO policy / directive,НАТО,NATO,
-eu_act,18,Акт ЄС,EU act,Європейський Союз,European Union,
-eu_proposal,19,Проєкт акта ЄС,EU proposal,Європейська комісія,European Commission,
-other,20,Інше,Other,,,
+ombudsman_order,12,Наказ Уповноваженого ВРУ з прав людини,Order of the Ukrainian Parliament Commissioner for Human Rights,Уповноважений Верховної Ради України з прав людини,Ukrainian Parliament Commissioner for Human Rights,
+other_order,13,Наказ іншого органу,Order of another central body,,,
+guidance,14,Методичний документ,Guidance,,,
+nd_tzi,15,НД ТЗІ,ND TZI (TZI normative document),Адміністрація Держспецзв’язку,SSSCIP,ssscip
+dstu,16,ДСТУ,DSTU (national standard),Національний орган стандартизації,National standards body,
+vst,17,ВСТ,VST (military standard),Міністерство оборони України,Ministry of Defence of Ukraine,mod
+nato_policy,18,Політика / директива НАТО,NATO policy / directive,НАТО,NATO,
+eu_act,19,Акт ЄС,EU act,Європейський Союз,European Union,
+eu_proposal,20,Проєкт акта ЄС,EU proposal,Європейська комісія,European Commission,
+other,21,Інше,Other,,,

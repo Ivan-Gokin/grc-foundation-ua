@@ -32,6 +32,20 @@
 </ol></div>
 </div>
 
+## Від вимог до впровадження
+
+<p class="journey-lead">Шлях GRC-аналітика або vCISO, який налаштовує відповідність для організації. Сайт потрібен на перших чотирьох кроках; далі робота йде у вашому GRC-інструменті.</p>
+
+<ol class="journey">
+<li><b><a href="#/craft?step=1">Профіль</a></b><span class="journey-where here">тут</span><span class="journey-text">Дайте відповіді на запитання про організацію і отримайте свої вимоги.</span></li>
+<li><b><a href="#/craft?step=6">Завантаження</a></b><span class="journey-where here">тут</span><span class="journey-text">Положення про застосовність або цільовий профіль CSF в Excel, або <a href="data/ciso-assistant-libraries.zip">бібліотеки для CISO Assistant</a>.</span></li>
+<li><b>Перенесення</b><span class="journey-where tool">ваш інструмент</span><span class="journey-text">Завантажте вимоги в CISO Assistant або подібний інструмент. Згодом: інструкція і готовий набір для вашого профілю.</span></li>
+<li><b>Оновлення</b><span class="journey-where here">тут і у вашому інструменті</span><span class="journey-text">Коли акти змінюються, виходить новий випуск. У CISO Assistant бібліотека оновлюється, а ваші відповіді лишаються. Згодом: стрічка випусків і аркуш змін для Excel.</span></li>
+<li><b><a href="#/guide?c=risk">Оцінка ризиків</a></b><span class="journey-where tool">ваш інструмент</span><span class="journey-text">Ризики понад обов'язковий мінімум. Згодом: типові сценарії за техніками атак на українські організації, без готових оцінок імовірності й впливу.</span></li>
+<li><b>Політики</b><span class="journey-where tool">ваш інструмент</span><span class="journey-text">Шаблони CIS або власні документи. Згодом: посилання на шаблони для кожного заходу і посібник.</span></li>
+<li><b><a href="#/guide?c=grc">Впровадження</a></b><span class="journey-where tool">ваш інструмент</span><span class="journey-text">Заходи, їх перевірка і автоматизація: GRC-інженерія.</span></li>
+</ol>
+
 <div class="home-panels">
 <section class="home-panel">
 

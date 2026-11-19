@@ -56,6 +56,11 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
   - Question: Order 836 — for a CII object with no ДІР, службова інформація or ДТ, the second criticality criterion (Критерії п. 4) is literally never met, yet п. 5 of the risk-level procedure puts CII objects at level II. Which level applies to their supplies?
   - Options: (a) level II for supplies where the supplier's system takes part in processing the object's information, level I for the rest, until SSSCIP clarifies — **chair recommends (a)** and asking SSSCIP; (b) literal reading: always level I (declaration only); (c) no decision, keep the [ПЕРЕВІРИТИ] marker (current state).
 
+- **REV-X1-XSC-2 (added, proposed; cross-act review) — suppliers and the 409/419 profiles.** Наказ 836 Вимоги п. 5 obliges a supplier of level II–IV supplies to meet the base/sector profile in its own system. REV-C1 (decided) hides 409/419 from non-public owners but never considered suppliers. Accept → add «постачальникам … — за наказом № 836 (Вимоги п. 5)» to the 409/419 act conditions and applicability rows 409/419 × ict-suppliers, vendors, cloud. Reject → profiles stay hidden from suppliers; the 836 vm-5 note is the only pointer (current state, with a [ПЕРЕВІРИТИ]).
+- **REV-X1-XSC-1 (added, proposed):** cloud/data-centre providers serving such owners are 836 suppliers; the supplier rows now also show for the `cloud` tag. Text-based; set the status.
+
+- **REV-X2-XSC-1 (added, proposed; cross-act confirmation round):** the ban on listed software/equipment (Закон 2163 ст. 4 ч. 4, ПКМУ 1335) also reaches cloud/data-centre providers' systems where users process ДІР/СІ/ДТ; shown to the `cloud` tag. Accept?
+
 **1.4 ПКМУ 1335 / Закон 2163 ст. 4 ч. 4: the ban on listed software and equipment. Raised by ST and IS.**
 - **D-1335-ADDR (added):** applicability follows the addressees of the ban. Chair: text-based; the owner only needs to set the status.
 - **D-1335-USE (not added).**
@@ -77,6 +82,11 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **Skipped until you decide:** add rows `ua-cmu-1668-2025,state-secrets` (basis «пп. 3, 4; виняток — п. 1 абз. другий», D1668-PD1; raised in the final round), `ua-cmu-1799-2025,state-secrets` and `ua-ssscip-285-2026,state-secrets` with `except=finance` and basis «п. 1 абз. перший» (AS register change 4).
 
 - **REV-R6-AS-1 (added, cited on the 1799 defence applicability row; from the third round, a valid major).** Military formations are treated as owners of assessment objects under ПКМУ 1799 (п. 1, п. 3 «для власних потреб»), like AUTH-41 / D1668-PD2, so the owner duties (annual self-assessment, report copy within 30 days, etc.) now show for a «Сили оборони» reader. If accepted, also consider adding `ua-ssscip-285-2026,defence` so the mandatory report form reaches them. If rejected, the defence tags on 1799 p4, p6, p7, p10, p14, p15, p17, p18 are removed.
+
+- **Cross-act review (2026-11-19), REV-X1-XAS-1 (not added) — strengthens 1.6:** Закон 2163 (D2163-PD2) and ПКМУ 1533 п. 17 (REV-C11) already read «ДІР, службова інформація або державна таємниця» as alternatives and tag state-secrets; ПКМУ 1799, 1668 and Наказ 285 should be read the same way for consistency. If accepted: add state-secrets applicability rows (except=finance) for 1799, 1668, 285 and the state-secrets tag on 1799 p4, p4-4, p6, p7, p7-3, p10, p14, p15, p17, p18 and the 285 rows tagged ki;kii;state-ir. If rejected: align 2163 a9-1-p3-1 and 1533 the other way.
+- **REV-X1-XAS-3 (added, proposed, cited on 7 rows):** Закон 2163 ст. 6 ч. 2 exempts assessment of CI/CII categories III–IV from the general assessor requirements, but ПКМУ 1799 пп. 3, 15, 18 still require listed, qualified assessors for all objects in its scope; we apply the stricter ПКМУ condition. Accept?
+
+- **REV-X4-XAS-1 (added, proposed):** state-owned non-bank persons under NBU supervision still see ПКМУ 373 п. 27 (373 excludes only banks), now with a note that the ПКМУ 1799 values don't apply to them. Accept, or hide p27 for the whole financial sector?
 
 **1.7 ПКМУ 1799 п. 6: does the owner have to give access? D1799-PD1 (not added). Raised by AS.**
 - **Question:** Do the assessor's rights under п. 6 create a corresponding duty on the owner to give access to the object, documents, copies and explanations?
@@ -101,7 +111,7 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
   - (b) Public users only. Set a11-p3-2 to `cloud;public-sector+cloud-users`.
 - **Skipped:** CL register change 6.
 
-**1.11 Закон 2075: the public-sector + cloud-users row. Raised by CL (R4-CL-019).**
+**1.11 Закон 2075: the public-sector + cloud-users row. *Cross-act review adds:* ст. 2 defines «публічний користувач» by status, and ст. 11 ч. 1 binds public users as such, which supports dropping `requires=cloud-users` from `ua-law-2075-ix,public-sector`. Raised by CL (R4-CL-019).**
 - **Question:** The row `ua-law-2075-ix,public-sector,cloud-users` hides the new a11-p1 row (ст. 11 ч. 1) from public bodies that are not marked as cloud users. Is that acceptable, or should a11-p1 reach every public body?
 
 **1.12 ПКМУ 154: legal hierarchy and the encryption reading. Raised by CL.**
@@ -204,10 +214,52 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
   - Options: keep it as it is (citing ст. 9 ч. 3 п. 4 абз. четвертий); or limit it to requests about incidents and add «—» rows for the threat-only report on a9-p3-4-5.
 - **Decide all three together.**
 
+**2.10 Cross-act review (NBU family).**
+- **REV-X1-XNB-1 (added, proposed):** a bank that is also a payment service provider reports a significant cyber incident under НБУ 178 п. 19-2; other НБУ 43 п. 45 events (Criminal Code Section XVI signs, restricted-info leaks, payment incidents) go immediately under НБУ 43 пп. 45–47. Accept?
+- **REV-X1-XNB-2 (added, proposed; extends 2.6):** the entry-into-force date of NBU resolutions counts from the first publication on the NBU website (stricter), applied the same way to НБУ 143/2025, 4/2021 and 67/2024. Needs ст. 56 of the Law on the NBU.
+- **2.8 also covers** НБУ 66 p14-2, p15, p16, p17, p19, p21, p21-3 (submissions to the NBU).
+
 **2.9 NBU Regulation 4: the deadline. REV-NO1-PD-F (not added). Raised by NO1.**
 - **Question:** For п. 28-1 підп. 4–5 розд. III, does the five-working-day deadline run from the date of the decision (the stricter reading of «запровадження таких змін»)?
 
 ---
+
+**2.11 Simulated readers (2026-11-19).**
+- **REV-P-INS-1 (added, proposed):** НБУ 43 is not shown to non-bank financial institutions or the ЄЦБД institution (not information-protection subjects, п. 3(16), 4). Accept?
+- **REV-P-INS-2 (not added):** show Закон 2121-III «Про банки…» only to banks (text not in the library). Or add the text.
+- **REV-P-MIN-1 (added, proposed):** the three NATO non-member directives apply only to nato-info (not to all public bodies). Accept?
+- **REV-P-CI-1 (not added):** the criticality-category answer should not make the reader a CII owner; add a separate «we own a CII object» answer. Meanwhile the site will show a notice.
+- Texts wanted: НБУ 194/2023, 204/2023, 15/2024, 185/2024 (cited in НБУ 143 п. 3, for nonbank-fi); НБУ 72, 73; ПКМУ 1772; Наказ 72; the joint order Держспецзв'язку/СБУ № 627/772 of 19.12.2024 (shown as mandatory for CI, text and title not verified).
+
+**2.12 Simulated readers — defence industry (2026-11-19). Not added; all need you.**
+- **REV-P-DEF-1:** owners of systems with ДІР/СІ/ДТ that report under ПКМУ 1533 п. 17 абз. 1 (REV-C10) are also bound by пп. 12 and 15 (taxonomy, criticality, TLP), so np-12 and np-15 should carry state-ir;state-secrets — otherwise the Наказ 143/410 rows for them lose their visible basis. Accept, or narrow the 143/410 rows?
+- **REV-P-DEF-2:** NATO documents the register itself describes as addressed to NATO bodies (Personal Data Protection Framework Policy, ACT DIR 040-13, C-M(2011)0043, PO(2021)0360, PO(2022)0409, C-M(2015)0041-REV2) shown as recommended for nato-info/defence until a basis binding national holders is recorded; also check revisions (C-M(2015)0041-REV1/REV2, AC/322-D(2019)0032-REV1/REV2) and show AC/35-D/2004-REV4 as current. Accept?
+- **REV-P-DEF-3:** ratified treaties that bind the State, not organisations (EU Association Agreement, Convention 108), get role=context and leave the mandatory list; the national implementing law carries the duties. Accept?
+
+**2.13 Simulated readers — state bank (2026-11-19). Not added; need you.**
+- **REV-P-BANK-1 — how should a state-owned bank answer the questionnaire?** Ticking «Банк» + «Державний сектор» gives 93 acts instead of 46 (AUTH-41 ДСК presumption, НД ТЗІ, ПКМУ 736/205/311/1281/835, Накази 20/45/317/660/661). (a) A state bank ticks only «Банк» (NBU regime, AUTH-14/30, REV-C2; AUTH-41 not for banks); state-secret systems via question 2 — then the AUTH-37 rows (80/94 a8-p2, a8-p3, a8-p7, a13-i1-1; 373 p11, p14, p16, p23) need a banks+state-secrets branch. (b) Tick both, but AUTH-41 skips banks and public-sector acts without a bank exception are reviewed one by one.
+- **REV-P-BANK-2:** ПКМУ 943 and Наказ 44/2026 (state CII register) not shown to the financial sector — the NBU keeps that register (Закон 2163 ст. 4 ч. 3 абз. 2). Needs their texts.
+- Also flagged: amending acts КМУ 447 (kii), 337 (ki), 1740 have no bank exception — check with their texts.
+
+**2.14 Simulated readers, round 2 (2026-11-19).**
+- **REV-P2-BANK-1 (added, proposed, applied):** Наказ 604, ПКМУ 1109, 818 (and recommended Наказ 23) are hidden from the financial sector, because Закон 1882 gives those powers to the NBU for banks (ст. 8 ч. 1, ст. 10 ч. 4, ст. 12 ч. 5) and ПКМУ 1668 excludes them. Accept?
+- **REV-P2-BANK-2 (not added; waits for REV-P-BANK-1):** until you decide how a state bank answers, show a neutral step-2 notice when a profile has both «Банки» and the public sector. Approve the notice?
+
+- **REV-P2-DEF-1 (added, proposed):** the isolated-systems exclusion of Закон 2163 ст. 2 ч. 1 п. 4 also applies to ПКМУ 1533 and Накази 143/410 (no one-hour CSIRT report for systems with no public network / Internet connection); 80/94 duties unaffected. Accept? (Same question for ПКМУ 1668 and 1799 if you extend it.)
+- **REV-P2-DEF-2 (not added; splits question 1.6):** ПКМУ 1668 пп. 3–4 reach owners of systems with state secrets regardless of ownership (information whose protection is required by law), so add `ua-cmu-1668-2025,state-secrets` (except=finance); monitoring (пп. 6–7) still follows 1.6. **Question 1.6 has now been raised by four independent reviewers** — a private holder of state secrets without ДСК sees no assessment cycle; please decide it before release.
+- **Закон 2075 for public bodies not yet using cloud (question 1.11) — raised for the third time** (ministry reader twice, cross-act review once).
+- **ПКМУ 1009** binds ministries (п. 2, two-month deadline already passed): put it first in the AUTH-19 queue of new acts.
+
+- **REV-P2-OMS-1 (added, proposed) and D1516-PD2 — local councils (ОМС).** Without an ОМС code, councils answer as «authority» and get state-bodies, so they also see ПКМУ 1516 and Закон 2163 ст. 5¹ ч. 1 абз. 3–4 rows (state authorities only) and ПКМУ 736 rows (recommendation for ОМС). Conditions are shown; only the A.6.4 lock rests on 736 alone. Options: (a) accept as is (chair's lean); (b) add a questionnaire answer «Орган місцевого самоврядування» that sets a profile flag (not a sector code) hiding 1516 / 2163 ст. 5¹ rows and showing 736 as recommendation; (c) a sector code.
+- **REV-P2-CI-1 (not added; depends on REV-C14):** ПКМУ 1533 provisions tied to «systems» (np-6, np-9-6, np-10, np-14, np-21, np-23, п. 11 абз. 3) reach a CI operator only with such systems; split п. 11 абз. 3 into np-11-3 and move A.6.8 there. Needs a row-by-row check first.
+- **Joint order 627/772:** the register URL suggests the title «Деякі питання розробки, затвердження та погодження планів захисту об'єктів критичної інфраструктури за проектною загрозою національного рівня „кібератака, кіберінцидент“» (unverified) — supply the text.
+
+- **REV-P2-INS-1 (not added):** add НБУ 194/2023, 204/2023 and 74/2024 (insurers' management system, records/protection, continuity plan; cited by НБУ 143 and 99) to the register for nonbank-fi as «text not in the library, not mapped» — or supply their texts.
+- **REV-P2-INS-2 (not added):** insurance secrecy and financial-service secrecy, like personal data and bank secrecy (AUTH-03), are not «information whose protection is required by law» under Закон 80/94 ст. 4 ч. 2, ст. 9. Accept, or say why not?
+- **Cross-act round 3 (suppliers):** (1) extend REV-X2-XSC-1 / D-1335-ADDR (ban on listed software, Закон 2163 ст. 4 ч. 4) to ICT suppliers whose own systems take part in processing ДІР/СІ/ДТ (836 levels II–IV)? Vendors separately (D-1335-ADDR excludes manufacturers). (2) extend the AUTH-41 presumption to Наказ 836 (owner side for every public body)? Both were held back to stop the scope widening round after round.
+
+- **Text wanted:** НБУ № 69 від 27.06.2025 (Положення про КІ фінансового сектору), at least розд. II пп. 20–21 — until then it shows only as an amending act.
+- **Final persona round (ministry):** if you accept REV-P2-DEF-1 (isolated systems), should it also cover ПКМУ 373 п. 29's one-hour reporting parameter (A.5.24, A.5.26, RS.MA-01, RS.CO-02)? Also wanted: texts of ПКМУ 1772 and Наказ 317 (then say who 317 covers relative to Накази 409/419).
 
 ## 3. Personal data
 
@@ -235,6 +287,14 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **Rows that also rest on AUTH-POS-3:**
   - written in this commit: `ua-ssscip-179-2026,ki` and `ua-ssscip-425-2026,ki` (the latter also cites PD-425-2);
   - decisions added: D179-PD1 and D1471-PD2.
+
+**4.1a Cross-act review (incident reporting). REV-X1-XIR-1/2/3 (added, proposed, cited on rows).**
+- **XIR-1:** threat reports to state bodies outside the response system (Закон 2163 ст. 11; Закон 1882 ст. 21 ч. 1 п. 9 to the SBU) are «—» rows under AUTH-06 (A.5.5, RS.CO-03 supporting); notifying response teams inside the system (ПКМУ 1533 пп. 13–14) is mapped as response. Accept?
+- **XIR-2:** banks that are CI operators/CII owners also set the category and criticality level under ПКМУ 1533 п. 12 (national taxonomy) alongside the NBU list (НБУ 178 п. 19-2). Accept?
+- **XIR-3:** the binding parts of Наказ 143 (taxonomy, criticality level, TLP rules) are shown under the order's applicability, wider than ПКМУ 1533 пп. 12, 15 — owners of systems with ДІР/СІ/ДТ report on the same form. Accept?
+- Also raised: can a CMU resolution exempt banks from the SSSCIP notification form required by Закон 2163 ст. 9¹ ч. 2? (A question of the acts' hierarchy; the rows follow ПКМУ 1533 п. 17 абз. 4.)
+
+- **REV-X3-XIR-1 (added, proposed):** the NBU's sectoral CSIRT (Закон 2163 ст. 9 ч. 3 п. 2) is the «relevant sectoral CSIRT» under ПКМУ 1533 п. 17 абз. 2 for every NBU-supervised CI operator/CII owner (not only banks); ПКМУ 1533 п. 18 fallback does not apply to them. Accept?
 
 **4.2 Закон 2163 ст. 8 ч. 3 п. 26 (planning cyber-protection spending). D2163-PD4 (not added). Raised by IS.**
 - **Question:** Should a point of ч. 3 be mapped as a duty only when it names who acts (п. 26), or should a8-p3-26 be definitional, with its 7.1 and GV.RR-03 links dropped and reliance placed on ПКМУ 518 p10?
@@ -291,6 +351,10 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 
 **5.4 Order 843 profile measures. PD-843-2 (now registered as REV-R6-NA-2, proposed, cited on 843 p1; together with REV-C3). Raised by NA.**
 - **Question:** Is every ND TZI 3.6-006-24 measure named in column 2 mandatory in full, with column 3 as the minimum parameters, as REV-C3 does for Orders 409 and 419?
+
+**5.6 Twin rows in the 409/419/843 profiles (cross-act review). REV-X1-XPB-1 (added, cited on 6 rows) and REV-X1-XPB-2 (not added).**
+- REV-X1-XPB-1: AC-2 h.3 («зміни, які потребують нових знань») read as a change in usage or need-to-know, deadline per column 5 (24 h). Accept?
+- REV-X1-XPB-2 (method): the same ND TZI measure with the same column 3 in 409, 419 and 843 is mapped to the same controls/relationships/parameters, differences only where columns 3–5 differ (explained in a note). Accept → a scripted alignment pass over the remaining twin rows (no locks are lost today; it is about consistency).
 
 **5.5 Order of correction (припис) under ПКМУ 1668. D1668-PD4 (not added). Raised by AS.**
 - **Question:** Are the requirements of a припис (п. 17 підп. 9) mandatory and mapped with p21?
