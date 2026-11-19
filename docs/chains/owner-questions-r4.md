@@ -76,6 +76,8 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **Question:** Should 1799 and 285 also apply to systems that hold only state secrets?
 - **Skipped until you decide:** add rows `ua-cmu-1799-2025,state-secrets` and `ua-ssscip-285-2026,state-secrets` with `except=finance` and basis «п. 1 абз. перший» (AS register change 4).
 
+- **REV-R6-AS-1 (added, cited on the 1799 defence applicability row; from the third round, a valid major).** Military formations are treated as owners of assessment objects under ПКМУ 1799 (п. 1, п. 3 «для власних потреб»), like AUTH-41 / D1668-PD2, so the owner duties (annual self-assessment, report copy within 30 days, etc.) now show for a «Сили оборони» reader. If accepted, also consider adding `ua-ssscip-285-2026,defence` so the mandatory report form reaches them. If rejected, the defence tags on 1799 p4, p6, p7, p10, p14, p15, p17, p18 are removed.
+
 **1.7 ПКМУ 1799 п. 6: does the owner have to give access? D1799-PD1 (not added). Raised by AS.**
 - **Question:** Do the assessor's rights under п. 6 create a corresponding duty on the owner to give access to the object, documents, copies and explanations?
 - **Options:**
