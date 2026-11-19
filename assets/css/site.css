@@ -1500,3 +1500,21 @@ button.pill { font: inherit; font-size: .88rem; cursor: pointer; text-align: lef
   .sys-arrow { display: none; }
 }
 @media (max-width: 340px) { .actors { grid-template-columns: minmax(0, 1fr); } }
+
+/* home: the journey from requirements to implementation */
+.journey-lead { color: var(--muted); max-width: 70ch; margin: 0 0 12px; }
+.journey { list-style: none; counter-reset: jr; margin: 0 0 28px; padding: 0; border-bottom: 1px solid var(--rule); }
+.journey li { counter-increment: jr; display: grid; grid-template-columns: 2.2rem minmax(0, 1fr);
+  grid-template-areas: "n t" "n w" "n x"; gap: 4px 14px; padding: 12px 0; border-top: 1px solid var(--rule); align-items: baseline; }
+.journey li::before { content: counter(jr); grid-area: n; font: 600 1.1rem var(--sans); color: var(--accent); }
+.journey li > b { grid-area: t; font-weight: 600; }
+.journey li > b a { color: var(--ink); text-decoration: none; }
+.journey li > b a:hover { color: var(--accent); }
+.journey-where { grid-area: w; justify-self: start; white-space: nowrap; font-size: .78rem; padding: 1px 8px; border: 1px solid var(--rule); color: var(--muted); }
+.journey-where.here { border-color: var(--accent); color: var(--accent); }
+.journey-text { grid-area: x; color: var(--muted); }
+.journey-text a { color: var(--accent); }
+@media (min-width: 900px) {
+  .journey li { grid-template-columns: 2.2rem 12rem minmax(0, 1fr) auto; grid-template-areas: "n t x w"; }
+  .journey-where { justify-self: end; }
+}

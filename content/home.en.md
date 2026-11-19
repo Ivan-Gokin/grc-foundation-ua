@@ -32,6 +32,20 @@ Laws, resolutions, orders, standards, NATO policies: hundreds of documents that 
 </ol></div>
 </div>
 
+## From requirements to implementation
+
+<p class="journey-lead">The path of a GRC analyst or vCISO setting up compliance for an organisation. You need this site for the first four steps; after that, the work happens in your GRC tool.</p>
+
+<ol class="journey">
+<li><b><a href="#/craft?step=1">Profile</a></b><span class="journey-where here">here</span><span class="journey-text">Answer the questions about the organisation and get its requirements.</span></li>
+<li><b><a href="#/craft?step=6">Download</a></b><span class="journey-where here">here</span><span class="journey-text">The Statement of Applicability or CSF target profile in Excel, or the <a href="data/ciso-assistant-libraries.zip">CISO Assistant libraries</a>.</span></li>
+<li><b>Import</b><span class="journey-where tool">your tool</span><span class="journey-text">Load the requirements into CISO Assistant or a similar tool. Coming: a how-to and a ready-made set for your profile.</span></li>
+<li><b>Updates</b><span class="journey-where here">here and in your tool</span><span class="journey-text">When the acts change, a new release comes out. In CISO Assistant the library updates and your answers stay. Coming: a release feed and a changes sheet for Excel.</span></li>
+<li><b><a href="#/guide?c=risk">Risk assessment</a></b><span class="journey-where tool">your tool</span><span class="journey-text">Risks beyond the legal minimum. Coming: typical scenarios built from the techniques used against Ukrainian organisations, with no likelihood or impact filled in.</span></li>
+<li><b>Policies</b><span class="journey-where tool">your tool</span><span class="journey-text">CIS templates or your own documents. Coming: links to the templates for each control, and a guide.</span></li>
+<li><b><a href="#/guide?c=grc">Implementation</a></b><span class="journey-where tool">your tool</span><span class="journey-text">Controls, how they are checked, and their automation: GRC engineering.</span></li>
+</ol>
+
 <div class="home-panels">
 <section class="home-panel">
 
