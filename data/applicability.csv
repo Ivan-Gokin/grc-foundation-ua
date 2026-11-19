@@ -343,6 +343,7 @@ ua-cmu-1335-2025,public-sector,,Закон № 2163-VIII ст. 4 ч. 4 абз. �
 ua-cmu-1335-2025,state-ir,,Закон № 2163-VIII ст. 4 ч. 4 абз. перший,yes,,,D-1335-ADDR
 ua-cmu-1335-2025,kii,,Закон № 2163-VIII ст. 4 ч. 4 абз. перший,yes,,,D-1335-ADDR
 ua-cmu-1335-2025,state-secrets,,Закон № 2163-VIII ст. 4 ч. 4 абз. перший,yes,,,D-1335-ADDR
+ua-cmu-1335-2025,cloud,,Закон № 2163-VIII ст. 4 ч. 4 абз. перший; ПКМУ № 154 Вимоги п. 4,no,,,D-1335-ADDR;REV-X2-XSC-1
 ua-ssscip-798-2025,state-bodies,,"entity tags, register 2026-10",no,,,D798-PD1
 ua-ssscip-798-2025,ki,,"entity tags, register 2026-10",no,,,D798-PD1
 ua-ssscip-798-2025,cii-1-2,,Рекомендації розд. I п. 2 (власники ОКІІ I–II категорій),no,,,D798-PD1
@@ -593,3 +594,4 @@ ua-law-2163-viii,state-secrets,,"Закон № 2163-VIII ст. 4 ч. 4, ст. 9
 ua-law-2163-viii,defence,,"Закон № 2163-VIII ст. 8 ч. 6 (військові формування), ст. 9 ч. 3 п. 2",no,,,
 ua-law-2163-viii,security-services,,"Закон № 2163-VIII ст. 9 ч. 3 пп. 2, 4 (приватні команди реагування)",no,,,
 ua-law-2163-viii,general,,"Закон № 2163-VIII ст. 11 (усі підприємства, установи, організації)",no,,,
+ua-law-2163-viii,cloud,,"Закон № 2163-VIII ст. 4 ч. 4 абз. перший (системи надавача, де обробляються ДІР/СІ/ДТ користувачів); ПКМУ № 154 Вимоги п. 4",no,,,REV-X2-XSC-1

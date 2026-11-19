@@ -59,6 +59,8 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **REV-X1-XSC-2 (added, proposed; cross-act review) — suppliers and the 409/419 profiles.** Наказ 836 Вимоги п. 5 obliges a supplier of level II–IV supplies to meet the base/sector profile in its own system. REV-C1 (decided) hides 409/419 from non-public owners but never considered suppliers. Accept → add «постачальникам … — за наказом № 836 (Вимоги п. 5)» to the 409/419 act conditions and applicability rows 409/419 × ict-suppliers, vendors, cloud. Reject → profiles stay hidden from suppliers; the 836 vm-5 note is the only pointer (current state, with a [ПЕРЕВІРИТИ]).
 - **REV-X1-XSC-1 (added, proposed):** cloud/data-centre providers serving such owners are 836 suppliers; the supplier rows now also show for the `cloud` tag. Text-based; set the status.
 
+- **REV-X2-XSC-1 (added, proposed; cross-act confirmation round):** the ban on listed software/equipment (Закон 2163 ст. 4 ч. 4, ПКМУ 1335) also reaches cloud/data-centre providers' systems where users process ДІР/СІ/ДТ; shown to the `cloud` tag. Accept?
+
 **1.4 ПКМУ 1335 / Закон 2163 ст. 4 ч. 4: the ban on listed software and equipment. Raised by ST and IS.**
 - **D-1335-ADDR (added):** applicability follows the addressees of the ban. Chair: text-based; the owner only needs to set the status.
 - **D-1335-USE (not added).**
