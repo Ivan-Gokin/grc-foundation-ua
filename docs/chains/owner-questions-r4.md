@@ -232,6 +232,11 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **REV-P-DEF-2:** NATO documents the register itself describes as addressed to NATO bodies (Personal Data Protection Framework Policy, ACT DIR 040-13, C-M(2011)0043, PO(2021)0360, PO(2022)0409, C-M(2015)0041-REV2) shown as recommended for nato-info/defence until a basis binding national holders is recorded; also check revisions (C-M(2015)0041-REV1/REV2, AC/322-D(2019)0032-REV1/REV2) and show AC/35-D/2004-REV4 as current. Accept?
 - **REV-P-DEF-3:** ratified treaties that bind the State, not organisations (EU Association Agreement, Convention 108), get role=context and leave the mandatory list; the national implementing law carries the duties. Accept?
 
+**2.13 Simulated readers — state bank (2026-11-19). Not added; need you.**
+- **REV-P-BANK-1 — how should a state-owned bank answer the questionnaire?** Ticking «Банк» + «Державний сектор» gives 93 acts instead of 46 (AUTH-41 ДСК presumption, НД ТЗІ, ПКМУ 736/205/311/1281/835, Накази 20/45/317/660/661). (a) A state bank ticks only «Банк» (NBU regime, AUTH-14/30, REV-C2; AUTH-41 not for banks); state-secret systems via question 2 — then the AUTH-37 rows (80/94 a8-p2, a8-p3, a8-p7, a13-i1-1; 373 p11, p14, p16, p23) need a banks+state-secrets branch. (b) Tick both, but AUTH-41 skips banks and public-sector acts without a bank exception are reviewed one by one.
+- **REV-P-BANK-2:** ПКМУ 943 and Наказ 44/2026 (state CII register) not shown to the financial sector — the NBU keeps that register (Закон 2163 ст. 4 ч. 3 абз. 2). Needs their texts.
+- Also flagged: amending acts КМУ 447 (kii), 337 (ki), 1740 have no bank exception — check with their texts.
+
 ## 3. Personal data
 
 **3.1 Закон 2297 ст. 7 ч. 2 пп. 6, 6². REV-PD-A (not added). Raised by PD.**
