@@ -56,6 +56,9 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
   - Question: Order 836 — for a CII object with no ДІР, службова інформація or ДТ, the second criticality criterion (Критерії п. 4) is literally never met, yet п. 5 of the risk-level procedure puts CII objects at level II. Which level applies to their supplies?
   - Options: (a) level II for supplies where the supplier's system takes part in processing the object's information, level I for the rest, until SSSCIP clarifies — **chair recommends (a)** and asking SSSCIP; (b) literal reading: always level I (declaration only); (c) no decision, keep the [ПЕРЕВІРИТИ] marker (current state).
 
+- **REV-X1-XSC-2 (added, proposed; cross-act review) — suppliers and the 409/419 profiles.** Наказ 836 Вимоги п. 5 obliges a supplier of level II–IV supplies to meet the base/sector profile in its own system. REV-C1 (decided) hides 409/419 from non-public owners but never considered suppliers. Accept → add «постачальникам … — за наказом № 836 (Вимоги п. 5)» to the 409/419 act conditions and applicability rows 409/419 × ict-suppliers, vendors, cloud. Reject → profiles stay hidden from suppliers; the 836 vm-5 note is the only pointer (current state, with a [ПЕРЕВІРИТИ]).
+- **REV-X1-XSC-1 (added, proposed):** cloud/data-centre providers serving such owners are 836 suppliers; the supplier rows now also show for the `cloud` tag. Text-based; set the status.
+
 **1.4 ПКМУ 1335 / Закон 2163 ст. 4 ч. 4: the ban on listed software and equipment. Raised by ST and IS.**
 - **D-1335-ADDR (added):** applicability follows the addressees of the ban. Chair: text-based; the owner only needs to set the status.
 - **D-1335-USE (not added).**
@@ -104,7 +107,7 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
   - (b) Public users only. Set a11-p3-2 to `cloud;public-sector+cloud-users`.
 - **Skipped:** CL register change 6.
 
-**1.11 Закон 2075: the public-sector + cloud-users row. Raised by CL (R4-CL-019).**
+**1.11 Закон 2075: the public-sector + cloud-users row. *Cross-act review adds:* ст. 2 defines «публічний користувач» by status, and ст. 11 ч. 1 binds public users as such, which supports dropping `requires=cloud-users` from `ua-law-2075-ix,public-sector`. Raised by CL (R4-CL-019).**
 - **Question:** The row `ua-law-2075-ix,public-sector,cloud-users` hides the new a11-p1 row (ст. 11 ч. 1) from public bodies that are not marked as cloud users. Is that acceptable, or should a11-p1 reach every public body?
 
 **1.12 ПКМУ 154: legal hierarchy and the encryption reading. Raised by CL.**
