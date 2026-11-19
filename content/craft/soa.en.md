@@ -16,4 +16,4 @@ Three things to watch:
 - **Legal values**, such as how long to keep logs or how fast to report an incident: yours can be stricter, never weaker.
 - **"AI, not reviewed"** mappings: check them against the text of the act before you rely on them.
 
-Below the list are provisions that no control covers, such as reports to the regulator; they need their own lines in your documents. The download has blank columns for the owner, status and evidence of each control.
+Below the list are provisions for which the framework has no matching control, such as reports to the regulator; they need their own lines in your documents. The download has blank columns for the owner, status and evidence of each control.

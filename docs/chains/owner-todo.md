@@ -101,5 +101,5 @@ Base profile for NATO information (chain 31):
 
 ## 5. Waiting on nothing (AI can do when asked)
 
-- NIST SP 800-53 layer: fill `data/sp800-53/baselines_ua.csv` (six measures missing from the dsk column; parameters from column 5 of Накази 409/419).
+- NIST SP 800-53 layer: fill `nato_params_uk` from column 3 of the Наказ 843 profile (e.g. AT-3 «a.1. щонайменше щороку», PM-1 «b. 1-ий параметр: щонайменше щороку»); the persona review found rows dropped on import because some ids were typed in Cyrillic (fixed for AC-3, AC-4, AC-20(2), AT-3, CP-9, CP-9(8), PM-1). Also fill `data/sp800-53/baselines_ua.csv` (six measures missing from the dsk column; parameters from column 5 of Накази 409/419).
 - Re-review of the NBU acts as one batch (chains 7, 8, 13, 16, 17, 19).

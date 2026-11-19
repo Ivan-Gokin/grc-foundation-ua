@@ -52,7 +52,7 @@ ua-cmu-518-2019,ki,,"entity tags, register 2026-10; виняток — ПКМУ 
 ua-cmu-518-2019,kii,,"entity tags, register 2026-10; виняток — ПКМУ № 518 п. 1 абз. другий",no,finance,,
 ua-cmu-943-2020,kii,,"entity tags, register 2026-10",no,,,
 ua-cmu-943-2020,ki,,"entity tags, register 2026-10",no,,,
-ua-cmu-1109-2020,ki,,"entity tags, register 2026-10",no,,,
+ua-cmu-1109-2020,ki,,"entity tags, register 2026-10; виняток — Закон № 1882-IX ст. 8 ч. 1 абз. другий, ст. 10 ч. 4 (порядок і методика НБУ; текст постанови не в бібліотеці)",no,finance,,REV-P2-BANK-1
 ua-cmu-1176-2020,kii,,"entity tags, register 2026-10",no,,,
 ua-cmu-1176-2020,state-ir,,"entity tags, register 2026-10",no,,,
 ua-cmu-1295-2020,kii,,"entity tags, register 2026-10",no,,,
@@ -74,7 +74,7 @@ ua-cmu-281-2002,state-ir,,"entity tags, register 2026-10",no,,,
 ua-cmu-939-2013,state-secrets,,"entity tags, register 2026-10",no,,,
 ua-cmu-121-1998,public-sector,,"entity tags, register 2026-10",no,,,
 ua-cmu-736-2016,public-sector,,"entity tags, register 2026-10",no,,,
-ua-cmu-736-2016,state-ir,,"entity tags, register 2026-10",no,,,
+ua-cmu-736-2016,state-ir,public-sector,"п. 1 Типової інструкції (установи — органи державної влади, інші державні органи, органи влади АРК); юридичні особи, на яких Інструкція не поширюється, лише дають письмове зобов'язання про нерозголошення (п. 11 абз. другий)",no,,,
 ua-cmu-1433-2003,public-sector,,"entity tags, register 2026-10",no,,,
 ua-cmu-180-1998,state-secrets,,"entity tags, register 2026-10",no,,,
 ua-cmu-688-2005,public-sector,,"entity tags, register 2026-10",no,,,
@@ -97,7 +97,7 @@ ua-ssscip-660-2014,state-ir,,"entity tags, register 2026-10",no,,,
 ua-ssscip-660-2014,public-sector,,"entity tags, register 2026-10",no,,,
 ua-ssscip-20-2016,state-ir,,"entity tags, register 2026-10",no,,,
 ua-ssscip-20-2016,public-sector,,"entity tags, register 2026-10",no,,,
-ua-ssscip-23-2021,ki,,"entity tags, register 2026-10",no,,,
+ua-ssscip-23-2021,ki,,"entity tags, register 2026-10",no,finance,,REV-P2-BANK-1
 ua-ssscip-550-2021,kii,,"entity tags, register 2026-10",no,,,
 ua-ssscip-550-2021,state-ir,,"entity tags, register 2026-10",no,,,
 ua-ssscip-601-2021,kii,,"entity tags, register 2026-10",no,,,
@@ -266,9 +266,8 @@ nato-ac-35-d-2004-rev3,nato-info,,"entity tags, register 2026-10",no,,,
 nato-ac-35-d-2004-rev3,defence,,"entity tags, register 2026-10",no,,,
 nato-ac-35-d-2005-rev3,nato-info,,"entity tags, register 2026-10",no,,,
 nato-ac-35-d-2005-rev3,defence,,"entity tags, register 2026-10",no,,,
-nato-ac-35-d-2006,nato-info,,"entity tags, register 2026-10",no,,,
+nato-ac-35-d-2006,nato-info,,"entity tags, register 2026-10",no,,,REV-P-MIN-1
 nato-ac-35-d-2006,defence,,"entity tags, register 2026-10",no,,,
-nato-ac-35-d-2006,public-sector,,"entity tags, register 2026-10",no,,,
 nato-ac-35-n-2015-0022,nato-info,,"entity tags, register 2026-10",no,,,
 nato-ac-35-n-2015-0022,defence,,"entity tags, register 2026-10",no,,,
 nato-act-dir-040-13,nato-info,,"entity tags, register 2026-10",no,,,
@@ -291,19 +290,19 @@ nato-po-2022-0409,nato-info,,"entity tags, register 2026-10",no,,,
 nato-po-2022-0409,defence,,"entity tags, register 2026-10",no,,,
 ua-vst-01.008.001-2021,nato-info,,"entity tags, register 2026-10",no,,,
 ua-vst-01.008.001-2021,defence,,"entity tags, register 2026-10",no,,,
-ua-vst-01.008.001-2021,defence-industry,,"entity tags, register 2026-10",no,,,
+ua-vst-01.008.001-2021,defence-industry,nato-info,"entity tags, register 2026-10; лише з інформацією НАТО: акт стосується систем чи контрактів з інформацією НАТО (concerns_uk, description_uk; P2-DEF-009)",no,,,
 ua-vst-01.008.002-2021,nato-info,,"entity tags, register 2026-10",no,,,
 ua-vst-01.008.002-2021,defence,,"entity tags, register 2026-10",no,,,
-ua-vst-01.008.002-2021,defence-industry,,"entity tags, register 2026-10",no,,,
+ua-vst-01.008.002-2021,defence-industry,nato-info,"entity tags, register 2026-10; лише з інформацією НАТО: акт стосується систем чи контрактів з інформацією НАТО (concerns_uk, description_uk; P2-DEF-009)",no,,,
 ua-vst-01.008.003-2021,nato-info,,"entity tags, register 2026-10",no,,,
 ua-vst-01.008.003-2021,defence,,"entity tags, register 2026-10",no,,,
-ua-vst-01.008.003-2021,defence-industry,,"entity tags, register 2026-10",no,,,
+ua-vst-01.008.003-2021,defence-industry,nato-info,"entity tags, register 2026-10; лише з інформацією НАТО: акт стосується систем чи контрактів з інформацією НАТО (concerns_uk, description_uk; P2-DEF-009)",no,,,
 ua-vst-01.008.004-2021,nato-info,,"entity tags, register 2026-10",no,,,
 ua-vst-01.008.004-2021,defence,,"entity tags, register 2026-10",no,,,
-ua-vst-01.008.004-2021,defence-industry,,"entity tags, register 2026-10",no,,,
+ua-vst-01.008.004-2021,defence-industry,nato-info,"entity tags, register 2026-10; лише з інформацією НАТО: акт стосується систем чи контрактів з інформацією НАТО (concerns_uk, description_uk; P2-DEF-009)",no,,,
 ua-vst-01.008.005-2021,nato-info,,"entity tags, register 2026-10",no,,,
 ua-vst-01.008.005-2021,defence,,"entity tags, register 2026-10",no,,,
-ua-vst-01.008.005-2021,defence-industry,,"entity tags, register 2026-10",no,,,
+ua-vst-01.008.005-2021,defence-industry,nato-info,"entity tags, register 2026-10; лише з інформацією НАТО: акт стосується систем чи контрактів з інформацією НАТО (concerns_uk, description_uk; P2-DEF-009)",no,,,
 ua-ssscip-505-2024,cloud,,"entity tags, register 2026-10",no,,,
 ua-ssscip-505-2024,state-ir,cloud-users,review 2026-10-24: state bodies that use cloud services,no,,,
 ua-ssscip-505-2024,kii,cloud-users,review 2026-10-24: CII owners that use cloud services,no,,,
@@ -333,6 +332,7 @@ ua-ssscip-409-2025,public-sector,,"entity tags, register 2026-10",no,banks,,AUTH
 ua-ssscip-409-2025,kii,public-sector,"ПКМУ № 712, Порядок авторизації п. 1; ПКМУ № 373 п. 16",no,banks,,AUTH-30;REV-C1
 ua-ssscip-419-2025,state-ir,public-sector,"entity tags, register 2026-10",no,banks,,AUTH-30;REV-C1
 ua-ssscip-419-2025,public-sector,,"entity tags, register 2026-10",no,banks,,AUTH-30;REV-C1;AUTH-41
+ua-ssscip-419-2025,kii,public-sector,"ПКМУ № 712, Порядок авторизації п. 1; ПКМУ № 373 п. 16",no,banks,,AUTH-30;REV-C1
 ua-cmu-712-2025,state-ir,public-sector,"entity tags, register 2026-10",no,banks,state-secrets,AUTH-14;AUTH-37;REV-C1;REV-C2
 ua-cmu-712-2025,kii,public-sector,"entity tags, register 2026-10",no,banks,state-secrets,AUTH-14;AUTH-37;REV-C1;REV-C2
 ua-cmu-712-2025,state-secrets,public-sector,"ПКМУ № 712, Порядок авторизації пп. 1, 10–11: системи з ДТ органів державного сектору",no,,,AUTH-37
@@ -343,6 +343,7 @@ ua-cmu-1335-2025,public-sector,,Закон № 2163-VIII ст. 4 ч. 4 абз. �
 ua-cmu-1335-2025,state-ir,,Закон № 2163-VIII ст. 4 ч. 4 абз. перший,yes,,,D-1335-ADDR
 ua-cmu-1335-2025,kii,,Закон № 2163-VIII ст. 4 ч. 4 абз. перший,yes,,,D-1335-ADDR
 ua-cmu-1335-2025,state-secrets,,Закон № 2163-VIII ст. 4 ч. 4 абз. перший,yes,,,D-1335-ADDR
+ua-cmu-1335-2025,cloud,,Закон № 2163-VIII ст. 4 ч. 4 абз. перший; ПКМУ № 154 Вимоги п. 4,no,,,D-1335-ADDR;REV-X2-XSC-1
 ua-ssscip-798-2025,state-bodies,,"entity tags, register 2026-10",no,,,D798-PD1
 ua-ssscip-798-2025,ki,,"entity tags, register 2026-10",no,,,D798-PD1
 ua-ssscip-798-2025,cii-1-2,,Рекомендації розд. I п. 2 (власники ОКІІ I–II категорій),no,,,D798-PD1
@@ -362,11 +363,11 @@ ua-cmu-1580-2025,kii,,"entity tags, register 2026-10",no,,,
 ua-cmu-1580-2025,security-services,,"entity tags, register 2026-10",no,,,
 ua-nbu-95-2017,banks,,п. 5 розділу I Положення,yes,,,
 ua-nbu-95-2017,nbu-is-participants,,п. 5 розділу I; розділ III,yes,,,AUTH-POS-6;REV-NO2-PD1
-ua-nbu-64-2018,finance,,"entity tags, register 2026-10",no,,,
-ua-nbu-43-2021,finance,,"entity tags, register 2026-10",no,,,
+ua-nbu-64-2018,banks,,п. 2 глави 1 розділу I Положення,yes,,,
+ua-nbu-43-2021,finance,,"entity tags, register 2026-10; виняток — п. 3(16), 4 розділу I: небанківські фінансові установи та установа ЄЦБД не є суб'єктами інформаційного захисту",no,nonbank-fi;nbu-ecbd,,REV-P-INS-1
 ua-nbu-4-2021,banks,,"п. 7 розділу I Положення (ред. 01.03.2025) [ПЕРЕВІРИТИ: чи поширюються вимоги на філії іноземних банків — Закон «Про банки і банківську діяльність», немає в бібліотеці]",yes,,,
 ua-nbu-178-2022,banks,,п. 6 розділу I: «поширюються на банки України»,yes,,,
-ua-nbu-88-2019,finance,,"entity tags, register 2026-10",no,,,
+ua-nbu-88-2019,banks,,п. 2 розділу I Положення (за умовою акта в реєстрі; тексту немає в бібліотеці),no,,,
 ua-nbu-99-2025,finance,cloud-users,review 2026-10-24: banks and other NBU-supervised institutions that use cloud services,no,,,
 ua-cmu-764-2024,trust,,"entity tags, register 2026-10",no,,,
 ua-cmu-1799-2025,ki,,"entity tags, register 2026-10; виняток — ПКМУ № 1799 п. 1 абз. третій",no,finance,,D1668-PD1
@@ -416,6 +417,7 @@ ua-ssscip-836-2025,state-ir,,Порядок визначення рівня ри
 ua-ssscip-836-2025,state-secrets,,Порядок визначення рівня ризику п. 1; Порядок підтвердження п. 2,yes,,,
 ua-ssscip-836-2025,kii,,Порядок визначення рівня ризику п. 1; Порядок підтвердження п. 2,yes,,,
 ua-ssscip-836-2025,vendors,,Вимоги п. 3; Порядок підтвердження п. 3 (постачальник — будь-яка особа),yes,,,D-836-SUP
+ua-ssscip-836-2025,cloud,,"Вимоги пп. 2–3; Порядок підтвердження пп. 2–3 (надавач хмарних послуг або ЦОД, що обслуговує власників ІКС з ДІР, службовою інформацією чи ДТ або ОКІІ)",no,,,D-836-SUP;REV-X1-XSC-1
 ua-ssscip-847-2025,state-ir,public-sector,"Наказ № 847 пп. 1, 5; ПКМУ № 712, Порядок авторизації п. 1",no,banks,state-secrets,AUTH-14;AUTH-37;REV-C1;REV-C2;REV-C15;D847-PD2
 ua-ssscip-847-2025,kii,public-sector,"Наказ № 847 пп. 1, 5; ПКМУ № 712, Порядок авторизації п. 1",no,banks,state-secrets,AUTH-14;AUTH-37;REV-C1;REV-C2;REV-C15;D847-PD2
 ua-ssscip-847-2025,state-secrets,public-sector,"Наказ № 847 пп. 1, 5; ПКМУ № 712, Порядок авторизації п. 1",no,,,AUTH-37;REV-C15;D847-PD2
@@ -495,10 +497,10 @@ ua-law-74-98-vr,public-sector,,"entity tags, register 2026-10",no,,,
 ua-cmu-447-2025,state-ir,,"entity tags, register 2026-10",no,,,
 ua-cmu-447-2025,kii,,"entity tags, register 2026-10",no,,,
 ua-cmu-447-2025,public-sector,,"entity tags, register 2026-10",no,,,
-ua-cmu-1470-2025,ki,,"entity tags, register 2026-10",no,,,
-ua-cmu-1470-2025,kii,,"entity tags, register 2026-10",no,,,
-ua-cmu-1531-2025,state-ir,,"entity tags, register 2026-10",no,,,
-ua-cmu-1531-2025,public-sector,,"entity tags, register 2026-10",no,,,
+ua-cmu-1470-2025,ki,,"entity tags, register 2026-10; виняток — ПКМУ № 518 п. 1 абз. другий (ред. постанови № 1470)",no,finance,,
+ua-cmu-1470-2025,kii,,"entity tags, register 2026-10; виняток — ПКМУ № 518 п. 1 абз. другий (ред. постанови № 1470)",no,finance,,
+ua-cmu-1531-2025,state-ir,,"entity tags, register 2026-10; виняток — ПКМУ № 373 п. 2 (ред. постанови № 1531)",no,banks,state-secrets,AUTH-30;AUTH-37
+ua-cmu-1531-2025,public-sector,,"entity tags, register 2026-10; виняток — ПКМУ № 373 п. 2 (ред. постанови № 1531)",no,banks,state-secrets,AUTH-30;AUTH-37
 ua-cmu-1740-2025,kii,,"entity tags, register 2026-10",no,,,
 ua-cmu-337-2026,ki,,"entity tags, register 2026-10",no,,,
 ua-cmu-337-2026,cloud,,"entity tags, register 2026-10",no,,,
@@ -506,13 +508,12 @@ ua-cmu-337-2026,defence-industry,,"entity tags, register 2026-10",no,,,
 ua-cmu-257-2023,ki,,"entity tags, register 2026-10",no,,,
 ua-cmu-257-2023,security-services,,"entity tags, register 2026-10",no,,,
 ua-cmu-627-2024,state-ir,,"entity tags, register 2026-10",no,,,
-ua-ssscip-604-2026,public-sector,,"entity tags, register 2026-10",no,,,
-ua-ssscip-604-2026,state-ir,,"entity tags, register 2026-10",no,,,
-ua-ssscip-604-2026,ki,,"entity tags, register 2026-10",no,,,
-ua-ssscip-604-2026,kii,,"entity tags, register 2026-10",no,,,
-ua-nbu-24-2025,finance,,"entity tags, register 2026-10",no,,,
+ua-ssscip-604-2026,public-sector,,"entity tags, register 2026-10; виняток — ПКМУ № 1668 п. 1 абз. другий (Методику затверджено за п. 2 Порядку)",no,finance,,D1668-PD1;REV-P2-BANK-1
+ua-ssscip-604-2026,state-ir,,"entity tags, register 2026-10; виняток — ПКМУ № 1668 п. 1 абз. другий (Методику затверджено за п. 2 Порядку)",no,finance,,D1668-PD1;REV-P2-BANK-1
+ua-ssscip-604-2026,ki,,"entity tags, register 2026-10; виняток — ПКМУ № 1668 п. 1 абз. другий (Методику затверджено за п. 2 Порядку)",no,finance,,D1668-PD1;REV-P2-BANK-1
+ua-ssscip-604-2026,kii,,"entity tags, register 2026-10; виняток — ПКМУ № 1668 п. 1 абз. другий (Методику затверджено за п. 2 Порядку)",no,finance,,D1668-PD1;REV-P2-BANK-1
+ua-nbu-24-2025,banks,,"п. 1 постанови: зміни до Положень № 4 і № 178, що поширюються на банки (п. 7 розділу I Положення № 4; п. 6 розділу I Положення № 178)",yes,,,
 ua-nbu-69-2025,finance,,"entity tags, register 2026-10",no,,,
-ua-nbu-69-2025,ki,,"entity tags, register 2026-10",no,,,
 ua-nbu-143-2025,nonbank-fi,,"п. 1, 4 розділу I Положення",no,,,REV-NB-PD-1
 ua-nbu-66-2026,ki,finance,п. 9 розділу I Положення про КІІ,no,,,
 ua-nbu-66-2026,kii,finance,п. 9 розділу I Положення про КІІ,no,,,
@@ -555,7 +556,7 @@ nato-ac-35-d-2000-rev9,nato-info,,"same entity types as the previous revision, r
 nato-ac-35-d-2000-rev9,defence,,"same entity types as the previous revision, review-2026-11-10",no,,,
 nato-ac-35-d-2003-rev5,nato-info,,"same entity types as the previous revision, review-2026-11-10",no,,,
 nato-ac-35-d-2003-rev5,defence,,"same entity types as the previous revision, review-2026-11-10",no,,,
-nato-ac-35-d-2003-rev5,defence-industry,,"same entity types as the previous revision, review-2026-11-10",no,,,
+nato-ac-35-d-2003-rev5,defence-industry,nato-info,"same entity types as the previous revision, review-2026-11-10; лише з інформацією НАТО: акт стосується систем чи контрактів з інформацією НАТО (concerns_uk, description_uk; P2-DEF-009)",no,,,
 nato-ac-35-d-2004-rev4,nato-info,,"same entity types as the previous revision, review-2026-11-10",no,,,
 nato-ac-35-d-2004-rev4,defence,,"same entity types as the previous revision, review-2026-11-10",no,,,
 nato-ac-35-d-2020,nato-info,,"NATO information handling, review-2026-11-10",no,,,
@@ -580,18 +581,17 @@ nato-c-m-2012-0014,nato-info,,"NATO information handling, review-2026-11-10",no,
 nato-c-m-2012-0014,defence,,"NATO information handling, review-2026-11-10",no,,,
 nato-personal-data-protection-framework-policy,nato-info,,"NATO information handling, review-2026-11-10",no,,,
 nato-personal-data-protection-framework-policy,defence,,"NATO information handling, review-2026-11-10",no,,,
-nato-ac-35-d-1038-rev3,nato-info,,"non-NATO entities exchanging information with NATO, review-2026-11-10",no,,,
+nato-ac-35-d-1038-rev3,nato-info,,"non-NATO entities exchanging information with NATO, review-2026-11-10",no,,,REV-P-MIN-1
 nato-ac-35-d-1038-rev3,defence,,"non-NATO entities exchanging information with NATO, review-2026-11-10",no,,,
-nato-ac-35-d-1038-rev3,public-sector,,"non-NATO entities exchanging information with NATO, review-2026-11-10",no,,,
-nato-ac-322-d-2015-0031,nato-info,,"non-NATO entities exchanging information with NATO, review-2026-11-10",no,,,
+nato-ac-322-d-2015-0031,nato-info,,"non-NATO entities exchanging information with NATO, review-2026-11-10",no,,,REV-P-MIN-1
 nato-ac-322-d-2015-0031,defence,,"non-NATO entities exchanging information with NATO, review-2026-11-10",no,,,
-nato-ac-322-d-2015-0031,public-sector,,"non-NATO entities exchanging information with NATO, review-2026-11-10",no,,,
 ua-ombudsman-1-02-14-2014,personal-data,,Типовий порядок обробки ПД: володільці і розпорядники,yes,,,
 ua-ombudsman-1-02-14-2014,general,,Типовий порядок пп. 1.1–1.2; Закон № 2297-VI ст. 4 ч. 2,yes,,,REV-PD-D
-ua-cmu-818-2023,ki,,паспортизація ОКІ: оператори КІ,no,,,
+ua-cmu-818-2023,ki,,паспортизація ОКІ: оператори КІ; виняток — Закон № 1882-IX ст. 12 ч. 5 (ПКМУ № 818 видано за ст. 12 ч. 4),no,finance,,REV-P2-BANK-1
 ua-ssscip-771-2023,state-bodies,,п. 2 розд. I: користувачі Системи — користувачі та спеціальні користувачі НТМ (ПКМУ № 1358/2020),no,,,D771-PD1
 ua-law-2163-viii,public-sector,,"Закон № 2163-VIII ст. 4 ч. 4, ст. 5¹, ст. 8 ч. 6, ст. 9¹; презумпція AUTH-41",no,,,AUTH-41
 ua-law-2163-viii,state-secrets,,"Закон № 2163-VIII ст. 4 ч. 4, ст. 9 ч. 3 п. 4, ст. 9¹ ч. 3",no,,,
 ua-law-2163-viii,defence,,"Закон № 2163-VIII ст. 8 ч. 6 (військові формування), ст. 9 ч. 3 п. 2",no,,,
 ua-law-2163-viii,security-services,,"Закон № 2163-VIII ст. 9 ч. 3 пп. 2, 4 (приватні команди реагування)",no,,,
 ua-law-2163-viii,general,,"Закон № 2163-VIII ст. 11 (усі підприємства, установи, організації)",no,,,
+ua-law-2163-viii,cloud,,"Закон № 2163-VIII ст. 4 ч. 4 абз. перший (системи надавача, де обробляються ДІР/СІ/ДТ користувачів); ПКМУ № 154 Вимоги п. 4",no,,,REV-X2-XSC-1
