@@ -1,6 +1,6 @@
 # GRC engineering
 
-<p class="chapter-lead">What you build when you <a href="#/craft?step=1">craft your baseline</a> is the foundation for automating controls: a minimal, integrated set of requirements for each asset.</p>
+<p class="chapter-lead">What you build when you <a href="#/craft?step=1">build your Statement of Applicability</a> is the foundation for automating controls: a minimal, integrated set of requirements for each asset.</p>
 
 *Covers: ISO/IEC 27001:2022, clauses 5-10 · harmonised structure of ISO management system standards · NIST CSF 2.0, GOVERN function*
 
@@ -8,7 +8,7 @@
 
 ## The foundation for automation
 
-GRC engineering turns requirements, controls and evidence into data and code: secure configurations, automated checks, continuous monitoring. But you can only automate what has already been defined. Crafting your baseline produces exactly that: a minimal, integrated set of requirements for each asset, every requirement with its legal basis, and one control meeting several acts at once. Automation cannot be built on top of contradictory requirements kept in different spreadsheets.
+GRC engineering turns requirements, controls and evidence into data and code: secure configurations, automated checks, continuous monitoring. But you can only automate what has already been defined. Building your Statement of Applicability produces exactly that: a minimal, integrated set of requirements for each asset, every requirement with its legal basis, and one control meeting several acts at once. Automation cannot be built on top of contradictory requirements kept in different spreadsheets.
 
 ## What GRC is and why integrate
 
