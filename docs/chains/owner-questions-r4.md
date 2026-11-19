@@ -239,6 +239,10 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **REV-P-BANK-2:** ПКМУ 943 and Наказ 44/2026 (state CII register) not shown to the financial sector — the NBU keeps that register (Закон 2163 ст. 4 ч. 3 абз. 2). Needs their texts.
 - Also flagged: amending acts КМУ 447 (kii), 337 (ki), 1740 have no bank exception — check with their texts.
 
+**2.14 Simulated readers, round 2 (2026-11-19).**
+- **REV-P2-BANK-1 (added, proposed, applied):** Наказ 604, ПКМУ 1109, 818 (and recommended Наказ 23) are hidden from the financial sector, because Закон 1882 gives those powers to the NBU for banks (ст. 8 ч. 1, ст. 10 ч. 4, ст. 12 ч. 5) and ПКМУ 1668 excludes them. Accept?
+- **REV-P2-BANK-2 (not added; waits for REV-P-BANK-1):** until you decide how a state bank answers, show a neutral step-2 notice when a profile has both «Банки» and the public sector. Approve the notice?
+
 ## 3. Personal data
 
 **3.1 Закон 2297 ст. 7 ч. 2 пп. 6, 6². REV-PD-A (not added). Raised by PD.**
