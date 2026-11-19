@@ -4,7 +4,7 @@
 
 # Which cybersecurity requirements must your organisation meet?
 
-Laws, resolutions, orders, standards, NATO policies: hundreds of documents that refer to each other and keep changing. This site turns them into the requirements that apply to you.
+Laws, resolutions, orders, standards, NATO policies: hundreds of documents that refer to each other and keep changing. Kreslenyk narrows them down to the requirements that apply to your organisation and ties each to an ISO/IEC 27001 or NIST CSF 2.0 control.
 
 
 </div>
@@ -38,13 +38,13 @@ Laws, resolutions, orders, standards, NATO policies: hundreds of documents that 
 <div class="home-panels">
 <section class="home-panel">
 
-### Help check the mappings
+### Data status
 
-AI drafted the mappings; a second person checks each one against the act in the mapping workbooks on GitHub.
+AI drafted the mappings of acts to controls, and a person checks each one against the act. Until a mapping is checked, check it against the act yourself.
 
 <div id="home-review"></div>
 
-<p class="panel-more"><a href="#/contribute">How to contribute →</a></p>
+<p class="panel-more"><a href="#/contribute">Help with the checking →</a></p>
 
 </section>
 <section class="home-panel">

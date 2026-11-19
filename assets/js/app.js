@@ -610,7 +610,7 @@
     });
     return `<div class="meter-box">${meterHtml(t("homeActsMapped"), mapped.length, open.length, "blue")}
       ${meterHtml(t("homeActsReviewed"), reviewed.length, mapped.length, "teal")}
-      <p class="dmeter-legend">${esc(fmt(t("homeActsNote"), acts.length - open.length))} ${esc(t("meterLegend"))}</p></div>`;
+      <p class="dmeter-legend">${esc(fmt(t("homeActsNote"), acts.length - open.length))}</p></div>`;
   }
   // How many mappings a second person has checked, counted from the data
   function homeReview() {

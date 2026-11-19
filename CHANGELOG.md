@@ -1,5 +1,12 @@
 # Changelog
 
+## Release data-2026.11.19 (2026-11-19)
+
+- 50 acts are mapped (12 on 2026-11-14): 1,549 provisions, 4,232 mappings. The new acts come from the chains of PR #16 and #17 and the batch of NBU resolutions. All of it went through hostile review by AI reviewers (rounds r4 to r7, then a simulated-reader review and a cross-act consistency review, until no valid major comment was left); no person has checked it yet. A new provision type, «рекомендація», marks provisions that bind no one; they are hidden unless the reader asks for recommended acts.
+- Start page: one diagram, "How to build a compliant ISMS from scratch", replaces "How it works": steps 1–4 on the site, steps 5–9 in the reader's GRC tool, and the update loop. The counter shows acts (mapped, and checked by a person) instead of mappings, in a "Data status" panel. On phones the questionnaire button comes before its four questions.
+- Policy templates: `data/policies.csv` gets the links of the CIS/MS-ISAC 2024 guide (34 of its 36 documents). Document names under controls link to their template; the Excel download has a "Documents" sheet with the links and the controls and provisions that use each document.
+- CISO Assistant: each library has its own version, raised only when its content changes, with a "what changed" note in its description (`mappings/ciso-assistant-versions.json`), so CISO Assistant's library update applies a release and keeps the answers to unchanged requirements.
+
 ## New name (2026-11-16)
 
 - The project is now «Кресленик відповідності СУІБ» / "Compliant ISMS Kreslenyk" (*kreslenyk*: Ukrainian for "blueprint"), formerly «GRC-фундамент для України» / "GRC foundation for Ukraine". Only the displayed name changed: the repository, the site address, file names (`grc-foundation-ua.xlsx`) and the CISO Assistant library identifiers stay as they were, so existing links and imported libraries keep working.
