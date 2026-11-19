@@ -324,7 +324,7 @@ The mapping over-selects, so treat the expansion as candidates to tailor, not a 
 
 ## 8. Roadmap: the user's journey
 
-The site serves one path, shown on the start page ("From requirements to implementation"). The proposed primary user is a vCISO or GRC analyst who sets up compliance for a regulated Ukrainian organisation or its supplier (positioning still to be decided by the owner). The site is needed for the first four steps; the rest happens in the user's GRC tool, such as CISO Assistant.
+The site serves one path, shown on the start page as a diagram ("How to build a compliant ISMS from scratch"). The proposed primary user is a vCISO or GRC analyst who sets up compliance for a regulated Ukrainian organisation or its supplier (positioning still to be decided by the owner). The site is needed for the first four steps; the rest happens in the user's GRC tool, such as CISO Assistant.
 
 | Step | Where | Status |
 |---|---|---|
@@ -333,13 +333,13 @@ The site serves one path, shown on the start page ("From requirements to impleme
 | 3. Import into CISO Assistant or a similar tool | the user's tool | libraries done; a how-to and a per-profile preset planned |
 | 4. Updates: hear about a release and pull it without losing one's own work | here and the user's tool | CISO Assistant library versions done; release feed, Excel changes sheet and URN guard planned |
 | 5. Risk assessment beyond the legal minimum | the user's tool | guide done; reference risk scenarios planned |
-| 6. Policies: CIS templates or one's own | the user's tool | policy names done; links and a guide planned |
+| 6. Policies: CIS templates or one's own | the user's tool | policy names and CIS template links done; a guide planned |
 | 7. Implementation: GRC engineering | the user's tool | guide done |
 
 Planned, roughly in order:
 
 1. **URN guard** (before going public; held during alpha, owner's decision of 2026-11-19). The build fails if a requirement URN or an implementation group of the last release disappears without being listed as retired. CISO Assistant deletes a requirement missing from a new version together with its assessments, and drops a missing group from the audits that selected it. A repealed provision stays in the library, marked as repealed.
-2. **Policy links.** A `url` column in `data/policies.csv`, taken from the hyperlinks in the CIS/MS-ISAC NIST CSF Policy Template Guide (2024); a "Policies" sheet in the SoA export with clickable names; the links in the CISO Assistant `typical_evidence`. Links only: the templates are not copied.
+2. **Policy links** (done 2026-11-19). A `url` column in `data/policies.csv`, taken from the hyperlinks in the CIS/MS-ISAC NIST CSF Policy Template Guide (2024); a "Documents" sheet in the SoA export with clickable links (34 of the 36 CIS documents; the guide gives none for "802.11 Wireless" and "Secure Coding"); the links in the CISO Assistant `typical_evidence`. Links only: the templates are not copied.
 3. **Release feed and Excel changes sheet.** An Atom feed of releases (data version, date, note, libraries changed), so users can subscribe; a "Changes since version X" sheet in the SoA export, keyed by the permanent provision IDs, so a user can merge a new download into the old one by hand. CISO Assistant does not check our site for new releases; the user uploads the new zip.
 4. **A CISO Assistant preset per profile.** CISO Assistant presets (library object `preset`) scaffold objects and a guided journey: compliance assessments with implementation groups already selected, a risk assessment, applied controls, policies. The site would generate one at step 6 from the user's answers: an audit for each applicable act with that profile's groups, and an empty risk assessment. This carries the profile into the tool, which a framework library alone cannot.
 5. **Reference risk scenarios** from the techniques used against Ukrainian organisations. A threats library (MITRE ATT&CK techniques, each tied to the public reports that show its use in Ukraine) and a risk-scenario sheet for CISO Assistant's import of a risk assessment (it matches scenarios by `ref_id`, so a re-import updates them). No likelihood or impact values: the analyst decides whether a scenario applies, rates it and compares it with the risk appetite. Each scenario lists the mitigating controls, and marks those the profile already requires by law. This content goes stale in months, so it needs an owner and a review cycle before it ships.

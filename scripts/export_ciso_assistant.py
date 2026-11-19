@@ -191,7 +191,7 @@ def export(out_dir, meta, sources, types, sectors, provisions, mappings, appl=()
     out = Path(out_dir) / "ciso-assistant"
     out.mkdir(parents=True, exist_ok=True)
     dec = {d["id"]: d for d in decisions}
-    pol = {r["id"]: r["name_uk"] for r in policies}
+    pol = {r["id"]: r["name_uk"] + (f" (шаблон CIS: {r['url']})" if r.get("url") else "") for r in policies}
     state = json.loads(Path(state_path).read_text(encoding="utf-8")) if state_path and Path(state_path).exists() else {}
     bumped = []
     by_src = {s["id"]: s for s in sources}
@@ -245,7 +245,7 @@ def export(out_dir, meta, sources, types, sectors, provisions, mappings, appl=()
             if ann_uk:
                 node["annotation"] = "\n".join(ann_uk)
             if docs:
-                node["typical_evidence"] = "Куди внести (базовий перелік документів, не шаблони): " + "; ".join(docs)
+                node["typical_evidence"] = "Куди внести (базовий перелік документів; для документів з посібника CIS/MS-ISAC 2024 дано посилання на шаблон): " + "; ".join(docs)
             if node["assessable"]:
                 node["importance"] = "mandatory" if s.get("binding") == "mandatory" else "recommended"
             if used:
