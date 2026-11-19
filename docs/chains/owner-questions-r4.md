@@ -289,6 +289,8 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **XIR-3:** the binding parts of Наказ 143 (taxonomy, criticality level, TLP rules) are shown under the order's applicability, wider than ПКМУ 1533 пп. 12, 15 — owners of systems with ДІР/СІ/ДТ report on the same form. Accept?
 - Also raised: can a CMU resolution exempt banks from the SSSCIP notification form required by Закон 2163 ст. 9¹ ч. 2? (A question of the acts' hierarchy; the rows follow ПКМУ 1533 п. 17 абз. 4.)
 
+- **REV-X3-XIR-1 (added, proposed):** the NBU's sectoral CSIRT (Закон 2163 ст. 9 ч. 3 п. 2) is the «relevant sectoral CSIRT» under ПКМУ 1533 п. 17 абз. 2 for every NBU-supervised CI operator/CII owner (not only banks); ПКМУ 1533 п. 18 fallback does not apply to them. Accept?
+
 **4.2 Закон 2163 ст. 8 ч. 3 п. 26 (planning cyber-protection spending). D2163-PD4 (not added). Raised by IS.**
 - **Question:** Should a point of ч. 3 be mapped as a duty only when it names who acts (п. 26), or should a8-p3-26 be definitional, with its 7.1 and GV.RR-03 links dropped and reliance placed on ПКМУ 518 p10?
 - **Chair:** the drafters' duty reading is not supported, so it is your call.
