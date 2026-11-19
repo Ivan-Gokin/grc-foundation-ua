@@ -247,6 +247,12 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
   - written in this commit: `ua-ssscip-179-2026,ki` and `ua-ssscip-425-2026,ki` (the latter also cites PD-425-2);
   - decisions added: D179-PD1 and D1471-PD2.
 
+**4.1a Cross-act review (incident reporting). REV-X1-XIR-1/2/3 (added, proposed, cited on rows).**
+- **XIR-1:** threat reports to state bodies outside the response system (Закон 2163 ст. 11; Закон 1882 ст. 21 ч. 1 п. 9 to the SBU) are «—» rows under AUTH-06 (A.5.5, RS.CO-03 supporting); notifying response teams inside the system (ПКМУ 1533 пп. 13–14) is mapped as response. Accept?
+- **XIR-2:** banks that are CI operators/CII owners also set the category and criticality level under ПКМУ 1533 п. 12 (national taxonomy) alongside the NBU list (НБУ 178 п. 19-2). Accept?
+- **XIR-3:** the binding parts of Наказ 143 (taxonomy, criticality level, TLP rules) are shown under the order's applicability, wider than ПКМУ 1533 пп. 12, 15 — owners of systems with ДІР/СІ/ДТ report on the same form. Accept?
+- Also raised: can a CMU resolution exempt banks from the SSSCIP notification form required by Закон 2163 ст. 9¹ ч. 2? (A question of the acts' hierarchy; the rows follow ПКМУ 1533 п. 17 абз. 4.)
+
 **4.2 Закон 2163 ст. 8 ч. 3 п. 26 (planning cyber-protection spending). D2163-PD4 (not added). Raised by IS.**
 - **Question:** Should a point of ч. 3 be mapped as a duty only when it names who acts (п. 26), or should a8-p3-26 be definitional, with its 7.1 and GV.RR-03 links dropped and reliance placed on ПКМУ 518 p10?
 - **Chair:** the drafters' duty reading is not supported, so it is your call.
