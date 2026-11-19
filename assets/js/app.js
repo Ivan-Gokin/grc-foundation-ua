@@ -382,6 +382,12 @@
   // «Куди внести»: ids from data/policies.csv, shown by name; a base list to start from, not templates
   const policyNames = (ids) => (ids || []).map((id) => (D.polById[id] ? L(D.polById[id], "name") : id));
   const policyText = (m) => policyNames(idsOfList(m && m.policies)).join("; ");
+  // The same names as HTML, each linked to its CIS template when the guide links one (data/policies.csv url)
+  const policyLinks = (ids) => (ids || []).map((id) => {
+    const r = D.polById[id];
+    if (!r) return esc(id);
+    return r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener" title="${esc(t("polTemplate"))}">${esc(L(r, "name"))}</a>` : esc(L(r, "name"));
+  }).join("; ");
   const idsOfList = (s) => (s ? s.split(";").filter(Boolean) : []);
   // The decisions (data/decisions.csv) a mapping rests on: its own and its provision's, each written once in the register
   const idsOf = (r) => (r && r.decisions ? r.decisions.split(";").filter(Boolean) : []);
@@ -1170,6 +1176,20 @@
     sheets.push({ name: t("xSheetGaps"), header: [t("srcColRef"), t("xProvision"), t("xRequires"), t("colParam"), t("xDriverScope"), t("xConditions"), t("xPolicySuggested"), t("xPolicy"), t("xOwner"), t("xStatus"), t("xEvidence")],
       rows: gaps.map((m) => { const p = D.provById[m.provision_id]; return [sourceRef(D.sourceById[p.source_id]), L(p, "ref"), L(p, "summary"), L(m, "parameter"), scope([m]), conds([m]), policyText(m), "", "", "", ""]; }),
       widths: [36, 20, 60, 50, 50, 50, 40, 30, 20, 20, 30], freeze: [2, 1] });
+    // the documents the rows point to («Куди внести»), each with its CIS template link and the controls that use it
+    const docUse = new Map();
+    const useDoc = (id, ref) => { if (!D.polById[id]) return; if (!docUse.has(id)) docUse.set(id, new Set()); docUse.get(id).add(ref); };
+    soaRows.concat(clauses).forEach((r) => {
+      r.ds.forEach((m) => idsOfList(m.policies).forEach((id) => useDoc(id, r.c.id)));
+      if (S.fw === "csf-2.0") (D.cisBySub[r.c.id] || []).forEach((id) => useDoc(id, r.c.id));
+    });
+    gaps.forEach((m) => { const p = D.provById[m.provision_id]; idsOfList(m.policies).forEach((id) => useDoc(id, `${shortRef(D.sourceById[p.source_id], true)}, ${L(p, "ref")}`)); });
+    const docRows = [...docUse].sort((x, y) => y[1].size - x[1].size).map(([id, refs]) => {
+      const r = D.polById[id];
+      return [L(r, "name"), r.origin === "cis-2024" ? t("xDocCis") : t("xDocUa"), r.url || (r.origin === "cis-2024" ? t("xNoTemplate") : ""), refs.size, [...refs].join("\n"), "", "", ""];
+    });
+    if (docRows.length) sheets.push({ name: t("xSheetDocs"), header: [t("xDocument"), t("xDocOrigin"), t("xTemplate"), t("xDocUses"), t("xDocUsedBy"), t("xPolicy"), t("xOwner"), t("xStatus")],
+      rows: docRows, widths: [50, 30, 60, 10, 40, 30, 20, 20], freeze: [1, 1], links: [2] });
     // the acts, with room for an owner and the reader's own requirements
     const actRow = (x, st) => [st, sourceRef(x), sourceTitle(x), typeLabel(x.type), L(x, "description"), L(x, "act_condition"), D.mappedProvs[x.id] ? D.mappedProvs[x.id].size : 0, x.url || "", "", "", ""];
     const mandatory = withS(MANDATORY, () => listedActs("core"));
@@ -1223,7 +1243,7 @@
       [t("colGrounds"), rows.flatMap((r) => r.ds).some((m) => groundsOf(m)) ? t("groundsFileNote") : ""],
       ["", ""],
       [t("xRmSheets"), ""],
-      ...sheets.map((sh) => [sh.name, t(sh.name === soaName ? (S.fw === "csf-2.0" ? "xRmSheetProfile" : "xRmSheetSoa") : sh.name === "NIST SP 800-53" ? "xRmSheet53" : ({ [t("xSheetClauses")]: "xRmSheetClauses", [t("xSheetGaps")]: "xRmSheetGaps", [t("xSheetActs")]: "xRmSheetActs", [t("xSheetRegulators")]: "xRmSheetRegulators", [t("xSheetDecisions")]: "xRmSheetDecisions" }[sh.name])) + (sh.name === "NIST SP 800-53" && sysNote ? ` (${sysNote})` : "")]),
+      ...sheets.map((sh) => [sh.name, t(sh.name === soaName ? (S.fw === "csf-2.0" ? "xRmSheetProfile" : "xRmSheetSoa") : sh.name === "NIST SP 800-53" ? "xRmSheet53" : ({ [t("xSheetClauses")]: "xRmSheetClauses", [t("xSheetGaps")]: "xRmSheetGaps", [t("xSheetDocs")]: "xRmSheetDocs", [t("xSheetActs")]: "xRmSheetActs", [t("xSheetRegulators")]: "xRmSheetRegulators", [t("xSheetDecisions")]: "xRmSheetDecisions" }[sh.name])) + (sh.name === "NIST SP 800-53" && sysNote ? ` (${sysNote})` : "")]),
       ["", ""],
       [t("xRmColumns"), ""],
       [t("xReqBy"), t("xRmReqBy")],
@@ -1685,7 +1705,7 @@
       const p = D.provById[m.provision_id]; const src = D.sourceById[p.source_id];
       const badge = m.review_status === "reviewed" ? `<span class="badge cov-full">${esc(t("reviewed"))}</span>` : "";
       return `<li><span class="driver-ref">${esc(sourceRef(src))}, ${esc(L(p, "ref"))}</span> ${badge}
-        <p${isFallback(p, "summary") ? ' lang="uk"' : ""}>${esc(L(p, "summary"))}</p>${L(m, "parameter") ? `<p><b>${esc(t("colParam"))}:</b> <span${isFallback(m, "parameter") ? ' lang="uk"' : ""}>${esc(L(m, "parameter"))}</span></p>` : ""}${policyText(m) ? `<p class="muted"><b>${esc(t("driverPolicy"))}:</b> ${esc(policyText(m))}</p>` : ""}
+        <p${isFallback(p, "summary") ? ' lang="uk"' : ""}>${esc(L(p, "summary"))}</p>${L(m, "parameter") ? `<p><b>${esc(t("colParam"))}:</b> <span${isFallback(m, "parameter") ? ' lang="uk"' : ""}>${esc(L(m, "parameter"))}</span></p>` : ""}${policyText(m) ? `<p class="muted"><b>${esc(t("driverPolicy"))}:</b> ${policyLinks(idsOfList(m.policies))}</p>` : ""}
         <p class="prov-links">${src.url ? `<a href="${esc(src.url)}" target="_blank" rel="noopener">${esc(t("openText"))} ↗</a>` : ""}${reportLink(m, "")}</p></li>`;
     }).join("");
     return `<details class="gaps" id="gaps"><summary><h2>${esc(fmt(t("gapsTitle"), fwLabel(fw), gaps.length))}</h2></summary>
@@ -1735,7 +1755,7 @@
   const basisOf = (id) => uniq((D.relsOut[id] || []).filter((r) => HIER_REL.has(r.relation) && D.sourceById[r.related_id]).map((r) => r.related_id));
   function driversBody(ctlId, ds) {
     const cis = S.fw === "csf-2.0" && D.cisBySub[ctlId]
-      ? `<p class="muted cis-base"><b>${esc(t("cisBase"))}:</b> ${esc(policyNames(D.cisBySub[ctlId]).join("; "))}</p>` : "";
+      ? `<p class="muted cis-base"><b>${esc(t("cisBase"))}:</b> ${policyLinks(D.cisBySub[ctlId])}</p>` : "";
     return cis + driversActs(ctlId, ds);
   }
   function driversActs(ctlId, ds) {
@@ -1789,7 +1809,7 @@
       p.applies_to ? `<p><b>${esc(t("appliesOnly"))}:</b> ${esc(appliesText(p.applies_to))}</p>` : "",
       L(src, "act_condition") ? `<p><b>${esc(t("actCondition"))}:</b> ${esc(L(src, "act_condition"))}</p>` : "",
       groundsOf(m) ? `<p><b>${esc(t("colGrounds"))}:</b> ${esc(groundsLabel(groundsOf(m)))}. ${esc(t("groundsHint"))}</p>${decisionsHtml(decisionsOf(m))}` : "",
-      policyText(m) ? `<p><b>${esc(t("driverPolicy"))}:</b> ${esc(policyText(m))} <span class="muted">(${esc(t("policyBase"))})</span></p>` : "",
+      policyText(m) ? `<p><b>${esc(t("driverPolicy"))}:</b> ${policyLinks(idsOfList(m.policies))} <span class="muted">(${esc(t("policyBase"))})</span></p>` : "",
       p.notes ? `<p><b>${esc(t("driverCaveat"))}:</b> <span${S.lang === "en" ? ' lang="uk"' : ""}>${esc(p.notes)}</span></p>` : "",
       `<p class="muted">${esc(t("driverMeta"))}: ${esc(relWords(m.relationship))}, ${esc(m.rationale)}; ${esc(reviewLabel(m.review_status))}; ${esc(m.mapped_by)}${m.reviewed_by ? `, ${esc(m.reviewed_by)}` : ""}; ${esc(m.date)}</p>`,
     ].join("");
@@ -1880,8 +1900,13 @@
     await loadXlsx();
     const wb = XLSX.utils.book_new();
     const all = sheets.map((sh) => ({ freeze: [1, 1], ...sh }));
-    all.forEach(({ name: sheet, header, rows, widths, noFilter }) => {
+    all.forEach(({ name: sheet, header, rows, widths, noFilter, links }) => {
       const ws = XLSX.utils.aoa_to_sheet([header, ...rows]);
+      // columns whose https values become clickable links
+      (links || []).forEach((c) => rows.forEach((row, y) => {
+        const v = row[c], cell = ws[XLSX.utils.encode_cell({ r: y + 1, c })];
+        if (cell && typeof v === "string" && v.startsWith("https://")) cell.l = { Target: v };
+      }));
       ws["!cols"] = (widths || header.map(() => 24)).map((w) => ({ wch: w }));
       if (!noFilter) ws["!autofilter"] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: rows.length, c: header.length - 1 } }) };
       XLSX.utils.book_append_sheet(wb, ws, sheet.slice(0, 31));

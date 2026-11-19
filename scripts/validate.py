@@ -204,6 +204,10 @@ def main():
             err("policies.csv", r, "origin must be cis-2024 or ua")
         if not r["name_uk"] or not r["name_en"]:
             err("policies.csv", r, "name_uk and name_en are required")
+        if r.get("url") and not r["url"].startswith("https://www.cisecurity.org/"):
+            err("policies.csv", r, "url: only CIS template links (https://www.cisecurity.org/...) are kept here")
+        if r.get("url") and r["origin"] != "cis-2024":
+            err("policies.csv", r, "url is for the CIS templates only (origin=cis-2024)")
     csf_ids = {r["id"] for r in load("controls_csf-2.0.csv")}
     for r in load("csf_policies.csv"):
         if r["csf_id"] not in csf_ids or r["policy_id"] not in POLICIES:
