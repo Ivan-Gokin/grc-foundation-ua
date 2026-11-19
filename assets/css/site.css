@@ -1518,3 +1518,8 @@ button.pill { font: inherit; font-size: .88rem; cursor: pointer; text-align: lef
   .journey li { grid-template-columns: 2.2rem 12rem minmax(0, 1fr) auto; grid-template-areas: "n t x w"; }
   .journey-where { justify-self: end; }
 }
+/* start page: the acts counter sits in a half-width panel, so its labels go above the bars */
+.home-panel .meter-box .dmeter { grid-template-columns: auto minmax(0, 1fr); margin-top: 10px; }
+.home-panel .meter-box .dmeter-label { grid-column: 1 / -1; }
+.home-panel .meter-box .dmeter-bar { gap: 2px; }
+.home-panel .meter-box .dmeter-bar i { width: 8px; }
