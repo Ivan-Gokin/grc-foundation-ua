@@ -1,12 +1,12 @@
 # Roles and authorities
 
-<p class="chapter-lead">Settle this before you <a href="#/craft?step=1">craft your baseline</a>: every requirement and control on it needs someone who owns it. Start with people: who decides, who does the work, who checks.</p>
+<p class="chapter-lead">Settle this before you <a href="#/craft?step=1">build your Statement of Applicability</a>: every requirement and control on it needs someone who owns it. Start with people: who decides, who does the work, who checks.</p>
 
 ## Why it matters
 
 *Covers: ISO/IEC 27001:2022, clauses 5.1, 5.3 and controls A.5.2-A.5.4 · NIST CSF 2.0, GV.RR*
 
-**Goal.** Decide who makes information security decisions, who is responsible for carrying them out and who checks independently. Without this your baseline has no owners: nobody updates the requirements register, nobody accepts risks, and policies are signed by people without the authority to enforce them.
+**Goal.** Decide who makes information security decisions, who is responsible for carrying them out and who checks independently. Without this your Statement of Applicability has no owners: nobody updates the requirements register, nobody accepts risks, and policies are signed by people without the authority to enforce them.
 
 ## Who is responsible for what
 

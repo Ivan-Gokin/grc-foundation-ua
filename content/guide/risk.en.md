@@ -2,7 +2,7 @@
 
 *Covers: ISO/IEC 27001:2022, clauses 6.1.2-6.1.3, 8.2-8.3 · NIST CSF 2.0, ID.RA*
 
-[Your baseline](#/craft?step=1) gives you the legal minimum: the controls the law requires, each with its legal basis. That is a floor, not a goal. Here the real work begins: assess the risks to your assets and decide what to add beyond the minimum. Use one risk assessment method for every management system, with different impact categories ([GRC engineering](#/guide?c=grc#how-to-integrate)).
+[Your Statement of Applicability](#/craft?step=1) gives you the legal minimum: the controls the law requires, each with its legal basis. That is a floor, not a goal. Here the real work begins: assess the risks to your assets and decide what to add beyond the minimum. Use one risk assessment method for every management system, with different impact categories ([GRC engineering](#/guide?c=grc#how-to-integrate)).
 
 **Goal.** Decisions driven by risk, with routine compliance kept current.
 

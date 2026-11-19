@@ -610,7 +610,7 @@
     });
     return `<div class="meter-box">${meterHtml(t("homeActsMapped"), mapped.length, open.length, "blue")}
       ${meterHtml(t("homeActsReviewed"), reviewed.length, mapped.length, "teal")}
-      <p class="dmeter-legend">${esc(fmt(t("homeActsNote"), acts.length - open.length))} ${esc(t("meterLegend"))}</p></div>`;
+      <p class="dmeter-legend">${esc(fmt(t("homeActsNote"), acts.length - open.length))}</p></div>`;
   }
   // How many mappings a second person has checked, counted from the data
   function homeReview() {
@@ -1032,7 +1032,7 @@
         <p class="hint">${esc(t("craftSysHint"))}</p><div id="craft-sys"></div></section>` : ""}
       <div class="soa-bar" role="region" aria-label="${esc(t("craftDownload"))}">
         <span class="soa-bar-count"><span class="level-count" id="bar-count">${esc(craftTab === "sys" ? fmt(t("toolSysSum"), sysCount) : fmt(t("levelPicked"), picked, soaRows.length))}</span></span>
-        <button type="button" class="btn btn-primary" id="soa-xlsx">${esc(t("craftDownload"))}</button><button type="button" class="btn" id="soa-csv" title="${esc(t("csvPartial"))}">CSV</button>
+        <button type="button" class="btn btn-primary" id="soa-xlsx">${esc(t(S.fw === "csf-2.0" ? "craftDownloadCsf" : "craftDownload"))}</button><button type="button" class="btn" id="soa-csv" title="${esc(t("csvPartial"))}">CSV</button>
         <a class="btn" href="data/ciso-assistant-libraries.zip" download title="${esc(t("caHint"))}">${esc(t("caBtnShort"))}</a></div>`;
     const list = box.querySelector("#pane-org");
     const listHtml = (xs) => {

@@ -1540,3 +1540,9 @@ button.pill { font: inherit; font-size: .88rem; cursor: pointer; text-align: lef
 .home-panel .meter-box .dmeter-label { grid-column: 1 / -1; }
 .home-panel .meter-box .dmeter-bar { gap: 2px; }
 .home-panel .meter-box .dmeter-bar i { width: 8px; }
+/* start page on a phone: the button first, then the four questions it asks */
+@media (max-width: 760px) {
+  .home-start > .who-foot { order: 1; }
+  .home-start > .hs-steps { order: 2; margin-bottom: 0; }
+  .home-start > .q-skip-top { order: 3; }
+}
