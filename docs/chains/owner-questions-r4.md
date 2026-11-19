@@ -258,6 +258,7 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **REV-P2-INS-2 (not added):** insurance secrecy and financial-service secrecy, like personal data and bank secrecy (AUTH-03), are not «information whose protection is required by law» under Закон 80/94 ст. 4 ч. 2, ст. 9. Accept, or say why not?
 - **Cross-act round 3 (suppliers):** (1) extend REV-X2-XSC-1 / D-1335-ADDR (ban on listed software, Закон 2163 ст. 4 ч. 4) to ICT suppliers whose own systems take part in processing ДІР/СІ/ДТ (836 levels II–IV)? Vendors separately (D-1335-ADDR excludes manufacturers). (2) extend the AUTH-41 presumption to Наказ 836 (owner side for every public body)? Both were held back to stop the scope widening round after round.
 
+- **Text wanted:** НБУ № 69 від 27.06.2025 (Положення про КІ фінансового сектору), at least розд. II пп. 20–21 — until then it shows only as an amending act.
 - **Final persona round (ministry):** if you accept REV-P2-DEF-1 (isolated systems), should it also cover ПКМУ 373 п. 29's one-hour reporting parameter (A.5.24, A.5.26, RS.MA-01, RS.CO-02)? Also wanted: texts of ПКМУ 1772 and Наказ 317 (then say who 317 covers relative to Накази 409/419).
 
 ## 3. Personal data

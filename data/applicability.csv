@@ -499,8 +499,8 @@ ua-cmu-447-2025,kii,,"entity tags, register 2026-10",no,,,
 ua-cmu-447-2025,public-sector,,"entity tags, register 2026-10",no,,,
 ua-cmu-1470-2025,ki,,"entity tags, register 2026-10; виняток — ПКМУ № 518 п. 1 абз. другий (ред. постанови № 1470)",no,finance,,
 ua-cmu-1470-2025,kii,,"entity tags, register 2026-10; виняток — ПКМУ № 518 п. 1 абз. другий (ред. постанови № 1470)",no,finance,,
-ua-cmu-1531-2025,state-ir,,"entity tags, register 2026-10",no,,,
-ua-cmu-1531-2025,public-sector,,"entity tags, register 2026-10",no,,,
+ua-cmu-1531-2025,state-ir,,"entity tags, register 2026-10; виняток — ПКМУ № 373 п. 2 (ред. постанови № 1531)",no,banks,state-secrets,AUTH-30;AUTH-37
+ua-cmu-1531-2025,public-sector,,"entity tags, register 2026-10; виняток — ПКМУ № 373 п. 2 (ред. постанови № 1531)",no,banks,state-secrets,AUTH-30;AUTH-37
 ua-cmu-1740-2025,kii,,"entity tags, register 2026-10",no,,,
 ua-cmu-337-2026,ki,,"entity tags, register 2026-10",no,,,
 ua-cmu-337-2026,cloud,,"entity tags, register 2026-10",no,,,
