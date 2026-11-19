@@ -565,7 +565,7 @@
     if (!(await mdInto(el, "home"))) return;
     const fill = (id, html) => { const x = el.querySelector(`#${id}`); if (x) x.outerHTML = html; };
     fill("home-who", homeStart());
-    fill("home-review", homeReview());
+    fill("home-review", homeActs());
     fill("home-changes", homeChanges());
     scrollToAnchor();
   }
@@ -591,6 +591,20 @@
     return `<div class="dmeter${series ? " dmeter-" + series : ""}">${label ? `<span class="dmeter-label">${esc(label)}</span>` : ""}
       <span class="dmeter-bar" role="img" aria-label="${esc(`${label ? label + ": " : ""}${value} / ${total}`)}">${segs}</span>
       <span class="dmeter-v">${value}<span class="dmeter-of"> / ${total}</span></span></div>`;
+  }
+  // The start page counts acts, not mappings: how many in-force acts with requirements (public text) are mapped,
+  // and how many of those a person has checked in full. Restricted acts (ДСК, NATO) are listed but never mapped publicly.
+  function homeActs() {
+    const acts = D.sources.filter((x) => x.scope === "core" && IN_EFFECT(x.status) && x.role === "requirements");
+    const open = acts.filter((x) => x.text_access !== "restricted");
+    const mapped = open.filter((x) => D.mappedProvs[x.id] && D.mappedProvs[x.id].size);
+    const reviewed = mapped.filter((x) => {
+      const ms = D.mappings.filter((m) => m.control_id && D.provById[m.provision_id] && D.provById[m.provision_id].source_id === x.id);
+      return ms.length && ms.every((m) => m.review_status === "reviewed");
+    });
+    return `<div class="meter-box">${meterHtml(t("homeActsMapped"), mapped.length, open.length, "blue")}
+      ${meterHtml(t("homeActsReviewed"), reviewed.length, mapped.length, "teal")}
+      <p class="dmeter-legend">${esc(fmt(t("homeActsNote"), acts.length - open.length))} ${esc(t("meterLegend"))}</p></div>`;
   }
   // How many mappings a second person has checked, counted from the data
   function homeReview() {
