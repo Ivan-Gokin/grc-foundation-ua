@@ -248,6 +248,14 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 - **Закон 2075 for public bodies not yet using cloud (question 1.11) — raised for the third time** (ministry reader twice, cross-act review once).
 - **ПКМУ 1009** binds ministries (п. 2, two-month deadline already passed): put it first in the AUTH-19 queue of new acts.
 
+- **REV-P2-OMS-1 (added, proposed) and D1516-PD2 — local councils (ОМС).** Without an ОМС code, councils answer as «authority» and get state-bodies, so they also see ПКМУ 1516 and Закон 2163 ст. 5¹ ч. 1 абз. 3–4 rows (state authorities only) and ПКМУ 736 rows (recommendation for ОМС). Conditions are shown; only the A.6.4 lock rests on 736 alone. Options: (a) accept as is (chair's lean); (b) add a questionnaire answer «Орган місцевого самоврядування» that sets a profile flag (not a sector code) hiding 1516 / 2163 ст. 5¹ rows and showing 736 as recommendation; (c) a sector code.
+- **REV-P2-CI-1 (not added; depends on REV-C14):** ПКМУ 1533 provisions tied to «systems» (np-6, np-9-6, np-10, np-14, np-21, np-23, п. 11 абз. 3) reach a CI operator only with such systems; split п. 11 абз. 3 into np-11-3 and move A.6.8 there. Needs a row-by-row check first.
+- **Joint order 627/772:** the register URL suggests the title «Деякі питання розробки, затвердження та погодження планів захисту об'єктів критичної інфраструктури за проектною загрозою національного рівня „кібератака, кіберінцидент“» (unverified) — supply the text.
+
+- **REV-P2-INS-1 (not added):** add НБУ 194/2023, 204/2023 and 74/2024 (insurers' management system, records/protection, continuity plan; cited by НБУ 143 and 99) to the register for nonbank-fi as «text not in the library, not mapped» — or supply their texts.
+- **REV-P2-INS-2 (not added):** insurance secrecy and financial-service secrecy, like personal data and bank secrecy (AUTH-03), are not «information whose protection is required by law» under Закон 80/94 ст. 4 ч. 2, ст. 9. Accept, or say why not?
+- **Cross-act round 3 (suppliers):** (1) extend REV-X2-XSC-1 / D-1335-ADDR (ban on listed software, Закон 2163 ст. 4 ч. 4) to ICT suppliers whose own systems take part in processing ДІР/СІ/ДТ (836 levels II–IV)? Vendors separately (D-1335-ADDR excludes manufacturers). (2) extend the AUTH-41 presumption to Наказ 836 (owner side for every public body)? Both were held back to stop the scope widening round after round.
+
 ## 3. Personal data
 
 **3.1 Закон 2297 ст. 7 ч. 2 пп. 6, 6². REV-PD-A (not added). Raised by PD.**
