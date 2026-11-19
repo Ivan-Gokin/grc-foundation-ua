@@ -78,6 +78,9 @@ The non-owner register changes were committed on branch `chains/2-5-10-12` as 98
 
 - **REV-R6-AS-1 (added, cited on the 1799 defence applicability row; from the third round, a valid major).** Military formations are treated as owners of assessment objects under ПКМУ 1799 (п. 1, п. 3 «для власних потреб»), like AUTH-41 / D1668-PD2, so the owner duties (annual self-assessment, report copy within 30 days, etc.) now show for a «Сили оборони» reader. If accepted, also consider adding `ua-ssscip-285-2026,defence` so the mandatory report form reaches them. If rejected, the defence tags on 1799 p4, p6, p7, p10, p14, p15, p17, p18 are removed.
 
+- **Cross-act review (2026-11-19), REV-X1-XAS-1 (not added) — strengthens 1.6:** Закон 2163 (D2163-PD2) and ПКМУ 1533 п. 17 (REV-C11) already read «ДІР, службова інформація або державна таємниця» as alternatives and tag state-secrets; ПКМУ 1799, 1668 and Наказ 285 should be read the same way for consistency. If accepted: add state-secrets applicability rows (except=finance) for 1799, 1668, 285 and the state-secrets tag on 1799 p4, p4-4, p6, p7, p7-3, p10, p14, p15, p17, p18 and the 285 rows tagged ki;kii;state-ir. If rejected: align 2163 a9-1-p3-1 and 1533 the other way.
+- **REV-X1-XAS-3 (added, proposed, cited on 7 rows):** Закон 2163 ст. 6 ч. 2 exempts assessment of CI/CII categories III–IV from the general assessor requirements, but ПКМУ 1799 пп. 3, 15, 18 still require listed, qualified assessors for all objects in its scope; we apply the stricter ПКМУ condition. Accept?
+
 **1.7 ПКМУ 1799 п. 6: does the owner have to give access? D1799-PD1 (not added). Raised by AS.**
 - **Question:** Do the assessor's rights under п. 6 create a corresponding duty on the owner to give access to the object, documents, copies and explanations?
 - **Options:**
