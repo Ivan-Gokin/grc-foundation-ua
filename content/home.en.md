@@ -74,7 +74,7 @@
 <div class="hf-card hf-lims">
 <div class="hf-lim hf-lim-ai"><h3>Not yet checked by a person</h3><p>Most mappings were prepared and checked by AI. That is good enough to start. Check what you will rely on in front of an auditor against the act.</p></div>
 <div class="hf-lim"><h3>Not legal advice</h3><p>Kreslenyk points to where the requirements are written down. The decisions are yours.</p></div>
-<div class="hf-lim"><h3>Publicly available requirements only</h3><p>Only requirements from public acts go into the project. You add the requirements of restricted (ДСК) documents and NATO standards yourself.</p></div>
+<div class="hf-lim"><h3>Publicly available requirements only</h3><p>Only requirements from public acts go into the project.</p></div>
 </div>
 
 </section>
