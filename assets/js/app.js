@@ -570,24 +570,16 @@
     const el = document.getElementById("home-text");
     if (!(await mdInto(el, "home"))) return;
     const fill = (id, html) => { const x = el.querySelector(`#${id}`); if (x) x.outerHTML = html; };
-    fill("home-who", homeStart());
-    fill("home-review", homeActs());
-    fill("home-changes", homeChanges());
+    const st = homeActStats();
+    fill("home-count", `<a href="#stan">${esc(fmt(t("homeCount"), st.mapped.length, st.open.length))}</a>`);
+    fill("home-more", `<li class="hf-more">${esc(fmt(t("homeMore"), st.open.length))}</li>`);
+    fill("home-review", homeActs(st));
+    fill("home-areas", homeAreas());
+    fill("home-changes", `<div>${homeChanges()}</div>`);
     scrollToAnchor();
   }
   // "Not sure, or just looking?": the way past the questions, on Home and in step 1
   const quizSkip = () => `<p class="q-skip-top">${esc(t("qSkipLead"))} <a href="#/craft?step=2&s=general">${esc(t("qSkipAll"))}</a><span aria-hidden="true"> · </span><a href="#/sources?scope=core&s=">${esc(t("qSkipBrowse"))}</a></p>`;
-  // In the hero: what the questionnaire does and one button into it; the questions themselves are in step 1
-  function homeStart() {
-    return `<section class="home-who home-start" aria-labelledby="hs-title">
-      <p class="hq-step">${esc(t("navCraft"))}</p>
-      <h2 id="hs-title">${esc(t("hsTitle"))}</h2>
-      <p class="hs-text">${esc(t("hsText"))}</p>
-      <ol class="hs-steps">${["hsQ1", "hsQ2", "hsQ3", "hsQ4"].map((k) => `<li>${esc(t(k))}</li>`).join("")}</ol>
-      <p class="who-foot"><a class="btn btn-primary btn-lg" href="#/craft?step=1">${esc(t("hsGo"))}</a><span class="cta-note">${esc(t("hqNote"))}</span></p>
-      ${quizSkip()}
-    </section>`;
-  }
   // The design system's Meter: a row of equal segments (one segment = 4%), filled in a series colour, empty ones
   // outlined; the exact figure stands to the right, so colour never replaces the number
   const METER_SEGS = 25;
@@ -600,17 +592,27 @@
   }
   // The start page counts acts, not mappings: how many in-force acts with requirements (public text) are mapped,
   // and how many of those a person has checked in full. Restricted acts (ДСК, NATO) are listed but never mapped publicly.
-  function homeActs() {
+  const isMapped = (x) => D.mappedProvs[x.id] && D.mappedProvs[x.id].size;
+  function homeActStats() {
     const acts = D.sources.filter((x) => x.scope === "core" && IN_EFFECT(x.status) && x.role === "requirements");
     const open = acts.filter((x) => x.text_access !== "restricted");
-    const mapped = open.filter((x) => D.mappedProvs[x.id] && D.mappedProvs[x.id].size);
+    const mapped = open.filter(isMapped);
     const reviewed = mapped.filter((x) => {
       const ms = D.mappings.filter((m) => m.control_id && D.provById[m.provision_id] && D.provById[m.provision_id].source_id === x.id);
       return ms.length && ms.every((m) => m.review_status === "reviewed");
     });
-    return `<div class="meter-box">${meterHtml(t("homeActsMapped"), mapped.length, open.length, "blue")}
-      ${meterHtml(t("homeActsReviewed"), reviewed.length, mapped.length, "teal")}
-      <p class="dmeter-legend">${esc(fmt(t("homeActsNote"), acts.length - open.length))}</p></div>`;
+    return { acts, open, mapped, reviewed };
+  }
+  function homeActs(st = homeActStats()) {
+    return `<div class="meter-box">${meterHtml(t("homeActsMapped"), st.mapped.length, st.open.length, "blue")}
+      ${meterHtml(t("homeActsReviewed"), st.reviewed.length, st.mapped.length, "teal")}</div>`;
+  }
+  // The same count by sector (the roadmap's milestones), public acts only
+  function homeAreas() {
+    return `<div class="area-meters hf-areas">${milestoneStats().map(({ id, xs }) => {
+      const open = xs.filter((x) => x.text_access !== "restricted");
+      return open.length ? meterHtml(t("ms_" + id), open.filter(isMapped).length, open.length, "blue") : "";
+    }).join("")}</div>`;
   }
   // How many mappings a second person has checked, counted from the data
   function homeReview() {
@@ -625,7 +627,8 @@
     const repo = (CFG.repoUrl || "").replace(/\/$/, "");
     const m = D.meta;
     const note = m ? (S.lang === "uk" ? m.note_uk : m.note_en) : "";
-    return `${m ? `<p class="change-head"><b>${esc(m.version)}</b> <span class="muted">${esc(m.date)}</span></p><p>${esc(note)}</p>` : ""}
+    const date = m && S.lang === "uk" ? String(m.date).split("-").reverse().join(".") : m && m.date;
+    return `${m ? `<p class="change-head"><b>${esc(date)}:</b> <span class="muted">${esc(note)}</span> <span class="change-v">${esc(m.version)}</span></p>` : ""}
       ${repo ? `<p class="change-links"><a href="${esc(repo)}/blob/${esc(CFG.branch || "main")}/CHANGELOG.md" target="_blank" rel="noopener">${esc(t("homeAllChanges"))}</a><a href="${esc(repo)}" target="_blank" rel="noopener">${esc(t("homeWatch"))}</a></p>` : ""}`;
   }
   function heroExample() {
