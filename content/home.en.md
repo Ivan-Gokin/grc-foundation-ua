@@ -1,57 +1,100 @@
-<section class="home-hero">
+<section class="home-hero hf-hero">
 
-<div class="hero-copy">
+<p class="hf-eyebrow">A free starting draft of your Statement of Applicability</p>
 
-# Which cybersecurity requirements must your organisation meet?
+# Build an ISMS that meets the law. Then automate it with GRC engineering.
 
-Laws, resolutions, orders, standards, NATO policies: hundreds of documents that refer to each other and keep changing. Kreslenyk narrows them down to the requirements that apply to your organisation and ties each to an ISO/IEC 27001 or NIST CSF 2.0 control.
+<p class="hf-lead">One ISMS for all your acts, with no duplicated requirements. Answer four questions and get an Excel file: which ISO 27001 or NIST CSF controls you need and which provision of which act says so.</p>
 
+<p class="home-cta"><a class="btn btn-primary btn-lg" href="#/craft?step=1">Start: 4 questions</a><a class="btn btn-lg" href="#/craft?step=6&s=banks,personal-data">Example for a bank</a></p>
 
-</div>
-
-<div id="home-who"></div>
+<p class="hf-note">It takes about a minute, and your answers are not sent anywhere. <span id="home-count"></span></p>
 
 </section>
 
-## How to build a compliant ISMS from scratch
-
-<p class="journey-lead">The path of a GRC analyst or vCISO: what to do on this site, and what to do next in your GRC tool, such as CISO Assistant.</p>
-
-<div class="jd-wrap">
-<section class="jd-lane site"><p class="jd-lane-title">On this site</p><ol class="jd">
-<li class="jd-step site"><span class="jd-n" aria-hidden="true">1</span><div class="jd-card"><span class="jd-where">here</span><b>Roles and responsibilities</b><p>Who in the organisation is responsible for security, and who makes decisions.</p><p class="jd-links"><a href="#/guide?c=roles">Guide</a></p></div></li>
-<li class="jd-step site"><span class="jd-n" aria-hidden="true">2</span><div class="jd-card"><span class="jd-where">here</span><b>Organisation profile</b><p>Four questions: how the law sees you, and who your regulator is.</p><p class="jd-links"><a href="#/craft?step=1">Organisation</a> · <a href="#/craft?step=2">Profile</a> · <a href="#/craft?step=3">Regulators</a></p></div></li>
-<li class="jd-step site"><span class="jd-n" aria-hidden="true">3</span><div class="jd-card"><span class="jd-where">here</span><b>Standard and acts</b><p>ISO/IEC 27001 or NIST CSF 2.0, and your acts: mandatory, recommended, your own.</p><p class="jd-links"><a href="#/craft?step=4">Standard</a> · <a href="#/craft?step=5">Acts</a></p></div></li>
-<li class="jd-step site"><span class="jd-n" aria-hidden="true">4</span><div class="jd-card"><span class="jd-where">here</span><b>Statement of Applicability</b><p>The standard's controls with the legal basis for each: an Excel table or libraries for CISO Assistant.</p><p class="jd-links"><a href="#/craft?step=6">Build it</a> · <a href="data/ciso-assistant-libraries.zip">CISO Assistant libraries</a></p></div></li>
-</ol></section>
-<div class="jd-hand"><span class="jd-arrow" aria-hidden="true"></span><p><b>From here the work moves to your GRC tool.</b> You come back to the site when the acts change.</p></div>
-<section class="jd-lane tool"><p class="jd-lane-title">In your GRC tool</p><ol class="jd" start="5">
-<li class="jd-step tool"><span class="jd-n" aria-hidden="true">5</span><div class="jd-card"><span class="jd-where">your tool</span><b>Import</b><p>Load the libraries, create an audit for each act and select your profile's groups.</p><p class="jd-soon">We plan to add a how-to and a ready-made set for your profile.</p></div></li>
-<li class="jd-step tool"><span class="jd-n" aria-hidden="true">6</span><div class="jd-card"><span class="jd-where">your tool</span><b>Risk assessment</b><p>Risks beyond the legal minimum: likelihood, impact, risk appetite, treatment.</p><p class="jd-links"><a href="#/guide?c=risk">Guide</a></p><p class="jd-soon">We plan to add typical scenarios built from the techniques used against Ukrainian organisations.</p></div></li>
-<li class="jd-step tool"><span class="jd-n" aria-hidden="true">7</span><div class="jd-card"><span class="jd-where">your tool</span><b>Policies</b><p>ISMS documents from the CIS templates or your own. The template links are next to each control and on the "Documents" sheet of your table.</p><p class="jd-soon">We plan to add a guide to writing policies.</p></div></li>
-<li class="jd-step tool"><span class="jd-n" aria-hidden="true">8</span><div class="jd-card"><span class="jd-where">your tool</span><b>Implementation</b><p>Controls, how they are checked, and their automation; for information systems, NIST SP 800-53.</p><p class="jd-links"><a href="#/guide?c=compliance">Information systems</a> · <a href="#/guide?c=grc">GRC engineering</a></p></div></li>
-<li class="jd-step tool"><span class="jd-n" aria-hidden="true">9</span><div class="jd-card"><span class="jd-where">your tool</span><b>Monitoring and improvement</b><p>Monitoring, internal audit, management review, corrective action (ISO/IEC 27001 clauses 9–10).</p></div></li>
-</ol></section>
-<p class="jd-band jd-loop"><b>↻ When the acts change,</b> a new release comes out here and the library updates in your tool: answers to unchanged requirements stay, new requirements are added. Then continue from step 5. <span class="jd-soon">We plan to add a release feed and a changes sheet for Excel.</span></p>
+<div class="hf-pair">
+<section class="hf-card hf-problem" aria-labelledby="hf-problem-t">
+<h2 class="hf-kicker" id="hf-problem-t">The problem</h2>
+<p><b>Hundreds of acts</b> refer to each other and keep changing. A missed requirement is an audit finding; an unnecessary one is wasted money.</p>
+<ol class="hf-acts">
+<li>Law No. 2163-VIII on cybersecurity</li>
+<li class="d1">CMU Resolution No. 518: cyber protection requirements for critical infrastructure</li>
+<li class="d2">SSSCIP Order No. 75: baseline measures</li>
+<li id="home-more"></li>
+</ol>
+</section>
+<span class="hf-arrow" aria-hidden="true">→</span>
+<section class="hf-card hf-answer" aria-labelledby="hf-answer-t">
+<h2 class="hf-kicker" id="hf-answer-t">The answer: a row of your Statement of Applicability</h2>
+<p class="hf-ctl"><span class="hf-ctl-id">A.5.24</span> <span class="hf-ctl-name">Plan and prepare incident management</span></p>
+<p class="hf-tags"><span class="hf-tag hf-tag-yes">Applicable: yes</span><span class="hf-tag hf-tag-ai">AI, not yet checked</span></p>
+<dl class="hf-row">
+<dt>Legal basis</dt><dd><a href="#/sources?act=ua-nbu-95-2017">NBU Resolution No. 95</a>, paras 130, 131, 139</dd>
+<dt>What the act requires</dt><dd>approved documents; an automated process</dd>
+<dt>Where it goes</dt><dd><a href="https://www.cisecurity.org/wp-content/uploads/2020/06/Incident-Response-Policy.docx" target="_blank" rel="noopener">Incident Response Policy</a> (CIS template)</dd>
+</dl>
+</section>
 </div>
 
-<div class="home-panels">
-<section class="home-panel">
+<section class="hf-sec" aria-labelledby="hf-promise">
 
-### Data status
+<h2 id="hf-promise">Take the starting draft here. What you build from it is up to you</h2>
 
-AI drafted the mappings of acts to controls, and a person checks each one against the act. Until a mapping is checked, check it against the act yourself.
+<p class="hf-sub">Instead of working through the acts from scratch, you check ready-made rows and carry them into your own tool.</p>
 
+<p class="hf-have"><b>Already have an ISMS?</b> Compare your Statement of Applicability with the draft to see which legal requirements it is missing.</p>
+
+<div class="hf-lanes">
+<section class="hf-card hf-lane here" aria-labelledby="hf-l1"><h3 class="hf-kicker" id="hf-l1">In Kreslenyk</h3><ol class="hf-steps">
+<li><b><a href="#/craft?step=1">Your acts</a></b><span>Which acts apply to you and who your regulator is.</span></li>
+<li><b><a href="#/craft?step=6">A draft Statement of Applicability</a></b><span>For each control: whether it is mandatory, under which act, and what exactly the act requires.</span></li>
+<li><b>A list of documents</b><span>Which documents the requirements go into; CIS templates for the basic ones.</span></li>
+<li><b><a href="data/ciso-assistant-libraries.zip" download>Libraries for the CISO Assistant GRC platform</a></b><span>Each mapped act as its own framework, already linked to the standards.</span></li>
+</ol></section>
+<p class="hf-hand"><span class="hf-arrow" aria-hidden="true">→</span><span>check and carry over</span></p>
+<section class="hf-card hf-lane" aria-labelledby="hf-l2"><h3 class="hf-kicker" id="hf-l2">In your tool</h3><ol class="hf-steps" start="5">
+<li><b>Check</b><span>Check the rows against the acts. Together with step 6 this is your Statement of Applicability.</span></li>
+<li><b>Risk assessment and treatment</b><span>Controls beyond the legal minimum. <a href="#/guide?c=risk">Guide</a></span></li>
+<li><b>Policies</b><span>From the CIS templates or your own.</span></li>
+<li><b>Implementation and GRC engineering</b><span>Controls and automated checks that they work. <a href="#/guide?c=grc">Guide</a></span></li>
+<li><b>Review and improvement</b><span>Monitoring, audit, management review.</span></li>
+</ol></section>
+</div>
+
+<p class="hf-loop"><b>↻ When the acts change,</b> a <a href="#home-updates">new release</a> comes out. Update the library in CISO Assistant and your answers to unchanged requirements stay; in Excel you carry the changes over by hand for now.</p>
+
+<p class="home-cta"><a class="btn btn-primary btn-lg" href="#/craft?step=1">Start: 4 questions</a></p>
+
+</section>
+
+<section class="hf-sec" aria-labelledby="hf-limits">
+
+<h2 id="hf-limits">Limitations</h2>
+
+<div class="hf-card hf-lims">
+<div class="hf-lim hf-lim-ai"><h3>Not yet checked by a person</h3><p>Most mappings were prepared and checked by AI. That is good enough to start. Check what you will rely on in front of an auditor against the act.</p></div>
+<div class="hf-lim"><h3>Not legal advice</h3><p>Kreslenyk points to where the requirements are written down. The decisions are yours.</p></div>
+<div class="hf-lim"><h3>Publicly available requirements only</h3><p>Only requirements from public acts go into the project.</p></div>
+</div>
+
+</section>
+
+<section class="hf-sec" id="stan" aria-labelledby="hf-status">
+
+<h2 id="hf-status">Project status</h2>
+
+<div class="hf-status">
+<div class="hf-card">
 <div id="home-review"></div>
-
-<p class="panel-more"><a href="#/contribute">Help with the checking →</a></p>
-
-</section>
-<section class="home-panel">
-
-### What changed
-
-<div id="home-changes"></div>
-
-</section>
+<p class="hf-small">Mappings rest only on official texts. Disputed interpretations are recorded in the <a href="#/method#how-the-data-is-updated-and-checked">decision register</a>.</p>
+<p class="hf-links"><a href="#/method">Methodology</a><a href="#/contribute">Help check the mappings</a></p>
 </div>
+<div class="hf-card"><h3 class="hf-kicker">By sector</h3><div id="home-areas"></div></div>
+</div>
+
+</section>
+
+<section class="hf-card hf-updates" id="home-updates" aria-labelledby="hf-upd">
+<h2 id="hf-upd">Updates</h2>
+<div id="home-changes"></div>
+</section>

@@ -1,5 +1,11 @@
 # Changelog
 
+## Site (unreleased)
+
+- New start page: the business problem and a sample row of the Statement of Applicability first, then what the reader takes from Kreslenyk and what they build in their own tool (two lanes, steps 1–9), a line for organisations that already have an ISMS, limitations, project status by sector, and the latest update. Counts of acts are computed from the data.
+- Readability: in the list of acts, conditions, the checked edition, the ELI and comments open under «Докладніше», so the list is about half as long; tags no longer show the ids of internal decisions (the decision stays in the tooltip). Chains: a key chain's summary shows its first sentence, long official titles are shortened, and amendments and repeals get their own line instead of nested brackets. The first abbreviation of each kind on a page (КМУ, ОКІІ, НД ТЗІ, ДСК…) has a tooltip with its full form. Long sentences on step 1 are split.
+- Register: the official title of CMU Resolution No. 518 («Загальних вимог до кіберзахисту»); a Cyrillic letter in the English title of ВСТ 01.008.002-2021.
+
 ## Release data-2026.11.19 (2026-11-19)
 
 - 50 acts are mapped (12 on 2026-11-14): 1,549 provisions, 4,232 mappings. The new acts come from the chains of PR #16 and #17 and the batch of NBU resolutions. All of it went through hostile review by AI reviewers (rounds r4 to r7, then a simulated-reader review and a cross-act consistency review, until no valid major comment was left); no person has checked it yet. A new provision type, «рекомендація», marks provisions that bind no one; they are hidden unless the reader asks for recommended acts.
