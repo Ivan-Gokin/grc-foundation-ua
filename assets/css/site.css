@@ -369,7 +369,7 @@ details.more p { margin: 6px 0 0; }
 .tree li { margin: 5px 0; }
 .chains > .tree > li > .chain-node { font-weight: 600; }
 .chain-node.repealed { text-decoration: line-through; }
-.chain-side { font-size: .82rem; color: var(--muted); }
+.chain-side { display: block; margin: 2px 0 0; font-size: .82rem; color: var(--muted); max-width: 90ch; }
 .tab { white-space: nowrap; }
 @media (max-width: 700px) {
   .tabs { display: block; border-bottom: 0; }
@@ -642,7 +642,8 @@ a.card h3 { color: var(--seal); }
 .kc-steps li:not(:last-child)::after { content: ""; position: absolute; left: 14px; top: 32px; bottom: 2px; width: 2px; background: var(--rule); }
 .kc-steps li:last-child::before { background: var(--teal); color: var(--surface); }
 .kc-act { font-weight: 600; }
-.kc-title { font-size: .88rem; color: var(--muted); }
+.kc-title { font-size: .88rem; color: var(--muted); display: block; max-width: 90ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kc-more { margin: -4px 0 12px; max-width: 90ch; }
 .kc-role { max-width: 80ch; }
 .kc-badges:empty { display: none; }
 .chains-all { font-size: 1.1rem; text-transform: uppercase; letter-spacing: .1em; color: var(--seal); margin: 8px 0 10px; }
@@ -1586,3 +1587,5 @@ button.pill { font: inherit; font-size: .88rem; cursor: pointer; text-align: lef
   .hf-hero .home-cta .btn { width: 100%; justify-content: center; }
   .hf-acts li.d1 { margin-left: 14px; } .hf-acts li.d2 { margin-left: 28px; }
 }
+/* abbreviations explained once per page (app.js markAbbr) */
+abbr[data-ab] { text-decoration: underline dotted; text-underline-offset: 2px; cursor: help; }

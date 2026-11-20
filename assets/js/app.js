@@ -454,6 +454,42 @@
     h.setAttribute("tabindex", "-1");
     h.focus({ preventScroll: true });
   }
+  // The first abbreviation of each kind on a page gets a tooltip with its full form (i18n abbr). Pages render in steps
+  // (markdown, data, soft redraws), so a mutation observer on the content runs the pass after each change.
+  const ABBR_SKIP = new Set(["A", "ABBR", "BUTTON", "CODE", "INPUT", "OPTION", "SCRIPT", "SELECT", "STYLE", "SUMMARY", "TEXTAREA", "svg"]);
+  let abbrRe = null, abbrLang = "", abbrQueued = false;
+  function markAbbr() {
+    abbrQueued = false;
+    const dict = t("abbr") || {};
+    if (abbrLang !== S.lang) {
+      abbrLang = S.lang;
+      const keys = Object.keys(dict).sort((a, b) => b.length - a.length).map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+      abbrRe = keys.length ? new RegExp(`(?<![\\p{L}\\p{N}])(?:${keys.join("|")})(?![\\p{L}\\p{N}])`, "gu") : null;
+    }
+    if (!abbrRe) return;
+    const done = new Set([...app.querySelectorAll("abbr[data-ab]")].map((x) => x.dataset.ab));
+    const walker = document.createTreeWalker(app, NodeFilter.SHOW_TEXT, { acceptNode: (n) => {
+      for (let e = n.parentElement; e && e !== app; e = e.parentElement) if (ABBR_SKIP.has(e.tagName) || e.hidden) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    } });
+    const hits = [];
+    for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+      abbrRe.lastIndex = 0;
+      let m;
+      while ((m = abbrRe.exec(n.data))) if (!done.has(m[0])) { done.add(m[0]); hits.push([n, m.index, m[0]]); }
+    }
+    abbrObserver.disconnect();
+    // wrap from the end of each node, so earlier offsets stay valid
+    hits.reverse().forEach(([n, i, k]) => {
+      const tail = n.splitText(i); tail.splitText(k.length);
+      const ab = document.createElement("abbr");
+      ab.dataset.ab = k; ab.title = dict[k]; ab.textContent = k;
+      tail.replaceWith(ab);
+    });
+    abbrObserver.observe(app, { childList: true, subtree: true });
+  }
+  const abbrObserver = new MutationObserver(() => { if (!abbrQueued) { abbrQueued = true; requestAnimationFrame(markAbbr); } });
+  abbrObserver.observe(app, { childList: true, subtree: true });
   function render() {
     renderShell();
     writeHash();
@@ -2203,22 +2239,28 @@
       const n = (D.provsBySource[s.id] || []).length;
       const sectors = (D.applBySource[s.id] || []).map((a) => {
         const ds = idsOf(a).filter((id) => D.decById[id]);
-        return `<span class="tag"${ds.length ? ` title="${esc(ds.map(decisionText).join("\n"))}"` : ""}>${esc(applLabel(a))}${ds.length ? ` <span class="muted">${esc(ds.join(", "))}</span>` : ""}</span>`;
+        // the decision's id stays in the tooltip: the tag reads as a sector, with a mark that it rests on an interpretation
+        return `<span class="tag"${ds.length ? ` title="${esc(ds.map(decisionText).join("\n"))}"` : ""}>${esc(applLabel(a))}${ds.length ? '<sup class="conf" aria-hidden="true">*</sup>' : ""}</span>`;
       }).join("");
       const title = sourceTitle(s);
       const concerns = L(s, "concerns");
       const comment = s.comment_uk && s.comment_uk !== L(s, "description")
-        ? `<details class="more"><summary>${esc(t("comment"))}</summary><p lang="uk">${esc(s.comment_uk)}</p></details>` : "";
+        ? `<p><b>${esc(t("comment"))}:</b> <span lang="uk">${esc(s.comment_uk)}</span></p>` : "";
+      // the row shows what the act is and whom it concerns at a glance; conditions, edition, ELI and comments open on demand
+      const more = [
+        concerns ? `<p><b>${esc(t("concerns"))}</b> ${esc(concerns)}</p>` : "",
+        L(s, "act_condition") ? `<p><b>${esc(t("actCondition"))}:</b> ${esc(L(s, "act_condition"))}</p>` : "",
+        s.checked_edition ? `<p class="muted">${esc(t("checkedEdition"))}: <span lang="uk">${esc(s.checked_edition)}</span></p>` : "",
+        comment, s.eli ? `<p>${eliLine(s)}</p>` : "",
+      ].join("");
       return `<tr id="src-${esc(s.id)}">
         <th scope="row" class="src"><span class="src-type">${esc(typeLabel(s.type))}<span class="src-no">${esc(t("regNo"))} ${esc(s.register_no)}</span></span>
           <span class="src-ref">${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(sourceRef(s))}</a>` : esc(sourceRef(s))}</span>
-          ${title !== sourceRef(s) ? `<span class="src-title"${isFallback(s, "title") ? ' lang="uk"' : ""}>${esc(title)}</span>` : ""}${eliLine(s)}</th>
+          ${title !== sourceRef(s) ? `<span class="src-title"${isFallback(s, "title") ? ' lang="uk"' : ""}>${esc(title)}</span>` : ""}</th>
         <td data-label="${esc(t("srcColStatus"))}">${sourceBadges(s)}${n ? `<p class="muted small">${esc(fmt(t("provisionsCount"), n))}</p>` : ""}</td>
         <td data-label="${esc(t("srcColDesc"))}"><p${isFallback(s, "description") ? ' lang="uk"' : ""}>${esc(L(s, "description"))}</p>
-          ${concerns ? `<p class="concerns"><b>${esc(t("concerns"))}</b> ${esc(concerns)}</p>` : ""}
-          ${L(s, "act_condition") ? `<p class="concerns"><b>${esc(t("actCondition"))}:</b> ${esc(L(s, "act_condition"))}</p>` : ""}
-          ${s.checked_edition ? `<p class="muted small">${esc(t("checkedEdition"))}: <span lang="uk">${esc(s.checked_edition)}</span></p>` : ""}
-          ${sectors ? `<p class="tags">${sectors}</p>` : ""}${comment}</td>
+          ${sectors ? `<p class="tags">${sectors}</p>` : ""}
+          ${more ? `<details class="more"><summary>${esc(t("provMore"))}</summary>${more}</details>` : ""}</td>
         <td data-label="${esc(t("srcColChain"))}">${relLinks(s)}</td></tr>`;
     }).join("");
     return `<div class="table-wrap"><table class="sources">
@@ -2238,6 +2280,13 @@
     return "";
   }
   // Key chains: a narrated path through the register, step by step (chains.csv + chain_steps.csv)
+  // The first sentence of a text, and the rest (split after a full stop followed by a capital letter)
+  function splitLead(text) {
+    const m = (text || "").match(/^(.+?[.!?])\s+(?=[A-ZА-ЯІЇЄҐ«])/u);
+    return m ? [m[1], text.slice(m[0].length)] : [text || "", ""];
+  }
+  // A long official title cut at a word boundary, for one-line lists; the full title goes in the tooltip
+  const shortTitle = (s, n = 90) => (s.length <= n ? s : s.slice(0, s.lastIndexOf(" ", n)).replace(/[,;:\s]+$/, "") + "…");
   function keyChainsHtml() {
     if (!D.chains.length) return "";
     const exp = expandedSectors();
@@ -2247,11 +2296,12 @@
         if (!x) return "";
         const yours = exp && sourceApplies(x, exp) ? ` <span class="badge cov-full">${esc(t("chainYours"))}</span>` : "";
         return `<li><span class="kc-act"><a href="#src-${esc(x.id)}" data-jump="${esc(x.id)}">${esc(sourceRef(x))}</a>${L(st, "ref") ? `, ${esc(L(st, "ref"))}` : ""}</span>
-          <span class="kc-title">${esc(sourceTitle(x))}</span>
+          <span class="kc-title" title="${esc(sourceTitle(x))}">${esc(sourceTitle(x))}</span>
           <span class="kc-role">${esc(L(st, "role"))}</span>
           <span class="kc-badges">${chainWeight(x)}${!IN_EFFECT(x.status) ? ` <span class="badge st-${esc(x.status)}">${esc(statusLabel(x.status))}</span>` : ""}${yours}</span></li>`;
       }).join("");
-      return `<section class="key-chain" id="chain-${esc(c.id)}"><h2>${esc(L(c, "title"))}</h2><p>${esc(L(c, "summary"))}</p><ol class="kc-steps">${steps}</ol></section>`;
+      const [lead, rest] = splitLead(L(c, "summary"));
+      return `<section class="key-chain" id="chain-${esc(c.id)}"><h2>${esc(L(c, "title"))}</h2><p>${esc(lead)}</p>${rest ? `<details class="more kc-more"><summary>${esc(t("provMore"))}</summary><p>${esc(rest)}</p></details>` : ""}<ol class="kc-steps">${steps}</ol></section>`;
     }).join("");
     return `<div class="key-chains"><p class="kicker">${esc(t("chainsKey"))}</p>${items}</div>`;
   }
@@ -2274,14 +2324,19 @@
     const direct = new Set(rows.map((x) => x.id));
     const label = (id, rel, link) => {
       const x = D.sourceById[id];
-      const side = (D.relsIn[id] || []).filter((r) => !HIER.has(r.relation))
-        .map((r) => `${esc(relIn(r))} <a href="#src-${esc(r.source_id)}" data-jump="${esc(r.source_id)}">${esc(sourceRef(D.sourceById[r.source_id]))}</a>${esc(pendingMark(r.source_id))}`);
+      const sideBy = new Map();
+      (D.relsIn[id] || []).filter((r) => !HIER.has(r.relation)).forEach((r) => {
+        const k = relIn(r);
+        if (!sideBy.has(k)) sideBy.set(k, []);
+        sideBy.get(k).push(`<a href="#src-${esc(r.source_id)}" data-jump="${esc(r.source_id)}">${esc(sourceRef(D.sourceById[r.source_id]))}</a>${esc(pendingMark(r.source_id))}`);
+      });
+      const side = [...sideBy].map(([k, links]) => `${esc(k.charAt(0).toUpperCase() + k.slice(1))}: ${links.join("; ")}`);
       const cls = (x.status === "repealed" ? " repealed" : "") + (S.sectors.length && !direct.has(id) ? " chain-ctx" : "");
       return `${rel && rel !== "based_on" ? `<span class="badge" title="eli:${esc(rel)}">${esc(t("rel_" + rel))}</span> ` : ""}<a class="chain-node${cls}" href="#src-${esc(id)}" data-jump="${esc(id)}">${esc(sourceRef(x))}</a>`
         + `${!IN_EFFECT(x.status) ? ` <span class="badge st-${esc(x.status)}">${esc(statusLabel(x.status))}</span>` : ""}${x.scope === "reference" ? ` <span class="badge">${esc(t("badgeEu"))}</span>` : ""}`
-        + ` <span class="muted small">${esc(sourceTitle(x).slice(0, 110))}</span>`
+        + ` <span class="muted small" title="${esc(sourceTitle(x))}">${esc(shortTitle(sourceTitle(x)))}</span>`
         + ` ${chainWeight(x)}`
-        + (side.length ? ` <span class="chain-side">(${side.join("; ")})</span>` : "")
+        + (side.length ? `<span class="chain-side">${side.join(". ")}</span>` : "")
         + (link && link.basis_uk ? `<span class="chain-basis">${esc(link.basis_uk)}${link.confidence === "medium" ? ` <span class="badge" title="${esc(t("confMedium"))}">${esc(t("confMediumShort"))}</span>` : ""}</span>` : "");
     };
     const walk = (id, link, depth) => {
