@@ -1140,6 +1140,10 @@ a.stage-hint { color: var(--accent); }
 }
 .craft-steps li.current a { color: var(--ink); font-weight: 600; }
 .craft-steps li.current .craft-num { background: var(--accent); color: var(--on-accent); }
+.craft-step-t { display: flex; flex-direction: column; gap: 1px; }
+.craft-kind { font-size: .76rem; font-weight: 400; color: var(--muted); }
+.craft-steps li.ck-read:not(.current) .craft-num { background: transparent; color: var(--muted); }
+.craft-steps li.ck-read .craft-kind { font-style: italic; }
 .craft-note { margin: 16px 0 0; padding-top: 12px; border-top: 1px solid var(--rule); font-size: .82rem; color: var(--muted); line-height: 1.45; }
 .craft-main { min-width: 0; }
 .craft-main > .kicker { margin: 0 0 4px; }
@@ -1264,7 +1268,7 @@ a.stage-hint { color: var(--accent); }
   .craft-steps { position: static; }
   .craft-steps ol { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
   .craft-steps li a { padding: 4px 0; }
-  .craft-steps li:not(.current) a > span:last-child { display: none; }
+  .craft-steps li:not(.current) a > .craft-step-t { display: none; }
   .craft-note { margin-top: 8px; padding-top: 8px; }
   .craft-card { padding: 14px 14px; }
   .soa-row { grid-template-columns: 36px minmax(0, 1fr); }

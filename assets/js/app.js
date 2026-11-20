@@ -731,6 +731,9 @@
     QA.q3 = c ? c[0] : "no";
   }
   const CRAFT_STEPS = ["about", "profile", "actors", "framework", "acts", "soa"];
+  // Only step 1 asks questions; the others are filled in from the answers. "do" steps need an action
+  // (they have a sensible default), "check" steps can be adjusted, "read" steps only explain.
+  const CRAFT_KIND = { about: "do", profile: "check", actors: "read", framework: "do", acts: "check", soa: "do" };
   const CRAFT_FROM = { context: 2, actors: 3, standard: 4, requirements: 5, soa: 6 }; // old guide chapters now live here
   const CR = { recActs: new Set(), euActs: new Set(), picked: new Set(), unpicked: new Set(), fwChosen: false, dirty: false };
   const W = { sectors: null, fw: null }; // the wizard's own profile and framework (Explore keeps its filters in S)
@@ -795,11 +798,11 @@
           ${n === CRAFT_STEPS.length ? `<a class="pager-next" href="#/guide?c=risk"><span>${esc(t("craftAfter"))}</span>${esc(chapterTitle("risk"))}</a>` : ""}</nav>`;
     app.innerHTML = `<article class="craft"><div class="craft-body">
       <nav class="craft-steps" aria-label="${esc(t("navCraft"))}"><p class="craft-label">${esc(t("navCraft"))}</p>
-        <ol>${CRAFT_STEPS.map((k, i) => `<li${i + 1 === n ? ' class="current"' : ""}><a href="${craftHref(i + 1)}"${i + 1 === n ? ' aria-current="step"' : ""}><span class="craft-num">${i + 1}</span><span>${esc(t("cs_" + k))}</span></a></li>`).join("")}</ol>
+        <ol>${CRAFT_STEPS.map((k, i) => `<li class="ck-${CRAFT_KIND[k]}${i + 1 === n ? " current" : ""}"><a href="${craftHref(i + 1)}"${i + 1 === n ? ' aria-current="step"' : ""}><span class="craft-num">${i + 1}</span><span class="craft-step-t"><span>${esc(t("cs_" + k))}</span><small class="craft-kind">${esc(t("ck_" + k))}</small></span></a></li>`).join("")}</ol>
         <p class="craft-note">${esc(t("craftNote"))}</p>
         <p class="craft-reset"><button type="button" class="link-btn" id="craft-reset">${esc(t("craftReset"))}</button></p></nav>
       <div class="craft-main">
-        <p class="kicker">${esc(fmt(t("craftStepOf"), n, CRAFT_STEPS.length))}</p>
+        <p class="kicker">${esc(fmt(t("craftStepOf"), n, CRAFT_STEPS.length))} · ${esc(t("ck_" + step))}</p>
         ${n > 1 ? pager("top") : ""}
         <div class="prose craft-guide" id="craft-guide"><h1>${esc(t("cs_" + step))}</h1></div>
         <details class="craft-why" id="craft-why" hidden${craftWhyOpen ? " open" : ""}><summary>${esc(t("craftWhy"))}</summary><div class="prose" id="craft-why-body"></div></details>
