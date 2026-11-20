@@ -8,7 +8,7 @@
 
 <p class="home-cta"><a class="btn btn-primary btn-lg" href="#/craft?step=1">Start: 4 questions</a><a class="btn btn-lg" href="#/craft?step=6&s=banks,personal-data">Example for a bank</a></p>
 
-<p class="hf-note">It takes about a minute, and your answers are not sent anywhere. <span id="home-count"></span></p>
+<p class="hf-note">The site fills in the other steps for you; you only need to look them over. It takes about a minute, and your answers are not sent anywhere. <span id="home-count"></span></p>
 
 </section>
 
