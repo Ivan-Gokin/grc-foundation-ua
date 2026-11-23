@@ -140,6 +140,8 @@ window.GRC_I18N = {
     cs_soa: "Ваше положення про застосовність",
     craftNote: "Ваші відповіді й вибір живуть лише на цій сторінці: нічого не зберігається і не надсилається. Щоб не втратити результат, завантажте його на останньому кроці.",
     craftStepOf: "Крок {0} із {1}",
+    // the rail groups the steps by what the reader does: only step 1 asks questions, the rest are filled in from the answers
+    cg_answer: "Ви відповідаєте", cg_review: "Ви переглядаєте", cg_take: "Ви забираєте",
     craftYourAnswer: "Ваша відповідь",
     craftPickText: "Спершу дайте відповідь на чотири запитання або оберіть тип організації, найближчий до вашого.",
     craftStart: "Відповісти на чотири запитання",
@@ -836,6 +838,7 @@ window.GRC_I18N = {
     cs_soa: "Your Statement of Applicability",
     craftNote: "Your answers and choices live on this page only: nothing is saved or sent. Download the result in the last step to keep it.",
     craftStepOf: "Step {0} of {1}",
+    cg_answer: "You answer", cg_review: "You review", cg_take: "You take it away",
     craftYourAnswer: "Your answer",
     craftPickText: "Answer the four questions first, or pick the kind of organisation closest to yours.",
     craftStart: "Answer four questions",

@@ -8,7 +8,7 @@
 
 <p class="home-cta"><a class="btn btn-primary btn-lg" href="#/craft?step=1">Почати: 4 запитання</a><a class="btn btn-lg" href="#/craft?step=6&s=banks,personal-data">Приклад для банку</a></p>
 
-<p class="hf-note">Це займає близько хвилини, відповіді нікуди не надсилаються. <span id="home-count"></span></p>
+<p class="hf-note">Решту кроків сайт заповнить за вас: їх досить переглянути. Це займає близько хвилини, відповіді нікуди не надсилаються. <span id="home-count"></span></p>
 
 </section>
 
